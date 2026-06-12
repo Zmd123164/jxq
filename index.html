@@ -247,7 +247,7 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
       <!-- slots -->
       <div class="slots" id="slots-container"></div>
       <button class="add-btn" onclick="addCustomTask()">＋ 添加临时任务</button>
-      <button class="add-btn" style="border-color:#fdba74;color:#ea580c" onclick="postponeDay()" id="postpone-btn">⏭ 今天没学完？一键把全天课程顺延到明天</button>
+      <button class="add-btn" style="border-color:#fdba74;color:#ea580c" onclick="postponeDay()" id="postpone-btn">⏭ 顺延课程（可选上午/下午/晚上）</button>
     </div>
 
     <!-- side panel: hidden on mobile by default, shown as collapsible -->
@@ -1093,13 +1093,14 @@ function renderSchedule(){
     container.appendChild(el);
   });
 
-  // 顺延按钮状态：已顺延的日期显示「撤销」
+  // 顺延按钮状态
   const ppBtn=document.getElementById('postpone-btn');
   if(ppBtn){
-    const anySkipped=['am','pm','ev'].some(s=>(D.skips||[]).some(x=>x.date===dkey&&x.slot===s));
-    ppBtn.textContent=anySkipped?'↩️ 本日有顺延（未完成的课程已移到次日）— 点击撤销':'⏭ 今天没学完？一键顺延未完成的课程到明天';
-    ppBtn.style.borderColor=anySkipped?'#86efac':'#fdba74';
-    ppBtn.style.color=anySkipped?'#16a34a':'#ea580c';
+    const slotNames={am:'上午',pm:'下午',ev:'晚上'};
+    const skipped=['am','pm','ev'].filter(s=>(D.skips||[]).some(x=>x.date===dkey&&x.slot===s));
+    ppBtn.textContent=skipped.length?`⏭ 本日已顺延：${skipped.map(s=>slotNames[s]).join('、')} — 点击调整/撤销`:'⏭ 顺延课程（可选上午/下午/晚上）';
+    ppBtn.style.borderColor=skipped.length?'#86efac':'#fdba74';
+    ppBtn.style.color=skipped.length?'#16a34a':'#ea580c';
   }
 
   renderSidePanel(d);
@@ -1231,39 +1232,65 @@ function submitCustomTask(){
   showToast(occupy?'✅ 已添加，该时段原课程自动顺延补位':'✅ 已添加临时任务');
 }
 
-// ==================== 一键全天顺延 ====================
-// 把「当前查看日期」的三个时段全部标记为占用：
-// 当天课程不再显示，之后所有天的课程编号自动后移1天，一节不漏
+// ==================== 顺延（弹窗自选时段） ====================
 function postponeDay(){
   const dkey=ds(curDate);
   D.skips=D.skips||[];
-  const slotNames={am:'上午场',pm:'下午场',ev:'晚上场'};
-  const skippedSlots=['am','pm','ev'].filter(s=>D.skips.some(x=>x.date===dkey&&x.slot===s));
-  if(skippedSlots.length){
-    // 已有顺延 → 这次点击=撤销
-    if(!confirm(`今天已顺延：${skippedSlots.map(s=>slotNames[s]).join('、')}。\n\n要撤销顺延、恢复这些时段的原课表吗？`)) return;
-    D.skips=D.skips.filter(x=>x.date!==dkey);
-    sv();renderSchedule();
-    showToast('已撤销顺延，今天课表已恢复');
-    return;
-  }
-  // ⭐ 只顺延「没学完」的时段：已全部打卡的时段保持原样，不会跟着后移
+  const slotNames={am:'🌅 上午场',pm:'☀️ 下午场',ev:'🌙 晚上场'};
   const info=getPhaseInfo(curDate);
-  const todo=[],done=[];
-  info.slots.forEach(slot=>{
-    const n=slot.tasks.length;
-    const allDone=n>0&&slot.tasks.every((_,ti)=>D.checks[`${dkey}_${slot.key}_${ti}`]);
-    (allDone?done:todo).push(slot.key);
-  });
-  if(!todo.length){showToast('今天三个时段都已完成，无需顺延 💪','orange');return;}
+  const old=document.getElementById('pp-modal');if(old)old.remove();
   const wd=['日','一','二','三','四','五','六'][curDate.getDay()];
-  const doneStr=done.length?`✅ ${done.map(s=>slotNames[s]).join('、')}已完成打卡 → 保持不动\n`:'';
-  if(!confirm(`确认顺延 ${curDate.getMonth()+1}月${curDate.getDate()}日（星期${wd}）未完成的课程吗？\n\n${doneStr}⏭ ${todo.map(s=>slotNames[s]).join('、')}未完成 → 课程顺延到明天，后续依次后移\n\n（点错了再点一次本按钮即可撤销）`)) return;
-  todo.forEach(s=>{
-    if(!D.skips.some(x=>x.date===dkey&&x.slot===s)) D.skips.push({date:dkey,slot:s});
+
+  // 各时段状态：已顺延 / 已完成 / 可顺延
+  const rows=['am','pm','ev'].map(key=>{
+    const skipped=D.skips.some(x=>x.date===dkey&&x.slot===key);
+    const slot=info.slots.find(s=>s.key===key);
+    const n=slot?slot.tasks.length:0;
+    const allDone=!skipped&&n>0&&slot.tasks.every((_,ti)=>D.checks[`${dkey}_${key}_${ti}`]);
+    let stateTxt,stateColor,disabled=false,checked=false;
+    if(skipped){stateTxt='已顺延（勾选=撤销恢复）';stateColor='#16a34a';checked=true;}
+    else if(allDone){stateTxt='已全部打卡完成 ✓';stateColor='#16a34a';disabled=true;}
+    else{stateTxt='未完成，可顺延';stateColor='#d97706';}
+    return `<label style="display:flex;align-items:center;gap:10px;padding:11px 12px;border:1.5px solid ${skipped?'#86efac':'#e2e8f0'};border-radius:10px;margin-bottom:8px;cursor:${disabled?'not-allowed':'pointer'};opacity:${disabled?.55:1};background:${skipped?'#f0fdf4':'#fff'}">
+      <input type="checkbox" class="pp-cb" value="${key}" ${checked?'checked':''} ${disabled?'disabled':''} style="width:17px;height:17px;flex-shrink:0"/>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:700;color:#0f172a">${slotNames[key]}</div>
+        <div style="font-size:11px;color:${stateColor}">${stateTxt}</div>
+      </div>
+    </label>`;
+  }).join('');
+
+  const m=document.createElement('div');m.id='pp-modal';
+  m.style.cssText='position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:1000;display:flex;align-items:center;justify-content:center;padding:18px';
+  m.innerHTML=`<div style="background:#fff;border-radius:14px;padding:18px;width:100%;max-width:380px;box-shadow:0 20px 60px rgba(0,0,0,.35)">
+    <div style="font-size:14px;font-weight:700;color:#0f172a;margin-bottom:4px">⏭ 顺延课程</div>
+    <div style="font-size:11px;color:#64748b;margin-bottom:12px">${curDate.getMonth()+1}月${curDate.getDate()}日（星期${wd}）· 勾选要顺延的时段</div>
+    ${rows}
+    <div style="font-size:10px;color:#94a3b8;line-height:1.7;background:#f8fafc;border-radius:8px;padding:8px 10px;margin:4px 0 12px">勾选的时段：当天课程移到明天，后续整体后移，一节不漏。<br>已顺延的时段取消勾选 = 撤销恢复原课表。</div>
+    <div style="display:flex;gap:8px">
+      <button onclick="submitPostpone()" class="btn-p" style="flex:1">✔ 确认</button>
+      <button onclick="document.getElementById('pp-modal').remove()" style="padding:8px 18px;border-radius:7px;border:1.5px solid #e2e8f0;background:#f8fafc;color:#475569;font-size:12px;cursor:pointer">取消</button>
+    </div>
+  </div>`;
+  m.addEventListener('click',e=>{if(e.target===m)m.remove();});
+  document.body.appendChild(m);
+}
+
+function submitPostpone(){
+  const dkey=ds(curDate);
+  D.skips=D.skips||[];
+  const slotNames={am:'上午场',pm:'下午场',ev:'晚上场'};
+  const want=new Set([...document.querySelectorAll('.pp-cb:checked')].map(cb=>cb.value));
+  const added=[],removed=[];
+  ['am','pm','ev'].forEach(key=>{
+    const has=D.skips.some(x=>x.date===dkey&&x.slot===key);
+    if(want.has(key)&&!has){D.skips.push({date:dkey,slot:key});added.push(slotNames[key]);}
+    if(!want.has(key)&&has){D.skips=D.skips.filter(x=>!(x.date===dkey&&x.slot===key));removed.push(slotNames[key]);}
   });
   sv();renderSchedule();
-  showToast(`✅ 已顺延${todo.map(s=>slotNames[s]).join('、')}${done.length?'；已完成的'+done.map(s=>slotNames[s]).join('、')+'保持不动':''}`);
+  document.getElementById('pp-modal').remove();
+  const msg=[added.length?`⏭ 已顺延${added.join('、')}`:'',removed.length?`↩️ 已恢复${removed.join('、')}`:''].filter(Boolean).join('；');
+  showToast(msg||'未做任何更改');
 }
 
 function delCustomTask(slotKey,i){
