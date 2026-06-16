@@ -1,0 +1,2930 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>公考备考 2026 | 四川省考 & 事业编</title>
+<style>
+:root{
+  --bg:#f0f6ff;--surface:#fff;--s2:#f7faff;--border:#d0e2ff;
+  --p:#2563eb;--pl:#eff6ff;--pd:#1d4ed8;
+  --g:#10b981;--gd:#059669;
+  --a:#f59e0b;--r:#ef4444;--v:#8b5cf6;
+  --t:#1e293b;--t2:#475569;--t3:#94a3b8;
+  --rad:12px;--sh:0 2px 12px rgba(37,99,235,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background:var(--bg);color:var(--t);font-size:14px;min-height:100vh}
+
+/* HEADER */
+.hdr{background:linear-gradient(135deg,#1d4ed8,#2563eb,#4f46e5);color:#fff;padding:16px 20px 10px;position:sticky;top:0;z-index:100;box-shadow:0 4px 20px rgba(37,99,235,.35)}
+.hdr-top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.hdr h1{font-size:17px;font-weight:700}
+.hdr h1 span{opacity:.7;font-size:11px;font-weight:400;margin-left:7px}
+.pills{display:flex;gap:6px;flex-wrap:wrap}
+.pill{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:3px 10px;font-size:11px;display:flex;align-items:center;gap:4px}
+.pill .d{font-weight:700;font-size:13px;color:#fde68a}
+.tabs{display:flex;gap:3px;margin-top:10px;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tb{background:rgba(255,255,255,.12);border:none;color:rgba(255,255,255,.75);padding:6px 13px;border-radius:7px;cursor:pointer;font-size:12px;white-space:nowrap;transition:all .2s}
+.tb.on,.tb:hover{background:rgba(255,255,255,.25);color:#fff;font-weight:600}
+
+/* LAYOUT */
+.main{max-width:1100px;margin:0 auto;padding:16px 14px 80px}
+.sec{display:none}.sec.on{display:block}
+
+/* CARDS */
+.card{background:var(--surface);border-radius:var(--rad);box-shadow:var(--sh);border:1px solid var(--border);padding:16px;margin-bottom:13px}
+.ct{font-size:14px;font-weight:700;color:var(--p);display:flex;align-items:center;gap:6px;margin-bottom:13px}
+
+/* LOCK */
+.lock{position:fixed;inset:0;background:rgba(15,23,42,.85);z-index:999;display:none;align-items:center;justify-content:center}
+.lock.show{display:flex}
+.lbox{background:#fff;border-radius:20px;padding:32px 28px;max-width:340px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.lic{font-size:48px;margin-bottom:10px}
+.lt{font-size:19px;font-weight:800;color:var(--r);margin-bottom:7px}
+.lm{font-size:12px;color:var(--t2);line-height:1.7;margin-bottom:16px}
+.lh{font-size:34px;font-weight:800;color:var(--p);margin:8px 0}
+.ln{font-size:12px;color:var(--t3);margin-bottom:16px}
+.lbtn{background:var(--r);color:#fff;border:none;border-radius:10px;padding:10px 24px;font-size:13px;font-weight:700;cursor:pointer;width:100%}
+
+/* DATE NAV */
+.dnav{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px}
+.dinfo{text-align:center}
+.ddate{font-size:17px;font-weight:700;color:var(--p)}
+.dmeta{font-size:11px;color:var(--t3);margin-top:2px}
+.darrow{background:var(--pl);border:1.5px solid var(--border);border-radius:8px;padding:6px 14px;cursor:pointer;font-size:14px;color:var(--p);font-weight:700;transition:all .2s}
+.darrow:hover{background:var(--p);color:#fff}
+.dtoday{background:var(--p);color:#fff;border:none;border-radius:8px;padding:6px 14px;cursor:pointer;font-size:12px;font-weight:600}
+
+/* PHASE BANNER */
+.phase-banner{background:linear-gradient(90deg,#eff6ff,#e0e7ff);border:1.5px solid #c7d7fe;border-radius:10px;padding:10px 14px;font-size:12px;font-weight:700;color:#3730a3;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+
+/* TIME SLOTS */
+.slots{display:flex;flex-direction:column;gap:10px}
+.slot{border:1.5px solid var(--border);border-radius:10px;overflow:hidden;background:var(--s2)}
+.slot.done-slot{border-color:#bbf7d0;background:#f0fdf4}
+.slot.running{border-color:var(--a);background:#fffbeb;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.88}}
+.sloth{display:flex;align-items:center;justify-content:space-between;padding:9px 13px;background:linear-gradient(90deg,#eff6ff,#f0f6ff);border-bottom:1px solid var(--border);flex-wrap:wrap;gap:6px}
+.slot.done-slot .sloth{background:linear-gradient(90deg,#f0fdf4,#f0fdf4)}
+.slot.running .sloth{background:linear-gradient(90deg,#fffbeb,#fffbeb)}
+.slotl{font-weight:700;color:var(--p);font-size:13px}
+.slotc{font-size:11px;color:var(--t2);background:#fff;padding:2px 7px;border-radius:11px;border:1px solid var(--border)}
+.slotbtn{padding:5px 12px;border-radius:7px;border:none;font-size:11px;font-weight:600;cursor:pointer;transition:all .2s}
+.btn-start-slot{background:var(--p);color:#fff}.btn-start-slot:hover{background:var(--pd)}
+.btn-stop-slot{background:var(--r);color:#fff}.btn-stop-slot:hover{background:#dc2626}
+.btn-done{background:var(--g);color:#fff}.btn-done:hover{background:var(--gd)}
+
+.tasks{padding:10px 13px;display:flex;flex-direction:column;gap:5px}
+
+/* TASK */
+.ti{display:flex;align-items:flex-start;gap:8px;padding:7px 9px;border-radius:7px;background:#fff;border:1px solid #e8f0fe}
+.ti.done{opacity:.55}.ti.done .tt{text-decoration:line-through;color:var(--t3)}
+.tcb{width:17px;height:17px;border-radius:4px;border:2px solid #93c5fd;flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px;cursor:pointer;transition:all .2s}
+.ti.done .tcb{background:var(--g);border-color:var(--g)}
+.tcb::after{content:'✓';color:#fff;font-size:10px;display:none;font-weight:700}
+.ti.done .tcb::after{display:block}
+.tbody2{flex:1;min-width:0}
+.tt{font-size:12px;color:var(--t);line-height:1.5;cursor:pointer}
+.tdrill{display:flex;align-items:center;gap:5px;margin-top:4px;flex-wrap:wrap}
+.tdlbl{font-size:10px;color:var(--t3)}
+.tdinp{width:48px;border:1.5px solid var(--border);border-radius:5px;padding:2px 4px;font-size:11px;color:var(--p);font-weight:700;background:var(--pl);outline:none;text-align:center}
+.tdinp:focus{border-color:var(--p)}
+.tdu{font-size:10px;color:var(--t2)}
+.ttag{font-size:10px;padding:2px 6px;border-radius:9px;font-weight:600;flex-shrink:0;align-self:flex-start;margin-top:1px}
+.tg-gj{background:#fef3c7;color:#92400e}
+.tg-xt{background:#ede9fe;color:#6d28d9}
+.tg-sl{background:#d1fae5;color:#065f46}
+.tg-dt{background:#fce7f3;color:#9d174d}
+.tg-zt{background:#dbeafe;color:#1e40af}
+.tg-fx{background:#fef9c3;color:#713f12}
+
+/* SIDE PANEL */
+.side-panel{background:var(--surface);border-radius:var(--rad);box-shadow:var(--sh);border:1px solid var(--border);padding:14px}
+.sp-item{padding:7px 9px;border-radius:7px;font-size:11px;margin-bottom:4px;border:1px solid transparent;line-height:1.5}
+.sp-item.sp-on{background:var(--pl);border-color:#bfdbfe;color:var(--pd);font-weight:700}
+.sp-item.sp-off{color:var(--t3)}
+.sp-item.sp-done{color:var(--g);text-decoration:line-through}
+
+/* PROGRESS BARS */
+.pb-item{margin-bottom:12px}
+.pb-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.pb-name{font-size:12px;font-weight:600;color:var(--t)}
+.pb-bar{height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden}
+.pb-fill{height:100%;border-radius:4px;transition:width .6s}
+
+/* TIMER */
+.ta{background:linear-gradient(135deg,#1d4ed8,#4f46e5);border-radius:10px;padding:14px 16px;color:#fff}
+.td{font-size:38px;font-weight:700;letter-spacing:3px;text-align:center;font-variant-numeric:tabular-nums}
+.tl{text-align:center;font-size:11px;opacity:.75;margin-top:3px}
+.tbtns{display:flex;gap:7px;justify-content:center;margin-top:10px;flex-wrap:wrap}
+.tbtn{padding:7px 16px;border-radius:7px;border:none;font-size:12px;font-weight:600;cursor:pointer;transition:all .2s}
+.tb-s{background:#fbbf24;color:#1e293b}.tb-s:hover{background:var(--a)}
+.tb-e{background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.4)}.tb-e:hover{background:rgba(255,255,255,.3)}
+.tb-r{background:rgba(255,255,255,.1);color:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.2)}
+.sel{width:100%;padding:7px 10px;border-radius:7px;border:1.5px solid var(--border);background:var(--s2);color:var(--t);font-size:12px;margin-bottom:9px;outline:none}
+
+/* STATS */
+.sg{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:8px}
+.sb{background:var(--surface);border-radius:9px;padding:12px 9px;text-align:center;border:1.5px solid var(--border)}
+.sv{font-size:20px;font-weight:700;color:var(--p)}
+.sl2{font-size:10px;color:var(--t3);margin-top:2px}
+
+/* LOG TABLE */
+.ltbl{width:100%;border-collapse:collapse}
+.ltbl th{background:var(--pl);color:var(--p);padding:6px 8px;text-align:left;font-size:11px;font-weight:700;border-bottom:2px solid var(--border)}
+.ltbl td{padding:5px 8px;font-size:11px;border-bottom:1px solid #f1f5f9;color:var(--t2)}
+.ltbl tr:hover td{background:var(--s2)}
+
+/* HEATMAP */
+.hc{width:12px;height:12px;border-radius:2px;background:#e2e8f0;flex-shrink:0;cursor:pointer;transition:transform .15s}
+.hc:hover{transform:scale(1.4)}
+.hc[data-l="1"]{background:#bfdbfe}.hc[data-l="2"]{background:#60a5fa}.hc[data-l="3"]{background:#2563eb}.hc[data-l="4"]{background:#1e40af}
+
+/* FLOATING TIMER */
+.ft{position:fixed;bottom:16px;right:14px;z-index:200;background:linear-gradient(135deg,#1d4ed8,#4f46e5);border-radius:13px;padding:10px 14px;color:#fff;box-shadow:0 8px 32px rgba(37,99,235,.45);min-width:145px;display:none}
+.ft.vis{display:block}
+.ftd{font-size:24px;font-weight:700;letter-spacing:2px;text-align:center}
+.ftl{font-size:9px;opacity:.7;text-align:center;margin-bottom:5px}
+.fts{width:100%;padding:4px;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.35);border-radius:5px;color:#fff;font-size:11px;font-weight:600;cursor:pointer}
+.fts:hover{background:rgba(255,255,255,.3)}
+
+/* REVIEW / NOTES */
+.note-box{background:var(--s2);border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:8px}
+.note-time{font-size:10px;color:var(--t3);margin-bottom:3px}
+.note-text{font-size:12px;color:var(--t2);line-height:1.6}
+
+/* FEEDBACK */
+.fb-item{background:var(--s2);border-radius:8px;border:1px solid var(--border);padding:10px 12px;margin-bottom:8px}
+.fb-ai{margin-top:7px;padding:7px 9px;background:var(--pl);border-radius:6px;border-left:3px solid var(--p);font-size:11px;color:var(--pd);line-height:1.6;white-space:pre-wrap}
+
+/* MISC */
+.alert{background:#fff7ed;border:1px solid #fed7aa;border-radius:7px;padding:8px 12px;font-size:11px;color:#9a3412;margin-bottom:10px;display:flex;gap:6px;align-items:flex-start}
+.alert-g{background:#f0fdf4;border-color:#bbf7d0;color:#166534}
+.alert-b{background:#eff6ff;border-color:#bfdbfe;color:#1e40af}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.add-btn{width:100%;padding:6px;border-radius:7px;border:1.5px dashed #93c5fd;background:transparent;color:var(--p);font-size:11px;cursor:pointer;margin-top:4px}
+.add-btn:hover{background:var(--pl)}
+.btn-p{background:var(--p);color:#fff;border:none;border-radius:7px;padding:8px 18px;font-size:12px;font-weight:600;cursor:pointer}
+.btn-p:hover{background:var(--pd)}
+.chip{display:inline-flex;align-items:center;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600;background:var(--pl);color:var(--p);border:1px solid #bfdbfe}
+.pbar-outer{height:7px;background:#dbeafe;border-radius:3px;overflow:hidden;margin:5px 0}
+.pbar-fill{height:100%;background:linear-gradient(90deg,#2563eb,#4f46e5);border-radius:3px;transition:width .5s}
+@media(max-width:600px){.g2{grid-template-columns:1fr}}
+::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-thumb{background:#93c5fd;border-radius:2px}
+</style>
+</head>
+<body>
+
+<!-- LOCK -->
+<div class="lock" id="lock">
+  <div class="lbox">
+    <div class="lic">🔒</div>
+    <div class="lt">今日未达标，明日已锁定</div>
+    <div class="lm">当日学习时间不足 6 小时，无法切换到下一天。<br>超出时间<strong>不跨天计算</strong>，今天补足才能解锁。</div>
+    <div class="lh" id="lh">0.0h</div>
+    <div class="ln" id="ln">今日已学 0.0h，还差 6.0h</div>
+    <button class="lbtn" onclick="closeLock()">我知道了，继续学习</button>
+  </div>
+</div>
+
+<div class="hdr">
+  <div class="hdr-top">
+    <h1>公考备考 2026 <span>四川省考 & 事业编</span></h1>
+    <div class="pills">
+      <div class="pill">📝 事业编 <span class="d" id="d1">--</span>天</div>
+      <div class="pill">📋 省考 <span class="d" id="d2">--</span>天</div>
+    </div>
+  </div>
+  <div class="tabs">
+    <button class="tb on" onclick="goTab('today',this)">📅 每日课表</button>
+    <button class="tb" onclick="goTab('timer',this)">⏱ 计时器</button>
+    <button class="tb" onclick="goTab('stat',this)">📊 统计</button>
+    <button class="tb" onclick="goTab('plan',this)">📋 总规划</button>
+    <button class="tb" onclick="goTab('note',this)">📝 反思笔记</button>
+    <button class="tb" onclick="goTab('wq',this)">❌ 错题本</button>
+    <button class="tb" onclick="goTab('correct',this)">✍️ 批改</button>
+    <button class="tb" onclick="goTab('fb',this)">💬 周反馈</button>
+    <button class="tb" onclick="goTab('cfg',this)">☁️ 云同步</button>
+  </div>
+  <div style="font-size:10px;margin-top:4px;opacity:.8" id="sync-status">⚪ 未配置</div>
+</div>
+
+<div class="main">
+
+<!-- ======= TODAY ======= -->
+<div class="sec on" id="sec-today">
+  <!-- mobile-first single column, side panel collapses below on small screens -->
+  <div id="today-grid">
+    <div>
+      <!-- date nav -->
+      <div class="card" style="padding:12px 14px">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+          <button class="darrow" onclick="prevDay()">◀</button>
+          <div style="text-align:center;flex:1">
+            <div class="ddate" id="cur-date">--</div>
+            <div class="dmeta" id="cur-meta">--</div>
+          </div>
+          <button class="darrow" onclick="nextDay()">▶</button>
+        </div>
+        <button class="dtoday" onclick="goToday()" style="width:100%;margin-top:8px">回到今天</button>
+      </div>
+
+      <!-- phase banner -->
+      <div class="phase-banner" id="phase-banner">🎯 加载中…</div>
+
+      <!-- progress -->
+      <div style="background:var(--surface);border-radius:var(--rad);box-shadow:var(--sh);border:1px solid var(--border);padding:12px 14px;margin-bottom:13px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;flex-wrap:wrap;gap:4px">
+          <span style="font-size:12px;color:var(--t2)">已学 <span id="cur-h" style="color:var(--p);font-weight:700">0.0</span>h / 目标 6h</span>
+          <span style="font-size:12px;color:var(--g);font-weight:700" id="cur-task-pct">任务 0%</span>
+        </div>
+        <div class="pbar-outer"><div class="pbar-fill" id="h-bar" style="width:0%;background:linear-gradient(90deg,#10b981,#059669)"></div></div>
+        <div class="pbar-outer" style="margin-top:4px"><div class="pbar-fill" id="t-bar" style="width:0%"></div></div>
+      </div>
+
+      <!-- slots -->
+      <div class="slots" id="slots-container"></div>
+      <button class="add-btn" onclick="addCustomTask()">＋ 添加临时任务</button>
+      <button class="add-btn" style="border-color:#fdba74;color:#ea580c" onclick="postponeDay()" id="postpone-btn">⏭ 顺延课程（可选上午/下午/晚上）</button>
+    </div>
+
+    <!-- side panel: hidden on mobile by default, shown as collapsible -->
+    <div id="sp-toggle-wrap" style="margin-top:10px">
+      <button onclick="toggleSidePanel()" style="width:100%;padding:8px;border-radius:8px;border:1.5px solid var(--border);background:var(--s2);color:var(--p);font-size:12px;font-weight:600;cursor:pointer" id="sp-toggle-btn">📡 查看排课进度 ▼</button>
+      <div class="side-panel" id="side-panel" style="display:none;margin-top:8px">
+        <div style="font-size:12px;font-weight:700;color:var(--p);margin-bottom:8px">📡 当前排课进度</div>
+        <div id="sp-content"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======= TIMER ======= -->
+<div class="sec" id="sec-timer">
+  <div class="card">
+    <div class="ct">⏱ 专注计时器</div>
+    <div class="alert alert-b">开始后浮窗持续显示，「结束计时」自动记录到统计</div>
+    <label style="font-size:11px;font-weight:600;color:var(--t2);display:block;margin-bottom:5px">学习科目</label>
+    <div style="display:flex;gap:6px;margin-bottom:4px">
+      <select id="t-subj" class="sel" style="flex:1;margin-bottom:0"></select>
+      <button onclick="addSubj()" style="padding:6px 12px;border-radius:7px;border:1.5px dashed #93c5fd;background:transparent;color:var(--p);font-size:12px;cursor:pointer;white-space:nowrap">＋ 新科目</button>
+      <button onclick="delSubj()" style="padding:6px 12px;border-radius:7px;border:1.5px solid #fecaca;background:#fef2f2;color:#dc2626;font-size:12px;cursor:pointer;white-space:nowrap">🗑 删科目</button>
+    </div>
+    <div style="margin-bottom:9px">
+      <div style="font-size:11px;font-weight:600;color:var(--t2);margin-bottom:5px">学习方式</div>
+      <div style="display:flex;gap:5px;flex-wrap:wrap" id="mode-wrap">
+        <button onclick="setMode('听课',this)" class="mb" style="padding:4px 11px;border-radius:6px;border:1.5px solid var(--border);background:var(--p);color:#fff;font-size:11px;cursor:pointer">🎧 听课</button>
+        <button onclick="setMode('刷题',this)" class="mb" style="padding:4px 11px;border-radius:6px;border:1.5px solid var(--border);background:var(--s2);color:var(--t2);font-size:11px;cursor:pointer">✏️ 刷题</button>
+        <button onclick="setMode('背诵',this)" class="mb" style="padding:4px 11px;border-radius:6px;border:1.5px solid var(--border);background:var(--s2);color:var(--t2);font-size:11px;cursor:pointer">📖 背诵</button>
+        <button onclick="setMode('手写',this)" class="mb" style="padding:4px 11px;border-radius:6px;border:1.5px solid var(--border);background:var(--s2);color:var(--t2);font-size:11px;cursor:pointer">✍️ 手写</button>
+        <button onclick="setMode('复盘',this)" class="mb" style="padding:4px 11px;border-radius:6px;border:1.5px solid var(--border);background:var(--s2);color:var(--t2);font-size:11px;cursor:pointer">🔄 复盘</button>
+      </div>
+    </div>
+    <div class="ta">
+      <div class="td" id="t-disp">00:00:00</div>
+      <div class="tl" id="t-lbl">选择科目后开始计时</div>
+      <div class="tbtns">
+        <button class="tbtn tb-s" onclick="startTimer()">🔔 开始计时</button>
+        <button class="tbtn tb-e" onclick="stopTimer()">⏹ 结束计时</button>
+        <button class="tbtn tb-r" onclick="resetTimer()">↺ 重置</button>
+      </div>
+    </div>
+    <div style="margin-top:13px">
+      <div class="ct" style="margin-bottom:9px">📋 今日计时记录</div>
+      <div style="overflow-x:auto"><table class="ltbl"><thead><tr><th>科目</th><th>方式</th><th>开始</th><th>结束</th><th>时长</th></tr></thead><tbody id="t-log"></tbody></table></div>
+    </div>
+  </div>
+</div>
+
+<!-- ======= STAT ======= -->
+<div class="sec" id="sec-stat">
+  <div class="card">
+    <div class="ct">📊 总学习统计</div>
+    <div class="sg">
+      <div class="sb"><div class="sv" id="s-total">0h</div><div class="sl2">总时长</div></div>
+      <div class="sb"><div class="sv" id="s-days">0</div><div class="sl2">学习天数</div></div>
+      <div class="sb"><div class="sv" id="s-avg">0h</div><div class="sl2">日均</div></div>
+      <div class="sb"><div class="sv" id="s-streak">0天</div><div class="sl2">连续打卡</div></div>
+    </div>
+  </div>
+  <div class="g2">
+    <div class="card">
+      <div class="ct">🥧 今日科目分布</div>
+      <canvas id="pie" width="220" height="220" style="max-width:220px;margin:0 auto;display:block"></canvas>
+      <div id="pie-leg" style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:9px"></div>
+    </div>
+    <div class="card">
+      <div class="ct">📈 本周学习（h/天）</div>
+      <canvas id="bar" width="220" height="220" style="max-width:100%"></canvas>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct">📚 课程进度</div>
+    <div id="prog-bars"></div>
+  </div>
+  <div class="card">
+    <div class="ct">🗓 学习热力图（近12周）</div>
+    <div id="heatmap" style="overflow-x:auto;padding-bottom:5px"></div>
+    <div style="display:flex;align-items:center;gap:4px;margin-top:6px;font-size:10px;color:var(--t3)">
+      少
+      <div style="width:11px;height:11px;background:#e2e8f0;border-radius:2px"></div>
+      <div style="width:11px;height:11px;background:#bfdbfe;border-radius:2px"></div>
+      <div style="width:11px;height:11px;background:#60a5fa;border-radius:2px"></div>
+      <div style="width:11px;height:11px;background:#2563eb;border-radius:2px"></div>
+      <div style="width:11px;height:11px;background:#1e40af;border-radius:2px"></div>
+      多(≥6h)
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct">📋 全部记录</div>
+    <div style="overflow-x:auto"><table class="ltbl"><thead><tr><th>日期</th><th>科目</th><th>方式</th><th>时长</th></tr></thead><tbody id="all-log"></tbody></table></div>
+  </div>
+</div>
+
+<!-- ======= PLAN ======= -->
+<div class="sec" id="sec-plan">
+  <div class="card">
+    <div class="ct">🗺 备考总时间线</div>
+    <div class="alert alert-b">📌 28天快速框架（行测2倍速）| ⭐进度驱动排课：课表节号跟着你的实际进度走，没学完的课自动留在课表上，打卡后才推进，不会跳节 | 7/7（D29）起转全面刷题冲刺</div>
+
+    <div style="border-radius:10px;overflow:hidden;border:1.5px solid var(--border);margin-bottom:13px">
+      <div style="background:linear-gradient(90deg,#eff6ff,#dbeafe);padding:10px 14px;font-weight:700;font-size:13px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
+        🟦 第一阶段：28天快速搭框架期
+        <span class="chip">6/9 - 7/6（28天）</span>
+      </div>
+      <div style="padding:12px 14px;font-size:12px">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+          <div>
+            <div style="font-weight:700;color:var(--p);margin-bottom:6px;font-size:11px">🌅 上午：行测快速框架（全2倍速）</div>
+            <div style="background:var(--s2);border-radius:8px;padding:8px 10px;font-size:11px;color:var(--t2);line-height:2">
+              D1-4（6/9-6/12）<br><strong>小黑政治理论</strong>1节(2倍速1h)+配套20题+<strong>言语基础</strong>1节(2倍速1h)+配套20题<br>
+              D5-7（6/13-6/15）<br><strong>言语基础</strong>1节+配套20题+<strong>逻辑</strong>2节+配套40题<br>
+              D8-14（6/16-6/22）<br><strong>言语刷题</strong>1节+<strong>逻辑</strong>2节+<strong>数量·理论</strong>1节（隔天小黑刷题课）<br>
+              D15-21（6/23-6/29）<br><strong>刷题主导</strong> 混合50题/天+<strong>数量·理论</strong>第8-14节<br>
+              D22-28（6/30-7/6）<br><strong>行测真题</strong> 每天1套计时+<strong>数量·理论</strong>第15-20节<br>
+              D29+（7/7起）：<strong>真题1套/天+薄弱专项30题</strong><br>
+              <span style="color:var(--t3)">※ 每节课2h/2倍速=1h，上午2h排2节；听课与配套刷题为独立任务，可分别打卡</span>
+            </div>
+          </div>
+          <div>
+            <div style="font-weight:700;color:var(--g);margin-bottom:6px;font-size:11px">☀️ 下午：⭐白鹭申论优先 + 综测（2倍速）</div>
+            <div style="background:var(--s2);border-radius:8px;padding:8px 10px;font-size:11px;color:var(--t2);line-height:2">
+              <strong style="color:var(--r)">白鹭申论60天上岸计划：60节×3h（50小题+10作文），每节配课后作业，每天1节优先排（2倍速≈1.5h/节）</strong><br><br>
+              D1-50（6/9-7/28）<br><strong>申论小题课</strong> 每天1节(2倍速1.5h)+配套作业<br>并行：综测基础/刷题/真题（2倍速）<br><br>
+              D51-60（7/29-8/7）<br><strong>申论作文课</strong> 每天1节(2倍速1.5h)+提纲作业<br>并行：综测真题手写<br><br>
+              D61+：<strong>申论作业轮</strong>（真题小题限时）+综测真题+公基刷题课
+            </div>
+          </div>
+          <div>
+            <div style="font-weight:700;color:var(--v);margin-bottom:6px;font-size:11px">🌙 晚上：公基理论并行（全2倍速）</div>
+            <div style="background:var(--s2);border-radius:8px;padding:8px 10px;font-size:11px;color:var(--t2);line-height:2">
+              D1-43（6/9-7/21）<br><strong>公基系统课</strong> 每天2节×2倍速1h=2h<br>（含法律模块，共86节，马克课已覆盖法律无需单独排）<br><br>
+              D44-68（7/22-8/15）<br><strong>公基刷题课</strong> 每天2节×2倍速15min=30min + 错题复盘<br><br>
+              D69+（8/16起）<br><strong>公基高频考点背诵</strong>（公文/管理/省情）+错题三刷<br><br>
+              <span style="color:var(--r);font-weight:700">每晚最后30min：申论（固定不动）</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="border-radius:10px;overflow:hidden;border:1.5px solid var(--border);margin-bottom:13px">
+      <div style="background:linear-gradient(90deg,#f0fdf4,#dcfce7);padding:10px 14px;font-weight:700;font-size:13px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
+        🟩 第二阶段：高强度刷题冲刺期
+        <span class="chip" style="background:#dcfce7;color:#166534;border-color:#bbf7d0">7/7 - 10/2（约88天）</span>
+      </div>
+      <div style="padding:12px 14px;font-size:11px;color:var(--t2);line-height:2">
+        上午：行测真题套卷1套（完整计时）+ 错题归因 + 薄弱专项30题<br>
+        下午：综测真题闭卷手写（90min）+ 公基刷题课（3节×2倍速）+ 时政滚动<br>
+        晚上：公基刷题课推进 + 错题归因倒查笔记 + 申论40-50min限时写
+      </div>
+    </div>
+
+    <div style="border-radius:10px;overflow:hidden;border:1.5px solid var(--border);margin-bottom:13px">
+      <div style="background:linear-gradient(90deg,#fff7ed,#ffedd5);padding:10px 14px;font-weight:700;font-size:13px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
+        🟧 第三阶段：事业编冲刺
+        <span class="chip" style="background:#ffedd5;color:#9a3412;border-color:#fed7aa">10/3 - 11/1（考前4周）</span>
+      </div>
+      <div style="padding:12px 14px;font-size:11px;color:var(--t2);line-height:2">
+        上午：行测全卷模拟（对齐考试时间）+ 数量/资料/言语补弱各20题<br>
+        下午：综测全真模拟（对齐考试时间）+ 公基高频选择题狂刷100题<br>
+        晚上：公基高频考点背诵（公文/管理/省情）+ 错题三刷 + 申论
+      </div>
+    </div>
+
+    <div style="border-radius:10px;overflow:hidden;border:1.5px solid var(--border)">
+      <div style="background:linear-gradient(90deg,#fdf4ff,#fae8ff);padding:10px 14px;font-weight:700;font-size:13px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
+        🟪 第四阶段：省考冲刺
+        <span class="chip" style="background:#fae8ff;color:#6b21a8;border-color:#e9d5ff">11/2（事业编考后）- 12/6</span>
+      </div>
+      <div style="padding:12px 14px;font-size:11px;color:var(--t2);line-height:2">
+        上午：行测全卷模拟（严格卡时）+ 数量/资料/言语专项补弱<br>
+        下午：申论大作文结构固化（限时写+逐段批改）<br>
+        晚上：高频考点速查 + 时政热词背诵 + 申论50min
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="ct">🕐 每日三场固定安排</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:9px">
+      <div style="border-radius:9px;overflow:hidden;border:1.5px solid #bfdbfe">
+        <div style="background:linear-gradient(135deg,#2563eb,#4f46e5);color:#fff;padding:8px 11px;font-weight:700;font-size:12px">🌅 上午 9:00-11:00（2h）</div>
+        <div style="padding:9px 11px;font-size:11px;color:var(--t2);line-height:1.9">行测单科集中（2倍速）<br>每天2节理论+配套刷题</div>
+      </div>
+      <div style="border-radius:9px;overflow:hidden;border:1.5px solid #bbf7d0">
+        <div style="background:linear-gradient(135deg,#10b981,#059669);color:#fff;padding:8px 11px;font-weight:700;font-size:12px">☀️ 下午 14:30-17:30（3h）</div>
+        <div style="padding:9px 11px;font-size:11px;color:var(--t2);line-height:1.9">白鹭申论1节(1.5h)+综测<br>听课/真题手写</div>
+      </div>
+      <div style="border-radius:9px;overflow:hidden;border:1.5px solid #e9d5ff">
+        <div style="background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;padding:8px 11px;font-weight:700;font-size:12px">🌙 晚上 19:00-22:00（3h）</div>
+        <div style="padding:9px 11px;font-size:11px;color:var(--t2);line-height:1.9">公基系统课2节(2h)+申论<br>30min固定，不挪动</div>
+      </div>
+    </div>
+    <div class="alert" style="margin-top:10px">⚡ 每日 <strong>6h 硬底线</strong> | 超出不跨天 | 未达标锁定明日</div>
+  </div>
+</div>
+
+<!-- ======= NOTE ======= -->
+<div class="sec" id="sec-note">
+  <div class="card">
+    <div class="ct">📝 反思笔记</div>
+    <div class="alert alert-b">记录秒杀公式、漏抠关键词、听课心得、错题反思</div>
+    <div style="margin-bottom:9px">
+      <label style="font-size:11px;font-weight:600;color:var(--t2);display:block;margin-bottom:4px">笔记类型</label>
+      <div style="display:flex;gap:6px">
+        <select id="note-type" class="sel" style="flex:1"></select>
+        <button onclick="addNoteType()" style="padding:6px 12px;border-radius:7px;border:1.5px dashed #93c5fd;background:transparent;color:var(--p);font-size:12px;cursor:pointer;white-space:nowrap">＋ 新类型</button>
+        <button onclick="delNoteType()" style="padding:6px 12px;border-radius:7px;border:1.5px solid #fecaca;background:#fef2f2;color:#dc2626;font-size:12px;cursor:pointer;white-space:nowrap">🗑 删类型</button>
+      </div>
+    </div>
+    <textarea id="note-input" style="width:100%;min-height:110px;padding:9px 11px;border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-size:12px;resize:vertical;outline:none;background:var(--s2);color:var(--t)" placeholder="例如：&#10;数量追及：追及时间=距离差/速度差&#10;综测第3题「完善」「改进」没有写出来…"></textarea>
+    <div style="display:flex;gap:7px;margin-top:8px;flex-wrap:wrap">
+      <button id="note-save-btn" class="btn-p" style="flex:1" onclick="saveNote(null)">💾 保存笔记</button>
+      <button id="note-cancel-edit" onclick="cancelEditNote()" style="display:none;padding:8px 14px;border-radius:7px;border:1.5px solid var(--border);background:var(--s2);color:var(--t2);font-size:12px;cursor:pointer">取消编辑</button>
+      <button onclick="exportAllNotes()" style="padding:8px 14px;border-radius:7px;border:1.5px solid var(--border);background:var(--s2);color:var(--t2);font-size:12px;cursor:pointer">⬇️ 导出全部</button>
+    </div>
+    <div style="margin-top:14px">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
+        <div class="ct" style="margin-bottom:0">📚 历史笔记</div>
+      </div>
+      <div id="note-filter" style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px"></div>
+      <div id="note-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ======= WRONG QUESTIONS ======= -->
+<div class="sec" id="sec-wq">
+  <div class="card">
+    <div class="ct">❌ 错题本</div>
+    <div class="alert alert-b">支持文字输入、图片上传、AI自动识别图片转文字；分类可自定义</div>
+    <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+      <button class="btn-p" onclick="openWqForm(null)">＋ 添加错题</button>
+      <button onclick="exportAllWq()" style="padding:8px 14px;border-radius:7px;border:1.5px solid var(--border);background:var(--s2);color:var(--t2);font-size:12px;cursor:pointer">⬇️ 导出全部</button>
+    </div>
+    <div id="wq-stats"></div>
+    <!-- add/edit form injected here -->
+    <div id="wq-form-wrap"></div>
+    <!-- filter -->
+    <div id="wq-cat-filter" style="display:flex;gap:5px;flex-wrap:wrap;margin-bottom:10px"></div>
+    <!-- list -->
+    <div id="wq-list"></div>
+  </div>
+</div>
+
+<!-- ======= FEEDBACK ======= -->
+<div class="sec" id="sec-fb">
+  <div class="card">
+    <div class="ct">💬 每周学习反馈</div>
+    <div class="alert alert-g">✅ 每周日提交，AI 根据实际进度给出下周调整建议</div>
+    <div>
+      <label style="font-size:11px;font-weight:600;color:var(--t2);display:block;margin-bottom:4px">第几周</label>
+      <select id="fb-w" class="sel"><option>第1周</option><option>第2周</option><option>第3周</option><option>第4周</option><option>第5周</option><option>第6周</option><option>第7周</option><option>第8周</option><option>第9周</option><option>第10周</option><option>第11周</option><option>第12周</option></select>
+      <label style="font-size:11px;font-weight:600;color:var(--t2);display:block;margin-bottom:4px">本周完成情况（完成哪些课/刷题量/正确率）</label>
+      <textarea id="fb-c" style="width:100%;min-height:90px;padding:8px 10px;border:1.5px solid var(--border);border-radius:7px;font-family:inherit;font-size:12px;resize:vertical;outline:none;background:var(--s2);color:var(--t);margin-bottom:8px" placeholder="例如：资料基础完成4节，每节后15题正确率约65%。逻辑推理看了8节，配套题正确率78%…"></textarea>
+      <label style="font-size:11px;font-weight:600;color:var(--t2);display:block;margin-bottom:4px">薄弱/卡壳点</label>
+      <textarea id="fb-w2" style="width:100%;min-height:65px;padding:8px 10px;border:1.5px solid var(--border);border-radius:7px;font-family:inherit;font-size:12px;resize:vertical;outline:none;background:var(--s2);color:var(--t);margin-bottom:8px" placeholder="例如：资料分析百分比增长老算错，数量工程问题没思路…"></textarea>
+      <label style="font-size:11px;font-weight:600;color:var(--t2);display:block;margin-bottom:4px">下周可用时间 & 特殊情况</label>
+      <textarea id="fb-p" style="width:100%;min-height:55px;padding:8px 10px;border:1.5px solid var(--border);border-radius:7px;font-family:inherit;font-size:12px;resize:vertical;outline:none;background:var(--s2);color:var(--t);margin-bottom:12px" placeholder="例如：下周有2天工作，周末完整…"></textarea>
+      <button class="btn-p" style="width:100%" onclick="submitFb()">📤 提交 & 获取AI分析</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct">📜 历史反馈</div>
+    <div id="fb-list"><div style="text-align:center;color:var(--t3);padding:18px;font-size:12px">提交后显示</div></div>
+  </div>
+</div>
+
+<!-- ======= CORRECTION ======= -->
+<div class="sec" id="sec-correct">
+  <div class="card">
+    <div class="ct">✍️ 申论 / 综测 答案批改</div>
+    <div class="alert alert-b">输入题目、你的答案、参考答案（可选），AI 评分并逐点分析不足</div>
+
+    <!-- 科目选择 -->
+    <div style="margin-bottom:11px">
+      <label style="font-size:11px;font-weight:600;color:var(--t2);display:block;margin-bottom:5px">批改科目</label>
+      <div style="display:flex;gap:6px;flex-wrap:wrap" id="corr-type-btns">
+        <button onclick="setCorrType('综测',this)" class="corr-type-btn" style="padding:6px 16px;border-radius:8px;border:1.5px solid var(--p);background:var(--p);color:#fff;font-size:12px;font-weight:600;cursor:pointer">📝 综测写作</button>
+        <button onclick="setCorrType('申论大作文',this)" class="corr-type-btn" style="padding:6px 16px;border-radius:8px;border:1.5px solid var(--border);background:var(--s2);color:var(--t2);font-size:12px;cursor:pointer">📄 申论大作文</button>
+        <button onclick="setCorrType('申论概括',this)" class="corr-type-btn" style="padding:6px 16px;border-radius:8px;border:1.5px solid var(--border);background:var(--s2);color:var(--t2);font-size:12px;cursor:pointer">📋 申论概括题</button>
+        <button onclick="setCorrType('申论对策',this)" class="corr-type-btn" style="padding:6px 16px;border-radius:8px;border:1.5px solid var(--border);background:var(--s2);color:var(--t2);font-size:12px;cursor:pointer">💡 申论对策题</button>
+      </div>
+      <input type="hidden" id="corr-type-val" value="综测"/>
+    </div>
+
+    <!-- 题目 -->
+    <div style="margin-bottom:11px">
+      <label style="font-size:11px;font-weight:600;color:var(--t2);display:block;margin-bottom:5px">题目内容 <span style="color:var(--r)">*</span></label>
+      <textarea id="corr-question" style="width:100%;min-height:100px;padding:9px 11px;border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-size:12px;resize:vertical;outline:none;background:var(--s2);color:var(--t)" placeholder="粘贴题目原文，或用下方按钮上传文档自动识别…"></textarea>
+      <div style="display:flex;align-items:center;gap:8px;margin-top:4px;flex-wrap:wrap">
+        <input type="file" id="corr-q-file" accept="image/*,.pdf,.docx,.txt" multiple style="display:none" onchange="corrDocUpload(this,'corr-question')"/>
+        <button onclick="document.getElementById('corr-q-file').click()" style="padding:4px 12px;border-radius:7px;border:1.5px dashed #93c5fd;background:transparent;color:var(--p);font-size:11px;cursor:pointer">📎 上传识别（拍照/PDF/Word）</button>
+        <span id="corr-q-status" style="font-size:10px;color:var(--t3)"></span>
+      </div>
+    </div>
+
+    <!-- 我的答案 -->
+    <div style="margin-bottom:11px">
+      <label style="font-size:11px;font-weight:600;color:var(--t2);display:block;margin-bottom:5px">我的答案 <span style="color:var(--r)">*</span></label>
+      <textarea id="corr-answer" style="width:100%;min-height:160px;padding:9px 11px;border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-size:12px;resize:vertical;outline:none;background:var(--s2);color:var(--t)" placeholder="把你写的答案完整输入，或拍照上传手写答案自动识别…"></textarea>
+      <div style="display:flex;align-items:center;gap:8px;margin-top:4px;flex-wrap:wrap">
+        <input type="file" id="corr-a-file" accept="image/*,.pdf,.docx,.txt" multiple style="display:none" onchange="corrDocUpload(this,'corr-answer')"/>
+        <button onclick="document.getElementById('corr-a-file').click()" style="padding:4px 12px;border-radius:7px;border:1.5px dashed #93c5fd;background:transparent;color:var(--p);font-size:11px;cursor:pointer">📎 上传识别（手写拍照/PDF/Word）</button>
+        <span id="corr-a-status" style="font-size:10px;color:var(--t3)"></span>
+        <span style="font-size:10px;color:var(--t3);margin-left:auto">已输入 <span id="corr-ans-count">0</span> 字</span>
+      </div>
+    </div>
+
+    <!-- 参考答案 -->
+    <div style="margin-bottom:14px">
+      <label style="font-size:11px;font-weight:600;color:var(--t2);display:block;margin-bottom:5px">参考答案 <span style="color:var(--t3);font-weight:400">（可选，有则批改更准）</span></label>
+      <textarea id="corr-ref" style="width:100%;min-height:100px;padding:9px 11px;border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-size:12px;resize:vertical;outline:none;background:var(--s2);color:var(--t)" placeholder="粘贴官方参考答案或范文，或上传文档自动识别…"></textarea>
+      <div style="display:flex;align-items:center;gap:8px;margin-top:4px;flex-wrap:wrap">
+        <input type="file" id="corr-r-file" accept="image/*,.pdf,.docx,.txt" multiple style="display:none" onchange="corrDocUpload(this,'corr-ref')"/>
+        <button onclick="document.getElementById('corr-r-file').click()" style="padding:4px 12px;border-radius:7px;border:1.5px dashed #93c5fd;background:transparent;color:var(--p);font-size:11px;cursor:pointer">📎 上传识别（拍照/PDF/Word）</button>
+        <span id="corr-r-status" style="font-size:10px;color:var(--t3)"></span>
+      </div>
+    </div>
+
+    <button class="btn-p" style="width:100%;font-size:13px;padding:11px" onclick="submitCorrection()" id="corr-submit-btn">
+      🤖 AI 批改 & 评分
+    </button>
+
+    <!-- Result area -->
+    <div id="corr-result" style="display:none;margin-top:16px"></div>
+  </div>
+
+  <!-- History -->
+  <div class="card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+      <div class="ct" style="margin-bottom:0">📚 批改历史</div>
+      <button onclick="exportAllCorrections()" style="padding:5px 12px;border-radius:7px;border:1.5px solid var(--border);background:var(--s2);color:var(--t2);font-size:11px;cursor:pointer">⬇️ 导出全部</button>
+    </div>
+    <div id="corr-history"></div>
+  </div>
+</div>
+
+<!-- ======= CLOUD CONFIG ======= -->
+<div class="sec" id="sec-cfg">
+  <div class="card">
+    <div class="ct">☁️ 云同步设置（JSONBin.io）</div>
+    <div class="alert alert-b" style="flex-direction:column;gap:6px;line-height:1.9">
+      <strong>📋 使用步骤：</strong>
+      1. 访问 <a href="https://jsonbin.io" target="_blank" style="color:var(--p);font-weight:600">jsonbin.io</a> 注册免费账号<br>
+      2. 进入 <strong>Account Settings → API Keys</strong>，复制 Master Key<br>
+      3. 粘贴到下方「API Key」栏，点「🆕 自动创建 Bin」<br>
+      4. <strong style="color:#dc2626">另一台设备：必须填入完全相同的 API Key + Bin ID，再点「💾 保存配置」</strong><br>
+      <span style="color:#dc2626;font-weight:600">⚠️ 必须用 Safari/Chrome 等浏览器直接打开本文件。App 内置预览窗口禁止联网，永远无法同步！</span>
+    </div>
+    <div style="margin-bottom:11px">
+      <label style="font-size:11px;font-weight:600;color:var(--t2);display:block;margin-bottom:4px">API Key（Secret Key）</label>
+      <input id="cfg-api-key" type="password" placeholder="$2b$10$xxxxxxxx…" style="width:100%;padding:8px 11px;border:1.5px solid var(--border);border-radius:8px;font-size:12px;background:var(--s2);color:var(--t);outline:none;font-family:monospace"/>
+      <div style="font-size:10px;color:var(--t3);margin-top:2px">仅存于本设备 localStorage，不会上传</div>
+    </div>
+    <div style="margin-bottom:11px">
+      <label style="font-size:11px;font-weight:600;color:var(--t2);display:block;margin-bottom:4px">Bin ID</label>
+      <div style="display:flex;gap:7px">
+        <input id="cfg-bin-id" type="text" placeholder="填入已有 Bin ID，或点右侧自动创建" style="flex:1;padding:8px 11px;border:1.5px solid var(--border);border-radius:8px;font-size:12px;background:var(--s2);color:var(--t);outline:none;font-family:monospace"/>
+        <button onclick="cloudCreateBin()" style="padding:8px 12px;border-radius:8px;border:1.5px solid var(--p);background:var(--pl);color:var(--p);font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap">🆕 自动创建</button>
+      </div>
+    </div>
+    <div style="margin-bottom:14px;display:flex;align-items:center;gap:8px">
+      <input type="checkbox" id="cfg-auto-sync" style="width:15px;height:15px;cursor:pointer"/>
+      <label for="cfg-auto-sync" style="font-size:12px;color:var(--t2);cursor:pointer">每次修改后自动同步到云端</label>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn-p" onclick="saveCfg()" style="flex:1">💾 保存配置</button>
+      <button onclick="cloudSave(false,true)" style="padding:8px 14px;border-radius:7px;border:1.5px solid var(--p);background:var(--pl);color:var(--p);font-size:12px;font-weight:600;cursor:pointer">☁️ 立即上传</button>
+      <button onclick="cloudLoad()" style="padding:8px 14px;border-radius:7px;border:1.5px solid var(--g);background:#f0fdf4;color:var(--gd);font-size:12px;font-weight:600;cursor:pointer">🔄 同步合并（拉取+上传）</button>
+      <button onclick="syncDiagnose()" style="padding:8px 14px;border-radius:7px;border:1.5px solid #fbbf24;background:#fffbeb;color:#b45309;font-size:12px;font-weight:600;cursor:pointer">🩺 同步诊断</button>
+    </div>
+    <div id="diag-result" style="display:none;margin-top:12px;padding:11px 13px;background:#0f172a;color:#e2e8f0;border-radius:9px;font-size:11px;line-height:1.9;font-family:monospace;white-space:pre-wrap;word-break:break-all"></div>
+    <div style="margin-top:14px;padding:11px 13px;background:var(--s2);border-radius:9px;border:1px solid var(--border)">
+      <div style="font-size:12px;font-weight:700;color:var(--t);margin-bottom:6px">当前状态</div>
+      <div style="font-size:13px;font-weight:700" id="sync-status-big">⚪ 未配置</div>
+      <div style="font-size:10px;color:var(--t3);margin-top:5px;line-height:1.6">✅ 同步=双向合并：手机和平板的学习记录、打卡、笔记、错题取并集，互不覆盖、不会丢数据<br>📲 多设备使用习惯：换设备前先在旧设备点「☁️ 立即上传」，新设备打开页面会自动拉取合并（计时结束也会自动上传）<br>⚠️ 错题图片体积较大，仅保存在本设备；其余数据均可同步</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct">🤖 AI 功能设置（OCR识别 / 批改 / 周反馈）</div>
+    <div class="alert alert-b" style="flex-direction:column;gap:6px;line-height:1.9">
+      <strong>支持两家服务商，填哪家的 Key 就自动用哪家：</strong><br>
+      <strong>方案A · 智谱AI</strong>（免费/国内直连）：<a href="https://open.bigmodel.cn" target="_blank" style="color:var(--p);font-weight:600">open.bigmodel.cn</a> 注册 → 控制台 → API Keys<br>
+      <strong>方案B · Anthropic Claude</strong>（效果更强/按量付费）：<a href="https://console.anthropic.com" target="_blank" style="color:var(--p);font-weight:600">console.anthropic.com</a> 注册 → API Keys → 复制 <code>sk-ant-</code> 开头的密钥<br>
+      <span style="color:#d97706">⚠️ Anthropic 需账户有余额（充值$5起），且国内网络可能无法直连，连不上请用方案A</span>
+    </div>
+    <div style="margin-bottom:11px">
+      <label style="font-size:11px;font-weight:600;color:var(--t2);display:block;margin-bottom:4px">API Key（智谱 或 Anthropic 均可，自动识别）</label>
+      <input id="cfg-ai-key" type="password" placeholder="智谱: a1b2c3…  /  Anthropic: sk-ant-api03-…" style="width:100%;padding:8px 11px;border:1.5px solid var(--border);border-radius:8px;font-size:12px;background:var(--s2);color:var(--t);outline:none;font-family:monospace"/>
+      <div style="font-size:10px;color:var(--t3);margin-top:2px" id="ai-provider-hint">仅存于本设备，每台设备需各自填一次</div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn-p" onclick="saveAiCfg()" style="flex:1">💾 保存 AI 配置</button>
+      <button onclick="testAiCfg()" style="padding:8px 14px;border-radius:7px;border:1.5px solid #fbbf24;background:#fffbeb;color:#b45309;font-size:12px;font-weight:600;cursor:pointer">🧪 测试连接</button>
+    </div>
+    <div id="ai-test-result" style="display:none;margin-top:10px;padding:9px 12px;border-radius:8px;font-size:11px;line-height:1.7"></div>
+  </div>
+  <div class="card">
+    <div class="ct">📦 本地数据备份</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button onclick="exportLocalData()" style="padding:8px 14px;border-radius:7px;border:1.5px solid var(--border);background:var(--s2);color:var(--t2);font-size:12px;cursor:pointer">⬇️ 导出 JSON</button>
+      <button onclick="document.getElementById('import-file').click()" style="padding:8px 14px;border-radius:7px;border:1.5px solid var(--border);background:var(--s2);color:var(--t2);font-size:12px;cursor:pointer">⬆️ 导入 JSON</button>
+      <input type="file" id="import-file" accept=".json" onchange="importLocalData(this)" style="display:none"/>
+      <button onclick="clearAllData()" style="padding:8px 14px;border-radius:7px;border:1.5px solid #fecaca;background:#fef2f2;color:#dc2626;font-size:12px;cursor:pointer">🗑 清空本地</button>
+    </div>
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<!-- FLOATING TIMER -->
+<div class="ft" id="ft">
+  <div style="font-size:9px;opacity:.75;text-align:center;margin-bottom:2px" id="ft-subj">--</div>
+  <div class="ftd" id="ft-disp">00:00:00</div>
+  <div class="ftl">计时中</div>
+  <button class="fts" onclick="stopTimer()">⏹ 结束计时</button>
+</div>
+
+<script>
+// ==================== STORE ====================
+const KEY='gk2026v3';
+function ld(){try{const r=localStorage.getItem(KEY);if(r)return JSON.parse(r);}catch(e){}
+  return{checks:{},drills:{},logs:[],notes:[],feedbacks:{},customTasks:{},
+    prog:{'小黑-理论':0,'小黑-刷题':0,'资料-基础':0,'资料-刷题':0,'逻辑':0,'数量-基础':0,'数量-刷题':0,'言语-基础':0,'言语-刷题':0,'综测-基础':0,'综测-刷题':0,'申论-小题':0,'申论-作文':0,'公基-系统':0,'公基-刷题':0}};}
+function sv(){
+  try{localStorage.setItem(KEY,JSON.stringify(D));}catch(e){}
+  // 只要配置了云同步就自动上传（不再依赖勾选框，带3秒防抖避免频繁请求）
+  if(CLOUD.apiKey&&CLOUD.binId) cloudSave(true);
+}
+let D=ld();
+
+// ==================== DATES ====================
+const START=new Date(2026,5,9);   // June 9 2026, local midnight
+const E1=new Date(2026,10,1);     // Nov 1 2026, local midnight
+const E2=new Date(2026,11,6);     // Dec 6 2026, local midnight
+
+// Return YYYY-MM-DD in local time
+function ds(date){
+  return date.getFullYear()+'-'+String(date.getMonth()+1).padStart(2,'0')+'-'+String(date.getDate()).padStart(2,'0');
+}
+function toDate(s){return new Date(s+'T00:00:00');}
+
+// Whole-day diff: midnight today → midnight target, no float rounding
+function dBetween(targetDate){
+  const now=new Date();
+  const todayMid=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  const tgtMid=new Date(targetDate.getFullYear(),targetDate.getMonth(),targetDate.getDate());
+  return Math.max(0,Math.round((tgtMid-todayMid)/86400000));
+}
+
+function dayIdx(date){
+  const a=new Date(date.getFullYear(),date.getMonth(),date.getDate());
+  const b=new Date(START.getFullYear(),START.getMonth(),START.getDate());
+  return Math.max(1,Math.round((a-b)/86400000)+1);
+}
+
+let curDate=new Date();
+
+function updateCountdowns(){
+  document.getElementById('d1').textContent=dBetween(E1);
+  document.getElementById('d2').textContent=dBetween(E2);
+}
+
+// ==================== SCHEDULE LOGIC ====================
+// 两条并行线：
+// 上午：行测28天框架（2倍速，听课≤40%），D29+转全面刷题
+// 下午：综测维持原节奏（D1-11基础/D12-18刷题/D19+真题手写）
+// ===== 晚上：公基系统课（含法律模块） + 刷题 + 申论固定30min =====
+// 公基系统课86节（马克课已含法律，不再单排法律线），每节2h/2倍速=1h
+// D1-43:  系统课每天2节=2h
+// D44-68: 刷题课每天2节=30min
+// D69+:   考点背诵+错题三刷
+// 每晚最后30min固定申论
+
+function getPhaseInfo(date){
+  const idx=dayIdx(date);
+  let phaseName='';
+  if(idx<=7)   phaseName=`🟦 D${idx}/28 · 行测快速搭框架期（听课≤40%，刷题≥60%）`;
+  else if(idx<=14) phaseName=`🟦 D${idx}/28 · 行测继续推进+公基理论并行`;
+  else if(idx<=21) phaseName=`🟩 D${idx}/28 · 刷题主导期（听课仅补漏）`;
+  else if(idx<=28) phaseName=`🟧 D${idx}/28 · 冲刺巩固期（行测真题每天1套）`;
+  else if(idx<=116) phaseName=`🟩 第二阶段·全面刷题冲刺（第${idx}天，距事业编${Math.max(0,146-idx)}天）`;
+  else if(idx<=145) phaseName=`🟧 第三阶段·事业编冲刺（第${idx}天，距考试${Math.max(0,146-idx)}天）`;
+  else phaseName=`🟪 第四阶段·省考冲刺（第${idx}天，距考试${Math.max(0,181-idx)}天）`;
+
+  // ---- 临时任务占用 → 课程自动顺延补位 ----
+  const dkey=ds(date);
+  const skipsBefore=slot=>(D.skips||[]).filter(s=>s.slot===slot&&s.date<dkey).length;
+  const skippedToday=slot=>(D.skips||[]).some(s=>s.slot===slot&&s.date===dkey);
+  const eff=slot=>Math.max(1,idx-skipsBefore(slot));
+
+  // ⭐ 进度驱动排课：课程节号由「实际已完成进度」决定，而不是按日历推算
+  // 没学完的课不会被跳过；打卡/手动改进度后，之后的课表自动接上
+  const P=progAt(dkey);
+
+  return {phaseName, slots:[
+    {key:'am',label:'上午场',clock:'9:00-11:40',  skipped:skippedToday('am'), tasks:skippedToday('am')?[]:getAmSeg(eff('am'),P)},
+    {key:'pm',label:'下午场',clock:'14:30-17:30', skipped:skippedToday('pm'), tasks:skippedToday('pm')?[]:getPmSeg(eff('pm'),P)},
+    {key:'ev',label:'晚上场',clock:'19:00-22:00', skipped:skippedToday('ev'), tasks:skippedToday('ev')?[]:getEvSeg(eff('ev'),P)},
+  ]};
+}
+
+// 当天首次渲染时把当前进度快照存档：今天之内打卡不会让当天课表"跳节"，
+// 第二天则从最新进度接着排
+function progAt(dkey){
+  D.dayStart=D.dayStart||{};
+  const today=ds(new Date());
+  if(dkey===today&&!D.dayStart[dkey]){
+    D.dayStart[dkey]={...(D.prog||{})};
+    const cutoff=ds(new Date(Date.now()-14*86400000));
+    Object.keys(D.dayStart).forEach(k=>{if(k<cutoff)delete D.dayStart[k];});
+    sv();
+  }
+  return D.dayStart[dkey]||D.prog||{};
+}
+
+function t(text,tag,drillMin,drillUnit){const o={text,tag};if(drillMin)o.drill={min:drillMin,unit:drillUnit||'题'};return o;}
+
+// ===== 上午：行测28天框架（进度驱动）=====
+// ⭐ 节号一律 = 你的实际进度+1：没学完的课不会被日历跳过，学完打卡后才推进
+// 进度来源：每日课表打卡自动更新 / 统计页手动修改
+// 阶段（按天数）决定"学哪些课"，进度决定"学第几节"
+function nx(P,key,n){ // 下一批节号 [start,end]，不超过课程总节数；学完返回null
+  const c=COURSES.find(x=>x.key===key);
+  const done=P[key]||0;
+  if(c&&done>=c.total) return null;
+  const start=done+1;
+  const end=c?Math.min(done+n,c.total):done+n;
+  return [start,end];
+}
+function rng(r){return r[0]===r[1]?`第${r[0]}节`:`第${r[0]}-${r[1]}节`;}
+
+// 行测理论收尾通道：按优先级把所有未学完的行测课持续排进课表，直到全部听完
+// （防止阶段切换后某条课程线被"搁浅"永远学不完）
+function xtCatchup(P,maxItems,prefix){
+  const lines=[
+    ['言语-基础',1,'行测言语·基础','2倍速1h'],
+    ['言语-刷题',1,'行测言语·刷题','2倍速1h'],
+    ['逻辑',2,'行测逻辑推理','2倍速1h/节'],
+    ['资料-基础',1,'资料分析·基础','2倍速1h'],
+    ['资料-刷题',1,'资料分析·刷题','2倍速1h'],
+    ['数量-基础',1,'数量关系·基础','2倍速1h'],
+  ];
+  const out=[];
+  for(const [key,n,name,spd] of lines){
+    if(out.length>=maxItems)break;
+    const r=nx(P,key,n);
+    if(r){
+      out.push(t(`${prefix||''}${name} ${rng(r)}（${spd}，理论线推进）`,'xt',0));
+      out.push(t('配套刷题10题','xt',10,'题'));
+    }
+  }
+  return out;
+}
+
+function getAmSeg(idx,P){
+  P=P||D.prog||{};
+  if(idx>116) return[
+    t('行测全卷模拟（对齐考试时间）','xt',0),
+    t('重点补弱：数量+资料+言语各精练20题','xt',60,'题'),
+  ];
+  if(idx>28) return[
+    t('行测真题套卷 1套（完整计时，严卡时间）','xt',0),
+    ...xtCatchup(P,1,'⚠️ 理论债补课：'),
+    t('错题归因分析（不会/会但慢/粗心 各自标记）','dt',0),
+    t('薄弱专项强化：言语/资料/数量/逻辑 选最弱一项刷30题','xt',30,'题'),
+  ];
+
+  // ---- 28天框架内：进度驱动 ----
+  const xh=nx(P,'小黑-理论',1),yy=nx(P,'言语-基础',1),lj=nx(P,'逻辑',2),
+        zl=nx(P,'资料-基础',1),yys=nx(P,'言语-刷题',1),lj2=nx(P,'逻辑',2),
+        zls=nx(P,'资料-刷题',1),sl=nx(P,'数量-基础',1),xhs=nx(P,'小黑-刷题',1);
+
+  // 小黑理论4节未完 → 在原来的基础上并排加上言语（不排逻辑和资料，防止塞得太满）
+  if(xh){
+    const arr = [
+      t(`小黑政治·理论课 ${rng(xh)}（2倍速约1.5h）`,'gj',0),
+      t('听完立刻做配套选择题20题，验证理解','gj',20,'题'),
+    ];
+    if(yy){
+      arr.push(t(`行测言语·基础 ${rng(yy)}（2倍速1h）`,'xt',0));
+      arr.push(t('言语配套刷题20题','xt',20,'题'));
+    }
+    return arr;
+  }
+
+  // 其他排课阶段完全同以前一样
+  if(idx<=7){
+    const arr=[];
+    if(yy){arr.push(t(`行测言语·基础 ${rng(yy)}（2倍速1h）`,'xt',0));arr.push(t('言语配套刷题20题','xt',20,'题'));}
+    else if(yys){arr.push(t(`行测言语·刷题 ${rng(yys)}（2倍速1h）`,'xt',25,'题'));}
+    if(lj){arr.push(t(`行测逻辑推理 ${rng(lj)}（2倍速1h）`,'xt',0));arr.push(t('逻辑配套刷题20题','xt',20,'题'));}
+    if(zl){arr.push(t(`资料分析·基础 ${rng(zl)}（2倍速1h）`,'xt',0));arr.push(t('资料配套刷题15题','xt',15,'题'));}
+    else if(zls){arr.push(t(`资料分析·刷题 ${rng(zls)}（2倍速1h）`,'xt',20,'题'));}
+    return arr.length?arr:[t('🎉 理论进度超前！行测混合刷题巩固（言语20+逻辑20+资料2篇）','xt',50,'题'),t('错题归因复盘','dt',0)];
+  }
+  if(idx<=14){
+    const xhDay=(idx%2===1);
+    const arr=[];
+    if(yy){arr.push(t(`行测言语·基础 ${rng(yy)}（2倍速1h）`,'xt',0));arr.push(t('言语配套刷题15题','xt',15,'题'));}
+    else if(yys){arr.push(t(`行测言语·刷题 ${rng(yys)}（2倍速1h）`,'xt',25,'题'));}
+    if(lj2){arr.push(t(`行测逻辑推理 ${rng(nx(P,'逻辑',2))}（2倍速1h）`,'xt',0));arr.push(t('逻辑配套刷题25题','xt',25,'题'));}
+    if(zl){arr.push(t(`资料分析·基础 ${rng(zl)}（2倍速1h）`,'xt',0));arr.push(t('资料配套刷题15题','xt',15,'题'));}
+    else if(zls){arr.push(t(`资料分析·刷题 ${rng(zls)}（2倍速1h）`,'xt',20,'题'));}
+    if(sl){arr.push(t(`数量关系·基础 ${rng(sl)}（2倍速1h）`,'xt',0));arr.push(t('数量配套刷题10题','xt',10,'题'));}
+    if(xhDay&&xhs){arr.push(t(`小黑政治·刷题课 ${rng(xhs)}（2倍速1h）`,'gj',20,'题'));}
+    return arr.length?arr:[t('🎉 理论进度超前！行测混合刷题（言语25+判断25+资料2篇）','xt',50,'题'),t('错题归因复盘','dt',0)];
+  }
+  if(idx<=21) return[
+    t('⚠️ 刷题主导模式：行测混合刷题（言语25+判断25+资料2篇）','xt',50,'题'),
+    ...xtCatchup(P,2),
+    t('遇到不会的题型 → 暂停 → 回补对应课程片段 → 继续刷','dt',0),
+    ...(xhs?[t(`小黑政治·刷题课 ${rng(xhs)}（2倍速1h）`,'gj',20,'题')]:[]),
+  ];
+  // D22-28
+  return[
+    t('行测真题套卷 1套（完整计时，不能超时）','xt',0),
+    ...xtCatchup(P,2),
+    t('错题必须复盘：归因标记（不会/会但慢/粗心）','dt',0),
+    ...(xhs?[t(`小黑政治·刷题课 ${rng(xhs)}（2倍速1h）`,'gj',20,'题')]:[]),
+  ];
+}
+
+// ===== 下午：综测（2倍速）+ 白鹭申论60天上岸计划（优先申论） =====
+// 白鹭申论共60节×3h：50节小题课 + 10节作文课，每节配课后作业
+// 每节课3小时，2倍速≈1.5h/节 → 每天下午排1节
+// D1-50:  申论小题课 每天1节（2倍速约1.5h）+ 综测基础/刷题（2倍速）
+// D51-60: 申论作文课 每天1节（2倍速约1.5h）+ 综测真题手写
+// D61+:   申论真题作业轮 + 综测真题手写 + 公基刷题课
+function getPmSeg(idx,P){
+  P=P||D.prog||{};
+  // 白鹭申论排课（进度驱动）：每节课3h（2倍速1.5h/节），每天只能排1节
+  // 先小题课50节×1节/天，再作文课10节×1节/天
+  const bl=()=>{
+    const xt=nx(P,'申论-小题',1);
+    if(xt) return t(`⭐白鹭申论·小题课 ${rng(xt)}（2倍速约1.5h/节，原课3h）听完立刻做配套作业`,'sl',0);
+    const zw=nx(P,'申论-作文',1);
+    if(zw) return t(`⭐白鹭申论·作文课 ${rng([zw[0]+50,zw[1]+50])}（2倍速约1.5h/节，原课3h）`,'sl',0);
+    return null;
+  };
+  const zc=()=>nx(P,'综测-基础',3),zcs=()=>nx(P,'综测-刷题',1);
+  // D146+（事业编考后）：省考冲刺，下午全力申论
+  if(idx>145) return[
+    t('申论大作文结构固化：限时写1篇（60min）','sl',0),
+    t('逐段对照参考答案批改，标记漏写关键词','sl',0),
+    t('申论小题套题1套（限时90min，按白鹭方法抠关键词）','sl',0),
+  ];
+  if(idx>116) return[
+    t('综测全真模拟（对齐考试时间）','zt',0),
+    t('申论小题1道限时（保持手感）','sl',0),
+    t('公基高频选择题狂刷（100题）','gj',50,'题'),
+  ];
+  if(idx>60){
+    // 白鹭/综测理论若未学完，继续在下午补完（不再被日历切断）
+    const blLeft=bl(),zcLeft=zc(),zcsLeft=zcs();
+    return[
+      ...(blLeft?[blLeft]:[t('⭐申论作业轮：真题小题1道限时20min，对照白鹭方法批改','sl',0)]),
+      ...(zcLeft?[t(`金标尺综测·基础 ${rng(zcLeft)}（2倍速每节25min，理论收尾）`,'zt',0)]:
+        (zcsLeft?[t(`金标尺综测·刷题 ${rng(zcsLeft)}（2倍速约60min，理论收尾）`,'zt',0)]:
+        [t('综测真题闭卷手写（1道大题，90min，圈出漏写关键词）','zt',0)])),
+      t('公基刷题课 继续推进（每天3节×2倍速30min=1.5h）','gj',30,'题'),
+    ];
+  }
+  // ---- 60天内：进度驱动（白鹭每天1节，每节2倍速=1.5h） ----
+  const blT=bl();           // 白鹭今天该上的1节（学完为null）
+  const zcT=zc();           // 综测基础下3节
+  const zcsT=zcs();         // 综测刷题下1节
+  const isZw=blT&&/作文课/.test(blT.text);
+  const tasks=[];
+  if(blT) tasks.push(blT);
+  if(blT&&!isZw) tasks.push(t('申论作业：今日小题课配套真题1道，限时做完对照答案抠关键词（30min）','sl',0));
+  if(isZw) tasks.push(t('作文课作业：按今日方法列大作文提纲1篇（20min）','sl',0));
+  // 综测线：基础未完→基础3节；基础完→刷题1节；都完→真题手写
+  if(zcT){
+    tasks.push(t(`金标尺综测·基础 ${rng(zcT)}（2倍速每节25min）`,'zt',0));
+    tasks.push(t('综测：跟着老师画材料逻辑主干图，暂停跟写，格子纸仿写1段（必须动笔）','zt',0));
+  }else if(zcsT){
+    tasks.push(t(`金标尺综测·刷题 ${rng(zcsT)}（2倍速约60min）`,'zt',0));
+    tasks.push(t('看完立刻关视频，格子纸完整手写，标记漏写关键词','zt',0));
+  }else{
+    tasks.push(t('综测真题限时闭卷手写（1道大题，60min）','zt',0));
+  }
+  // 申论已全部学完但还在60天内 → 进入作业轮
+  if(!blT) tasks.unshift(t('⭐申论作业轮：真题小题1道限时20min，对照白鹭方法批改','sl',0));
+  return tasks;
+}
+
+// ===== 晚上：公基系统课 + 刷题 + 申论固定30min =====
+// 公基系统课86节（含法律模块，每节2h/2倍速=1h），每天2节=2h
+// 公基刷题课50节（每节30min/2倍速=15min），D44+开始每天2节穿插
+// 每晚最后30min固定申论
+function getEvSeg(idx,P){
+  P=P||D.prog||{};
+  const sl=getApplyShenLun(idx);
+  if(idx>116) return[
+    t('公基高频考点背诵（公文规范/管理/省情/四川特色考点）','gj',0),
+    t('公基错题精炼（三刷）','gj',0),
+    sl,
+  ];
+  // ---- 进度驱动：公基系统课86节→公基刷题课50节，依次推进 ----
+  const sys=nx(P,'公基-系统',2),gst=nx(P,'公基-刷题',2);
+  // 系统课未完：每天2节（2h）
+  if(sys) return[
+    t(`马克公基·系统课 ${rng(sys)}（2倍速每节1h，共2h/含法律模块）`,'gj',0),
+    t('课后15min：核心考点速记/笔记整理','gj',0),
+    sl,
+  ];
+  // 系统课完成 → 刷题课2节/天
+  if(gst) return[
+    t(`公基刷题课 ${rng(gst)}（每天2节×2倍速15min=30min）`,'gj',30,'题'),
+    t('错题归因标记 + 倒查理论笔记','dt',0),
+    sl,
+  ];
+  // 全部完成：复习巩固
+  return[
+    t('公基错题精炼+高频考点背诵','gj',0),
+    sl,
+  ];
+}
+
+function getApplyShenLun(idx){
+  if(idx<=60) return t('申论复盘（30min）：补做白鹭今日课后作业/订正，整理方法笔记','sl',0);
+  if(idx<=70) return t('申论（30min）：作文课框架背诵 + 仿写开头结尾各1段','sl',0);
+  if(idx<=100) return t('申论（40min）：完整大作文限时写（本周累计2篇）','sl',0);
+  return t('申论大作文（50min）：限时写完 + 逐段对照批改','sl',0);
+}
+
+// ==================== SIDE PANEL ====================
+function renderSidePanel(date){
+  const idx=dayIdx(date);
+  const sp=document.getElementById('sp-content');
+
+  const amItems=[
+    {range:[1,4],   text:'上午 D1-4：小黑理论课+言语基础（2倍速）'},
+    {range:[5,7],   text:'上午 D5-7：言语+逻辑+资料理论基础 搭框架'},
+    {range:[8,14],  text:'上午 D8-14：言语刷题+逻辑+资料刷题+数量理论基础'},
+    {range:[15,21], text:'上午 D15-21：刷题主导+数量第8-14节+资料第4-8节'},
+    {range:[22,28], text:'上午 D22-28：行测真题套卷+数量第15-20节收尾'},
+    {range:[29,116],text:'上午 D29-116：行测真题每天1套+专项强化'},
+    {range:[117,181],text:'上午 D117+：全卷模拟冲刺（对齐考试时间）'},
+  ];
+  const pmItems=[
+    {range:[1,50],  text:'下午 D1-50：⭐白鹭申论小题1节/天(2倍速1.5h)+综测基础（2倍速）'},
+    {range:[51,60], text:'下午 D51-60：⭐白鹭申论作文课1节/天(2倍速1.5h)+综测真题'},
+    {range:[61,116],text:'下午 D61-116：申论作业轮+综测真题+公基刷题'},
+    {range:[117,145],text:'下午 D117-145：综测全真模拟+申论小题+公基'},
+    {range:[146,181],text:'下午 D146+（事业编考后）：申论全力冲刺'},
+  ];
+  const evItems=[
+    {range:[1,43],  text:'晚上 D1-43：公基系统课2节/天(2倍速2h，含法律模块)'},
+    {range:[44,68],text:'晚上 D44-68：公基刷题课2节/天(穿插)'},
+    {range:[69,116],text:'晚上 D69-116：公基错题+考点背诵'},
+    {range:[117,181],text:'晚上 D117+：公基考点背诵+错题三刷'},
+  ];
+
+  const renderGroup=(items,title)=>{
+    let h=`<div style="font-size:10px;font-weight:700;color:var(--t3);margin:7px 0 3px">${title}</div>`;
+    items.forEach(item=>{
+      const [a,b]=item.range;
+      const isOn=idx>=a&&idx<=b;
+      const isDone=idx>b;
+      h+=`<div class="sp-item ${isOn?'sp-on':isDone?'sp-done':'sp-off'}">${isDone?'✅ ':isOn?'▶ ':'○ '}${item.text}</div>`;
+    });
+    return h;
+  };
+
+  // 28天进度条
+  const pct28=Math.min(100,Math.round(idx/28*100));
+  const bar28=idx<=28?`<div style="margin-bottom:10px">
+    <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--t2);margin-bottom:3px">
+      <span>⚡ 28天框架进度</span><span>${Math.min(idx,28)}/28天</span>
+    </div>
+    <div style="height:6px;background:#e2e8f0;border-radius:3px;overflow:hidden">
+      <div style="height:100%;width:${pct28}%;background:linear-gradient(90deg,#f59e0b,#ef4444);border-radius:3px"></div>
+    </div>
+    <div style="font-size:10px;color:var(--r);margin-top:2px;font-weight:600">${idx<=28?`D${idx}·截止7月8日`:'✅ 28天框架已完成'}</div>
+  </div>`:'';
+
+  sp.innerHTML=bar28+renderGroup(amItems,'🌅 上午·行测28天框架')+renderGroup(pmItems,'☀️ 下午·综测原节奏')+renderGroup(evItems,'🌙 晚上·公基+申论');
+}
+
+// ==================== RENDER SCHEDULE ====================
+function renderSchedule(){
+  const d=curDate;
+  const dkey=ds(d);
+  const wd=['日','一','二','三','四','五','六'][d.getDay()];
+  document.getElementById('cur-date').textContent=`${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日 星期${wd}`;
+  const idx=dayIdx(d);
+  const isToday=dkey===ds(new Date());
+  document.getElementById('cur-meta').textContent=`第${Math.ceil(idx/7)}周 · 第${idx}天 ${isToday?'· 今天':''}`;
+
+  const info=getPhaseInfo(d);
+  document.getElementById('phase-banner').textContent=info.phaseName;
+
+  const container=document.getElementById('slots-container');
+  container.innerHTML='';
+
+  info.slots.forEach((slot,si)=>{
+    const slotKey=`${dkey}_${slot.key}`;
+    const custom=(D.customTasks[slotKey]||[]).map((ct,ci)=>({text:(ct.occupy?'📌 ':'📎 ')+ct.text,tag:ct.tag||'dt',_custom:true,_ci:ci}));
+    const allTasks=[...slot.tasks,...custom];
+    const isRunning=tOn&&activeSlotKey.startsWith(slotKey);
+    const isDoneSlot=allTasks.every((_,ti)=>D.checks[`${dkey}_${slot.key}_${ti}`]);
+
+    const taskHTML=allTasks.map((task,ti)=>{
+      const ck=`${dkey}_${slot.key}_${ti}`;
+      _ckTaskText[ck]=task.text;  // 供打卡时自动同步课程进度
+      const done=D.checks[ck]||false;
+      const dk=ck+'_d';
+      const dv=D.drills[dk]!==undefined?D.drills[dk]:(task.drill?task.drill.min:0);
+      let drillH='';
+      if(task.drill&&task.drill.min>0){
+        drillH=`<div class="tdrill"><span class="tdlbl">最低刷题：</span><input class="tdinp" type="number" min="0" value="${dv}" onclick="event.stopPropagation()" onchange="saveDrill('${dk}',this.value)"/><span class="tdu">${task.drill.unit}</span></div>`;
+      }
+      const tagMap={xt:'行测',gj:'公基',sl:'申论',dt:'刷题',zt:'综测',fx:'复盘'};
+      const tagCls={xt:'tg-xt',gj:'tg-gj',sl:'tg-sl',dt:'tg-dt',zt:'tg-zt',fx:'tg-fx'};
+      const delBtn=task._custom?`<span onclick="event.stopPropagation();delCustomTask('${slotKey}',${task._ci})" style="cursor:pointer;font-size:12px;color:#dc2626;padding:0 4px;flex-shrink:0" title="删除临时任务">✕</span>`:'';
+      // 单任务计时：该任务计时中→红色⏹；其他任务计时中→隐藏；空闲→▶
+      const isTaskRunning=tOn&&activeSlotKey===ck;
+      const taskMin=taskMinutes(ck);
+      const timerBtn=isTaskRunning
+        ?`<button onclick="event.stopPropagation();stopTimer()" style="flex-shrink:0;padding:3px 9px;border-radius:6px;border:none;background:var(--r);color:#fff;font-size:10px;font-weight:700;cursor:pointer">⏹ 结束</button>`
+        :(tOn?'':`<button onclick="event.stopPropagation();startTaskTimer('${ck}')" style="flex-shrink:0;padding:3px 9px;border-radius:6px;border:1.5px solid var(--p);background:var(--pl);color:var(--p);font-size:10px;font-weight:600;cursor:pointer">▶ 计时</button>`);
+      const minBadge=taskMin>0?`<span style="flex-shrink:0;font-size:10px;color:var(--g);font-weight:700">${taskMin}min</span>`:'';
+      return `<div class="ti ${done?'done':''} ${isTaskRunning?'task-running':''}" id="ti-${ck}" ${isTaskRunning?'style="outline:2px solid var(--p);border-radius:8px"':''}>
+        <div class="tcb" onclick="toggleCheck('${ck}',this)"></div>
+        <div class="tbody2">
+          <div class="tt" onclick="toggleCheck('${ck}',document.querySelector('#ti-${ck} .tcb'))">${task.text}</div>
+          ${drillH}
+        </div>
+        ${minBadge}${timerBtn}
+        <div class="ttag ${tagCls[task.tag]||'tg-dt'}">${tagMap[task.tag]||task.tag}</div>${delBtn}
+      </div>`;
+    }).join('')+(slot.skipped?`<div style="font-size:11px;color:#d97706;background:#fffbeb;border:1px dashed #fed7aa;border-radius:8px;padding:7px 10px;margin-top:6px">⚡ 本时段被临时任务占用，原排课已自动顺延到后续日期（不会漏课）</div>`:'');
+
+    const el=document.createElement('div');
+    el.className=`slot ${isDoneSlot?'done-slot':''} ${isRunning?'running':''}`;
+    el.innerHTML=`
+      <div class="sloth">
+        <div class="slotl">🕐 ${slot.label}</div>
+        <div class="slotc">${slot.clock}</div>
+        <div style="display:flex;gap:5px;align-items:center;font-size:10px;color:var(--t3)">点任务右侧 ▶ 单独计时</div>
+      </div>
+      <div class="tasks">${taskHTML}</div>`;
+    container.appendChild(el);
+  });
+
+  // 顺延按钮状态
+  const ppBtn=document.getElementById('postpone-btn');
+  if(ppBtn){
+    const slotNames={am:'上午',pm:'下午',ev:'晚上'};
+    const skipped=['am','pm','ev'].filter(s=>(D.skips||[]).some(x=>x.date===dkey&&x.slot===s));
+    ppBtn.textContent=skipped.length?`⏭ 本日已顺延：${skipped.map(s=>slotNames[s]).join('、')} — 点击调整/撤销`:'⏭ 顺延课程（可选上午/下午/晚上）';
+    ppBtn.style.borderColor=skipped.length?'#86efac':'#fdba74';
+    ppBtn.style.color=skipped.length?'#16a34a':'#ea580c';
+  }
+
+  renderSidePanel(d);
+  updateDayProgress(dkey);
+}
+
+function toggleCheck(ck,cbEl){
+  D.checks[ck]=!D.checks[ck];
+  // 打卡课程任务时，自动同步「统计→课程进度」（按任务文本中的节号更新）
+  if(D.checks[ck]) autoProg(_ckTaskText[ck]);
+  sv();
+  document.getElementById('ti-'+ck)?.classList.toggle('done',D.checks[ck]);
+  updateDayProgress(ds(curDate));
+}
+
+// ==================== 课程进度自动同步 ====================
+// 任务文本里有「第X节 / 第X-Y节 / 第X至Y节」→ 打卡时把对应课程进度推到该节号
+let _ckTaskText={};
+const PROG_PATTERNS=[
+  {re:/小黑政治·理论课/,key:'小黑-理论'},
+  {re:/小黑(政治·)?刷题课/,key:'小黑-刷题'},
+  {re:/行测言语·基础/,key:'言语-基础'},
+  {re:/行测言语·刷题/,key:'言语-刷题'},
+  {re:/行测逻辑推理/,key:'逻辑'},
+  {re:/资料分析·基础/,key:'资料-基础'},
+  {re:/资料分析·刷题/,key:'资料-刷题'},
+  {re:/数量关系·基础/,key:'数量-基础'},
+  {re:/金标尺综测·基础/,key:'综测-基础'},
+  {re:/金标尺综测·刷题/,key:'综测-刷题'},
+  {re:/白鹭申论·小题课/,key:'申论-小题'},
+  {re:/白鹭申论·作文课/,key:'申论-作文',offset:-50},
+  {re:/公基·系统课/,key:'公基-系统'},
+  {re:/公基刷题课/,key:'公基-刷题'},
+];
+function autoProg(text){
+  if(!text) return;
+  const p=PROG_PATTERNS.find(x=>x.re.test(text));
+  if(!p) return;
+  const m=text.match(/第(\d+)(?:[-至](\d+))?节/);
+  if(!m) return;
+  let hi=parseInt(m[2]||m[1])+(p.offset||0);
+  if(hi<=0) return;
+  const c=COURSES.find(x=>x.key===p.key);
+  if(c) hi=Math.min(hi,c.total);
+  if(hi>(D.prog[p.key]||0)){
+    D.prog[p.key]=hi;
+    // 修复 Bug：打卡时不仅更新全局 D.prog，还要实时同步更新今天的课表快照 D.dayStart[today]
+    const today=ds(new Date());
+    if(D.dayStart && D.dayStart[today]) D.dayStart[today][p.key]=hi;
+    sv();
+    showToast(`📚 ${c?c.label:p.key} 进度已更新 → 第${hi}节`);
+  }
+}
+function saveDrill(k,v){D.drills[k]=parseInt(v)||0;sv();}
+
+function updateDayProgress(dkey){
+  const isToday=dkey===ds(new Date());
+  const allCks=Object.keys(D.checks).filter(k=>k.startsWith(dkey+'_')&&!k.endsWith('_d'));
+  const done=allCks.filter(k=>D.checks[k]).length;
+  const total=allCks.length||1;
+  const tpct=Math.round(done/total*100);
+  document.getElementById('cur-task-pct').textContent=`任务 ${tpct}%`;
+  document.getElementById('t-bar').style.width=tpct+'%';
+
+  const todayMin=D.logs.filter(l=>l.date===dkey).reduce((s,l)=>s+l.duration,0);
+  const h=todayMin/60;
+  document.getElementById('cur-h').textContent=h.toFixed(1);
+  document.getElementById('h-bar').style.width=Math.min(100,h/6*100)+'%';
+}
+
+function addCustomTask(){
+  const old=document.getElementById('ct-modal');if(old)old.remove();
+  const wd=['日','一','二','三','四','五','六'][curDate.getDay()];
+  const isToday=ds(curDate)===ds(new Date());
+  const m=document.createElement('div');m.id='ct-modal';
+  m.style.cssText='position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:1000;display:flex;align-items:center;justify-content:center;padding:18px';
+  m.innerHTML=`<div style="background:#fff;border-radius:14px;padding:18px;width:100%;max-width:400px;box-shadow:0 20px 60px rgba(0,0,0,.35)">
+    <div style="font-size:14px;font-weight:700;color:#0f172a;margin-bottom:4px">＋ 添加临时任务</div>
+    <div style="font-size:11px;color:#64748b;margin-bottom:12px">将添加到：${curDate.getMonth()+1}月${curDate.getDate()}日（星期${wd}）${isToday?'· 今天':'（可先用 ◀▶ 切换日期再添加）'}</div>
+    <label style="font-size:11px;font-weight:600;color:#475569;display:block;margin-bottom:4px">任务内容</label>
+    <textarea id="ct-text" style="width:100%;min-height:60px;padding:8px 10px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:12px;font-family:inherit;resize:vertical;outline:none" placeholder="例如：补听白鹭申论第12节 / 单位临时加班后补学 / 模考一套"></textarea>
+    <div style="display:flex;gap:8px;margin:10px 0">
+      <div style="flex:1">
+        <label style="font-size:11px;font-weight:600;color:#475569;display:block;margin-bottom:4px">时段</label>
+        <select id="ct-slot" style="width:100%;padding:7px 8px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:12px;background:#f8fafc">
+          <option value="am">🌅 上午场 9:00-11:40</option>
+          <option value="pm">☀️ 下午场 14:30-17:30</option>
+          <option value="ev" selected>🌙 晚上场 19:00-22:00</option>
+        </select>
+      </div>
+      <div style="flex:1">
+        <label style="font-size:11px;font-weight:600;color:#475569;display:block;margin-bottom:4px">标签</label>
+        <select id="ct-tag" style="width:100%;padding:7px 8px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:12px;background:#f8fafc">
+          <option value="xt">行测</option>
+          <option value="zt">综测</option>
+          <option value="gj">公基</option>
+          <option value="sl">申论</option>
+          <option value="dt" selected>刷题</option>
+          <option value="fx">复盘</option>
+        </select>
+      </div>
+    </div>
+    <label style="display:flex;align-items:flex-start;gap:7px;font-size:11px;color:#475569;line-height:1.6;cursor:pointer;background:#fffbeb;border:1px solid #fed7aa;border-radius:8px;padding:8px 10px">
+      <input type="checkbox" id="ct-occupy" style="margin-top:2px;width:14px;height:14px;cursor:pointer"/>
+      <span><strong>占用该时段</strong>：当日该时段的原排课不再显示，整条课程线自动顺延1天补位（之后每天的课程编号自动后移，不会漏课）</span>
+    </label>
+    <div style="display:flex;gap:8px;margin-top:14px">
+      <button onclick="submitCustomTask()" class="btn-p" style="flex:1">✔ 添加</button>
+      <button onclick="document.getElementById('ct-modal').remove()" style="padding:8px 18px;border-radius:7px;border:1.5px solid #e2e8f0;background:#f8fafc;color:#475569;font-size:12px;cursor:pointer">取消</button>
+    </div>
+  </div>`;
+  m.addEventListener('click',e=>{if(e.target===m)m.remove();});
+  document.body.appendChild(m);
+}
+
+function submitCustomTask(){
+  const text=document.getElementById('ct-text').value.trim();
+  if(!text){showToast('请输入任务内容','orange');return;}
+  const slot=document.getElementById('ct-slot').value;
+  const tag=document.getElementById('ct-tag').value;
+  const occupy=document.getElementById('ct-occupy').checked;
+  const dkey=ds(curDate);
+  const k=`${dkey}_${slot}`;
+  if(!D.customTasks[k]) D.customTasks[k]=[];
+  D.customTasks[k].push({text,tag,occupy});
+  if(occupy){
+    D.skips=D.skips||[];
+    if(!D.skips.some(s=>s.date===dkey&&s.slot===slot)) D.skips.push({date:dkey,slot});
+  }
+  sv();renderSchedule();
+  document.getElementById('ct-modal').remove();
+  showToast(occupy?'✅ 已添加，该时段原课程自动顺延补位':'✅ 已添加临时任务');
+}
+
+// ==================== 顺延（弹窗自选时段） ====================
+function postponeDay(){
+  const dkey=ds(curDate);
+  D.skips=D.skips||[];
+  const slotNames={am:'🌅 上午场',pm:'☀️ 下午场',ev:'🌙 晚上场'};
+  const info=getPhaseInfo(curDate);
+  const old=document.getElementById('pp-modal');if(old)old.remove();
+  const wd=['日','一','二','三','四','五','六'][curDate.getDay()];
+
+  // 各时段状态：已顺延 / 已完成 / 可顺延
+  const rows=['am','pm','ev'].map(key=>{
+    const skipped=D.skips.some(x=>x.date===dkey&&x.slot===key);
+    const slot=info.slots.find(s=>s.key===key);
+    const n=slot?slot.tasks.length:0;
+    const allDone=!skipped&&n>0&&slot.tasks.every((_,ti)=>D.checks[`${dkey}_${key}_${ti}`]);
+    let stateTxt,stateColor,disabled=false,checked=false;
+    if(skipped){stateTxt='已顺延（勾选=撤销恢复）';stateColor='#16a34a';checked=true;}
+    else if(allDone){stateTxt='已全部打卡完成 ✓';stateColor='#16a34a';disabled=true;}
+    else{stateTxt='未完成，可顺延';stateColor='#d97706';}
+    return `<label style="display:flex;align-items:center;gap:10px;padding:11px 12px;border:1.5px solid ${skipped?'#86efac':'#e2e8f0'};border-radius:10px;margin-bottom:8px;cursor:${disabled?'not-allowed':'pointer'};opacity:${disabled?.55:1};background:${skipped?'#f0fdf4':'#fff'}">
+      <input type="checkbox" class="pp-cb" value="${key}" ${checked?'checked':''} ${disabled?'disabled':''} style="width:17px;height:17px;flex-shrink:0"/>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:700;color:#0f172a">${slotNames[key]}</div>
+        <div style="font-size:11px;color:${stateColor}">${stateTxt}</div>
+      </div>
+    </label>`;
+  }).join('');
+
+  const m=document.createElement('div');m.id='pp-modal';
+  m.style.cssText='position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:1000;display:flex;align-items:center;justify-content:center;padding:18px';
+  m.innerHTML=`<div style="background:#fff;border-radius:14px;padding:18px;width:100%;max-width:380px;box-shadow:0 20px 60px rgba(0,0,0,.35)">
+    <div style="font-size:14px;font-weight:700;color:#0f172a;margin-bottom:4px">⏭ 顺延课程</div>
+    <div style="font-size:11px;color:#64748b;margin-bottom:12px">${curDate.getMonth()+1}月${curDate.getDate()}日（星期${wd}）· 勾选要顺延的时段</div>
+    ${rows}
+    <div style="font-size:10px;color:#94a3b8;line-height:1.7;background:#f8fafc;border-radius:8px;padding:8px 10px;margin:4px 0 12px">勾选的时段：当天课程移到明天，后续整体后移，一节不漏。<br>已顺延的时段取消勾选 = 撤销恢复原课表。</div>
+    <div style="display:flex;gap:8px">
+      <button onclick="submitPostpone()" class="btn-p" style="flex:1">✔ 确认</button>
+      <button onclick="document.getElementById('pp-modal').remove()" style="padding:8px 18px;border-radius:7px;border:1.5px solid #e2e8f0;background:#f8fafc;color:#475569;font-size:12px;cursor:pointer">取消</button>
+    </div>
+  </div>`;
+  m.addEventListener('click',e=>{if(e.target===m)m.remove();});
+  document.body.appendChild(m);
+}
+
+function submitPostpone(){
+  const dkey=ds(curDate);
+  D.skips=D.skips||[];
+  const slotNames={am:'上午场',pm:'下午场',ev:'晚上场'};
+  const want=new Set([...document.querySelectorAll('.pp-cb:checked')].map(cb=>cb.value));
+  const added=[],removed=[];
+  ['am','pm','ev'].forEach(key=>{
+    const has=D.skips.some(x=>x.date===dkey&&x.slot===key);
+    if(want.has(key)&&!has){D.skips.push({date:dkey,slot:key});added.push(slotNames[key]);}
+    if(!want.has(key)&&has){D.skips=D.skips.filter(x=>!(x.date===dkey&&x.slot===key));removed.push(slotNames[key]);}
+  });
+  sv();renderSchedule();
+  document.getElementById('pp-modal').remove();
+  const msg=[added.length?`⏭ 已顺延${added.join('、')}`:'',removed.length?`↩️ 已恢复${removed.join('、')}`:''].filter(Boolean).join('；');
+  showToast(msg||'未做任何更改');
+}
+
+function delCustomTask(slotKey,i){
+  const arr=D.customTasks[slotKey]||[];
+  const removed=arr.splice(i,1)[0];
+  if(removed&&removed.occupy&&!arr.some(x=>x.occupy)){
+    const date=slotKey.slice(0,10),slot=slotKey.slice(11);
+    D.skips=(D.skips||[]).filter(s=>!(s.date===date&&s.slot===slot));
+  }
+  if(!arr.length) delete D.customTasks[slotKey];
+  sv();renderSchedule();
+  showToast('已删除临时任务，排课已恢复');
+}
+
+// ==================== DATE NAV ====================
+function prevDay(){curDate.setDate(curDate.getDate()-1);renderSchedule();}
+function goToday(){curDate=new Date();renderSchedule();}
+function nextDay(){
+  const dkey=ds(new Date()); // today
+  const curDkey=ds(curDate);
+  // Only lock if navigating from today forward
+  if(curDkey===dkey){
+    const todayMin=D.logs.filter(l=>l.date===dkey).reduce((s,l)=>s+l.duration,0);
+    const h=todayMin/60;
+    if(h<6){
+      document.getElementById('lh').textContent=h.toFixed(1)+'h';
+      document.getElementById('ln').textContent=`今日已学 ${h.toFixed(1)}h，还差 ${(6-h).toFixed(1)}h 才能解锁明天`;
+      document.getElementById('lock').classList.add('show');
+      return;
+    }
+  }
+  curDate.setDate(curDate.getDate()+1);
+  renderSchedule();
+}
+function closeLock(){document.getElementById('lock').classList.remove('show');}
+
+// ==================== TIMER ====================
+// State persisted to localStorage so closing/refreshing browser restores the running timer
+const TKEY='gk2026_timer';
+let tInt=null,tOn=false,curSubj='',curMode='听课',sessStart='',activeSlotKey='';
+
+// Read persisted timer state
+function loadTimer(){
+  try{const r=localStorage.getItem(TKEY);if(r)return JSON.parse(r);}catch(e){}
+  return null;
+}
+function saveTimerState(){
+  try{
+    if(!tOn){localStorage.removeItem(TKEY);return;}
+    localStorage.setItem(TKEY,JSON.stringify({
+      wallStart: Date.now() - elapsedMs(),  // absolute wall-clock start
+      subject: curSubj,
+      mode: curMode,
+      sessStart,
+      slotKey: activeSlotKey
+    }));
+  }catch(e){}
+}
+function clearTimerState(){try{localStorage.removeItem(TKEY);}catch(e){}}
+
+// Elapsed ms from persisted or live start
+let _wallStart=null;  // absolute epoch ms when timer started (survives reload)
+function elapsedMs(){return _wallStart ? Date.now()-_wallStart : 0;}
+function elapsedSec(){return Math.floor(elapsedMs()/1000);}
+
+function tickTimer(){
+  const f=fmt(elapsedSec());
+  document.getElementById('t-disp').textContent=f;
+  document.getElementById('ft-disp').textContent=f;
+}
+
+function _startInterval(){
+  clearInterval(tInt);
+  tInt=setInterval(tickTimer,500);
+}
+
+function _showRunningUI(label){
+  document.getElementById('t-lbl').textContent=`🎯 ${label} · ${curMode}`;
+  document.getElementById('ft-subj').textContent=label;
+  document.getElementById('ft').classList.add('vis');
+}
+
+function startTimer(){
+  if(tOn) return;
+  curSubj=document.getElementById('t-subj').value;
+  sessStart=new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'});
+  _wallStart=Date.now();
+  tOn=true;
+  saveTimerState();
+  swPost({type:'TIMER_START',wallStart:_wallStart,subject:curSubj,mode:curMode,sessStart});
+  _showRunningUI(sL(curSubj));
+  _startInterval();
+  renderSchedule(); // 同步课表：计时期间隐藏各任务的▶按钮
+}
+
+// ==================== 单任务计时 ====================
+// 根据任务文本自动推断科目与学习方式
+function inferSubj(text){
+  if(!text) return '复盘';
+  const rules=[
+    [/小黑政治·理论/,'小黑-理论'],[/小黑.*刷题/,'小黑-刷题'],
+    [/白鹭申论·小题/,'申论-小题'],[/白鹭申论·作文/,'申论-作文'],[/申论/,'申论'],
+    [/言语·基础|言语理解·基础/,'言语-基础'],[/言语·刷题/,'言语-刷题'],
+    [/逻辑/,'逻辑'],
+    [/资料分析·基础/,'资料-基础'],[/资料分析·刷题|资料/,'资料-刷题'],
+    [/数量关系·基础/,'数量-基础'],[/数量/,'数量-刷题'],
+    [/综测.*基础/,'综测-基础'],[/综测.*刷题/,'综测-刷题'],[/综测/,'综测-真题'],
+    [/系统课/,'公基-系统'],[/公基.*刷题|公基/,'公基-刷题'],
+    [/行测真题|行测混合|套卷|模拟/,'资料-刷题'],
+    [/错题|复盘|归因/,'复盘'],
+  ];
+  for(const [re,subj] of rules){if(re.test(text))return subj;}
+  return '复盘';
+}
+function inferMode(text){
+  if(!text) return '听课';
+  if(/刷题|做题|题量|混合|套卷|狂刷/.test(text)) return '刷题';
+  if(/手写|仿写|限时写|写1篇|提纲/.test(text)) return '手写';
+  if(/背诵|速记|背5条/.test(text)) return '背诵';
+  if(/复盘|归因|错题/.test(text)) return '复盘';
+  return '听课';
+}
+// 该任务今天已累计的分钟数
+function taskMinutes(ck){
+  return (D.logs||[]).filter(l=>l.taskKey===ck).reduce((s,l)=>s+l.duration,0);
+}
+function startTaskTimer(ck){
+  if(tOn){showToast('已有任务在计时，请先结束','orange');return;}
+  activeSlotKey=ck;  // 现在精确到任务级（日期_时段_序号）
+  const text=_ckTaskText[ck]||'';
+  curSubj=inferSubj(text);
+  curMode=inferMode(text);
+  try{document.getElementById('t-subj').value=curSubj;}catch(e){}
+  sessStart=new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'});
+  _wallStart=Date.now();
+  tOn=true;
+  saveTimerState();
+  swPost({type:'TIMER_START',wallStart:_wallStart,subject:curSubj,mode:curMode,sessStart});
+  _showRunningUI(text.slice(0,14)+(text.length>14?'…':''));
+  _startInterval();
+  renderSchedule();
+  showToast(`▶ 开始计时：${sL(curSubj)} · ${curMode}`);
+}
+
+function stopTimer(){
+  if(!tOn) return;
+  clearInterval(tInt);
+  const elapsed=elapsedSec();
+  const taskKey=activeSlotKey;  // 记录是哪个任务的计时
+  tOn=false;_wallStart=null;
+  clearTimerState();
+  swPost({type:'TIMER_STOP'});
+  document.getElementById('ft').classList.remove('vis');
+  activeSlotKey='';
+  if(elapsed<30){
+    document.getElementById('t-disp').textContent='00:00:00';
+    document.getElementById('ft-disp').textContent='00:00:00';
+    renderTLog();renderSchedule();return;
+  }
+  const dur=Math.round(elapsed/60);
+  const end=new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'});
+  D.logs.push({date:ds(new Date()),subject:curSubj,mode:curMode,start:sessStart,end,duration:dur,...(taskKey?{taskKey}:{})});
+  sv();
+  // 计时结束=关键节点：只要配置了云同步就强制上传（不受自动同步开关/防抖限制）
+  if(CLOUD.apiKey&&CLOUD.binId) cloudSave(true,true);
+  document.getElementById('t-disp').textContent='00:00:00';
+  document.getElementById('ft-disp').textContent='00:00:00';
+  document.getElementById('t-lbl').textContent=`✅ 已记录 ${dur} 分钟`;
+  renderTLog();updateDayProgress(ds(curDate));renderSchedule();
+}
+
+function resetTimer(){
+  clearInterval(tInt);tOn=false;_wallStart=null;
+  clearTimerState();
+  document.getElementById('t-disp').textContent='00:00:00';
+  document.getElementById('ft-disp').textContent='00:00:00';
+  document.getElementById('ft').classList.remove('vis');
+  document.getElementById('t-lbl').textContent='选择科目后开始计时';
+  activeSlotKey='';renderSchedule();
+}
+
+// Restore timer after page reload
+function restoreTimer(){
+  const saved=loadTimer();
+  if(!saved) return;
+  _wallStart=saved.wallStart;
+  curSubj=saved.subject||'资料-基础';
+  curMode=saved.mode||'听课';
+  sessStart=saved.sessStart||'--';
+  activeSlotKey=saved.slotKey||'';
+  tOn=true;
+  try{document.getElementById('t-subj').value=curSubj;}catch(e){}
+  // Show banner indicating timer was restored
+  const elapsed=elapsedSec();
+  const f=fmt(elapsed);
+  document.getElementById('t-disp').textContent=f;
+  document.getElementById('ft-disp').textContent=f;
+  _showRunningUI(sL(curSubj));
+  _startInterval();
+  // Show a subtle restore notice in timer label
+  document.getElementById('t-lbl').textContent=`🔄 已恢复计时 · ${sL(curSubj)} · ${curMode}（关闭前已计 ${fmt(elapsed)}）`;
+}
+function fmt(s){return[Math.floor(s/3600),Math.floor(s%3600/60),s%60].map(x=>String(x).padStart(2,'0')).join(':');}
+function setMode(m,btn){curMode=m;document.querySelectorAll('.mb').forEach(b=>{b.style.background='var(--s2)';b.style.color='var(--t2)';});btn.style.background='var(--p)';btn.style.color='#fff';}
+
+// ==================== 学习科目管理（可增删，跨设备同步） ====================
+const SUBJ_DEFAULT=[
+  {v:'资料-基础',label:'📊 资料分析·基础课'},{v:'资料-刷题',label:'📊 资料分析·刷题'},
+  {v:'逻辑',label:'🔍 逻辑推理'},
+  {v:'数量-基础',label:'🔢 数量关系·基础'},{v:'数量-刷题',label:'🔢 数量关系·刷题'},
+  {v:'言语-基础',label:'💬 言语理解·基础'},{v:'言语-刷题',label:'💬 言语理解·刷题'},
+  {v:'综测-基础',label:'📖 综测·基础班'},{v:'综测-刷题',label:'✏️ 综测·刷题班'},{v:'综测-真题',label:'✍️ 综测·真题手写'},
+  {v:'小黑-理论',label:'🎓 小黑政治·理论课'},{v:'小黑-刷题',label:'🎓 小黑政治·刷题课'},
+  {v:'公基-系统',label:'📚 公基·系统课（含法律）'},{v:'公基-刷题',label:'📝 公基·刷题课'},
+  {v:'申论-小题',label:'⭐ 白鹭申论·小题课'},{v:'申论-作文',label:'⭐ 白鹭申论·作文课'},{v:'申论',label:'✍️ 申论写作/作业'},
+  {v:'复盘',label:'🔄 错题复盘'},
+];
+function getSubjs(){
+  if(!D.subjs||!D.subjs.length) D.subjs=SUBJ_DEFAULT.map(s=>({...s}));
+  return D.subjs;
+}
+function renderSubjs(){
+  const sel=document.getElementById('t-subj');
+  if(!sel) return;
+  const cur=sel.value;
+  sel.innerHTML=getSubjs().map(s=>`<option value="${s.v}">${s.label}</option>`).join('');
+  if(getSubjs().some(s=>s.v===cur)) sel.value=cur;
+}
+function addSubj(){
+  const name=prompt('输入新科目名称（如：时政、面试、英语）：');
+  if(!name?.trim()) return;
+  const v=name.trim();
+  const subjs=getSubjs();
+  if(subjs.some(s=>s.v===v)){showToast('该科目已存在','orange');return;}
+  subjs.push({v,label:'📌 '+v});
+  D.subjs=subjs;sv();renderSubjs();
+  document.getElementById('t-subj').value=v;
+  showToast('✅ 已添加科目「'+v+'」');
+}
+function delSubj(){
+  const sel=document.getElementById('t-subj');
+  const v=sel.value;if(!v)return;
+  const used=(D.logs||[]).filter(l=>l.subject===v).length;
+  if(!confirm(`删除科目「${sL(v)}」？\n\n${used?`已有 ${used} 条学习记录使用此科目（记录不会被删除，统计仍正常显示）`:'该科目暂无学习记录'}`)) return;
+  D.subjs=getSubjs().filter(s=>s.v!==v);
+  if(!D.subjs.length) D.subjs=SUBJ_DEFAULT.map(s=>({...s}));
+  sv();renderSubjs();
+  showToast('🗑 已删除科目');
+}
+function sL(v){const m={'资料-基础':'资料基础','资料-刷题':'资料刷题','逻辑':'逻辑推理','数量-基础':'数量基础','数量-刷题':'数量刷题','言语-基础':'言语基础','言语-刷题':'言语刷题','综测-基础':'综测基础','综测-刷题':'综测刷题','综测-真题':'综测真题','小黑-理论':'小黑理论','小黑-刷题':'小黑刷题','公基-系统':'公基系统','公基-刷题':'公基刷题','申论-小题':'白鹭申论小题','申论-作文':'白鹭申论作文','申论':'申论','复盘':'错题复盘'};return m[v]||v;}
+// 学习记录唯一键 + 删除（带墓碑机制：删除会同步，不会被合并复活）
+const logK=l=>`${l.date}|${l.start}|${l.end}|${l.subject}|${l.duration}`;
+// 修改某条记录的科目（修正误归类，如早上学小黑却被记成资料）
+function editLogSubj(key){
+  const log=(D.logs||[]).find(l=>logK(l)===key);if(!log)return;
+  const subjs=getSubjs();
+  const list=subjs.map((s,i)=>`${i+1}. ${s.label}`).join('\n');
+  const inp=prompt(`这条记录当前科目：${sL(log.subject)}\n\n输入新科目的编号：\n${list}`);
+  if(!inp)return;
+  const pick=subjs[parseInt(inp)-1];
+  if(!pick){showToast('编号无效','orange');return;}
+  // 旧键加墓碑防止云端合并复活，再以新科目重建
+  D.deletedLogs=D.deletedLogs||[];
+  if(!D.deletedLogs.includes(key)) D.deletedLogs.push(key);
+  log.subject=pick.v;
+  sv();if(CLOUD.apiKey&&CLOUD.binId)cloudSave(true,true);
+  renderTLog();try{renderStats();renderAllLogs();renderPie();renderBar();}catch(e){}
+  showToast(`✏️ 已改为「${sL(pick.v)}」`);
+}
+function delLog(key){
+  if(!confirm('删除这条学习记录？\n\n删除后会同步到云端，另一台设备上也会消失。')) return;
+  D.deletedLogs=D.deletedLogs||[];
+  if(!D.deletedLogs.includes(key)) D.deletedLogs.push(key);
+  D.logs=D.logs.filter(l=>logK(l)!==key);
+  sv(); if(CLOUD.apiKey&&CLOUD.binId) cloudSave(true,true);
+  renderTLog();updateDayProgress(ds(curDate));
+  try{renderStats();renderAllLogs();renderPie();renderBar();renderHeatmap();}catch(e){}
+  showToast('🗑 已删除该条学习记录');
+}
+
+function renderTLog(){const dkey=ds(new Date());const logs=D.logs.filter(l=>l.date===dkey);const tb=document.getElementById('t-log');tb.innerHTML=logs.length?logs.map(l=>`<tr><td>${sL(l.subject)}</td><td>${l.mode}</td><td>${l.start}</td><td>${l.end}</td><td><strong style="color:var(--p)">${l.duration}min</strong> <span onclick="editLogSubj('${logK(l)}')" style="cursor:pointer;color:var(--p);font-size:11px;padding:0 3px" title="修改科目">✏️</span><span onclick="delLog('${logK(l)}')" style="cursor:pointer;color:#dc2626;font-size:11px;padding:0 3px" title="删除此记录">✕</span></td></tr>`).join(''):'<tr><td colspan="5" style="text-align:center;color:var(--t3);padding:14px">暂无记录</td></tr>';}
+
+// ==================== SERVICE WORKER (background timer) ====================
+// SW is registered inline via blob URL so no extra file is needed
+function registerSW(){
+  // 沙箱预览/隐私模式下访问 navigator.serviceWorker 本身就会抛 SecurityError，必须 try 住
+  try{ if(!('serviceWorker' in navigator) || !navigator.serviceWorker) return; }catch(e){ return; }
+  const swCode=`
+self.addEventListener('message', e => {
+  if(e.data.type==='TIMER_START'){
+    self._timerWallStart = e.data.wallStart;
+    self._timerSubject   = e.data.subject;
+    self._timerSessStart = e.data.sessStart;
+    self._timerMode      = e.data.mode;
+  }
+  if(e.data.type==='TIMER_PING'){
+    if(self._timerWallStart){
+      const elapsed = Math.floor((Date.now()-self._timerWallStart)/1000);
+      e.source.postMessage({type:'TIMER_TICK', elapsed});
+    }
+  }
+  if(e.data.type==='TIMER_STOP'){
+    self._timerWallStart=null;
+  }
+});
+self.addEventListener('install',()=>self.skipWaiting());
+self.addEventListener('activate',e=>e.waitUntil(clients.claim()));
+`;
+  try{
+    const blob=new Blob([swCode],{type:'application/javascript'});
+    const url=URL.createObjectURL(blob);
+    navigator.serviceWorker.register(url,{scope:'/'}).then(reg=>{
+      console.log('[SW] registered');
+    }).catch(e=>console.warn('[SW] failed (likely file:// protocol):', e.message));
+
+    navigator.serviceWorker.addEventListener('message', e=>{
+      if(e.data.type==='TIMER_TICK' && tOn){
+        _wallStart = Date.now() - e.data.elapsed*1000;
+      }
+    });
+  }catch(e){console.warn('[SW] unavailable:',e.message);}
+}
+
+function swPost(msg){
+  try{
+    if(navigator.serviceWorker?.controller)
+      navigator.serviceWorker.controller.postMessage(msg);
+  }catch(e){}
+}
+
+// ==================== WRONG QUESTIONS ====================
+// D.wq = [{id, date, category, title, content, imgData, answer, tags}]
+const WQ_DEFAULT_CATS=['综测','申论','言语','资料','数量','逻辑','图推','常识','公基'];
+
+function getWqCats(){return D.wqCats||(D.wqCats=[...WQ_DEFAULT_CATS]);}
+
+function renderWq(filterCat){
+  const cat=filterCat||'全部';
+  const attrLabel={'notknow':'🔴 不会','slow':'🟡 会但慢','careless':'🟢 粗心'};
+  const attrColor={'notknow':'#fef2f2','slow':'#fffbeb','careless':'#f0fdf4'};
+  const attrBorder={'notknow':'#fecaca','slow':'#fed7aa','careless':'#bbf7d0'};
+  const items=(D.wq||[]).filter(q=>cat==='全部'||q.category===cat);
+  const cats=['全部',...getWqCats()];
+  const total=(D.wq||[]).length;
+  const nk=(D.wq||[]).filter(q=>q.attr==='notknow').length;
+  const sl=(D.wq||[]).filter(q=>q.attr==='slow').length;
+  const ca=(D.wq||[]).filter(q=>q.attr==='careless').length;
+
+  const statsEl=document.getElementById('wq-stats');
+  if(statsEl) statsEl.innerHTML=total?`
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+      <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:8px 12px;flex:1;min-width:80px;text-align:center">
+        <div style="font-size:20px;font-weight:700;color:#dc2626">${nk}</div>
+        <div style="font-size:10px;color:#dc2626;font-weight:600">🔴 不会</div>
+        <div style="font-size:9px;color:#94a3b8">→ 回补听课</div>
+      </div>
+      <div style="background:#fffbeb;border:1px solid #fed7aa;border-radius:8px;padding:8px 12px;flex:1;min-width:80px;text-align:center">
+        <div style="font-size:20px;font-weight:700;color:#d97706">${sl}</div>
+        <div style="font-size:10px;color:#d97706;font-weight:600">🟡 会但慢</div>
+        <div style="font-size:9px;color:#94a3b8">→ 大量刷同类</div>
+      </div>
+      <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:8px 12px;flex:1;min-width:80px;text-align:center">
+        <div style="font-size:20px;font-weight:700;color:#16a34a">${ca}</div>
+        <div style="font-size:10px;color:#16a34a;font-weight:600">🟢 粗心</div>
+        <div style="font-size:9px;color:#94a3b8">→ 强制检查</div>
+      </div>
+      <div style="background:var(--pl);border:1px solid #bfdbfe;border-radius:8px;padding:8px 12px;flex:1;min-width:80px;text-align:center">
+        <div style="font-size:20px;font-weight:700;color:var(--p)">${total}</div>
+        <div style="font-size:10px;color:var(--p);font-weight:600">总错题</div>
+      </div>
+    </div>`:'';
+
+  document.getElementById('wq-cat-filter').innerHTML=cats.map(c=>`
+    <button onclick="renderWq('${c}')" style="padding:3px 10px;border-radius:10px;border:1.5px solid ${c===cat?'var(--p)':'var(--border)'};background:${c===cat?'var(--p)':'var(--s2)'};color:${c===cat?'#fff':'var(--t2)'};font-size:11px;cursor:pointer;font-weight:${c===cat?600:400}">${c}</button>`).join('');
+
+  document.getElementById('wq-list').innerHTML=items.length?items.map(q=>`
+    <div style="background:${attrColor[q.attr]||'var(--s2)'};border:1.5px solid ${attrBorder[q.attr]||'var(--border)'};border-radius:10px;padding:12px 14px;margin-bottom:9px">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:7px">
+        <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap">
+          <span style="background:${attrColor[q.attr]||'var(--s2)'};color:${q.attr==='notknow'?'#dc2626':q.attr==='slow'?'#d97706':'#16a34a'};border:1px solid ${attrBorder[q.attr]||'var(--border)'};border-radius:7px;padding:2px 8px;font-size:11px;font-weight:700">${attrLabel[q.attr]||'未归因'}</span>
+          <span style="background:var(--pl);color:var(--p);border:1px solid #bfdbfe;border-radius:7px;padding:2px 7px;font-size:11px;font-weight:600">${q.category}</span>
+          <span style="font-size:10px;color:var(--t3)">${q.date}</span>
+        </div>
+        <div style="display:flex;gap:4px">
+          <button onclick="editWq('${q.id}')" style="padding:2px 8px;border-radius:5px;border:1px solid var(--border);background:#fff;color:var(--t2);font-size:10px;cursor:pointer">✏️</button>
+          <button onclick="delWq('${q.id}')" style="padding:2px 8px;border-radius:5px;border:1px solid #fecaca;background:#fef2f2;color:#dc2626;font-size:10px;cursor:pointer">🗑</button>
+          <button onclick="exportWqItem('${q.id}')" style="padding:2px 8px;border-radius:5px;border:1px solid var(--border);background:#fff;color:var(--t2);font-size:10px;cursor:pointer">⬇️</button>
+        </div>
+      </div>
+      ${q.title?`<div style="font-size:13px;font-weight:700;color:var(--t);margin-bottom:5px">${q.title}</div>`:''}
+      ${q.content?`<div style="font-size:12px;color:var(--t2);line-height:1.7;white-space:pre-wrap;margin-bottom:6px">${q.content}</div>`:''}
+      ${q.imgData?`<img src="${q.imgData}" style="max-width:100%;border-radius:7px;border:1px solid var(--border);margin-bottom:6px"/>`:''}
+      ${q.answer?`<div style="background:#fff;border:1px solid var(--border);border-radius:7px;padding:8px 10px;font-size:12px;color:var(--t2);line-height:1.7"><strong>解析/反思：</strong>${q.answer}</div>`:''}
+    </div>`).join(''):'<div style="text-align:center;color:var(--t3);padding:20px;font-size:12px">暂无错题，点击「＋ 添加错题」开始收集</div>';
+}
+
+function openWqForm(editId){
+  const existing=editId?(D.wq||[]).find(q=>q.id===editId):null;
+  const cats=getWqCats();
+  const attrMap={'notknow':'🔴 不会（知识盲区，需回补听课）','slow':'🟡 会但慢（方法有但不熟，需大量刷同类）','careless':'🟢 粗心（审题/计算失误，需强制检查）'};
+  document.getElementById('wq-form-wrap').innerHTML=`
+    <div style="background:#fff;border:1.5px solid var(--p);border-radius:12px;padding:16px;margin-bottom:14px">
+      <div style="font-size:13px;font-weight:700;color:var(--p);margin-bottom:12px">${editId?'✏️ 编辑错题':'➕ 添加错题'}</div>
+      <div style="margin-bottom:9px">
+        <label style="font-size:11px;font-weight:600;color:var(--t2);display:block;margin-bottom:4px">⚡ 错误归因（必选）</label>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          ${Object.entries(attrMap).map(([k,v])=>`
+            <button onclick="selectAttr('${k}',this)" class="attr-btn" style="padding:5px 12px;border-radius:8px;border:1.5px solid var(--border);background:${existing?.attr===k?'var(--p)':'var(--s2)'};color:${existing?.attr===k?'#fff':'var(--t2)'};font-size:11px;cursor:pointer;font-weight:${existing?.attr===k?700:400}">${v}</button>
+          `).join('')}
+        </div>
+        <input type="hidden" id="wq-attr-val" value="${existing?.attr||''}"/>
+      </div>
+      <div style="margin-bottom:9px">
+        <label style="font-size:11px;font-weight:600;color:var(--t2);display:block;margin-bottom:4px">分类</label>
+        <div style="display:flex;gap:5px;flex-wrap:wrap;align-items:center" id="wq-cats-row">
+          ${cats.map(c=>`<span style="position:relative;display:inline-flex;align-items:center"><button onclick="selectWqCat('${c}',this)" class="wq-cat-btn" style="padding:3px 22px 3px 10px;border-radius:9px;border:1.5px solid var(--border);background:${existing?.category===c?'var(--p)':'var(--s2)'};color:${existing?.category===c?'#fff':'var(--t2)'};font-size:11px;cursor:pointer">${c}</button><span onclick="delWqCat('${c}')" title="删除分类" style="position:absolute;right:5px;cursor:pointer;font-size:10px;color:#dc2626;font-weight:700">✕</span></span>`).join('')}
+          <button onclick="addWqCat()" style="padding:3px 10px;border-radius:9px;border:1.5px dashed #93c5fd;background:transparent;color:var(--p);font-size:11px;cursor:pointer">＋ 新分类</button>
+        </div>
+        <input type="hidden" id="wq-cat-val" value="${existing?.category||cats[0]}"/>
+      </div>
+      <div style="margin-bottom:9px">
+        <label style="font-size:11px;font-weight:600;color:var(--t2);display:block;margin-bottom:4px">标题（可选）</label>
+        <input id="wq-title" type="text" value="${existing?.title||''}" placeholder="例如：资料分析-增长率计算失误" style="width:100%;padding:7px 10px;border:1.5px solid var(--border);border-radius:7px;font-size:12px;background:var(--s2);color:var(--t);outline:none"/>
+      </div>
+      <div style="margin-bottom:9px">
+        <label style="font-size:11px;font-weight:600;color:var(--t2);display:block;margin-bottom:4px">题目内容（文字）</label>
+        <textarea id="wq-content" style="width:100%;min-height:80px;padding:7px 10px;border:1.5px solid var(--border);border-radius:7px;font-size:12px;background:var(--s2);color:var(--t);outline:none;resize:vertical;font-family:inherit" placeholder="粘贴题目文字，或上传图片后点「识别图片→文字」">${existing?.content||''}</textarea>
+      </div>
+      <div style="margin-bottom:9px">
+        <label style="font-size:11px;font-weight:600;color:var(--t2);display:block;margin-bottom:4px">题目图片（可选）</label>
+        <input type="file" id="wq-img-input" accept="image/*" onchange="handleWqImg(this)" style="font-size:11px"/>
+        <div id="wq-img-preview" style="margin-top:6px">${existing?.imgData?`<img src="${existing.imgData}" style="max-width:100%;border-radius:7px;border:1px solid var(--border)"/>`:''}
+        </div>
+        <button onclick="ocrWqImg()" style="margin-top:6px;padding:5px 12px;border-radius:7px;border:1.5px solid var(--p);background:var(--pl);color:var(--p);font-size:11px;cursor:pointer;font-weight:600">🔍 识别图片 → 文字（OCR）</button>
+        <span id="ocr-status" style="font-size:11px;color:var(--t3);margin-left:8px"></span>
+      </div>
+      <div style="margin-bottom:12px">
+        <label style="font-size:11px;font-weight:600;color:var(--t2);display:block;margin-bottom:4px">解析 / 反思</label>
+        <textarea id="wq-answer" style="width:100%;min-height:70px;padding:7px 10px;border:1.5px solid var(--border);border-radius:7px;font-size:12px;background:var(--s2);color:var(--t);outline:none;resize:vertical;font-family:inherit" placeholder="正确解法、自己错在哪里、下次注意什么">${existing?.answer||''}</textarea>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button onclick="saveWq('${editId||''}')" class="btn-p" style="flex:1">💾 保存错题</button>
+        <button onclick="closeWqForm()" style="padding:8px 16px;border-radius:7px;border:1.5px solid var(--border);background:var(--s2);color:var(--t2);font-size:12px;cursor:pointer">取消</button>
+      </div>
+    </div>`;
+  try{document.getElementById('wq-form-wrap').scrollIntoView({behavior:'smooth'});}catch(e){}
+}
+
+function closeWqForm(){document.getElementById('wq-form-wrap').innerHTML='';}
+
+let _wqImgData=null;
+function handleWqImg(input){
+  const file=input.files[0];if(!file) return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    _wqImgData=e.target.result;
+    document.getElementById('wq-img-preview').innerHTML=`<img src="${_wqImgData}" style="max-width:100%;border-radius:7px;border:1px solid var(--border)"/>`;
+  };
+  reader.readAsDataURL(file);
+}
+
+// ==================== AI 配置（智谱AI，免费模型，国内直连，支持浏览器CORS） ====================
+const AI_KEY_STORE='gk2026_ai';
+function getAiKey(){try{return localStorage.getItem(AI_KEY_STORE)||'';}catch(e){return '';}}
+function saveAiCfg(){
+  const k=document.getElementById('cfg-ai-key').value.trim();
+  try{localStorage.setItem(AI_KEY_STORE,k);}catch(e){}
+  showToast(k?'✅ AI 配置已保存':'已清空 AI Key');
+}
+async function testAiCfg(){
+  const el=document.getElementById('ai-test-result');
+  el.style.display='block';el.style.background='#fffbeb';el.style.color='#b45309';
+  const k=document.getElementById('cfg-ai-key').value.trim()||getAiKey();
+  if(!k){el.textContent='❌ 请先填入 API Key（智谱 或 Anthropic）';return;}
+  const pv=aiProvider(k)==='anthropic'?'Anthropic Claude':'智谱AI';
+  el.textContent='⏳ 测试中…（识别为 '+pv+'）';
+  try{
+    const r=await aiChat('回复"连接成功"四个字',null,k);
+    el.style.background='#f0fdf4';el.style.color='#16a34a';
+    el.textContent='✅ '+pv+' 连接正常！回复：'+r.slice(0,30);
+  }catch(e){
+    el.style.background='#fef2f2';el.style.color='#dc2626';
+    el.textContent='❌ ['+pv+'] '+e.message;
+  }
+}
+// 统一AI调用：text-only 或带图片（imgData为dataURL）
+// 自动识别服务商：sk-ant- 开头 → Anthropic Claude；其他 → 智谱AI
+function aiProvider(key){return key.startsWith('sk-ant-')?'anthropic':'zhipu';}
+async function aiChat(text,imgData,keyOverride){
+  const key=keyOverride||getAiKey();
+  if(!key) throw new Error('未配置 AI Key。请到「☁️ 云同步」页底部的「🤖 AI 功能设置」填入密钥（智谱免费 / Anthropic 付费均可）');
+  if(aiProvider(key)==='anthropic') return aiChatAnthropic(text,imgData,key);
+  return aiChatZhipu(text,imgData,key);
+}
+
+async function aiChatZhipu(text,imgData,key){
+  const model=imgData?'glm-4v-flash':'glm-4-flash';
+  const content=imgData
+    ?[{type:'image_url',image_url:{url:imgData}},{type:'text',text}]
+    :text;
+  const resp=await fetch('https://open.bigmodel.cn/api/paas/v4/chat/completions',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
+    // ⚠️ glm-4v-flash 的 max_tokens 上限是1024，超了会报"参数非法"
+    body:JSON.stringify({model,messages:[{role:'user',content}],max_tokens:imgData?1024:2500})
+  });
+  if(!resp.ok){
+    let msg='HTTP '+resp.status;
+    try{const j=await resp.json();msg=j.error?.message||msg;}catch(e){}
+    if(resp.status===401) msg='智谱 API Key 无效，请检查是否复制完整';
+    throw new Error(msg);
+  }
+  const data=await resp.json();
+  const out=data.choices?.[0]?.message?.content||'';
+  if(!out) throw new Error('AI 未返回内容，请重试');
+  return out;
+}
+
+async function aiChatAnthropic(text,imgData,key){
+  const content=imgData
+    ?[{type:'image',source:{type:'base64',media_type:(imgData.split(';')[0].split(':')[1]||'image/jpeg'),data:imgData.split(',')[1]}},{type:'text',text}]
+    :[{type:'text',text}];
+  let resp;
+  try{
+    resp=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'x-api-key':key,
+        'anthropic-version':'2023-06-01',
+        'anthropic-dangerous-direct-browser-access':'true'  // 官方浏览器直连开关，必须带
+      },
+      body:JSON.stringify({model:'claude-sonnet-4-5',max_tokens:2500,messages:[{role:'user',content}]})
+    });
+  }catch(e){
+    throw new Error('无法连接 api.anthropic.com（国内网络通常无法直连，需科学上网；或改用智谱Key）');
+  }
+  if(!resp.ok){
+    let msg='HTTP '+resp.status;
+    try{const j=await resp.json();msg=j.error?.message||msg;}catch(e){}
+    if(resp.status===401) msg='Anthropic API Key 无效，请检查 sk-ant- 密钥是否完整';
+    if(resp.status===400&&/credit/i.test(msg)) msg='Anthropic 账户余额不足，请到 console.anthropic.com 充值（$5起）';
+    if(resp.status===429) msg='请求过于频繁，稍等几秒再试';
+    throw new Error(msg);
+  }
+  const data=await resp.json();
+  const out=data.content?.[0]?.text||'';
+  if(!out) throw new Error('AI 未返回内容，请重试');
+  return out;
+}
+
+// ==================== 批改：文档上传识别（图片/PDF/Word/TXT） ====================
+// 图片→AI视觉OCR；PDF→pdf.js提取文字（扫描版自动转图OCR）；docx→mammoth；txt→直读
+function loadLib(url,globalName){
+  return new Promise((res,rej)=>{
+    if(globalName.split('.').reduce((o,k)=>o&&o[k],window)) return res();
+    const s=document.createElement('script');s.src=url;
+    s.onload=()=>res();s.onerror=()=>rej(new Error('组件加载失败，请检查网络'));
+    document.head.appendChild(s);
+  });
+}
+function readFileAs(file,mode){
+  return new Promise((res,rej)=>{
+    const r=new FileReader();
+    r.onload=e=>res(e.target.result);
+    r.onerror=()=>rej(new Error('文件读取失败'));
+    if(mode==='dataURL')r.readAsDataURL(file);
+    else if(mode==='arrayBuffer')r.readAsArrayBuffer(file);
+    else r.readAsText(file);
+  });
+}
+// 压缩图片，避免超出视觉模型大小限制
+function shrinkImage(dataURL,maxW=1600){
+  return new Promise(res=>{
+    const img=new Image();
+    img.onload=()=>{
+      if(img.width<=maxW){res(dataURL);return;}
+      const c=document.createElement('canvas');
+      c.width=maxW;c.height=Math.round(img.height*maxW/img.width);
+      c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+      res(c.toDataURL('image/jpeg',0.85));
+    };
+    img.onerror=()=>res(dataURL);
+    img.src=dataURL;
+  });
+}
+const OCR_PROMPT='请将图中所有文字内容完整提取，保持原始段落结构。手写文字请尽力辨认。只输出提取的文字本身，不要任何解释或评论。';
+
+async function extractFromFile(file,statusEl){
+  const name=file.name.toLowerCase();
+  // 1. 纯文本
+  if(name.endsWith('.txt')) return await readFileAs(file,'text');
+  // 2. Word docx
+  if(name.endsWith('.docx')){
+    statusEl.textContent='⏳ 解析 Word…';
+    await loadLib('https://cdn.jsdelivr.net/npm/mammoth@1.6.0/mammoth.browser.min.js','mammoth');
+    const buf=await readFileAs(file,'arrayBuffer');
+    const r=await window.mammoth.extractRawText({arrayBuffer:buf});
+    if(!r.value?.trim()) throw new Error('Word 中未提取到文字');
+    return r.value.trim();
+  }
+  if(name.endsWith('.doc')) throw new Error('暂不支持旧版 .doc，请用 Word 另存为 .docx 后上传');
+  // 3. PDF
+  if(name.endsWith('.pdf')){
+    statusEl.textContent='⏳ 解析 PDF…';
+    await loadLib('https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js','pdfjsLib');
+    window.pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';
+    const buf=await readFileAs(file,'arrayBuffer');
+    const pdf=await window.pdfjsLib.getDocument({data:buf}).promise;
+    const maxPages=Math.min(pdf.numPages,10);
+    let text='';
+    for(let i=1;i<=maxPages;i++){
+      const page=await pdf.getPage(i);
+      const tc=await page.getTextContent();
+      text+=tc.items.map(it=>it.str).join('')+'\n';
+    }
+    if(text.trim().length>=30) return text.trim();
+    // 文字层太少 → 扫描版PDF，逐页转图片走OCR
+    statusEl.textContent='⏳ 扫描版PDF，逐页OCR…';
+    let ocrText='';
+    for(let i=1;i<=Math.min(pdf.numPages,5);i++){
+      statusEl.textContent=`⏳ OCR 第${i}页…`;
+      const page=await pdf.getPage(i);
+      const vp=page.getViewport({scale:2});
+      const c=document.createElement('canvas');c.width=vp.width;c.height=vp.height;
+      await page.render({canvasContext:c.getContext('2d'),viewport:vp}).promise;
+      const img=await shrinkImage(c.toDataURL('image/jpeg',0.85));
+      ocrText+=await aiChat(OCR_PROMPT,img)+'\n';
+    }
+    return ocrText.trim();
+  }
+  // 4. 图片（拍照）
+  if(file.type.startsWith('image/')){
+    statusEl.textContent='⏳ AI 识别图片中…';
+    const raw=await readFileAs(file,'dataURL');
+    const img=await shrinkImage(raw);
+    return await aiChat(OCR_PROMPT,img);
+  }
+  throw new Error('不支持的格式：'+file.name+'（支持 图片/PDF/docx/txt）');
+}
+
+async function corrDocUpload(input,targetId){
+  const files=[...input.files];if(!files.length)return;
+  const statusEl=document.getElementById(targetId.replace('corr-question','corr-q-status').replace('corr-answer','corr-a-status').replace('corr-ref','corr-r-status'));
+  const ta=document.getElementById(targetId);
+  try{
+    let all='';
+    for(let i=0;i<files.length;i++){
+      if(files.length>1) statusEl.textContent=`⏳ 处理第${i+1}/${files.length}个文件…`;
+      all+=(await extractFromFile(files[i],statusEl)).trim()+'\n\n';
+    }
+    ta.value=(ta.value.trim()?ta.value.trim()+'\n\n':'')+all.trim();
+    ta.dispatchEvent(new Event('input'));
+    statusEl.textContent='✅ 识别完成，可在文本框中校对修改';
+    showToast('✅ 文档识别完成');
+  }catch(e){
+    statusEl.textContent='❌ '+e.message;
+    if(/未配置/.test(e.message)) alert('📎 图片/扫描件识别需要 AI Key（免费）\n\n到「☁️ 云同步」页底部「🤖 AI 功能设置」配置智谱AI密钥即可。\n\n纯文字PDF、Word、TXT 不需要 Key 也能识别。');
+  }
+  input.value='';
+}
+
+async function ocrWqImg(){
+  const imgData=_wqImgData||(document.querySelector('#wq-img-preview img')?.src);
+  if(!imgData){alert('请先上传图片');return;}
+  const status=document.getElementById('ocr-status');
+  status.textContent='识别中…';
+  try{
+    const text=await aiChat('请将这道题目的所有文字内容完整提取出来，保持原始排版，包括题干、选项、数据表格等，不要解题，只提取文字。',imgData);
+    document.getElementById('wq-content').value=text;
+    status.textContent='✅ 识别完成';
+  }catch(e){
+    status.textContent='❌ '+e.message;
+    if(/未配置/.test(e.message)) alert('🤖 OCR 需要先配置 AI Key（免费）\n\n步骤：\n1. 打开「☁️ 云同步」页，拉到「AI 功能设置」\n2. 按提示注册智谱AI（open.bigmodel.cn，手机号即可）\n3. 复制 API Key 粘贴并保存\n\nOCR 和批改用的都是免费模型，不产生费用。');
+  }
+}
+
+function selectAttr(attr,btn){
+  document.getElementById('wq-attr-val').value=attr;
+  document.querySelectorAll('.attr-btn').forEach(b=>{b.style.background='var(--s2)';b.style.color='var(--t2)';b.style.borderColor='var(--border)';b.style.fontWeight='400';});
+  btn.style.background='var(--p)';btn.style.color='#fff';btn.style.borderColor='var(--p)';btn.style.fontWeight='700';
+}
+
+function selectWqCat(cat,btn){
+  document.getElementById('wq-cat-val').value=cat;
+  document.querySelectorAll('.wq-cat-btn').forEach(b=>{b.style.background='var(--s2)';b.style.color='var(--t2)';b.style.borderColor='var(--border)';});
+  btn.style.background='var(--p)';btn.style.color='#fff';btn.style.borderColor='var(--p)';
+}
+
+function addWqCat(){
+  const name=prompt('输入新分类名称：');
+  if(!name?.trim()) return;
+  const cats=getWqCats();
+  if(!cats.includes(name.trim())) cats.push(name.trim());
+  D.wqCats=cats;sv();
+  openWqForm(); // reopen to refresh cat list
+}
+
+function delWqCat(cat){
+  const used=(D.wq||[]).filter(q=>q.category===cat).length;
+  if(!confirm(`删除分类「${cat}」？\n\n${used?`已有 ${used} 道错题使用此分类（错题不会被删除，仍可在「全部」中查看）`:'该分类下暂无错题'}`)) return;
+  D.wqCats=getWqCats().filter(c=>c!==cat);
+  if(!D.wqCats.length) D.wqCats=[...WQ_DEFAULT_CATS];
+  // 标记删除（墓碑），防止云同步合并时被另一台设备加回来
+  D.deletedWqCats=D.deletedWqCats||[];
+  if(!D.deletedWqCats.includes(cat)) D.deletedWqCats.push(cat);
+  sv();
+  openWqForm();renderWq();
+  showToast('🗑 已删除分类「'+cat+'」');
+}
+
+function saveWq(editId){
+  const attr=document.getElementById('wq-attr-val')?.value||'';
+  const cat=document.getElementById('wq-cat-val')?.value||getWqCats()[0];
+  const title=document.getElementById('wq-title')?.value.trim()||'';
+  const content=document.getElementById('wq-content')?.value.trim()||'';
+  const answer=document.getElementById('wq-answer')?.value.trim()||'';
+  const imgData=_wqImgData||(document.querySelector('#wq-img-preview img')?.src)||null;
+  if(!attr){alert('请选择错误归因（不会 / 会但慢 / 粗心）');return;}
+  if(!content&&!imgData){alert('请填写题目内容或上传图片');return;}
+  if(!D.wq) D.wq=[];
+  if(editId){
+    const idx=D.wq.findIndex(q=>q.id===editId);
+    if(idx>-1) D.wq[idx]={...D.wq[idx],attr,category:cat,title,content,answer,
+      imgData:imgData||D.wq[idx].imgData};
+  }else{
+    D.wq.push({id:'wq_'+Date.now(),date:ds(new Date()),attr,category:cat,title,content,answer,imgData});
+  }
+  sv();cloudSave();_wqImgData=null;closeWqForm();renderWq();
+}
+
+function editWq(id){_wqImgData=null;openWqForm(id);}
+
+function delWq(id){
+  if(!confirm('确认删除这道错题？')) return;
+  D.wq=(D.wq||[]).filter(q=>q.id!==id);sv();cloudSave();renderWq();
+}
+
+function exportWqItem(id){
+  const q=(D.wq||[]).find(x=>x.id===id);if(!q) return;
+  const al={'notknow':'不会','slow':'会但慢','careless':'粗心'};
+  downloadText(`错题记录\n归因：${al[q.attr]||'未知'}\n分类：${q.category}\n日期：${q.date}\n标题：${q.title||'无'}\n\n题目：\n${q.content||'（见图片）'}\n\n解析：\n${q.answer||'暂无'}`,
+    `错题_${q.category}_${q.date}.txt`);
+}
+
+function exportAllWq(){
+  const items=D.wq||[];if(!items.length){alert('暂无错题');return;}
+  const al={'notknow':'不会','slow':'会但慢','careless':'粗心'};
+  const text=items.map((q,i)=>`=== 错题${i+1} | ${al[q.attr]||'?'} | ${q.category} | ${q.date} ===\n标题：${q.title||'无'}\n题目：${q.content||'（图片）'}\n解析：${q.answer||'无'}`).join('\n\n');
+  downloadText(text,`全部错题_${ds(new Date())}.txt`);
+}
+
+function downloadText(text,filename){
+  const a=document.createElement('a');
+  a.href='data:text/plain;charset=utf-8,'+encodeURIComponent(text);
+  a.download=filename;a.click();
+}
+
+// ==================== CLOUD SYNC (JSONBin.io) ====================
+// 用户在「设置」Tab 填入 API Key + Bin ID，数据自动上云
+// 跨设备：在另一台设备打开同一HTML，填入相同Key+BinID，点「从云端恢复」即可
+
+const CLOUD_KEY_STORE = 'gk2026_cloud';
+function loadCloudCfg(){
+  try{const r=localStorage.getItem(CLOUD_KEY_STORE);if(r)return JSON.parse(r);}catch(e){}
+  return {apiKey:'',binId:'',autoSync:false};
+}
+function saveCloudCfg(cfg){try{localStorage.setItem(CLOUD_KEY_STORE,JSON.stringify(cfg));}catch(e){}}
+let CLOUD=loadCloudCfg();
+
+// 压缩图片数据，避免超出JSONBin 100KB/请求限制
+// 图片单独不上传，只同步文字数据；图片保留在本地localStorage
+function stripImgs(data){
+  const d=JSON.parse(JSON.stringify(data));
+  if(d.wq) d.wq=d.wq.map(q=>({...q,imgData:q.imgData?'[img]':null}));
+  return d;
+}
+
+let _lastSaveTs=0;
+async function cloudSave(silent=true,force=false){
+  if(!CLOUD.apiKey||!CLOUD.binId) return;
+  const now=Date.now();
+  if(!force&&now-_lastSaveTs<3000) return; // debounce 3s
+  _lastSaveTs=now;
+  const payload=stripImgs(D);
+  setSyncStatus('saving');
+  try{
+    const r=await fetch(`https://api.jsonbin.io/v3/b/${CLOUD.binId}`,{
+      method:'PUT',
+      headers:{'Content-Type':'application/json','X-Master-Key':CLOUD.apiKey,'X-Bin-Versioning':'false'},
+      body:JSON.stringify(payload)  // ⚠️ 直接发数据本身，不能再套{record:}壳（JSONBin会自动包装）
+    });
+    if(!r.ok) throw new Error(await r.text());
+    CLOUD.lastSyncTs=Date.now();saveCloudCfg(CLOUD);
+    setSyncStatus('ok');
+    if(!silent) showToast('☁️ 已同步到云端');
+  }catch(e){
+    setSyncStatus('err');
+    showToast('❌ 上传失败：'+(e.message||'网络错误')+'（学习记录仍在本机，稍后请手动点「立即上传」）','red');
+  }
+}
+
+// ---- 双向合并：取两边并集，谁都不会覆盖谁 ----
+// 解决「平板学了3小时，手机一同步还是0」：以前是云端整体覆盖本地，
+// 现在按条目合并：学习记录/打卡/笔记/错题全部取并集，进度取较大值
+function mergeData(local,remote){
+  const m={...remote,...{}};
+  // 删除墓碑：任一端删除过的记录，合并时彻底排除（防止被另一端"复活"）
+  const tomb=new Set([...(remote.deletedLogs||[]),...(local.deletedLogs||[])]);
+  m.deletedLogs=[...tomb];
+  // 学习记录：按 日期+起止+科目 去重合并
+  const logKey=l=>`${l.date}|${l.start}|${l.end}|${l.subject}|${l.duration}`;
+  const seen=new Set();
+  m.logs=[];
+  [...(remote.logs||[]),...(local.logs||[])].forEach(l=>{
+    const k=logKey(l);
+    if(!seen.has(k)&&!tomb.has(k)){m.logs.push(l);seen.add(k);}
+  });
+  m.logs.sort((a,b)=>a.date<b.date?-1:1);
+  // 打卡：完成状态取并集（任一端勾了就算完成）
+  m.checks={...(remote.checks||{}),...(local.checks||{})};
+  Object.keys(remote.checks||{}).forEach(k=>{if(remote.checks[k])m.checks[k]=true;});
+  // 刷题数：取较大值
+  m.drills={...(remote.drills||{})};
+  Object.entries(local.drills||{}).forEach(([k,v])=>{m.drills[k]=Math.max(parseFloat(v)||0,parseFloat(m.drills[k])||0);});
+  // 笔记/错题/批改：按 id 取并集
+  const byId=(a,b,idf)=>{const map=new Map();(a||[]).forEach(x=>map.set(idf(x),x));(b||[]).forEach(x=>{if(!map.has(idf(x)))map.set(idf(x),x);});return[...map.values()];};
+  m.notes=byId(remote.notes,local.notes,x=>x.id||x.ts);
+  m.wq=byId(remote.wq,local.wq,x=>x.id);
+  m.corrections=byId(remote.corrections,local.corrections,x=>x.id);
+  // 周反馈：合并，本地有内容的优先
+  m.feedbacks={...(remote.feedbacks||{}),...(local.feedbacks||{})};
+  // 临时任务：按时段合并去重
+  m.customTasks={...(remote.customTasks||{})};
+  Object.entries(local.customTasks||{}).forEach(([k,arr])=>{
+    const ex=m.customTasks[k]||[];
+    const txts=new Set(ex.map(x=>x.text));
+    m.customTasks[k]=[...ex,...arr.filter(x=>!txts.has(x.text))];
+  });
+  // 顺延记录：并集
+  const skKey=s=>`${s.date}|${s.slot}`;
+  const sks=new Map();[...(remote.skips||[]),...(local.skips||[])].forEach(s=>sks.set(skKey(s),s));
+  m.skips=[...sks.values()];
+  // 课程进度：取较大值
+  // 课程进度：默认取大值；但带手动修正时间戳的，以最新一次修正为准（允许往下调）
+  m.prog={...(remote.prog||{})};
+  m.progTs={...(remote.progTs||{})};
+  Object.entries(local.prog||{}).forEach(([k,v])=>{
+    const lt=(local.progTs||{})[k]||0, rt=(remote.progTs||{})[k]||0;
+    if(lt>rt){m.prog[k]=v;m.progTs[k]=lt;}
+    else if(rt>lt){/* 保留remote值 */}
+    else m.prog[k]=Math.max(v||0,m.prog[k]||0);
+  });
+  // 当日进度快照：本地优先（仅影响当天课表显示，无关紧要的取舍）
+  m.dayStart={...(remote.dayStart||{}),...(local.dayStart||{})};
+  // 错题分类：并集
+  // 错题分类：并集，但排除任一端删除过的（墓碑）
+  const catTomb=new Set([...(remote.deletedWqCats||[]),...(local.deletedWqCats||[])]);
+  m.deletedWqCats=[...catTomb];
+  m.wqCats=[...new Set([...(remote.wqCats||[]),...(local.wqCats||[])])].filter(c=>!catTomb.has(c));
+  // 笔记类型：按值合并去重
+  const ntMap=new Map();
+  [...(remote.noteTypes||[]),...(local.noteTypes||[])].forEach(t=>{if(t&&t.v&&!ntMap.has(t.v))ntMap.set(t.v,t);});
+  if(ntMap.size) m.noteTypes=[...ntMap.values()];
+  return m;
+}
+
+async function cloudLoad(){
+  if(!CLOUD.apiKey||!CLOUD.binId){showToast('请先填写 API Key 和 Bin ID','orange');return;}
+  setSyncStatus('loading');
+  try{
+    const r=await fetch(`https://api.jsonbin.io/v3/b/${CLOUD.binId}/latest`,{
+      headers:{'X-Master-Key':CLOUD.apiKey}
+    });
+    if(!r.ok) throw new Error(await r.text());
+    const json=await r.json();
+    let remote=json.record;
+    // 兼容旧版双重包裹的数据：{record:{record:{logs:...}}}，逐层解开
+    let guard=0;
+    while(remote&&!remote.logs&&remote.record&&guard<5){remote=remote.record;guard++;}
+    if(!remote||!remote.logs&&!remote.checks){showToast('云端无数据','orange');return;}
+    // 保留本地错题图片
+    const localWqImgs={};
+    (D.wq||[]).forEach(q=>{if(q.imgData&&q.imgData!=='[img]') localWqImgs[q.id]=q.imgData;});
+    // ⭐ 双向合并（不再整体覆盖），合并结果回传云端，两边数据都不丢
+    const merged=mergeData(D,remote);
+    Object.keys(merged).forEach(k=>{D[k]=merged[k];});
+    if(D.wq) D.wq=D.wq.map(q=>({...q,imgData:localWqImgs[q.id]||(q.imgData==='[img]'?null:q.imgData)||null}));
+    try{localStorage.setItem(KEY,JSON.stringify(D));}catch(e){}
+    cloudSave(true,true); // 把合并结果传回云端
+    setSyncStatus('ok');
+    showToast('✅ 已同步（本机与云端记录已合并，互不覆盖）');
+    // 全量刷新：课表、计时记录、当日进度、统计页（若打开）
+    renderSchedule();renderTLog();updateDayProgress(ds(curDate));
+    try{
+      if(document.getElementById('sec-stat')?.classList.contains('on')){
+        renderStats();renderPie();renderBar();renderProgBars();renderHeatmap();renderAllLogs();
+      }
+    }catch(e){}
+  }catch(e){
+    setSyncStatus('err');
+    showToast('❌ 读取失败：'+e.message,'red');
+  }
+}
+
+async function cloudCreateBin(){
+  // 直接读取输入框（用户可能还没点「保存配置」），并自动保存
+  const inputKey=document.getElementById('cfg-api-key').value.trim();
+  if(inputKey) CLOUD.apiKey=inputKey;
+  if(!CLOUD.apiKey){showToast('请先填写 API Key','orange');return;}
+  if(!/^\$2[aby]\$/.test(CLOUD.apiKey)){showToast('⚠️ Key 格式不对，请确认复制的是 X-Master-Key（$2a$10$ 或 $2b$10$ 开头）','orange');return;}
+  setSyncStatus('saving');
+  try{
+    const r=await fetch('https://api.jsonbin.io/v3/b',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','X-Master-Key':CLOUD.apiKey,'X-Bin-Name':'gongkao2026','X-Bin-Private':'true'},
+      body:JSON.stringify(stripImgs(D))
+    });
+    if(!r.ok){
+      let msg='HTTP '+r.status;
+      try{const j=await r.json();msg=j.message||msg;}catch(e2){}
+      if(r.status===401) msg='API Key 无效（401）。请到 jsonbin.io → API KEYS 页面复制 MASTER KEY';
+      throw new Error(msg);
+    }
+    const json=await r.json();
+    const newId=json.metadata?.id||'';
+    CLOUD.binId=newId;
+    saveCloudCfg(CLOUD);
+    document.getElementById('cfg-bin-id').value=newId;
+    setSyncStatus('ok');
+    showToast('🎉 Bin 创建成功！ID 已自动填入并保存');
+  }catch(e){
+    setSyncStatus('err');
+    const hint=/Failed to fetch|NetworkError|fetch/i.test(e.message)
+      ? '网络请求被拦截：请用浏览器直接打开本文件（预览窗口禁止联网），且需在 https 或 file 环境'
+      : e.message;
+    showToast('❌ 创建失败：'+hint,'red');
+    alert('❌ Bin 创建失败\n\n原因：'+hint+'\n\n排查步骤：\n1. 必须把文件下载后用 Safari/Chrome 打开（App 内预览窗口无法联网）\n2. 确认复制的是 jsonbin.io → API KEYS 页面的 MASTER KEY\n3. 网络需能访问 api.jsonbin.io（部分网络环境需切换流量/Wi-Fi）');
+  }
+}
+
+function setSyncStatus(s){
+  const el=document.getElementById('sync-status');
+  if(!el) return;
+  const m={ok:'☁️ 已同步',saving:'⏳ 同步中…',loading:'⏳ 读取中…',err:'❌ 同步失败',none:'⚪ 未配置'};
+  const c={ok:'#16a34a',saving:'#d97706',loading:'#2563eb',err:'#dc2626',none:'#94a3b8'};
+  el.textContent=m[s]||s;el.style.color=c[s]||'#94a3b8';
+}
+
+function showToast(msg,color='#1d4ed8'){
+  let t=document.getElementById('toast');
+  if(!t){t=document.createElement('div');t.id='toast';t.style.cssText='position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#1d4ed8;color:#fff;padding:9px 20px;border-radius:20px;font-size:12px;font-weight:600;z-index:999;box-shadow:0 4px 16px rgba(0,0,0,.2);transition:opacity .4s';document.body.appendChild(t);}
+  t.textContent=msg;t.style.background=color==='red'?'#dc2626':color==='orange'?'#d97706':'#1d4ed8';t.style.opacity='1';
+  clearTimeout(t._to);t._to=setTimeout(()=>t.style.opacity='0',2800);
+}
+
+function saveCfg(){
+  CLOUD.apiKey=document.getElementById('cfg-api-key').value.trim();
+  CLOUD.binId=document.getElementById('cfg-bin-id').value.trim();
+  CLOUD.autoSync=document.getElementById('cfg-auto-sync').checked;
+  saveCloudCfg(CLOUD);
+  showToast('✅ 配置已保存');
+  setSyncStatus(CLOUD.apiKey&&CLOUD.binId?'ok':'none');
+}
+
+function renderCloudCfg(){
+  document.getElementById('cfg-api-key').value=CLOUD.apiKey||'';
+  document.getElementById('cfg-bin-id').value=CLOUD.binId||'';
+  document.getElementById('cfg-auto-sync').checked=CLOUD.autoSync||false;
+  try{document.getElementById('cfg-ai-key').value=getAiKey();}catch(e){}
+  setSyncStatus(CLOUD.apiKey&&CLOUD.binId?'ok':'none');
+  // 显示上次成功同步时间，便于判断同步是否真的在工作
+  const big=document.getElementById('sync-status-big');
+  if(big&&CLOUD.lastSyncTs){
+    const dt=new Date(CLOUD.lastSyncTs);
+    big.textContent=(CLOUD.apiKey&&CLOUD.binId?'☁️ 已配置':'⚪ 未配置')+' · 上次成功同步：'+dt.getMonth()+1+'月'+dt.getDate()+'日 '+String(dt.getHours()).padStart(2,'0')+':'+String(dt.getMinutes()).padStart(2,'0');
+  }
+}
+
+// ==================== 同步诊断 ====================
+// 一步步检查同步链路，把问题定位清楚显示给用户
+async function syncDiagnose(){
+  const el=document.getElementById('diag-result');
+  el.style.display='block';
+  const lines=[];
+  const log=s=>{lines.push(s);el.textContent=lines.join('\n');};
+  log('🩺 开始诊断…');
+
+  // 1. 运行环境
+  const proto=location.protocol;
+  log('1️⃣ 运行环境: '+proto+'//'+(location.host||'(本地文件)'));
+  if(proto==='about:'||location.href.startsWith('about:srcdoc')){
+    log('   ❌ 检测到沙箱预览环境！App内预览窗口禁止联网，');
+    log('   必须下载文件后用 Safari/Chrome 打开才能同步。诊断终止。');
+    return;
+  }
+  log('   ✅ 环境正常');
+
+  // 2. 配置检查（注意：CLOUD 是各设备独立保存的，新设备必须重新填）
+  log('2️⃣ 本机保存的配置:');
+  log('   API Key: '+(CLOUD.apiKey?CLOUD.apiKey.slice(0,12)+'…（已填）':'❌ 空！本设备没有保存过 Key'));
+  log('   Bin ID : '+(CLOUD.binId||'❌ 空！本设备没有保存过 Bin ID'));
+  log('   自动同步: '+(CLOUD.autoSync?'✅ 已开启':'⚠️ 未开启（建议勾选后点保存配置）'));
+  if(!CLOUD.apiKey||!CLOUD.binId){
+    log('   ❌ 配置不完整！每台设备都要各自填一次 Key+BinID 并点「保存配置」。');
+    log('   （配置存在各设备本地，换设备/清浏览器缓存后要重新填）诊断终止。');
+    return;
+  }
+
+  // 3. 网络连通
+  log('3️⃣ 测试连接 api.jsonbin.io …');
+  let r;
+  try{
+    r=await fetch(`https://api.jsonbin.io/v3/b/${CLOUD.binId}/latest`,{headers:{'X-Master-Key':CLOUD.apiKey}});
+  }catch(e){
+    log('   ❌ 网络请求失败: '+e.message);
+    log('   可能原因: ①App预览窗口（无法联网） ②当前网络屏蔽了 jsonbin.io（试试切流量/换Wi-Fi）');
+    return;
+  }
+  if(r.status===401){log('   ❌ 401: API Key 无效。请确认复制的是 jsonbin.io → API KEYS 页的 MASTER KEY');return;}
+  if(r.status===404){log('   ❌ 404: Bin ID 不存在或拼写错误。请核对两台设备的 Bin ID 是否完全一致');return;}
+  if(!r.ok){log('   ❌ HTTP '+r.status+'，请稍后重试');return;}
+  log('   ✅ 连接成功，Key 和 Bin ID 都有效');
+
+  // 4. 云端数据 vs 本机数据（兼容旧版双重包裹格式）
+  try{
+    const json=await r.json();
+    let rec=json.record||{};
+    let g=0;while(rec&&!rec.logs&&rec.record&&g<5){rec=rec.record;g++;}
+    if(g>0) log('   ℹ️ 检测到旧版数据格式（嵌套'+g+'层），已自动解包');
+    const rMin=(rec.logs||[]).reduce((s,l)=>s+(l.duration||0),0);
+    const lMin=(D.logs||[]).reduce((s,l)=>s+(l.duration||0),0);
+    log('4️⃣ 数据对比:');
+    log('   云端: 学习记录 '+(rec.logs||[]).length+' 条 / 共 '+(rMin/60).toFixed(1)+'h / 打卡 '+Object.values(rec.checks||{}).filter(Boolean).length+' 项');
+    log('   本机: 学习记录 '+(D.logs||[]).length+' 条 / 共 '+(lMin/60).toFixed(1)+'h / 打卡 '+Object.values(D.checks||{}).filter(Boolean).length+' 项');
+    if((rec.logs||[]).length===0&&(D.logs||[]).length>0){
+      log('   ⚠️ 云端是空的但本机有数据 → 另一台设备从未成功上传过！');
+      log('   请在学习的那台设备上点「☁️ 立即上传」');
+    }
+  }catch(e){log('   ⚠️ 云端数据解析失败: '+e.message);}
+
+  // 5. 自动执行一次双向合并
+  log('5️⃣ 正在执行同步合并…');
+  try{
+    await cloudLoad();
+    log('   ✅ 合并完成！课表/计时/统计已刷新。');
+    log('   若另一台设备的数据仍未出现 → 去那台设备点「立即上传」，再回来点「同步合并」');
+  }catch(e){log('   ❌ 合并失败: '+e.message);}
+}
+
+// ==================== STATS ====================
+const COURSES=[
+  {key:'小黑-理论',label:'小黑政治·理论课',total:4,color:'#ef4444'},
+  {key:'小黑-刷题',label:'小黑政治·刷题课',total:8,color:'#f87171'},
+  {key:'资料-基础',label:'资料分析·基础',total:8,color:'#6366f1'},
+  {key:'资料-刷题',label:'资料分析·刷题',total:24,color:'#818cf8'},
+  {key:'逻辑',label:'逻辑推理',total:62,color:'#06b6d4'},
+  {key:'数量-基础',label:'数量关系·基础',total:20,color:'#0ea5e9'},
+  {key:'数量-刷题',label:'数量关系·刷题',total:20,color:'#38bdf8'},
+  {key:'言语-基础',label:'言语理解·基础',total:12,color:'#10b981'},
+  {key:'言语-刷题',label:'言语理解·刷题',total:10,color:'#34d399'},
+  {key:'综测-基础',label:'金标尺综测·基础',total:32,color:'#2563eb'},
+  {key:'综测-刷题',label:'金标尺综测·刷题',total:7,color:'#60a5fa'},
+  {key:'申论-小题',label:'白鹭申论·小题课',total:50,color:'#a855f7'},
+  {key:'申论-作文',label:'白鹭申论·作文课',total:10,color:'#c084fc'},
+  {key:'公基-系统',label:'公基·系统课',total:86,color:'#f59e0b'},
+  {key:'公基-刷题',label:'公基·刷题课',total:50,color:'#f97316'},
+];
+
+function renderStats(){
+  const logs=D.logs;const totalMin=logs.reduce((s,l)=>s+l.duration,0);
+  const days=[...new Set(logs.map(l=>l.date))];
+  document.getElementById('s-total').textContent=(totalMin/60).toFixed(1)+'h';
+  document.getElementById('s-days').textContent=days.length;
+  document.getElementById('s-avg').textContent=days.length?(totalMin/days.length/60).toFixed(1)+'h':'0h';
+  let streak=0;let cd=new Date();
+  while(true){const s=ds(cd);if(days.includes(s)){streak++;cd.setDate(cd.getDate()-1);}else break;}
+  document.getElementById('s-streak').textContent=streak+'天';
+}
+
+function renderProgBars(){
+  document.getElementById('prog-bars').innerHTML=COURSES.map(c=>{
+    const done=D.prog[c.key]||0;const pct=Math.min(100,Math.round(done/c.total*100));
+    return`<div class="pb-item">
+      <div class="pb-hdr">
+        <div class="pb-name">${c.label}</div>
+        <div style="display:flex;align-items:center;gap:6px">
+          <input type="number" min="0" max="${c.total}" value="${done}" style="width:44px;border:1px solid var(--border);border-radius:4px;padding:1px 3px;font-size:11px;color:var(--t);background:var(--s2);text-align:center" onchange="updateProg('${c.key}',this.value)"/>
+          <span style="font-size:10px;color:var(--t3)">${done}/${c.total}·${pct}%</span>
+        </div>
+      </div>
+      <div class="pb-bar"><div class="pb-fill" style="width:${pct}%;background:${c.color}"></div></div>
+    </div>`;
+  }).join('');
+}
+function updateProg(key,val){
+  const c=COURSES.find(x=>x.key===key);
+  D.prog[key]=Math.min(c.total,Math.max(0,parseInt(val)||0));
+  // 记录修正时间戳：云同步合并时以最新修正为准（否则取大值会把往下改的修正吞掉）
+  D.progTs=D.progTs||{};D.progTs[key]=Date.now();
+  // 手动修正进度 = 权威操作：同步更新今天的课表快照，今天的课表立即按新进度显示
+  const today=ds(new Date());
+  if(D.dayStart&&D.dayStart[today]) D.dayStart[today][key]=D.prog[key];
+  sv();
+  try{renderProgBars();}catch(e){}
+  try{renderPie();}catch(e){}
+  try{renderSchedule();}catch(e){}
+  showToast(`✏️ ${c.label} 进度已修正为 第${D.prog[key]}节，课表已同步`);
+}
+
+const PC={'资料':'#6366f1','逻辑':'#06b6d4','数量':'#0ea5e9','言语':'#10b981','综测':'#2563eb','公基':'#f59e0b','申论':'#8b5cf6','复盘':'#94a3b8'};
+function grp(s){if(s.startsWith('资料'))return'资料';if(s==='逻辑')return'逻辑';if(s.startsWith('数量'))return'数量';if(s.startsWith('言语'))return'言语';if(s.startsWith('综测'))return'综测';if(s.startsWith('小黑')||['公基-系统','公基-刷题'].includes(s))return'公基';if(s.startsWith('申论'))return'申论';return'复盘';}
+
+function renderPie(){
+  const cv=document.getElementById('pie');const ctx=cv.getContext('2d');
+  const dkey=ds(new Date());const logs=D.logs.filter(l=>l.date===dkey);
+  const g={};logs.forEach(l=>{const gr=grp(l.subject);g[gr]=(g[gr]||0)+l.duration;});
+  const ent=Object.entries(g).filter(([,v])=>v>0);const tot=ent.reduce((s,[,v])=>s+v,0);
+  ctx.clearRect(0,0,220,220);const cx=110,cy=110,r=90;
+  if(!ent.length){ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fillStyle='#e2e8f0';ctx.fill();ctx.fillStyle='#94a3b8';ctx.font='12px sans-serif';ctx.textAlign='center';ctx.fillText('今日暂无记录',cx,cy+4);document.getElementById('pie-leg').innerHTML='';return;}
+  let sa=-Math.PI/2;
+  ent.forEach(([n,v])=>{const ang=(v/tot)*Math.PI*2;ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,sa,sa+ang);ctx.fillStyle=PC[n]||'#94a3b8';ctx.fill();ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();if(ang>0.25){const ma=sa+ang/2;ctx.fillStyle='#fff';ctx.font='bold 10px sans-serif';ctx.textAlign='center';ctx.fillText(Math.round(v/tot*100)+'%',cx+Math.cos(ma)*r*.65,cy+Math.sin(ma)*r*.65+3);}sa+=ang;});
+  document.getElementById('pie-leg').innerHTML=ent.map(([n,v])=>`<div style="display:flex;align-items:center;gap:3px;font-size:10px;color:var(--t2)"><div style="width:8px;height:8px;border-radius:50%;background:${PC[n]||'#94a3b8'}"></div>${n} ${(v/60).toFixed(1)}h</div>`).join('');
+}
+
+function renderBar(){
+  const cv=document.getElementById('bar');const ctx=cv.getContext('2d');
+  const days=[];for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);days.push(ds(d));}
+  const vals=days.map(d=>D.logs.filter(l=>l.date===d).reduce((s,l)=>s+l.duration,0)/60);
+  ctx.clearRect(0,0,220,220);const max=Math.max(...vals,6),bw=24,gap=8,pl=26,pb=26,pt=16,ch=220-pb-pt;
+  [0,2,4,6].forEach(v=>{const y=pt+ch-(v/max)*ch;ctx.fillStyle='#94a3b8';ctx.font='8px sans-serif';ctx.textAlign='right';ctx.fillText(v+'h',pl-2,y+3);ctx.beginPath();ctx.strokeStyle='#f1f5f9';ctx.lineWidth=1;ctx.moveTo(pl,y);ctx.lineTo(215,y);ctx.stroke();});
+  const ty=pt+ch-(6/max)*ch;ctx.beginPath();ctx.strokeStyle='#ef4444';ctx.lineWidth=1.5;ctx.setLineDash([4,3]);ctx.moveTo(pl,ty);ctx.lineTo(215,ty);ctx.stroke();ctx.setLineDash([]);
+  days.forEach((d,i)=>{const v=vals[i];const x=pl+i*(bw+gap);const bh=(v/max)*ch;const y=pt+ch-bh;const grd=ctx.createLinearGradient(0,y,0,y+bh);grd.addColorStop(0,v>=6?'#10b981':'#2563eb');grd.addColorStop(1,v>=6?'#059669':'#1d4ed8');ctx.fillStyle=v>0?grd:'#e2e8f0';ctx.beginPath();if(ctx.roundRect)ctx.roundRect(x,y,bw,Math.max(bh,2),[3,3,0,0]);else ctx.rect(x,y,bw,Math.max(bh,2));ctx.fill();const dn=['日','一','二','三','四','五','六'][new Date(d+'T12:00:00').getDay()];ctx.fillStyle='#94a3b8';ctx.font='8px sans-serif';ctx.textAlign='center';ctx.fillText(dn,x+bw/2,pt+ch+14);if(v>0){ctx.fillStyle='#475569';ctx.font='bold 8px sans-serif';ctx.fillText(v.toFixed(1),x+bw/2,y-3);}});
+}
+
+function renderHeatmap(){
+  const c=document.getElementById('heatmap');const dt={};D.logs.forEach(l=>{dt[l.date]=(dt[l.date]||0)+l.duration;});
+  let h='<div style="display:flex;gap:2px"><div style="display:flex;flex-direction:column;gap:2px;margin-right:3px">';
+  ['日','一','二','三','四','五','六'].forEach(n=>h+=`<div style="width:12px;height:12px;font-size:8px;color:var(--t3);line-height:12px;text-align:center">${n}</div>`);
+  h+='</div>';
+  for(let col=0;col<12;col++){h+='<div style="display:flex;flex-direction:column;gap:2px">';for(let row=0;row<7;row++){const da=12*7-(col*7+row);const d2=new Date();d2.setDate(d2.getDate()-da);const s=ds(d2);const hh=(dt[s]||0)/60;const lv=hh===0?0:hh<2?1:hh<4?2:hh<6?3:4;h+=`<div class="hc" data-l="${lv}" title="${s}: ${hh.toFixed(1)}h"></div>`;}h+='</div>';}
+  h+='</div>';c.innerHTML=h;
+}
+
+function renderAllLogs(){const tb=document.getElementById('all-log');const logs=[...D.logs].reverse().slice(0,60);tb.innerHTML=logs.length?logs.map(l=>`<tr><td>${l.date}</td><td>${sL(l.subject)}</td><td>${l.mode||'听课'}</td><td><strong style="color:var(--p)">${l.duration}min</strong> <span onclick="editLogSubj('${logK(l)}')" style="cursor:pointer;color:var(--p);font-size:11px;padding:0 3px" title="修改科目">✏️</span><span onclick="delLog('${logK(l)}')" style="cursor:pointer;color:#dc2626;font-size:11px;padding:0 3px" title="删除此记录">✕</span></td></tr>`).join(''):'<tr><td colspan="4" style="text-align:center;color:var(--t3);padding:14px">暂无记录</td></tr>';}
+
+// ==================== NOTES ====================
+function saveNote(editId){
+  const type=document.getElementById('note-type').value;
+  const text=document.getElementById('note-input').value.trim();
+  if(!text){alert('请输入笔记内容');return;}
+  if(editId){
+    const idx=D.notes.findIndex(n=>n.id===editId);
+    if(idx>-1){D.notes[idx].type=type;D.notes[idx].text=text;}
+  } else {
+    D.notes.unshift({id:'n_'+Date.now(),date:ds(new Date()),type,text,ts:Date.now()});
+  }
+  sv();
+  document.getElementById('note-input').value='';
+  document.getElementById('note-save-btn').textContent='💾 保存笔记';
+  document.getElementById('note-save-btn').onclick=()=>saveNote(null);
+  document.getElementById('note-cancel-edit').style.display='none';
+  renderNotes(noteFilter);
+}
+
+function editNote(id){
+  const n=D.notes.find(x=>x.id===id);if(!n) return;
+  document.getElementById('note-type').value=n.type;
+  document.getElementById('note-input').value=n.text;
+  document.getElementById('note-save-btn').textContent='💾 保存修改';
+  document.getElementById('note-save-btn').onclick=()=>saveNote(id);
+  document.getElementById('note-cancel-edit').style.display='inline-block';
+  document.getElementById('note-input').scrollIntoView({behavior:'smooth'});
+}
+
+function cancelEditNote(){
+  document.getElementById('note-input').value='';
+  document.getElementById('note-save-btn').textContent='💾 保存笔记';
+  document.getElementById('note-save-btn').onclick=()=>saveNote(null);
+  document.getElementById('note-cancel-edit').style.display='none';
+}
+
+function delNote(id){
+  if(!confirm('确认删除这条笔记？')) return;
+  D.notes=D.notes.filter(n=>n.id!==id);sv();renderNotes(noteFilter);
+}
+
+function exportNote(id){
+  const n=D.notes.find(x=>x.id===id);if(!n) return;
+  downloadText(`【${n.type}】${n.date}\n\n${n.text}`,`笔记_${n.type}_${n.date}.txt`);
+}
+
+function exportAllNotes(){
+  const items=noteFilter==='全部'?D.notes:D.notes.filter(n=>n.type===noteFilter);
+  if(!items.length){alert('暂无笔记');return;}
+  const text=items.map((n,i)=>`=== 笔记 ${i+1} | ${n.type} | ${n.date} ===\n${n.text}`).join('\n\n');
+  downloadText(text,`笔记_${noteFilter}_${ds(new Date())}.txt`);
+}
+
+let noteFilter='全部';
+function filterNotes(f,btn){
+  noteFilter=f;
+  document.querySelectorAll('#note-filter button').forEach(b=>{b.style.background='var(--s2)';b.style.color='var(--t2)';b.style.borderColor='var(--border)';b.style.fontWeight='400';});
+  if(btn){btn.style.background='var(--p)';btn.style.color='#fff';btn.style.borderColor='var(--p)';btn.style.fontWeight='600';}
+  renderNotes(f);
+}
+
+// ==================== 笔记类型管理（可增删，跨设备同步） ====================
+const NOTE_TYPE_DEFAULT=[
+  {v:'公式',label:'🔢 数量/资料 秒杀公式'},
+  {v:'关键词',label:'📝 综测/申论 漏抠关键词'},
+  {v:'错题',label:'❌ 错题反思'},
+  {v:'听课',label:'🎧 听课心得'},
+  {v:'言语',label:'💬 言语理解 技巧'},
+  {v:'逻辑',label:'🔍 逻辑/图推 套路'},
+  {v:'其他',label:'💡 其他'},
+];
+function getNoteTypes(){
+  if(!D.noteTypes||!D.noteTypes.length) D.noteTypes=NOTE_TYPE_DEFAULT.map(t=>({...t}));
+  return D.noteTypes;
+}
+function renderNoteTypes(){
+  const types=getNoteTypes();
+  const sel=document.getElementById('note-type');
+  if(sel){
+    const cur=sel.value;
+    sel.innerHTML=types.map(t=>`<option value="${t.v}">${t.label}</option>`).join('');
+    if(types.some(t=>t.v===cur)) sel.value=cur;
+  }
+  const ft=document.getElementById('note-filter');
+  if(ft){
+    ft.innerHTML=['全部',...types.map(t=>t.v)].map(v=>{
+      const on=v===noteFilter;
+      return `<button onclick="filterNotes('${v}',this)" style="padding:3px 10px;border-radius:10px;border:1.5px solid ${on?'var(--p)':'var(--border)'};background:${on?'var(--p)':'var(--s2)'};color:${on?'#fff':'var(--t2)'};font-size:11px;cursor:pointer;font-weight:${on?600:400}">${v}</button>`;
+    }).join('');
+  }
+}
+function addNoteType(){
+  const name=prompt('输入新笔记类型名称（如：言语、逻辑、时政）：');
+  if(!name?.trim()) return;
+  const v=name.trim();
+  const types=getNoteTypes();
+  if(types.some(t=>t.v===v)){showToast('该类型已存在','orange');return;}
+  types.push({v,label:'📌 '+v});
+  D.noteTypes=types;sv();renderNoteTypes();
+  document.getElementById('note-type').value=v;
+  showToast('✅ 已添加类型「'+v+'」');
+}
+function delNoteType(){
+  const sel=document.getElementById('note-type');
+  const v=sel.value;
+  if(!v){return;}
+  const used=(D.notes||[]).filter(n=>n.type===v).length;
+  if(!confirm(`删除笔记类型「${v}」？\n\n${used?`已有 ${used} 条笔记使用此类型（笔记不会被删除，仍可在「全部」中查看）`:'该类型下暂无笔记'}`)) return;
+  D.noteTypes=getNoteTypes().filter(t=>t.v!==v);
+  if(!D.noteTypes.length) D.noteTypes=NOTE_TYPE_DEFAULT.map(t=>({...t}));
+  sv();
+  if(noteFilter===v) noteFilter='全部';
+  renderNoteTypes();renderNotes(noteFilter);
+  showToast('🗑 已删除类型「'+v+'」');
+}
+
+function renderNotes(f){
+  const list=document.getElementById('note-list');
+  const items=(f==='全部'?D.notes:D.notes.filter(n=>n.type===f))||[];
+  if(!items.length){list.innerHTML='<div style="text-align:center;color:var(--t3);padding:16px;font-size:12px">暂无笔记</div>';return;}
+  list.innerHTML=items.map(n=>`
+    <div class="note-box" id="nb-${n.id}">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:5px;margin-bottom:4px">
+        <div class="note-time">${n.date} · <span style="color:var(--p);font-weight:600">${n.type}</span></div>
+        <div style="display:flex;gap:4px">
+          <button onclick="editNote('${n.id}')" style="padding:2px 8px;border-radius:5px;border:1px solid var(--border);background:var(--s2);color:var(--t2);font-size:10px;cursor:pointer">✏️ 编辑</button>
+          <button onclick="exportNote('${n.id}')" style="padding:2px 8px;border-radius:5px;border:1px solid var(--border);background:var(--s2);color:var(--t2);font-size:10px;cursor:pointer">⬇️ 导出</button>
+          <button onclick="delNote('${n.id}')" style="padding:2px 8px;border-radius:5px;border:1px solid #fecaca;background:#fef2f2;color:#dc2626;font-size:10px;cursor:pointer">🗑</button>
+        </div>
+      </div>
+      <div class="note-text">${n.text}</div>
+    </div>`).join('');
+}
+
+// ==================== FEEDBACK ====================
+async function submitFb(){
+  const week=document.getElementById('fb-w').value;
+  const complete=document.getElementById('fb-c').value.trim();
+  const weak=document.getElementById('fb-w2').value.trim();
+  const plan=document.getElementById('fb-p').value.trim();
+  if(!complete){alert('请填写完成情况');return;}
+  const btn=document.querySelector('#sec-fb .btn-p');
+  btn.textContent='🤔 分析中…';btn.disabled=true;
+  let analysis='';
+  try{
+    const prompt=`你是专业公考备考顾问。学生${week}反馈：
+【完成情况】${complete}
+【薄弱模块】${weak||'未填'}
+【下周计划】${plan||'未填'}
+
+背景：备考四川省考（12月）和事业编（11月）。排课逻辑：单科集中推进（资料→逻辑→数量→言语，每天精确节数），下午综测，晚上公基+申论30min。核心短板：资料分析、数量关系、言语理解、申论大作文。每日6h硬底线。
+
+请给出（简洁直接）：
+1. 【进度评估】50字内
+2. 【关键问题】1-3条
+3. 【下周具体安排】精确到上午/下午/晚上做什么，100字内
+4. 【一句话鼓励】`;
+    analysis=await aiChat(prompt);
+  }catch(e){analysis='（AI分析失败：'+e.message+'。如未配置AI Key，请到「云同步」页底部「AI功能设置」免费配置）';}
+  D.feedbacks[week]={date:ds(new Date()),week,complete,weak,plan,analysis,ts:Date.now()};
+  sv();document.getElementById('fb-c').value='';document.getElementById('fb-w2').value='';document.getElementById('fb-p').value='';
+  btn.textContent='📤 提交 & 获取AI分析';btn.disabled=false;
+  renderFb();
+}
+
+function renderFb(){
+  const list=document.getElementById('fb-list');const items=Object.values(D.feedbacks).sort((a,b)=>b.ts-a.ts);
+  if(!items.length){list.innerHTML='<div style="text-align:center;color:var(--t3);padding:16px;font-size:12px">提交后显示</div>';return;}
+  list.innerHTML=items.map(fb=>`<div class="fb-item"><div style="font-size:10px;color:var(--t3);margin-bottom:4px">${fb.week} · ${fb.date}</div><div style="font-size:12px;color:var(--t)"><strong>完成：</strong>${fb.complete}</div>${fb.weak?`<div style="font-size:11px;color:var(--t2);margin-top:2px"><strong>薄弱：</strong>${fb.weak}</div>`:''}<div class="fb-ai">🤖 ${fb.analysis}</div></div>`).join('');
+}
+
+// ==================== CORRECTION ====================
+let corrType='综测';
+
+function setCorrType(type,btn){
+  corrType=type;
+  document.getElementById('corr-type-val').value=type;
+  document.querySelectorAll('.corr-type-btn').forEach(b=>{
+    b.style.background='var(--s2)';b.style.color='var(--t2)';b.style.borderColor='var(--border)';b.style.fontWeight=400;
+  });
+  btn.style.background='var(--p)';btn.style.color='#fff';btn.style.borderColor='var(--p)';btn.style.fontWeight=600;
+}
+
+// Live char count
+document.addEventListener('DOMContentLoaded',()=>{
+  const ans=document.getElementById('corr-answer');
+  if(ans) ans.addEventListener('input',()=>{
+    document.getElementById('corr-ans-count').textContent=ans.value.length;
+  });
+});
+
+function buildCorrPrompt(type,question,answer,ref){
+  const refPart=ref?`\n\n【参考答案】\n${ref}`:'（无参考答案，请根据题型标准独立评判）';
+  const rules={
+    '综测':`你是专业的四川省事业单位综合测评写作评卷老师。请按以下维度逐一批改，最后给出总分（满分20分）：
+①要点完整性（6分）：是否覆盖题目要求的所有得分点，列出缺失/遗漏的要点
+②关键词命中（4分）：是否使用了材料中的核心词语，列出漏抠的关键词
+③逻辑结构（4分）：总分总结构是否清晰，段落层次是否分明
+④语言规范（3分）：是否符合公文/政论风格，有无口语化表达
+⑤格式规范（3分）：字数是否达标，分段是否合理`,
+    '申论大作文':`你是专业的四川省考申论评卷老师。请按以下维度逐一批改，最后给出总分（满分40分）：
+①主题立意（8分）：论点是否准确切题，是否回应材料核心问题
+②论证充分性（10分）：论据是否有力，是否结合材料，有无空洞表述
+③对策具体性（10分）：对策是否具体可操作，有无主体/措施/目标要素
+④结构完整性（7分）：总分总结构，开头是否点题，结尾是否升华
+⑤语言表达（5分）：是否流畅规范，有无错别字/病句/口语化`,
+    '申论概括':`你是专业的四川省考申论评卷老师。请按以下维度批改概括题（满分15分）：
+①要点覆盖（8分）：是否找全所有要点，列出遗漏要点
+②归纳准确性（4分）：概括是否精准，有无过度发挥或张冠李戴
+③语言简洁（3分）：是否简明扼要，有无冗余表述`,
+    '申论对策':`你是专业的四川省考申论评卷老师。请按以下维度批改对策题（满分20分）：
+①针对性（6分）：对策是否针对问题，有无答非所问
+②可操作性（7分）：措施是否具体，有无主体/时间/方式
+③逻辑完整性（4分）：问题→分析→对策链条是否完整
+④语言规范（3分）：是否简洁规范，无口语化`,
+  };
+  const rule=rules[type]||rules['综测'];
+  return `${rule}
+
+【题目】
+${question}
+
+【考生答案】
+${answer}${refPart}
+
+请按以下格式输出（严格遵守）：
+
+## 📊 总评分
+**X / Y分**（用粗体写清楚）
+
+## 🔍 逐维度分析
+（每个维度：得分 + 具体指出问题 + 原文对应位置）
+
+## ❌ 主要不足
+（3-5条，每条一句话，直接点出问题，不要模糊表达）
+
+## ✅ 亮点
+（1-3条，肯定做得好的地方）
+
+## 💡 修改建议
+（针对最大不足给出具体改法，包括示例改写）
+
+## 📈 下次注意
+（1-3条最需要改进的习惯/方法）`;
+}
+
+async function submitCorrection(){
+  const question=document.getElementById('corr-question').value.trim();
+  const answer=document.getElementById('corr-answer').value.trim();
+  const ref=document.getElementById('corr-ref').value.trim();
+  if(!question){alert('请输入题目内容');return;}
+  if(!answer){alert('请输入你的答案');return;}
+
+  const btn=document.getElementById('corr-submit-btn');
+  btn.textContent='🤔 批改中，请稍候…';btn.disabled=true;
+
+  const resultEl=document.getElementById('corr-result');
+  resultEl.style.display='block';
+  resultEl.innerHTML=`<div style="background:var(--pl);border-radius:10px;padding:20px;text-align:center;color:var(--p)">
+    <div style="font-size:24px;margin-bottom:8px">🤖</div>
+    <div style="font-size:13px;font-weight:600">AI 正在批改中…</div>
+    <div style="font-size:11px;color:var(--t3);margin-top:4px">通常需要15-30秒</div>
+  </div>`;
+
+  let resultText='';
+  try{
+    const prompt=buildCorrPrompt(corrType,question,answer,ref);
+    resultText=await aiChat(prompt);
+  }catch(e){
+    resultText='❌ 批改失败：'+e.message+(/未配置/.test(e.message)?'\n\n👉 配置方法：打开「☁️ 云同步」页 → 拉到「🤖 AI 功能设置」→ 按提示注册智谱AI（免费）→ 填入 Key 保存即可。':'');
+  }
+
+  // Extract score from result
+  const scoreMatch=resultText.match(/(\d+)\s*\/\s*(\d+)\s*分/);
+  const scoreStr=scoreMatch?`${scoreMatch[1]}/${scoreMatch[2]}分`:'--';
+
+  // Render markdown-ish result
+  const html=renderCorrResult(resultText);
+  resultEl.innerHTML=`
+    <div style="border:1.5px solid var(--p);border-radius:12px;overflow:hidden">
+      <div style="background:linear-gradient(135deg,#1d4ed8,#4f46e5);color:#fff;padding:13px 16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+        <div>
+          <div style="font-size:13px;font-weight:700">${corrType} · AI批改结果</div>
+          <div style="font-size:11px;opacity:.8">${ds(new Date())}</div>
+        </div>
+        <div style="background:rgba(255,255,255,.2);border-radius:10px;padding:6px 16px;font-size:18px;font-weight:800">${scoreStr}</div>
+      </div>
+      <div style="padding:14px 16px;font-size:12px;line-height:1.8;color:var(--t)">${html}</div>
+    </div>`;
+
+  // Save to history
+  if(!D.corrections) D.corrections=[];
+  D.corrections.unshift({
+    id:'c_'+Date.now(),
+    date:ds(new Date()),
+    type:corrType,
+    question:question.slice(0,200),
+    answer,ref,
+    result:resultText,
+    score:scoreStr
+  });
+  sv();cloudSave(true);
+  renderCorrHistory();
+
+  btn.textContent='🤖 AI 批改 & 评分';btn.disabled=false;
+}
+
+function renderCorrResult(text){
+  // Convert markdown headings and bold to HTML
+  return text
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/^## (.+)$/gm,'<div style="font-size:13px;font-weight:800;color:var(--p);margin:14px 0 6px;padding-bottom:4px;border-bottom:1.5px solid var(--border)">$1</div>')
+    .replace(/\*\*(.+?)\*\*/g,'<strong style="color:var(--t)">$1</strong>')
+    .replace(/^- (.+)$/gm,'<div style="display:flex;gap:6px;margin:3px 0"><span style="color:var(--p);flex-shrink:0">•</span><span>$1</span></div>')
+    .replace(/^①(.+)$/gm,'<div style="background:var(--pl);border-radius:6px;padding:6px 10px;margin:4px 0;border-left:3px solid var(--p)"><span style="font-weight:700;color:var(--p)">①</span>$1</div>')
+    .replace(/^②(.+)$/gm,'<div style="background:var(--pl);border-radius:6px;padding:6px 10px;margin:4px 0;border-left:3px solid var(--p)"><span style="font-weight:700;color:var(--p)">②</span>$1</div>')
+    .replace(/^③(.+)$/gm,'<div style="background:var(--pl);border-radius:6px;padding:6px 10px;margin:4px 0;border-left:3px solid var(--p)"><span style="font-weight:700;color:var(--p)">③</span>$1</div>')
+    .replace(/^④(.+)$/gm,'<div style="background:var(--pl);border-radius:6px;padding:6px 10px;margin:4px 0;border-left:3px solid var(--p)"><span style="font-weight:700;color:var(--p)">④</span>$1</div>')
+    .replace(/^⑤(.+)$/gm,'<div style="background:var(--pl);border-radius:6px;padding:6px 10px;margin:4px 0;border-left:3px solid var(--p)"><span style="font-weight:700;color:var(--p)">⑤</span>$1</div>')
+    .replace(/\n/g,'<br>');
+}
+
+function renderCorrHistory(){
+  const el=document.getElementById('corr-history');
+  const items=D.corrections||[];
+  if(!items.length){
+    el.innerHTML='<div style="text-align:center;color:var(--t3);padding:20px;font-size:12px">暂无批改记录</div>';
+    return;
+  }
+  el.innerHTML=items.map(c=>`
+    <div style="border:1.5px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:10px">
+      <div style="background:var(--s2);padding:10px 13px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;cursor:pointer" onclick="toggleCorrItem('ci-${c.id}')">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          <span style="background:var(--pl);color:var(--p);border:1px solid #bfdbfe;border-radius:7px;padding:2px 9px;font-size:11px;font-weight:600">${c.type}</span>
+          <span style="font-size:11px;color:var(--t3)">${c.date}</span>
+          <span style="background:linear-gradient(135deg,#1d4ed8,#4f46e5);color:#fff;border-radius:8px;padding:2px 10px;font-size:12px;font-weight:700">${c.score}</span>
+        </div>
+        <div style="display:flex;gap:5px">
+          <button onclick="event.stopPropagation();exportCorrItem('${c.id}')" style="padding:3px 8px;border-radius:5px;border:1px solid var(--border);background:#fff;color:var(--t2);font-size:10px;cursor:pointer">⬇️</button>
+          <button onclick="event.stopPropagation();delCorrItem('${c.id}')" style="padding:3px 8px;border-radius:5px;border:1px solid #fecaca;background:#fef2f2;color:#dc2626;font-size:10px;cursor:pointer">🗑</button>
+          <span style="font-size:12px;color:var(--t3)">▼</span>
+        </div>
+      </div>
+      <div id="ci-${c.id}" style="display:none;padding:12px 14px;font-size:12px;line-height:1.8;color:var(--t);border-top:1px solid var(--border)">
+        <div style="margin-bottom:8px"><strong>题目摘要：</strong>${c.question}…</div>
+        <div style="margin-bottom:8px"><strong>我的答案：</strong><span style="color:var(--t2)">${c.answer.slice(0,150)}${c.answer.length>150?'…':''}</span></div>
+        <div style="background:var(--s2);border-radius:8px;padding:10px 12px;margin-top:8px">${renderCorrResult(c.result)}</div>
+      </div>
+    </div>`).join('');
+}
+
+function toggleCorrItem(id){
+  const el=document.getElementById(id);
+  if(el) el.style.display=el.style.display==='none'?'block':'none';
+}
+
+function delCorrItem(id){
+  if(!confirm('确认删除这条批改记录？')) return;
+  D.corrections=(D.corrections||[]).filter(c=>c.id!==id);
+  sv();renderCorrHistory();
+}
+
+function exportCorrItem(id){
+  const c=(D.corrections||[]).find(x=>x.id===id);if(!c) return;
+  downloadText(`批改记录\n科目：${c.type}\n日期：${c.date}\n得分：${c.score}\n\n题目：\n${c.question}\n\n我的答案：\n${c.answer}\n\n批改结果：\n${c.result}`,
+    `批改_${c.type}_${c.date}.txt`);
+}
+
+function exportAllCorrections(){
+  const items=D.corrections||[];if(!items.length){alert('暂无批改记录');return;}
+  const text=items.map((c,i)=>`=== 批改${i+1} | ${c.type} | ${c.date} | ${c.score} ===\n题目：${c.question}\n答案：${c.answer}\n\n批改：\n${c.result}`).join('\n\n'+'='.repeat(50)+'\n\n');
+  downloadText(text,`全部批改_${ds(new Date())}.txt`);
+}
+function exportLocalData(){
+  const json=JSON.stringify(D,null,2);
+  downloadText(json,`gongkao_backup_${ds(new Date())}.json`);
+}
+function importLocalData(input){
+  const file=input.files[0];if(!file) return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      const imported=JSON.parse(e.target.result);
+      // 合并模式：导入数据与本机数据取并集，不覆盖本机已有记录
+      const merged=mergeData(D,imported);
+      Object.keys(merged).forEach(k=>{D[k]=merged[k];});
+      sv();
+      if(CLOUD.apiKey&&CLOUD.binId) cloudSave(true,true); // 合并结果同步上云
+      showToast('✅ 已导入并合并（学习记录/打卡/笔记取并集，已自动上传云端）');
+      renderSchedule();renderTLog();updateDayProgress(ds(curDate));
+    }catch(err){showToast('❌ 导入失败：文件格式错误','red');}
+    input.value='';
+  };
+  reader.readAsText(file);
+}
+function clearAllData(){
+  if(!confirm('确认清空所有本地数据？此操作不可恢复！')) return;
+  try{localStorage.removeItem(KEY);}catch(e){}
+  D=ld();
+  showToast('已清空本地数据');
+  renderSchedule();
+}
+
+// ==================== TABS ====================
+function goTab(name,btn){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
+  document.querySelectorAll('.tb').forEach(b=>b.classList.remove('on'));
+  document.getElementById('sec-'+name).classList.add('on');
+  btn.classList.add('on');
+  if(name==='stat'){renderStats();renderPie();renderBar();renderProgBars();renderHeatmap();renderAllLogs();}
+  if(name==='timer'){renderSubjs();renderTLog();}
+  if(name==='fb') renderFb();
+  if(name==='note'){renderNoteTypes();renderNotes(noteFilter);}
+  if(name==='wq'){D.wq=D.wq||[];renderWq();}
+  if(name==='correct'){D.corrections=D.corrections||[];renderCorrHistory();}
+  if(name==='cfg'){renderCloudCfg();document.getElementById('sync-status-big').textContent=document.getElementById('sync-status').textContent;}
+}
+
+// ==================== RESPONSIVE ====================
+function toggleSidePanel(){
+  const el=document.getElementById('side-panel');
+  const btn=document.getElementById('sp-toggle-btn');
+  if(!el) return;
+  const showing=el.style.display!=='none';
+  el.style.display=showing?'none':'block';
+  btn.textContent=showing?'📡 查看排课进度 ▼':'📡 收起排课进度 ▲';
+  if(!showing) renderSidePanel(curDate);
+}
+
+function checkLayout(){
+  // On wide screens (≥768px) auto-show side panel inline
+  const sp=document.getElementById('side-panel');
+  const wrap=document.getElementById('sp-toggle-wrap');
+  const btn=document.getElementById('sp-toggle-btn');
+  if(!sp||!wrap) return;
+  if(window.innerWidth>=768){
+    wrap.style.marginTop='0';
+    btn.style.display='none';
+    sp.style.display='block';
+    renderSidePanel(curDate);
+  } else {
+    btn.style.display='block';
+    // keep whatever user toggled
+  }
+}
+window.addEventListener('resize',checkLayout);
+
+// ==================== INIT ====================
+// 每一步单独容错：任何一步失败（如沙箱预览环境禁用 SW/localStorage）都不影响其余功能
+function safeRun(fn){try{fn();}catch(e){console.warn('[init]',e.message);}}
+function init(){
+  safeRun(updateCountdowns);                 // 倒计时最先渲染，绝不被其它错误阻断
+  safeRun(registerSW);
+  safeRun(()=>{if(D.notes) D.notes.forEach(n=>{if(!n.id) n.id='n_'+n.ts;});});
+  if(!D.wq) D.wq=[];
+  if(!D.corrections) D.corrections=[];
+  safeRun(restoreTimer);
+  safeRun(renderSchedule);
+  safeRun(renderTLog);
+  safeRun(renderNoteTypes);
+  safeRun(renderSubjs);
+  safeRun(checkLayout);
+  safeRun(()=>setSyncStatus(CLOUD.apiKey&&CLOUD.binId?'ok':'none'));
+  setInterval(()=>safeRun(updateCountdowns),60000);
+  // 切回页面/从后台唤醒时立即刷新倒计时与课表（保证跨天后数字准确）
+  document.addEventListener('visibilitychange',()=>{
+    if(!document.hidden){
+      safeRun(updateCountdowns);safeRun(renderSchedule);
+      // 切回页面时自动拉取云端最新数据（如配置了同步）——换设备打开即自动合并
+      if(CLOUD.apiKey&&CLOUD.binId) cloudLoad().catch(()=>{});
+    }else{
+      // 切到后台/锁屏前，把当前数据推上云端
+      if(CLOUD.apiKey&&CLOUD.binId) cloudSave(true,true);
+    }
+  });
+  setInterval(()=>{if(tOn){safeRun(saveTimerState);safeRun(()=>swPost({type:'TIMER_PING'}));}},5000);
+  // 打开页面即自动拉取云端并合并（只要配置了 Key+BinID 就拉，不依赖自动同步开关）
+  if(CLOUD.apiKey&&CLOUD.binId) cloudLoad().catch(()=>{});
+}
+init();
+</script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0c238d22fc1a2a1',t:'MTc4MTUzMzI5NA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
