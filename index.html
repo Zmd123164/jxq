@@ -1657,7 +1657,22 @@ function delLog(key){
   showToast('🗑 已删除该条学习记录');
 }
 
-function renderTLog(){const dkey=ds(new Date());const logs=D.logs.filter(l=>l.date===dkey);const tb=document.getElementById('t-log');tb.innerHTML=logs.length?logs.map(l=>`<tr><td>${sL(l.subject)}</td><td>${l.mode}</td><td>${l.start}</td><td>${l.end}</td><td><strong style="color:var(--p)">${l.duration}min</strong> <span onclick="editLogSubj('${logK(l)}')" style="cursor:pointer;color:var(--p);font-size:11px;padding:0 3px" title="修改科目">✏️</span><span onclick="delLog('${logK(l)}')" style="cursor:pointer;color:#dc2626;font-size:11px;padding:0 3px" title="删除此记录">✕</span></td></tr>`).join(''):'<tr><td colspan="5" style="text-align:center;color:var(--t3);padding:14px">暂无记录</td></tr>';}
+// 修改计时记录的时长
+function editLogDuration(key){
+  const log=(D.logs||[]).find(l=>logK(l)===key);if(!log)return;
+  const input = prompt(`修改时长（分钟）\n当前: ${log.duration} 分钟\n科目: ${sL(log.subject)}  ${log.start}-${log.end}\n\n输入新的分钟数：`, log.duration);
+  if(input === null) return;
+  const v = parseInt(input);
+  if(isNaN(v) || v < 0){ showToast('时长无效','orange'); return; }
+  D.deletedLogs=D.deletedLogs||[];
+  if(!D.deletedLogs.includes(key)) D.deletedLogs.push(key);
+  log.duration = v;
+  sv(); if(CLOUD.apiKey&&CLOUD.binId) cloudSave(true,true);
+  renderTLog(); updateDayProgress(ds(curDate));
+  try{renderStats();renderAllLogs();renderPie();renderBar();renderHeatmap();}catch(e){}
+  showToast(`✅ 时长已改为 ${v} 分钟`);
+}
+function renderTLog(){const dkey=ds(new Date());const logs=D.logs.filter(l=>l.date===dkey);const tb=document.getElementById('t-log');tb.innerHTML=logs.length?logs.map(l=>`<tr><td>${sL(l.subject)}</td><td>${l.mode}</td><td>${l.start}</td><td>${l.end}</td><td><strong style="color:var(--p);cursor:pointer" onclick="editLogDuration('${logK(l)}')" title="点击修改时长">${l.duration}min</strong> <span onclick="editLogSubj('${logK(l)}')" style="cursor:pointer;color:var(--p);font-size:11px;padding:0 3px" title="修改科目">✏️</span><span onclick="editLogDuration('${logK(l)}')" style="cursor:pointer;color:#d97706;font-size:11px;padding:0 3px" title="修改时长">🕐</span><span onclick="delLog('${logK(l)}')" style="cursor:pointer;color:#dc2626;font-size:11px;padding:0 3px" title="删除此记录">✕</span></td></tr>`).join(''):'<tr><td colspan="5" style="text-align:center;color:var(--t3);padding:14px">暂无记录</td></tr>';}
 
 // ==================== SERVICE WORKER (background timer) ====================
 // SW is registered inline via blob URL so no extra file is needed
@@ -2521,7 +2536,7 @@ function renderHeatmap(){
   h+='</div>';c.innerHTML=h;
 }
 
-function renderAllLogs(){const tb=document.getElementById('all-log');const logs=[...D.logs].reverse().slice(0,60);tb.innerHTML=logs.length?logs.map(l=>`<tr><td>${l.date}</td><td>${sL(l.subject)}</td><td>${l.mode||'听课'}</td><td><strong style="color:var(--p)">${l.duration}min</strong> <span onclick="editLogSubj('${logK(l)}')" style="cursor:pointer;color:var(--p);font-size:11px;padding:0 3px" title="修改科目">✏️</span><span onclick="delLog('${logK(l)}')" style="cursor:pointer;color:#dc2626;font-size:11px;padding:0 3px" title="删除此记录">✕</span></td></tr>`).join(''):'<tr><td colspan="4" style="text-align:center;color:var(--t3);padding:14px">暂无记录</td></tr>';}
+function renderAllLogs(){const tb=document.getElementById('all-log');const logs=[...D.logs].reverse().slice(0,60);tb.innerHTML=logs.length?logs.map(l=>`<tr><td>${l.date}</td><td>${sL(l.subject)}</td><td>${l.mode||'听课'}</td><td><strong style="color:var(--p);cursor:pointer" onclick="editLogDuration('${logK(l)}')" title="点击修改时长">${l.duration}min</strong> <span onclick="editLogSubj('${logK(l)}')" style="cursor:pointer;color:var(--p);font-size:11px;padding:0 3px" title="修改科目">✏️</span><span onclick="editLogDuration('${logK(l)}')" style="cursor:pointer;color:#d97706;font-size:11px;padding:0 3px" title="修改时长">🕐</span><span onclick="delLog('${logK(l)}')" style="cursor:pointer;color:#dc2626;font-size:11px;padding:0 3px" title="删除此记录">✕</span></td></tr>`).join(''):'<tr><td colspan="4" style="text-align:center;color:var(--t3);padding:14px">暂无记录</td></tr>';}
 
 // ==================== NOTES ====================
 function saveNote(editId){
