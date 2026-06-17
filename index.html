@@ -283,8 +283,16 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
       </div>
     </div>
     <div class="ta">
-      <div class="td" id="t-disp">00:00:00</div>
-      <div class="tl" id="t-lbl">选择科目后开始计时</div>
+      <div class="td" id="t-disp" style="cursor:pointer" onclick="editTimerTime()" title="点击直接修改时长">00:00:00</div>
+      <div class="tl" id="t-lbl">选择科目后开始计时 | 点击时间可直接修改</div>
+      <!-- 时长快调按钮 -->
+      <div style="display:flex;gap:5px;justify-content:center;margin-top:8px;flex-wrap:wrap">
+        <button onclick="adjustTimer(-300)" style="padding:3px 9px;border-radius:6px;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.1);color:#fff;font-size:11px;cursor:pointer">-5分</button>
+        <button onclick="adjustTimer(-60)" style="padding:3px 9px;border-radius:6px;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.1);color:#fff;font-size:11px;cursor:pointer">-1分</button>
+        <button onclick="editTimerTime()" style="padding:3px 12px;border-radius:6px;border:1px solid rgba(255,255,255,.5);background:rgba(255,255,255,.2);color:#fff;font-size:11px;font-weight:700;cursor:pointer">✏️ 修改时长</button>
+        <button onclick="adjustTimer(60)" style="padding:3px 9px;border-radius:6px;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.1);color:#fff;font-size:11px;cursor:pointer">+1分</button>
+        <button onclick="adjustTimer(300)" style="padding:3px 9px;border-radius:6px;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.1);color:#fff;font-size:11px;cursor:pointer">+5分</button>
+      </div>
       <div class="tbtns">
         <button class="tbtn tb-s" onclick="startTimer()">🔔 开始计时</button>
         <button class="tbtn tb-e" onclick="stopTimer()">⏹ 结束计时</button>
@@ -1478,6 +1486,76 @@ function resetTimer(){
   document.getElementById('ft').classList.remove('vis');
   document.getElementById('t-lbl').textContent='选择科目后开始计时';
   activeSlotKey='';renderSchedule();
+}
+
+// ==================== 计时器时长修改 ====================
+// 增减计时器时长（秒），运行时/暂停时均可
+function adjustTimer(deltaSec){
+  // 如果从未计时过，先初始化一个0起点，方便直接补录时间
+  if(!_wallStart && !tOn){
+    _wallStart = Date.now();
+    // 不自动开始计时，只是为了能调整
+  }
+  if(!_wallStart){
+    showToast('请先开始计时，或点击时间直接设置','orange');
+    return;
+  }
+  // 调整 wallStart: 增加时间 = wallStart 往前推， 减少时间 = wallStart 往后推
+  _wallStart -= deltaSec * 1000;
+  const sec = elapsedSec();
+  // 不允许负数
+  if(sec < 0){
+    _wallStart = Date.now();
+  }
+  tickTimer();
+  if(tOn) saveTimerState();
+  const sign = deltaSec>0?'+':'';
+  showToast(`已调整 ${sign}${deltaSec/60} 分钟，当前 ${fmt(elapsedSec())}`);
+}
+
+// 直接编辑计时器时间，支持 HH:MM:SS / MM:SS / 纯分钟数
+function editTimerTime(){
+  const currentSec = _wallStart ? elapsedSec() : 0;
+  const currentStr = fmt(currentSec);
+  const input = prompt(`修改计时器时长\n当前: ${currentStr}\n\n请输入新时长，支持格式：\n• HH:MM:SS  例如 1:25:30\n• MM:SS     例如 45:20\n• 纯分钟    例如 90\n• 纯秒数    例如 3600`, currentStr);
+  if(input === null) return;
+  let sec = 0;
+  const s = input.trim();
+  try{
+    if(s.includes(':')){
+      const parts = s.split(':').map(x=>parseInt(x)||0);
+      if(parts.length===3) sec = parts[0]*3600 + parts[1]*60 + parts[2];
+      else if(parts.length===2) sec = parts[0]*60 + parts[1];
+      else sec = parts[0];
+    }else{
+      const num = parseFloat(s);
+      if(isNaN(num)) throw new Error();
+      // < 1000 当作分钟，否则当作秒（兼容老习惯）
+      sec = num < 1000 ? Math.round(num*60) : Math.round(num);
+    }
+  }catch(e){ showToast('时间格式无效','red'); return; }
+  if(sec < 0) sec = 0;
+  if(sec > 24*3600){ showToast('时间不能超过24小时','orange'); return; }
+  _wallStart = Date.now() - sec*1000;
+  tickTimer();
+  if(tOn) saveTimerState();
+  showToast(`✅ 已设为 ${fmt(sec)}${!tOn ? '，点击开始计时即可' : ''}`);
+  // 如果当前没在计时，提示是否直接保存为一条记录
+  if(!tOn && sec >= 60){
+    setTimeout(()=>{
+      if(confirm(`当前计时器显示 ${fmt(sec)}，是否直接保存为一条学习记录？`)){
+        curSubj = curSubj || document.getElementById('t-subj').value;
+        sessStart = new Date(Date.now() - sec*1000).toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'});
+        const dur = Math.round(sec/60);
+        const end = new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'});
+        D.logs.push({date:ds(new Date()),subject:curSubj,mode:curMode,start:sessStart,end,duration:dur});
+        sv();
+        resetTimer();
+        renderTLog(); updateDayProgress(ds(curDate));
+        showToast(`✅ 已保存 ${dur} 分钟`);
+      }
+    },200);
+  }
 }
 
 // Restore timer after page reload
