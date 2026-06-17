@@ -300,7 +300,10 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
       </div>
     </div>
     <div style="margin-top:13px">
-      <div class="ct" style="margin-bottom:9px">📋 今日计时记录</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;flex-wrap:wrap;gap:8px">
+        <div class="ct" style="margin-bottom:0">📋 今日计时记录</div>
+        <button onclick="openAddLogModal()" style="padding:4px 10px;border-radius:6px;border:1.5px solid var(--p);background:var(--pl);color:var(--p);font-size:11px;font-weight:600;cursor:pointer">＋ 手动补录记录</button>
+      </div>
       <div style="overflow-x:auto"><table class="ltbl"><thead><tr><th>科目</th><th>方式</th><th>开始</th><th>结束</th><th>时长</th></tr></thead><tbody id="t-log"></tbody></table></div>
     </div>
   </div>
@@ -346,8 +349,11 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
     </div>
   </div>
   <div class="card">
-    <div class="ct">📋 全部记录</div>
-    <div style="overflow-x:auto"><table class="ltbl"><thead><tr><th>日期</th><th>科目</th><th>方式</th><th>时长</th></tr></thead><tbody id="all-log"></tbody></table></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;flex-wrap:wrap;gap:8px">
+      <div class="ct" style="margin-bottom:0">📋 全部记录</div>
+      <button onclick="openAddLogModal()" style="padding:4px 10px;border-radius:6px;border:1.5px solid var(--p);background:var(--pl);color:var(--p);font-size:11px;font-weight:600;cursor:pointer">＋ 手动补录记录</button>
+    </div>
+    <div style="overflow-x:auto"><table class="ltbl"><thead><tr><th>日期</th><th>科目</th><th>方式</th><th>开始</th><th>结束</th><th>时长</th></tr></thead><tbody id="all-log"></tbody></table></div>
   </div>
 </div>
 
@@ -1672,7 +1678,298 @@ function editLogDuration(key){
   try{renderStats();renderAllLogs();renderPie();renderBar();renderHeatmap();}catch(e){}
   showToast(`✅ 时长已改为 ${v} 分钟`);
 }
-function renderTLog(){const dkey=ds(new Date());const logs=D.logs.filter(l=>l.date===dkey);const tb=document.getElementById('t-log');tb.innerHTML=logs.length?logs.map(l=>`<tr><td>${sL(l.subject)}</td><td>${l.mode}</td><td>${l.start}</td><td>${l.end}</td><td><strong style="color:var(--p);cursor:pointer" onclick="editLogDuration('${logK(l)}')" title="点击修改时长">${l.duration}min</strong> <span onclick="editLogSubj('${logK(l)}')" style="cursor:pointer;color:var(--p);font-size:11px;padding:0 3px" title="修改科目">✏️</span><span onclick="editLogDuration('${logK(l)}')" style="cursor:pointer;color:#d97706;font-size:11px;padding:0 3px" title="修改时长">🕐</span><span onclick="delLog('${logK(l)}')" style="cursor:pointer;color:#dc2626;font-size:11px;padding:0 3px" title="删除此记录">✕</span></td></tr>`).join(''):'<tr><td colspan="5" style="text-align:center;color:var(--t3);padding:14px">暂无记录</td></tr>';}
+function renderTLog(){const dkey=ds(new Date());const logs=D.logs.filter(l=>l.date===dkey);const tb=document.getElementById('t-log');tb.innerHTML=logs.length?logs.map(l=>`<tr><td>${sL(l.subject)}</td><td>${l.mode||'听课'}</td><td style="color:var(--p);cursor:pointer;font-weight:600" onclick="editLogTime('${logK(l)}','start')" title="点击修改开始时间">${l.start||'--'}</td><td style="color:var(--p);cursor:pointer;font-weight:600" onclick="editLogTime('${logK(l)}','end')" title="点击修改结束时间">${l.end||'--'}</td><td><strong style="color:var(--p);cursor:pointer" onclick="editLogDuration('${logK(l)}')" title="点击修改时长">${l.duration}min</strong> <span onclick="openEditLogModal('${logK(l)}')" style="cursor:pointer;color:var(--p);font-size:12px;padding:0 2px" title="综合编辑此记录">📝</span><span onclick="editLogSubj('${logK(l)}')" style="cursor:pointer;color:var(--p);font-size:11px;padding:0 2px" title="快速修改科目">✏️</span><span onclick="editLogDuration('${logK(l)}')" style="cursor:pointer;color:#d97706;font-size:11px;padding:0 2px" title="快速修改时长">🕐</span><span onclick="delLog('${logK(l)}')" style="cursor:pointer;color:#dc2626;font-size:11px;padding:0 2px" title="删除此记录">✕</span></td></tr>`).join(''):'<tr><td colspan="5" style="text-align:center;color:var(--t3);padding:14px">暂无记录</td></tr>';}
+
+// 快速修改开始/结束时间
+function editLogTime(key, field) {
+  const log = (D.logs || []).find(l => logK(l) === key);
+  if (!log) return;
+  const isStart = field === 'start';
+  const label = isStart ? '开始时间' : '结束时间';
+  const curVal = isStart ? (log.start || '09:00') : (log.end || '10:00');
+  
+  const input = prompt(`修改${label}\n当前: ${curVal}\n科目: ${sL(log.subject)} (${log.duration}min)\n\n请输入新的${label}（格式 HH:MM，例如 09:30）：`, curVal);
+  if (input === null) return;
+  const s = input.trim();
+  if (!/^\d{1,2}:\d{1,2}$/.test(s)) {
+    showToast('时间格式无效，请输入如 09:30 的格式', 'orange');
+    return;
+  }
+  const parts = s.split(':');
+  const formatted = String(parts[0]).padStart(2, '0') + ':' + String(parts[1]).padStart(2, '0');
+
+  D.deletedLogs = D.deletedLogs || [];
+  if (!D.deletedLogs.includes(key)) D.deletedLogs.push(key);
+
+  if (isStart) log.start = formatted;
+  else log.end = formatted;
+
+  let newDur = log.duration;
+  try {
+    if (log.start && log.end && log.start.includes(':') && log.end.includes(':')) {
+      const sParts = log.start.split(':').map(Number);
+      const eParts = log.end.split(':').map(Number);
+      let sMin = sParts[0] * 60 + sParts[1];
+      let eMin = eParts[0] * 60 + eParts[1];
+      if (eMin < sMin) eMin += 24 * 60;
+      const calcDur = eMin - sMin;
+      if (calcDur >= 0 && calcDur !== log.duration) {
+        if (confirm(`已将${label}修改为 ${formatted}。\n\n根据新的起止时间 (${log.start} - ${log.end})，计算此时长应为 ${calcDur} 分钟 (原为 ${log.duration} 分钟)。\n\n是否自动更新时长？`)) {
+          newDur = calcDur;
+          log.duration = newDur;
+        }
+      }
+    }
+  } catch (e) {}
+
+  sv(); 
+  if (CLOUD.apiKey && CLOUD.binId) cloudSave(true, true);
+  renderTLog(); 
+  updateDayProgress(ds(curDate));
+  try { renderStats(); renderAllLogs(); renderPie(); renderBar(); renderHeatmap(); } catch (e) {}
+  showToast(`✅ ${label}已修改为 ${formatted}` + (newDur === log.duration ? '' : `，时长更新为 ${newDur}min`));
+}
+
+// 综合编辑学习记录弹窗 Modal
+function openEditLogModal(key) {
+  const log = (D.logs || []).find(l => logK(l) === key);
+  if (!log) return;
+  const oldModal = document.getElementById('edit-log-modal');
+  if (oldModal) oldModal.remove();
+
+  const subjs = getSubjs();
+  const subjOptions = subjs.map(s => `<option value="${s.v}" ${s.v === log.subject ? 'selected' : ''}>${s.label}</option>`).join('');
+  const modes = ['听课', '刷题', '背诵', '手写', '复盘'];
+  if (!modes.includes(log.mode)) modes.push(log.mode || '听课');
+  const modeOptions = modes.map(m => `<option value="${m}" ${m === log.mode ? 'selected' : ''}>${m}</option>`).join('');
+
+  const m = document.createElement('div');
+  m.id = 'edit-log-modal';
+  m.style.cssText = 'position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:1000;display:flex;align-items:center;justify-content:center;padding:18px';
+  m.innerHTML = `<div style="background:#fff;border-radius:14px;padding:20px;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,.35)">
+    <div style="font-size:15px;font-weight:700;color:var(--p);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between">
+      <span>📝 综合编辑学习记录</span>
+      <span onclick="document.getElementById('edit-log-modal').remove()" style="cursor:pointer;color:#94a3b8;font-size:16px;padding:0 4px">✕</span>
+    </div>
+    
+    <div style="margin-bottom:11px">
+      <label style="font-size:11px;font-weight:600;color:var(--t2);display:block;margin-bottom:4px">学习日期</label>
+      <input id="elm-date" type="date" value="${log.date}" style="width:100%;padding:8px 11px;border:1.5px solid var(--border);border-radius:8px;font-size:12px;background:var(--s2);color:var(--t);outline:none"/>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:11px">
+      <div>
+        <label style="font-size:11px;font-weight:600;color:var(--t2);display:block;margin-bottom:4px">科目</label>
+        <select id="elm-subj" style="width:100%;padding:8px;border:1.5px solid var(--border);border-radius:8px;font-size:12px;background:var(--s2);color:var(--t);outline:none">
+          ${subjOptions}
+        </select>
+      </div>
+      <div>
+        <label style="font-size:11px;font-weight:600;color:var(--t2);display:block;margin-bottom:4px">学习方式</label>
+        <select id="elm-mode" style="width:100%;padding:8px;border:1.5px solid var(--border);border-radius:8px;font-size:12px;background:var(--s2);color:var(--t);outline:none">
+          ${modeOptions}
+        </select>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:11px">
+      <div>
+        <label style="font-size:11px;font-weight:600;color:var(--t2);display:block;margin-bottom:4px">开始时间</label>
+        <input id="elm-start" type="time" value="${log.start || ''}" onchange="calcElmDur()" style="width:100%;padding:8px;border:1.5px solid var(--border);border-radius:8px;font-size:12px;background:var(--s2);color:var(--t);outline:none"/>
+      </div>
+      <div>
+        <label style="font-size:11px;font-weight:600;color:var(--t2);display:block;margin-bottom:4px">结束时间</label>
+        <input id="elm-end" type="time" value="${log.end || ''}" onchange="calcElmDur()" style="width:100%;padding:8px;border:1.5px solid var(--border);border-radius:8px;font-size:12px;background:var(--s2);color:var(--t);outline:none"/>
+      </div>
+    </div>
+
+    <div style="margin-bottom:16px">
+      <label style="font-size:11px;font-weight:600;color:var(--t2);display:block;margin-bottom:4px">学习时长（分钟）</label>
+      <input id="elm-dur" type="number" min="0" value="${log.duration}" style="width:100%;padding:8px 11px;border:1.5px solid var(--border);border-radius:8px;font-size:12px;background:var(--s2);color:var(--t);outline:none;font-weight:700"/>
+      <div style="font-size:10px;color:var(--t3);margin-top:4px">⚡ 修改起止时间会自动计算时长，也可手动填写修改</div>
+    </div>
+
+    <div style="display:flex;gap:10px">
+      <button onclick="saveEditLogModal('${key}')" class="btn-p" style="flex:1;padding:10px;font-size:13px">💾 保存修改</button>
+      <button onclick="document.getElementById('edit-log-modal').remove()" style="padding:10px 20px;border-radius:7px;border:1.5px solid var(--border);background:var(--s2);color:var(--t2);font-size:13px;cursor:pointer">取消</button>
+    </div>
+  </div>`;
+
+  m.addEventListener('click', e => { if (e.target === m) m.remove(); });
+  document.body.appendChild(m);
+}
+
+function calcElmDur() {
+  try {
+    const sVal = document.getElementById('elm-start').value;
+    const eVal = document.getElementById('elm-end').value;
+    if (sVal && eVal && sVal.includes(':') && eVal.includes(':')) {
+      const sParts = sVal.split(':').map(Number);
+      const eParts = eVal.split(':').map(Number);
+      let sMin = sParts[0] * 60 + sParts[1];
+      let eMin = eParts[0] * 60 + eParts[1];
+      if (eMin < sMin) eMin += 24 * 60;
+      const calc = eMin - sMin;
+      if (calc >= 0) {
+        document.getElementById('elm-dur').value = calc;
+      }
+    }
+  } catch (e) {}
+}
+
+function saveEditLogModal(key) {
+  const log = (D.logs || []).find(l => logK(l) === key);
+  if (!log) { showToast('记录已不存在', 'red'); return; }
+
+  const newDate = document.getElementById('elm-date').value;
+  const newSubj = document.getElementById('elm-subj').value;
+  const newMode = document.getElementById('elm-mode').value;
+  const newStart = document.getElementById('elm-start').value || '--';
+  const newEnd = document.getElementById('elm-end').value || '--';
+  const newDur = parseInt(document.getElementById('elm-dur').value) || 0;
+
+  if (!newDate) { showToast('请选择日期', 'orange'); return; }
+  if (newDur < 0) { showToast('时长不能为负', 'orange'); return; }
+
+  D.deletedLogs = D.deletedLogs || [];
+  if (!D.deletedLogs.includes(key)) D.deletedLogs.push(key);
+
+  log.date = newDate;
+  log.subject = newSubj;
+  log.mode = newMode;
+  log.start = newStart;
+  log.end = newEnd;
+  log.duration = newDur;
+
+  D.logs.sort((a,b) => a.date < b.date ? -1 : 1);
+  sv();
+  if (CLOUD.apiKey && CLOUD.binId) cloudSave(true, true);
+
+  renderTLog();
+  updateDayProgress(ds(curDate));
+  try { renderStats(); renderAllLogs(); renderPie(); renderBar(); renderHeatmap(); } catch (e) {}
+
+  document.getElementById('edit-log-modal').remove();
+  showToast('✅ 记录修改已保存');
+}
+
+// 手动补录学习记录 Modal
+function openAddLogModal() {
+  const oldModal = document.getElementById('add-log-modal');
+  if (oldModal) oldModal.remove();
+
+  const subjs = getSubjs();
+  const subjOptions = subjs.map(s => `<option value="${s.v}">${s.label}</option>`).join('');
+  const modes = ['听课', '刷题', '背诵', '手写', '复盘'];
+  const modeOptions = modes.map(m => `<option value="${m}">${m}</option>`).join('');
+  const todayStr = ds(new Date());
+
+  const m = document.createElement('div');
+  m.id = 'add-log-modal';
+  m.style.cssText = 'position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:1000;display:flex;align-items:center;justify-content:center;padding:18px';
+  m.innerHTML = `<div style="background:#fff;border-radius:14px;padding:20px;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,.35)">
+    <div style="font-size:15px;font-weight:700;color:var(--p);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between">
+      <span>➕ 手动补录学习记录</span>
+      <span onclick="document.getElementById('add-log-modal').remove()" style="cursor:pointer;color:#94a3b8;font-size:16px;padding:0 4px">✕</span>
+    </div>
+    
+    <div style="margin-bottom:11px">
+      <label style="font-size:11px;font-weight:600;color:var(--t2);display:block;margin-bottom:4px">学习日期</label>
+      <input id="alm-date" type="date" value="${todayStr}" style="width:100%;padding:8px 11px;border:1.5px solid var(--border);border-radius:8px;font-size:12px;background:var(--s2);color:var(--t);outline:none"/>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:11px">
+      <div>
+        <label style="font-size:11px;font-weight:600;color:var(--t2);display:block;margin-bottom:4px">学习科目</label>
+        <select id="alm-subj" style="width:100%;padding:8px;border:1.5px solid var(--border);border-radius:8px;font-size:12px;background:var(--s2);color:var(--t);outline:none">
+          ${subjOptions}
+        </select>
+      </div>
+      <div>
+        <label style="font-size:11px;font-weight:600;color:var(--t2);display:block;margin-bottom:4px">学习方式</label>
+        <select id="alm-mode" style="width:100%;padding:8px;border:1.5px solid var(--border);border-radius:8px;font-size:12px;background:var(--s2);color:var(--t);outline:none">
+          ${modeOptions}
+        </select>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:11px">
+      <div>
+        <label style="font-size:11px;font-weight:600;color:var(--t2);display:block;margin-bottom:4px">开始时间</label>
+        <input id="alm-start" type="time" value="09:00" onchange="calcAlmDur()" style="width:100%;padding:8px;border:1.5px solid var(--border);border-radius:8px;font-size:12px;background:var(--s2);color:var(--t);outline:none"/>
+      </div>
+      <div>
+        <label style="font-size:11px;font-weight:600;color:var(--t2);display:block;margin-bottom:4px">结束时间</label>
+        <input id="alm-end" type="time" value="10:00" onchange="calcAlmDur()" style="width:100%;padding:8px;border:1.5px solid var(--border);border-radius:8px;font-size:12px;background:var(--s2);color:var(--t);outline:none"/>
+      </div>
+    </div>
+
+    <div style="margin-bottom:16px">
+      <label style="font-size:11px;font-weight:600;color:var(--t2);display:block;margin-bottom:4px">学习时长（分钟）</label>
+      <input id="alm-dur" type="number" min="0" value="60" style="width:100%;padding:8px 11px;border:1.5px solid var(--border);border-radius:8px;font-size:12px;background:var(--s2);color:var(--t);outline:none;font-weight:700"/>
+      <div style="font-size:10px;color:var(--t3);margin-top:4px">⚡ 修改起止时间会自动计算时长，也可手动填写修改</div>
+    </div>
+
+    <div style="display:flex;gap:10px">
+      <button onclick="saveAddLogModal()" class="btn-p" style="flex:1;padding:10px;font-size:13px">✔ 保存记录</button>
+      <button onclick="document.getElementById('add-log-modal').remove()" style="padding:10px 20px;border-radius:7px;border:1.5px solid var(--border);background:var(--s2);color:var(--t2);font-size:13px;cursor:pointer">取消</button>
+    </div>
+  </div>`;
+
+  m.addEventListener('click', e => { if (e.target === m) m.remove(); });
+  document.body.appendChild(m);
+}
+
+function calcAlmDur() {
+  try {
+    const sVal = document.getElementById('alm-start').value;
+    const eVal = document.getElementById('alm-end').value;
+    if (sVal && eVal && sVal.includes(':') && eVal.includes(':')) {
+      const sParts = sVal.split(':').map(Number);
+      const eParts = eVal.split(':').map(Number);
+      let sMin = sParts[0] * 60 + sParts[1];
+      let eMin = eParts[0] * 60 + eParts[1];
+      if (eMin < sMin) eMin += 24 * 60;
+      const calc = eMin - sMin;
+      if (calc >= 0) {
+        document.getElementById('alm-dur').value = calc;
+      }
+    }
+  } catch (e) {}
+}
+
+function saveAddLogModal() {
+  const newDate = document.getElementById('alm-date').value;
+  const newSubj = document.getElementById('alm-subj').value;
+  const newMode = document.getElementById('alm-mode').value;
+  const newStart = document.getElementById('alm-start').value || '--';
+  const newEnd = document.getElementById('alm-end').value || '--';
+  const newDur = parseInt(document.getElementById('alm-dur').value) || 0;
+
+  if (!newDate) { showToast('请选择学习日期', 'orange'); return; }
+  if (newDur <= 0) { showToast('学习时长必须大于0', 'orange'); return; }
+
+  if (!D.logs) D.logs = [];
+  D.logs.push({
+    date: newDate,
+    subject: newSubj,
+    mode: newMode,
+    start: newStart,
+    end: newEnd,
+    duration: newDur
+  });
+
+  D.logs.sort((a,b) => a.date < b.date ? -1 : 1);
+  sv();
+  if (CLOUD.apiKey && CLOUD.binId) cloudSave(true, true);
+
+  renderTLog();
+  updateDayProgress(ds(curDate));
+  try { renderStats(); renderAllLogs(); renderPie(); renderBar(); renderHeatmap(); } catch (e) {}
+
+  document.getElementById('add-log-modal').remove();
+  showToast(`✅ 已添加 ${sL(newSubj)} 记录 (${newDur}min)`);
+}
 
 // ==================== SERVICE WORKER (background timer) ====================
 // SW is registered inline via blob URL so no extra file is needed
@@ -2536,7 +2833,7 @@ function renderHeatmap(){
   h+='</div>';c.innerHTML=h;
 }
 
-function renderAllLogs(){const tb=document.getElementById('all-log');const logs=[...D.logs].reverse().slice(0,60);tb.innerHTML=logs.length?logs.map(l=>`<tr><td>${l.date}</td><td>${sL(l.subject)}</td><td>${l.mode||'听课'}</td><td><strong style="color:var(--p);cursor:pointer" onclick="editLogDuration('${logK(l)}')" title="点击修改时长">${l.duration}min</strong> <span onclick="editLogSubj('${logK(l)}')" style="cursor:pointer;color:var(--p);font-size:11px;padding:0 3px" title="修改科目">✏️</span><span onclick="editLogDuration('${logK(l)}')" style="cursor:pointer;color:#d97706;font-size:11px;padding:0 3px" title="修改时长">🕐</span><span onclick="delLog('${logK(l)}')" style="cursor:pointer;color:#dc2626;font-size:11px;padding:0 3px" title="删除此记录">✕</span></td></tr>`).join(''):'<tr><td colspan="4" style="text-align:center;color:var(--t3);padding:14px">暂无记录</td></tr>';}
+function renderAllLogs(){const tb=document.getElementById('all-log');const logs=[...D.logs].reverse().slice(0,60);tb.innerHTML=logs.length?logs.map(l=>`<tr><td>${l.date}</td><td>${sL(l.subject)}</td><td>${l.mode||'听课'}</td><td style="color:var(--p);cursor:pointer;font-weight:600" onclick="editLogTime('${logK(l)}','start')" title="点击修改开始时间">${l.start||'--'}</td><td style="color:var(--p);cursor:pointer;font-weight:600" onclick="editLogTime('${logK(l)}','end')" title="点击修改结束时间">${l.end||'--'}</td><td><strong style="color:var(--p);cursor:pointer" onclick="editLogDuration('${logK(l)}')" title="点击修改时长">${l.duration}min</strong> <span onclick="openEditLogModal('${logK(l)}')" style="cursor:pointer;color:var(--p);font-size:12px;padding:0 2px" title="综合编辑此记录">📝</span><span onclick="editLogSubj('${logK(l)}')" style="cursor:pointer;color:var(--p);font-size:11px;padding:0 2px" title="快速修改科目">✏️</span><span onclick="editLogDuration('${logK(l)}')" style="cursor:pointer;color:#d97706;font-size:11px;padding:0 2px" title="快速修改时长">🕐</span><span onclick="delLog('${logK(l)}')" style="cursor:pointer;color:#dc2626;font-size:11px;padding:0 2px" title="删除此记录">✕</span></td></tr>`).join(''):'<tr><td colspan="6" style="text-align:center;color:var(--t3);padding:14px">暂无记录</td></tr>';}
 
 // ==================== NOTES ====================
 function saveNote(editId){
@@ -3019,5 +3316,5 @@ function init(){
 }
 init();
 </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0c238d22fc1a2a1',t:'MTc4MTUzMzI5NA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0c238d22fc1a2a1',t:'MTc4MTUzMzI5NA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0d05a45cf871b46',t:'MTc4MTY4MTQ2NQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
