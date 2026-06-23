@@ -663,6 +663,15 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
     <div id="ai-test-result" style="display:none;margin-top:10px;padding:9px 12px;border-radius:8px;font-size:11px;line-height:1.7"></div>
   </div>
   <div class="card">
+    <div class="ct">⏸ 备考暂停管理</div>
+    <div class="alert alert-b">临时中断公考备考（如冲刺其他考试）时，点此暂停。课表日期自动顺延，原有进度、打卡、笔记全部保留，恢复后继续衔接。</div>
+    <div id="pause-status" style="margin-bottom:12px;font-size:13px;color:var(--t2);font-weight:600"></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button onclick="pauseStudy()" style="padding:8px 14px;border-radius:7px;border:1.5px solid #fbbf24;background:#fffbeb;color:#b45309;font-size:12px;font-weight:600;cursor:pointer">⏸ 暂停备考（+17天）</button>
+      <button onclick="resumeStudy()" style="padding:8px 14px;border-radius:7px;border:1.5px solid var(--g);background:#f0fdf4;color:var(--gd);font-size:12px;font-weight:600;cursor:pointer">▶ 恢复备考（清除偏移）</button>
+    </div>
+  </div>
+  <div class="card">
     <div class="ct">📦 本地数据备份</div>
     <div style="display:flex;gap:8px;flex-wrap:wrap">
       <button onclick="exportLocalData()" style="padding:8px 14px;border-radius:7px;border:1.5px solid var(--border);background:var(--s2);color:var(--t2);font-size:12px;cursor:pointer">⬇️ 导出 JSON</button>
@@ -687,7 +696,7 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
 // ==================== STORE ====================
 const KEY='gk2026v3';
 function ld(){try{const r=localStorage.getItem(KEY);if(r)return JSON.parse(r);}catch(e){}
-  return{checks:{},drills:{},logs:[],notes:[],feedbacks:{},customTasks:{},
+  return{checks:{},drills:{},logs:[],notes:[],feedbacks:{},customTasks:{},pauseOffset:0,
     prog:{'小黑-理论':0,'小黑-刷题':0,'资料-基础':0,'资料-刷题':0,'逻辑':0,'数量-基础':0,'数量-刷题':0,'言语-基础':0,'言语-刷题':0,'综测-基础':0,'综测-刷题':0,'申论-小题':0,'申论-作文':0,'公基-系统':0,'公基-刷题':0}};}
 function sv(){
   try{localStorage.setItem(KEY,JSON.stringify(D));}catch(e){}
@@ -718,7 +727,7 @@ function dBetween(targetDate){
 function dayIdx(date){
   const a=new Date(date.getFullYear(),date.getMonth(),date.getDate());
   const b=new Date(START.getFullYear(),START.getMonth(),START.getDate());
-  return Math.max(1,Math.round((a-b)/86400000)+1);
+  return Math.max(1,Math.round((a-b)/86400000)+1 - (D.pauseOffset||0));
 }
 
 let curDate=new Date();
@@ -742,13 +751,16 @@ function updateCountdowns(){
 function getPhaseInfo(date){
   const idx=dayIdx(date);
   let phaseName='';
-  if(idx<=7)   phaseName=`🟦 D${idx}/28 · 行测快速搭框架期（听课≤40%，刷题≥60%）`;
-  else if(idx<=14) phaseName=`🟦 D${idx}/28 · 行测继续推进+公基理论并行`;
-  else if(idx<=21) phaseName=`🟩 D${idx}/28 · 刷题主导期（听课仅补漏）`;
-  else if(idx<=28) phaseName=`🟧 D${idx}/28 · 冲刺巩固期（行测真题每天1套）`;
-  else if(idx<=116) phaseName=`🟩 第二阶段·全面刷题冲刺（第${idx}天，距事业编${Math.max(0,146-idx)}天）`;
-  else if(idx<=145) phaseName=`🟧 第三阶段·事业编冲刺（第${idx}天，距考试${Math.max(0,146-idx)}天）`;
-  else phaseName=`🟪 第四阶段·省考冲刺（第${idx}天，距考试${Math.max(0,181-idx)}天）`;
+  if((D.pauseOffset||0)>0){
+    phaseName=`⏸ 已暂停${D.pauseOffset}天 · `;
+  }
+  if(idx<=7)   phaseName+=`🟦 D${idx}/28 · 行测快速搭框架期（听课≤40%，刷题≥60%）`;
+  else if(idx<=14) phaseName+=`🟦 D${idx}/28 · 行测继续推进+公基理论并行`;
+  else if(idx<=21) phaseName+=`🟩 D${idx}/28 · 刷题主导期（听课仅补漏）`;
+  else if(idx<=28) phaseName+=`🟧 D${idx}/28 · 冲刺巩固期（行测真题每天1套）`;
+  else if(idx<=116) phaseName+=`🟩 第二阶段·全面刷题冲刺（第${idx}天，距事业编${Math.max(0,146-idx)}天）`;
+  else if(idx<=145) phaseName+=`🟧 第三阶段·事业编冲刺（第${idx}天，距考试${Math.max(0,146-idx)}天）`;
+  else phaseName+=`🟪 第四阶段·省考冲刺（第${idx}天，距考试${Math.max(0,181-idx)}天）`;
 
   // ---- 临时任务占用 → 课程自动顺延补位 ----
   const dkey=ds(date);
@@ -2544,6 +2556,7 @@ function mergeData(local,remote){
   });
   // 当日进度快照：本地优先（仅影响当天课表显示，无关紧要的取舍）
   m.dayStart={...(remote.dayStart||{}),...(local.dayStart||{})};
+  m.pauseOffset=Math.max((local.pauseOffset||0),(remote.pauseOffset||0));
   // 错题分类：并集
   // 错题分类：并集，但排除任一端删除过的（墓碑）
   const catTomb=new Set([...(remote.deletedWqCats||[]),...(local.deletedWqCats||[])]);
@@ -3238,6 +3251,36 @@ function clearAllData(){
   renderSchedule();
 }
 
+// ==================== PAUSE / RESUME ====================
+function pauseStudy(){
+  const days=17;
+  if(!confirm(`确认暂停公考备考 ${days} 天？\n\n• 课表起始日期将自动后推 ${days} 天\n• 现有进度、打卡、笔记全部保留\n• 今天之后的课表顺延，不会积压`)) return;
+  D.pauseOffset=(D.pauseOffset||0)+days;
+  sv();
+  if(CLOUD.apiKey&&CLOUD.binId) cloudSave(true,true);
+  renderSchedule();renderPauseStatus();
+  showToast(`⏸ 已暂停 ${days} 天，课表自动顺延`);
+}
+function resumeStudy(){
+  if(!(D.pauseOffset||0)){showToast('当前未暂停，无需恢复','orange');return;}
+  if(!confirm('确认恢复备考？\n\n• 清除日期偏移，课表按原计划继续\n• 所有进度、打卡、笔记保留')) return;
+  D.pauseOffset=0;
+  sv();
+  if(CLOUD.apiKey&&CLOUD.binId) cloudSave(true,true);
+  renderSchedule();renderPauseStatus();
+  showToast('▶ 已恢复备考，课表回到正常进度');
+}
+function renderPauseStatus(){
+  const el=document.getElementById('pause-status');
+  if(!el) return;
+  const off=D.pauseOffset||0;
+  if(off){
+    el.innerHTML=`当前状态：<span style="color:var(--a);font-weight:800">已暂停 ${off} 天</span> · 课表已后推 ${off} 天`;
+  } else {
+    el.innerHTML=`当前状态：<span style="color:var(--g);font-weight:800">正常推进</span> · 无暂停偏移`;
+  }
+}
+
 // ==================== TABS ====================
 function goTab(name,btn){
   document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
@@ -3250,7 +3293,7 @@ function goTab(name,btn){
   if(name==='note'){renderNoteTypes();renderNotes(noteFilter);}
   if(name==='wq'){D.wq=D.wq||[];renderWq();}
   if(name==='correct'){D.corrections=D.corrections||[];renderCorrHistory();}
-  if(name==='cfg'){renderCloudCfg();document.getElementById('sync-status-big').textContent=document.getElementById('sync-status').textContent;}
+  if(name==='cfg'){renderCloudCfg();renderPauseStatus();document.getElementById('sync-status-big').textContent=document.getElementById('sync-status').textContent;}
 }
 
 // ==================== RESPONSIVE ====================
@@ -3297,6 +3340,7 @@ function init(){
   safeRun(renderNoteTypes);
   safeRun(renderSubjs);
   safeRun(checkLayout);
+  safeRun(renderPauseStatus);
   safeRun(()=>setSyncStatus(CLOUD.apiKey&&CLOUD.binId?'ok':'none'));
   setInterval(()=>safeRun(updateCountdowns),60000);
   // 切回页面/从后台唤醒时立即刷新倒计时与课表（保证跨天后数字准确）
@@ -3316,5 +3360,5 @@ function init(){
 }
 init();
 </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0c238d22fc1a2a1',t:'MTc4MTUzMzI5NA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0d05a45cf871b46',t:'MTc4MTY4MTQ2NQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0c238d22fc1a2a1',t:'MTc4MTUzMzI5NA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0d05a45cf871b46',t:'MTc4MTY4MTQ2NQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a1017d472b76817d',t:'MTc4MjE5NjcwMQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
