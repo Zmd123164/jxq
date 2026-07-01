@@ -774,7 +774,7 @@ function getPhaseInfo(date){
   return {phaseName, slots:[
     {key:'am',label:'上午场',clock:'9:00-11:40',  skipped:skippedToday('am'), tasks:skippedToday('am')?[]:getAmSeg(eff('am'),P)},
     {key:'pm',label:'下午场',clock:'14:30-17:30', skipped:skippedToday('pm'), tasks:skippedToday('pm')?[]:getPmSeg(eff('pm'),P)},
-    {key:'ev',label:'晚上场',clock:'19:00-22:00', skipped:skippedToday('ev'), tasks:skippedToday('ev')?[]:getEvSeg(eff('ev'),P)},
+    {key:'ev',label:'晚上场',clock:'19:00-22:00', skipped:skippedToday('ev'), tasks:skippedToday('ev')?[]:getEvSeg(eff('ev'),P,date)},
   ]};
 }
 
@@ -874,12 +874,14 @@ function getAmSeg(idx,P){
 
   // 2. 智能选取今天早上的【第二辅攻/专项练习】（最多只排1项，绝对不让上午超负荷！）
   if(arr.length > 0){
-    if(yys){
+    if(idx % 2 === 1 && yys){
+      arr.push(t(`行测言语·刷题进阶 ${rng(yys)}（限时练，保持语感）`,'xt',20,'题'));
+    }else if(idx % 2 === 0 && zls){
+      arr.push(t(`资料分析·刷题进阶 ${rng(zls)}（限时练，巩固速算）`,'xt',15,'题'));
+    }else if(yys){
       arr.push(t(`行测言语·刷题进阶 ${rng(yys)}（限时练，保持语感）`,'xt',20,'题'));
     }else if(zls){
       arr.push(t(`资料分析·刷题进阶 ${rng(zls)}（限时练，巩固速算）`,'xt',15,'题'));
-    }else if(xhs){
-      arr.push(t(`小黑政治·高频刷题课 ${rng(xhs)}（穿插巩固考点）`,'gj',20,'题'));
     }else{
       arr.push(t('错题归因复盘（倒查知识点漏洞与解题技巧）','dt',0));
     }
@@ -963,7 +965,7 @@ function getPmSeg(idx,P){
 // 公基系统课86节（含法律模块，每节2h/2倍速=1h），每天2节=2h
 // 公基刷题课50节（每节30min/2倍速=15min），D44+开始每天2节穿插
 // 每晚最后30min固定申论
-function getEvSeg(idx,P){
+function getEvSeg(idx,P,date){
   P=P||D.prog||{};
   const sl=getApplyShenLun(idx);
   if(idx>116) return[
@@ -972,13 +974,28 @@ function getEvSeg(idx,P){
     sl,
   ];
   // ---- 进度驱动：公基系统课86节→公基刷题课50节，依次推进 ----
-  const sys=nx(P,'公基-系统',2),gst=nx(P,'公基-刷题',2);
-  // 系统课未完：每天2节（2h）
-  if(sys) return[
-    t(`马克公基·系统课 ${rng(sys)}（2倍速每节1h，共2h/含法律模块）`,'gj',0),
-    t('课后15min：核心考点速记/笔记整理','gj',0),
-    sl,
-  ];
+  const sys=nx(P,'公基-系统',2), gst=nx(P,'公基-刷题',2), xhs=nx(P,'小黑-刷题',1);
+  // 每周三、周六（或按节号每3天），联动穿插小黑政治刷题课
+  const isPolDay = date ? (date.getDay()===3 || date.getDay()===6) : (idx % 3 === 0);
+
+  // 系统课未完：每天排课
+  if(sys){
+    // 如果今天是政治联动刷题日（每周三/六），且小黑刷题课还未学完，则拆分为：1节公基系统 + 1节小黑政治刷题！
+    if(isPolDay && xhs){
+      const sys1 = nx(P,'公基-系统',1);
+      return [
+        t(`马克公基·系统课 ${rng(sys1)}（2倍速1h，含法律/常识模块）`,'gj',0),
+        t(`⭐小黑政治·刷题课 ${rng(xhs)}（2倍速30min，梦幻联动！选择题检验理论巩固）`,'gj',0),
+        t('听完立刻做配套政治高频选择题20题（卡点验证，抗遗忘）','gj',20,'题'),
+        sl,
+      ];
+    }
+    return [
+      t(`马克公基·系统课 ${rng(sys)}（2倍速每节1h，共2h/含法律模块）`,'gj',0),
+      t('课后15min：核心考点速记/笔记整理','gj',0),
+      sl,
+    ];
+  }
   // 系统课完成 → 刷题课2节/天
   if(gst) return[
     t(`公基刷题课 ${rng(gst)}（每天2节×2倍速15min=30min）`,'gj',30,'题'),
