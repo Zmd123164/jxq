@@ -143,12 +143,27 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
 .hc[data-l="1"]{background:#bfdbfe}.hc[data-l="2"]{background:#60a5fa}.hc[data-l="3"]{background:#2563eb}.hc[data-l="4"]{background:#1e40af}
 
 /* FLOATING TIMER */
-.ft{position:fixed;bottom:16px;right:14px;z-index:200;background:linear-gradient(135deg,#1d4ed8,#4f46e5);border-radius:13px;padding:10px 14px;color:#fff;box-shadow:0 8px 32px rgba(37,99,235,.45);min-width:145px;display:none}
+.ft{position:fixed;bottom:16px;right:14px;z-index:200;background:linear-gradient(135deg,#1d4ed8,#4f46e5);border-radius:13px;padding:10px 14px;color:#fff;box-shadow:0 8px 32px rgba(37,99,235,.45);min-width:168px;display:none;user-select:none;touch-action:none}
 .ft.vis{display:block}
-.ftd{font-size:24px;font-weight:700;letter-spacing:2px;text-align:center}
+.ft-handle{font-size:9px;opacity:.55;text-align:center;letter-spacing:3px;cursor:grab;margin-bottom:2px}
+.ft-handle:active{cursor:grabbing}
+.ftd{font-size:26px;font-weight:700;letter-spacing:2px;text-align:center;font-variant-numeric:tabular-nums}
 .ftl{font-size:9px;opacity:.7;text-align:center;margin-bottom:5px}
-.fts{width:100%;padding:4px;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.35);border-radius:5px;color:#fff;font-size:11px;font-weight:600;cursor:pointer}
+.fts{flex:1;padding:4px 6px;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.35);border-radius:5px;color:#fff;font-size:10px;font-weight:600;cursor:pointer}
 .fts:hover{background:rgba(255,255,255,.3)}
+.ft-row{display:flex;gap:4px;margin-top:4px}
+.debt{background:linear-gradient(90deg,#fff7ed,#fef3c7);border:1.5px solid #fed7aa;border-radius:10px;padding:11px 13px;margin-bottom:13px}
+.debt h3{font-size:12px;color:#9a3412;margin-bottom:6px}
+.debt p{font-size:11px;color:#9a3412;line-height:1.7}
+.debt-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:6px;margin-top:8px}
+.debt-cell{background:#fff;border-radius:7px;padding:6px 8px;border:1px solid #fed7aa}
+.debt-cell .n{font-size:10px;color:#9a3412}
+.debt-cell .v{font-size:12px;font-weight:700;color:#c2410c;margin-top:1px}
+.debt-cell.ok{border-color:#bbf7d0}
+.debt-cell.ok .n,.debt-cell.ok .v{color:#166534}
+.mini-body{margin:0;min-height:100vh;background:linear-gradient(135deg,#1d4ed8,#4f46e5);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'PingFang SC',system-ui,sans-serif}
+.mini-time{font-size:48px;font-weight:800;letter-spacing:3px;font-variant-numeric:tabular-nums}
+.mini-sub{font-size:13px;opacity:.85;margin:8px 0 16px;text-align:center;padding:0 12px}
 
 /* REVIEW / NOTES */
 .note-box{background:var(--s2);border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:8px}
@@ -233,6 +248,7 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
 
       <!-- phase banner -->
       <div class="phase-banner" id="phase-banner">🎯 加载中…</div>
+      <div class="debt" id="debt-banner" style="display:none"></div>
 
       <!-- progress -->
       <div style="background:var(--surface);border-radius:var(--rad);box-shadow:var(--sh);border:1px solid var(--border);padding:12px 14px;margin-bottom:13px">
@@ -265,7 +281,7 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
 <div class="sec" id="sec-timer">
   <div class="card">
     <div class="ct">⏱ 专注计时器</div>
-    <div class="alert alert-b">开始后浮窗持续显示，「结束计时」自动记录到统计</div>
+    <div class="alert alert-b">开始后页面右下角浮窗一直走；点「📺 悬浮窗」可画中画（切到网课/刷题 App 仍能看见时间）。iPad 还可点「🗗 弹出」再分屏钉在右侧。锁屏请先开悬浮窗，系统会把计时小窗留在桌面。</div>
     <label style="font-size:11px;font-weight:600;color:var(--t2);display:block;margin-bottom:5px">学习科目</label>
     <div style="display:flex;gap:6px;margin-bottom:4px">
       <select id="t-subj" class="sel" style="flex:1;margin-bottom:0"></select>
@@ -360,43 +376,44 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
 <!-- ======= PLAN ======= -->
 <div class="sec" id="sec-plan">
   <div class="card">
-    <div class="ct">🗺 备考总时间线</div>
-    <div class="alert alert-b">📌 50天系统打底与刷题框架（行测2倍速）| ⭐智能单科排课：每天上午聚焦“1课+1刷”，绝不超负荷堆叠，打卡后接续推进 | 7/29（D51）起与申论同步转入真题套卷冲刺</div>
+    <div class="ct">🗺 备考总时间线 · 8/12 进度校准版</div>
+    <div class="alert" style="background:#fff7ed;border-color:#fed7aa;color:#9a3412">⚠ 原计划默认「按日历走」：今天已是第65天、本该第二阶段套卷冲刺。实际课表仍停在打底（申论小题刚开头、公基系统课刚开头）。<strong>已改为按真实进度排课，绝不跳节</strong>；下面四阶段按「今天起、距事业编81天」重切，宁可砍低性价比内容，也不再假装能追上原日历。</div>
+    <div class="alert alert-b">📌 校准原则：①申论下午1节绝不中断（最大杠杆）②公基晚上保持2节 ③行测只保资料/言语/高频逻辑，62节逻辑不求听完 ④上午固定速算30min ⑤课表仍由打卡进度驱动，学完才推进</div>
+    <div id="plan-gap" style="margin-bottom:13px"></div>
+    <div id="score-guess" style="margin-bottom:13px"></div>
 
-    <div style="border-radius:10px;overflow:hidden;border:1.5px solid var(--border);margin-bottom:13px">
-      <div style="background:linear-gradient(90deg,#eff6ff,#dbeafe);padding:10px 14px;font-weight:700;font-size:13px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
-        🟦 第一阶段：50天系统搭框架与刷题巩固期
-        <span class="chip">6/9 - 7/28（50天，接轨申论前50天）</span>
+    <div style="border-radius:10px;overflow:hidden;border:1.5px solid #fed7aa;margin-bottom:13px">
+      <div style="background:linear-gradient(90deg,#fff7ed,#ffedd5);padding:10px 14px;font-weight:700;font-size:13px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
+        🟧 校准期（原第一阶段未完成部分，并入今天起）
+        <span class="chip" style="background:#ffedd5;color:#9a3412;border-color:#fed7aa">8/12 - 9/15（35天）</span>
       </div>
       <div style="padding:12px 14px;font-size:12px">
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
           <div>
-            <div style="font-weight:700;color:var(--p);margin-bottom:6px;font-size:11px">🌅 上午：行测智能单科聚焦（2倍速）</div>
+            <div style="font-weight:700;color:var(--p);margin-bottom:6px;font-size:11px">🌅 上午：速算 + 行测单科（2倍速）</div>
             <div style="background:var(--s2);border-radius:8px;padding:8px 10px;font-size:11px;color:var(--t2);line-height:2">
-              D1-14（6/9-6/22）<br><strong>言语与政治打底</strong> 单科1节+配套真题刷题<br>
-              D15-28（6/23-7/6）<br><strong>资料与逻辑攻克</strong> 黄金提分模块重点聚焦<br>
-              D29-42（7/7-7/20）<br><strong>专项刷题进阶</strong> 查漏补缺突破<br>
-              D43-50（7/21-7/28）<br><strong>理论收尾与真题过渡</strong> 数量基础选学<br>
-              D51+（7/29起）：<strong>真题1套/天+薄弱专项30题</strong><br>
-              <span style="color:var(--t3)">※ 智能单科排课：绝不把多门理论课堆叠在同天上午；打卡完成后自动接续下一节</span>
+              <strong>每天先速算30min</strong>（截位直除/分数百分数/增长率，计时练）<br>
+              再排 1课+1刷，优先级不变：<strong>资料 → 言语 → 高频逻辑 → 数量选学</strong><br>
+              资料基础收尾后立刻上资料刷题+言语，逻辑只听高频题型，不求62节听完<br>
+              9/1 起若资料+言语已通：上午加「半套热身」（资料2篇限时）为套卷过渡<br>
+              <span style="color:var(--t3)">※ 仍按打卡进度接下一节，不会因为日历到了就跳去全套卷</span>
             </div>
           </div>
           <div>
-            <div style="font-weight:700;color:var(--g);margin-bottom:6px;font-size:11px">☀️ 下午：⭐白鹭申论优先 + 综测（2倍速）</div>
+            <div style="font-weight:700;color:var(--g);margin-bottom:6px;font-size:11px">☀️ 下午：⭐申论1节锁死 + 综测压缩</div>
             <div style="background:var(--s2);border-radius:8px;padding:8px 10px;font-size:11px;color:var(--t2);line-height:2">
-              <strong style="color:var(--r)">白鹭申论60天上岸计划：60节×3h（50小题+10作文），每节配课后作业，每天1节优先排（2倍速≈1.5h/节）</strong><br><br>
-              D1-50（6/9-7/28）<br><strong>申论小题课</strong> 每天1节(2倍速1.5h)+配套作业<br>并行：综测基础/刷题/真题（2倍速）<br><br>
-              D51-60（7/29-8/7）<br><strong>申论作文课</strong> 每天1节(2倍速1.5h)+提纲作业<br>并行：综测真题手写<br><br>
-              D61+：<strong>申论作业轮</strong>（真题小题限时）+综测真题+公基刷题课
+              <strong style="color:var(--r)">白鹭申论：今起每天1节，一节不能断。</strong>小题还剩约48节，1节/天 → 约9/28听完；再10节作文 → 约10/8收尾，刚好接事业编冲刺。<br><br>
+              综测基础改为「能跟则跟、跟不动就改手写1段」，不要让综测挤掉申论。<br>
+              作业：听完立刻做配套1道，限时抠关键词。
             </div>
           </div>
           <div>
-            <div style="font-weight:700;color:var(--v);margin-bottom:6px;font-size:11px">🌙 晚上：公基理论并行（全2倍速）</div>
+            <div style="font-weight:700;color:var(--v);margin-bottom:6px;font-size:11px">🌙 晚上：公基2节 + 申论30min</div>
             <div style="background:var(--s2);border-radius:8px;padding:8px 10px;font-size:11px;color:var(--t2);line-height:2">
-              D1-43（6/9-7/21）<br><strong>公基系统课</strong> 每天2节×2倍速1h=2h<br>（含法律模块，共86节，马克课已覆盖法律无需单独排）<br><br>
-              D44-68（7/22-8/15）<br><strong>公基刷题课</strong> 每天2节×2倍速15min=30min + 错题复盘<br><br>
-              D69+（8/16起）<br><strong>公基高频考点背诵</strong>（公文/管理/省情）+错题三刷<br><br>
-              <span style="color:var(--r);font-weight:700">每晚最后30min：申论（固定不动）</span>
+              公基系统课还剩约85节，<strong>继续每天2节×2倍速=2h</strong> → 约9/24听完，再转刷题课。<br>
+              听不懂/非高频直接跳，打卡后进度照样走，别卡在一节里。<br>
+              周三/六仍穿插小黑政治刷题。<br>
+              <span style="color:var(--r);font-weight:700">每晚最后30min：申论复盘（固定不动）</span>
             </div>
           </div>
         </div>
@@ -405,24 +422,24 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
 
     <div style="border-radius:10px;overflow:hidden;border:1.5px solid var(--border);margin-bottom:13px">
       <div style="background:linear-gradient(90deg,#f0fdf4,#dcfce7);padding:10px 14px;font-weight:700;font-size:13px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
-        🟩 第二阶段：高强度刷题冲刺期
-        <span class="chip" style="background:#dcfce7;color:#166534;border-color:#bbf7d0">7/29 - 10/2（约66天）</span>
+        🟩 第二阶段：套卷并行（理论债继续还）
+        <span class="chip" style="background:#dcfce7;color:#166534;border-color:#bbf7d0">9/16 - 10/8（23天）</span>
       </div>
       <div style="padding:12px 14px;font-size:11px;color:var(--t2);line-height:2">
-        上午：行测真题套卷1套（完整计时）+ 错题归因 + 薄弱专项30题<br>
-        下午：综测真题闭卷手写（90min）+ 公基刷题课（3节×2倍速）+ 时政滚动<br>
-        晚上：公基刷题课推进 + 错题归因倒查笔记 + 申论40-50min限时写
+        上午：⚡速算30min + 行测真题套卷1套（能全卷就全卷，否则资料+言语半套卡时）+ 错题归因；理论没听完的课自动插1节补漏<br>
+        下午：白鹭申论继续（此时应进入作文课/作业轮）+ 综测真题闭卷手写<br>
+        晚上：公基刷题课推进 + 错题倒查 + 申论30–40min
       </div>
     </div>
 
     <div style="border-radius:10px;overflow:hidden;border:1.5px solid var(--border);margin-bottom:13px">
       <div style="background:linear-gradient(90deg,#fff7ed,#ffedd5);padding:10px 14px;font-weight:700;font-size:13px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
         🟧 第三阶段：事业编冲刺
-        <span class="chip" style="background:#ffedd5;color:#9a3412;border-color:#fed7aa">10/3 - 11/1（考前4周）</span>
+        <span class="chip" style="background:#ffedd5;color:#9a3412;border-color:#fed7aa">10/9 - 11/1（考前3.5周）</span>
       </div>
       <div style="padding:12px 14px;font-size:11px;color:var(--t2);line-height:2">
-        上午：行测全卷模拟（对齐考试时间）+ 数量/资料/言语补弱各20题<br>
-        下午：综测全真模拟（对齐考试时间）+ 公基高频选择题狂刷100题<br>
+        上午：⚡速算30min + 行测全卷模拟（对齐考试时间）+ 数量/资料/言语补弱<br>
+        下午：综测全真模拟（对齐考试时间）+ 公基高频选择狂刷100题<br>
         晚上：公基高频考点背诵（公文/管理/省情）+ 错题三刷 + 申论
       </div>
     </div>
@@ -433,7 +450,7 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
         <span class="chip" style="background:#fae8ff;color:#6b21a8;border-color:#e9d5ff">11/2（事业编考后）- 12/6</span>
       </div>
       <div style="padding:12px 14px;font-size:11px;color:var(--t2);line-height:2">
-        上午：行测全卷模拟（严格卡时）+ 数量/资料/言语专项补弱<br>
+        上午：⚡速算30min + 行测全卷模拟（严格卡时）+ 数量/资料/言语专项补弱<br>
         下午：申论大作文结构固化（限时写+逐段批改）<br>
         晚上：高频考点速查 + 时政热词背诵 + 申论50min
       </div>
@@ -441,22 +458,22 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
   </div>
 
   <div class="card">
-    <div class="ct">🕐 每日三场固定安排</div>
+    <div class="ct">🕐 每日三场固定安排（校准后）</div>
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:9px">
       <div style="border-radius:9px;overflow:hidden;border:1.5px solid #bfdbfe">
-        <div style="background:linear-gradient(135deg,#2563eb,#4f46e5);color:#fff;padding:8px 11px;font-weight:700;font-size:12px">🌅 上午 9:00-11:40（2.5h）</div>
-        <div style="padding:9px 11px;font-size:11px;color:var(--t2);line-height:1.9">行测智能单科聚焦<br>每天1节新课+配套刷题</div>
+        <div style="background:linear-gradient(135deg,#2563eb,#4f46e5);color:#fff;padding:8px 11px;font-weight:700;font-size:12px">🌅 上午 9:00-12:10（3h）</div>
+        <div style="padding:9px 11px;font-size:11px;color:var(--t2);line-height:1.9">⚡速算热身 30min（新增，每天固定）<br>行测智能单科 1课+1刷</div>
       </div>
       <div style="border-radius:9px;overflow:hidden;border:1.5px solid #bbf7d0">
         <div style="background:linear-gradient(135deg,#10b981,#059669);color:#fff;padding:8px 11px;font-weight:700;font-size:12px">☀️ 下午 14:30-17:30（3h）</div>
-        <div style="padding:9px 11px;font-size:11px;color:var(--t2);line-height:1.9">白鹭申论1节(1.5h)+综测<br>听课/真题手写</div>
+        <div style="padding:9px 11px;font-size:11px;color:var(--t2);line-height:1.9">白鹭申论1节(1.5h) 锁死不断<br>综测跟课/手写（不挤申论）</div>
       </div>
       <div style="border-radius:9px;overflow:hidden;border:1.5px solid #e9d5ff">
         <div style="background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;padding:8px 11px;font-weight:700;font-size:12px">🌙 晚上 19:00-22:00（3h）</div>
         <div style="padding:9px 11px;font-size:11px;color:var(--t2);line-height:1.9">公基系统课2节(2h)+申论<br>30min固定，不挪动</div>
       </div>
     </div>
-    <div class="alert" style="margin-top:10px">⚡ 每日 <strong>6h 硬底线</strong> | 超出不跨天 | 未达标锁定明日</div>
+    <div class="alert" style="margin-top:10px">⚡ 每日 <strong>6h 硬底线</strong>不变 | 超出不跨天 | 未达标锁定明日 | 想补进度：优先补下午申论和晚上公基，不要用通宵听逻辑硬刚</div>
   </div>
 </div>
 
@@ -685,10 +702,17 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
 
 <!-- FLOATING TIMER -->
 <div class="ft" id="ft">
+  <div class="ft-handle" id="ft-handle">● ● ● 拖到任意位置</div>
   <div style="font-size:9px;opacity:.75;text-align:center;margin-bottom:2px" id="ft-subj">--</div>
   <div class="ftd" id="ft-disp">00:00:00</div>
-  <div class="ftl">计时中</div>
-  <button class="fts" onclick="stopTimer()">⏹ 结束计时</button>
+  <div class="ftl" id="ft-hint">计时中 · 切 App 也能看时间</div>
+  <div class="ft-row">
+    <button class="fts" onclick="toggleFollowTimer()" title="画中画，切到别的软件仍显示">📺 悬浮窗</button>
+    <button class="fts" onclick="openMiniTimer()" title="弹出小窗，iPad 可分屏钉住">🗗 弹出</button>
+  </div>
+  <div class="ft-row">
+    <button class="fts" onclick="stopTimer()">⏹ 结束</button>
+  </div>
 </div>
 
 <script>
@@ -747,13 +771,25 @@ function updateCountdowns(){
 // D69+:   考点背诵+错题三刷
 // 每晚最后30min固定申论
 
+function isTheoryDebt(P){
+  P=P||D.prog||{};
+  return (P['申论-小题']||0)<40 || (P['公基-系统']||0)<40 || (P['资料-基础']||0)<8;
+}
+function isXtReady(P){
+  P=P||D.prog||{};
+  return (P['资料-基础']||0)>=8 && ((P['言语-基础']||0)+(P['言语-刷题']||0))>=6;
+}
 function getPhaseInfo(date){
   const idx=dayIdx(date);
+  const P=progAt(ds(date));
   let phaseName='';
   if((D.pauseOffset||0)>0){
     phaseName=`⏸ 已暂停${D.pauseOffset}天 · `;
   }
-  if(idx<=14)   phaseName+=`🟦 第一阶段·D${idx}/50 · 行测言语与政治基础（单科打底，稳扎稳打）`;
+  // 8/12 校准：日历进入第二阶段但理论债未还清 → 显示校准期，课表仍按实际进度
+  if(idx>50 && idx<=116 && isTheoryDebt(P)){
+    phaseName+=`🟧 校准期·消化理论债（日历第${idx}天，课表按实际进度不跳节，距事业编${Math.max(0,146-idx)}天）`;
+  }else if(idx<=14)   phaseName+=`🟦 第一阶段·D${idx}/50 · 行测言语与政治基础（单科打底，稳扎稳打）`;
   else if(idx<=28) phaseName+=`🟦 第一阶段·D${idx}/50 · 资料分析与逻辑推理（黄金提分重点攻克）`;
   else if(idx<=42) phaseName+=`🟩 第一阶段·D${idx}/50 · 专项高频真题刷题与进阶巩固期`;
   else if(idx<=50) phaseName+=`🟧 第一阶段·D${idx}/50 · 基础收尾与套卷过渡期（接轨申论节奏）`;
@@ -769,10 +805,9 @@ function getPhaseInfo(date){
 
   // ⭐ 进度驱动排课：课程节号由「实际已完成进度」决定，而不是按日历推算
   // 没学完的课不会被跳过；打卡/手动改进度后，之后的课表自动接上
-  const P=progAt(dkey);
 
   return {phaseName, slots:[
-    {key:'am',label:'上午场',clock:'9:00-11:40',  skipped:skippedToday('am'), tasks:skippedToday('am')?[]:getAmSeg(eff('am'),P)},
+    {key:'am',label:'上午场',clock:'9:00-12:10',  skipped:skippedToday('am'), tasks:skippedToday('am')?[]:getAmSeg(eff('am'),P)},
     {key:'pm',label:'下午场',clock:'14:30-17:30', skipped:skippedToday('pm'), tasks:skippedToday('pm')?[]:getPmSeg(eff('pm'),P)},
     {key:'ev',label:'晚上场',clock:'19:00-22:00', skipped:skippedToday('ev'), tasks:skippedToday('ev')?[]:getEvSeg(eff('ev'),P,date)},
   ]};
@@ -831,22 +866,27 @@ function xtCatchup(P,maxItems,prefix){
   return out;
 }
 
+function suanTask(){
+  return t('⚡速算热身 30min：截位直除 / 分数↔百分数 / 增长率口算（每天固定，计时练）','xt',25,'题');
+}
+function withSuan(arr){return [suanTask(), ...arr];}
+
 function getAmSeg(idx,P){
   P=P||D.prog||{};
-  if(idx>116) return[
+  if(idx>116) return withSuan([
     t('行测全卷模拟（对齐考试时间，严格卡点）','xt',0),
     t('重点补弱：数量+资料+言语各精练20题','xt',60,'题'),
-  ];
-  // D51 - D116: 第二阶段（真题套卷每天1套，7月29日起与申论同步转入）
-  if(idx>50) return[
+  ]);
+  // D51+ 原计划转套卷；理论债未还清则继续打底，不跳去全卷
+  if(idx>50 && isXtReady(P)) return withSuan([
     t('行测真题套卷 1套（完整计时，严卡120min时间）','xt',0),
     ...xtCatchup(P,1,'⚠️ 理论债补漏：'),
     t('错题归因分析（不会/会但慢/粗心 各自标记并整理）','dt',0),
     t('薄弱专项强化：言语/资料/数量/逻辑 选最弱一项精练30题','xt',30,'题'),
-  ];
+  ]);
 
   // ---- 50天系统打底期内（D1-D50，6/9-7/28）：智能优先队列单科排课 ----
-  // ⭐ 核心原则：绝不堆叠！每天上午只聚焦一门主攻科目（1课+1刷），外加一项辅攻练习（共约2.5h）
+  // ⭐ 核心原则：先速算30min，再聚焦一门主攻（1课+1刷），外加一项辅攻（共约3h）
   const zl=nx(P,'资料-基础',1), yy=nx(P,'言语-基础',1), lj=nx(P,'逻辑',2),
         xh=nx(P,'小黑-理论',1), sl=nx(P,'数量-基础',1),
         zls=nx(P,'资料-刷题',1), yys=nx(P,'言语-刷题',1), xhs=nx(P,'小黑-刷题',1);
@@ -885,16 +925,16 @@ function getAmSeg(idx,P){
     }else{
       arr.push(t('错题归因复盘（倒查知识点漏洞与解题技巧）','dt',0));
     }
-    return arr;
+    return withSuan(arr);
   }
 
-  // 3. 如果全部理论基础都提前学完了 → 自动转入高频专项刷题稳固期（直到D50结束）
-  return [
+  // 3. 如果全部理论基础都提前学完了 → 自动转入高频专项刷题稳固期
+  return withSuan([
     t('🎉 核心基础已全通！行测真题模块混合限时刷题（言语25+判断25+资料2篇）','xt',50,'题'),
     ...xtCatchup(P,1,'💡 专项选修补缺：'),
     t('错题归因复盘（总结秒杀公式与漏错原因）','dt',0),
     ...(xhs?[t(`小黑政治·高频刷题 ${rng(xhs)}`,'gj',20,'题')]:[])
-  ];
+  ]);
 }
 
 // ===== 下午：综测（2倍速）+ 白鹭申论60天上岸计划（优先申论） =====
@@ -1020,53 +1060,137 @@ function getApplyShenLun(idx){
 function renderSidePanel(date){
   const idx=dayIdx(date);
   const sp=document.getElementById('sp-content');
+  if(!sp) return;
+  const P=D.prog||{};
+  const n=k=>P[k]||0;
+  const sl=n('申论-小题'), zw=n('申论-作文'), gj=n('公基-系统'), gjs=n('公基-刷题');
+  const zl=n('资料-基础'), zls=n('资料-刷题'), yy=n('言语-基础'), yys=n('言语-刷题');
+  const lj=n('逻辑'), zc=n('综测-基础'), zcs=n('综测-刷题');
+  const corePct=Math.round(((sl/50)+(gj/86)+(zl/8))/3*100);
+  const xtReady=isXtReady(P);
+  const left=dBetween(E1);
 
-  const amItems=[
-    {range:[1,14],  text:'上午 D1-14：言语与小黑政治（单科突破）'},
-    {range:[15,28], text:'上午 D15-28：资料分析与逻辑推理（黄金增分期）'},
-    {range:[29,42], text:'上午 D29-42：专项刷题巩固与查漏补缺'},
-    {range:[43,50], text:'上午 D43-50：理论收尾与数量选学'},
-    {range:[51,116],text:'上午 D51-116：行测真题每天1套+薄弱专项'},
-    {range:[117,181],text:'上午 D117+：全卷模拟冲刺（对齐考试时间）'},
-  ];
-  const pmItems=[
-    {range:[1,50],  text:'下午 D1-50：⭐白鹭申论小题1节/天(2倍速1.5h)+综测基础（2倍速）'},
-    {range:[51,60], text:'下午 D51-60：⭐白鹭申论作文课1节/天(2倍速1.5h)+综测真题'},
-    {range:[61,116],text:'下午 D61-116：申论作业轮+综测真题+公基刷题'},
-    {range:[117,145],text:'下午 D117-145：综测全真模拟+申论小题+公基'},
-    {range:[146,181],text:'下午 D146+（事业编考后）：申论全力冲刺'},
-  ];
-  const evItems=[
-    {range:[1,43],  text:'晚上 D1-43：公基系统课2节/天(2倍速2h，含法律模块)'},
-    {range:[44,68],text:'晚上 D44-68：公基刷题课2节/天(穿插)'},
-    {range:[69,116],text:'晚上 D69-116：公基错题+考点背诵'},
-    {range:[117,181],text:'晚上 D117+：公基考点背诵+错题三刷'},
-  ];
+  // 当前真正在学的线（和课表同一套优先级），日历走过不等于学完
+  const amNow = zl<8 ? '资料基础' : yy<12 ? '言语基础' : lj<20 ? '高频逻辑' : xtReady ? '真题套卷' : '行测刷题';
+  const pmNow = sl<50 ? '申论小题' : zw<10 ? '申论作文' : '申论作业轮';
+  const evNow = gj<86 ? '公基系统课' : gjs<50 ? '公基刷题课' : '公基背诵';
 
-  const renderGroup=(items,title)=>{
-    let h=`<div style="font-size:10px;font-weight:700;color:var(--t3);margin:7px 0 3px">${title}</div>`;
-    items.forEach(item=>{
-      const [a,b]=item.range;
-      const isOn=idx>=a&&idx<=b;
-      const isDone=idx>b;
-      h+=`<div class="sp-item ${isOn?'sp-on':isDone?'sp-done':'sp-off'}">${isDone?'✅ ':isOn?'▶ ':'○ '}${item.text}</div>`;
-    });
-    return h;
+  const row=(done,total,name,hint,current)=>{
+    const pct=total?Math.min(100,Math.round(done/total*100)):0;
+    const finished=done>=total && total>0;
+    const cls=finished?'sp-done':current?'sp-on':'sp-off';
+    const mark=finished?'✅ ':current?'▶ ':'○ ';
+    const st=finished?'已学完':current?`进行中 ${done}/${total}`:`${done}/${total} 未轮到`;
+    return `<div class="sp-item ${cls}">
+      <div>${mark}<strong>${name}</strong> · ${st}</div>
+      <div style="height:4px;background:#e2e8f0;border-radius:2px;margin:4px 0 2px;overflow:hidden">
+        <div style="height:100%;width:${pct}%;background:${finished?'#10b981':current?'#2563eb':'#94a3b8'};border-radius:2px"></div>
+      </div>
+      <div style="font-size:10px;opacity:.85">${hint}</div>
+    </div>`;
   };
 
-  // 50天系统打底进度条（接轨申论前50天节奏）
-  const pct50=Math.min(100,Math.round(idx/50*100));
-  const bar50=idx<=50?`<div style="margin-bottom:10px">
-    <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--t2);margin-bottom:3px">
-      <span>⚡ 50天系统打底进度</span><span>${Math.min(idx,50)}/50天</span>
-    </div>
-    <div style="height:6px;background:#e2e8f0;border-radius:3px;overflow:hidden">
-      <div style="height:100%;width:${pct50}%;background:linear-gradient(90deg,#10b981,#3b82f6);border-radius:3px"></div>
-    </div>
-    <div style="font-size:10px;color:var(--p);margin-top:2px;font-weight:600">${idx<=50?`D${idx}·截止7月28日（与申论前50天同步接轨）`:'✅ 50天系统打底已完成'}</div>
-  </div>`:'';
+  const emptyHint=(sl+gj+zl+yy+zw+zc)===0
+    ? `<div class="alert" style="margin:8px 0 10px">这份文件如果是刚下载的，进度是空的（0/50）。你在 <strong>zmd123164.github.io</strong> 里打的卡存在那个网址的浏览器里。请把新文件上传覆盖 GitHub 后再打开原网址；或在「云同步」填同一套 Key。</div>`
+    : '';
 
-  sp.innerHTML=bar50+renderGroup(amItems,'🌅 上午·行测50天系统打底')+renderGroup(pmItems,'☀️ 下午·综测原节奏')+renderGroup(evItems,'🌙 晚上·公基+申论');
+  sp.innerHTML=`
+    <div class="alert" style="margin-bottom:10px">⚠ 以前按「日历过了哪一天」划掉，所以 D1–50 全绿。那是假完成。<strong>现在只看课打到第几节</strong>，没学完绝不划掉。</div>
+    <div style="margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--t2);margin-bottom:3px">
+        <span>⚡ 核心课实际进度（申论/公基/资料）</span><span>${corePct}%</span>
+      </div>
+      <div style="height:6px;background:#e2e8f0;border-radius:3px;overflow:hidden">
+        <div style="height:100%;width:${Math.min(100,corePct)}%;background:linear-gradient(90deg,#f59e0b,#ef4444);border-radius:3px"></div>
+      </div>
+      <div style="font-size:10px;color:#c2410c;margin-top:2px;font-weight:600">日历只是第 ${idx} 天 · 距事业编 ${left} 天 · 今天上午在「${amNow}」下午「${pmNow}」晚上「${evNow}」</div>
+    </div>
+    ${emptyHint}
+    <div style="font-size:10px;font-weight:700;color:var(--t3);margin:7px 0 3px">🌅 上午 · 行测（按实际进度，不是按日历）</div>
+    ${row(zl,8,'资料分析·基础','黄金提分，先收尾再走别的',amNow==='资料基础')}
+    ${row(zls,24,'资料分析·刷题','基础听完接上',zl>=8 && amNow!=='资料基础' && zls<24)}
+    ${row(yy,12,'言语·基础','资料完后的主攻',amNow==='言语基础')}
+    ${row(yys,10,'言语·刷题','隔天穿插，保语感',yy>=4 && yys<10 && amNow!=='资料基础')}
+    ${row(Math.min(lj,20),20,'逻辑·高频（只求20节）','62节听不完，砍到高频',amNow==='高频逻辑')}
+    <div class="sp-item ${xtReady?'sp-on':'sp-off'}">${xtReady?'▶ ':'○ '}真题套卷 ${xtReady?'已解锁，上午主项':'未解锁 · 资料基础完 + 言语学过才开'}</div>
+    <div class="sp-item sp-on">⚡ 速算 30min · 每天固定，不算「学完」</div>
+    <div style="font-size:10px;font-weight:700;color:var(--t3);margin:7px 0 3px">☀️ 下午 · 申论优先（1节锁死）</div>
+    ${row(sl,50,'白鹭申论·小题',sl<50?`还剩 ${50-sl} 节 · 1节/天约 ${50-sl} 天`:'听完，转作文',pmNow==='申论小题')}
+    ${row(zw,10,'白鹭申论·作文',sl<50?'小题没听完，先别上':'1节/天约10天',pmNow==='申论作文')}
+    ${row(zc,32,'综测·基础','能跟则跟，绝不挤掉申论',sl>=50 && zc<32)}
+    ${row(zcs,7,'综测·刷题','基础完再上',zc>=32 && zcs<7)}
+    <div style="font-size:10px;font-weight:700;color:var(--t3);margin:7px 0 3px">🌙 晚上 · 公基 + 申论30min</div>
+    ${row(gj,86,'公基·系统课',gj<86?`还剩 ${86-gj} 节 · 2节/天约 ${Math.ceil((86-gj)/2)} 天`:'转刷题课',evNow==='公基系统课')}
+    ${row(gjs,50,'公基·刷题课',gj<86?'系统课没完，先别跳':'2节/天',evNow==='公基刷题课')}
+    <div class="sp-item sp-on">⚡ 申论复盘 30min · 每晚固定，不挪动</div>
+    <div style="font-size:10px;color:var(--t3);line-height:1.6;margin-top:8px">打卡课表任务或在「统计」改节数，这里会跟着变。日历数字只用来倒计时，不再用来假装你学完了。</div>
+  `;
+}
+
+// ==================== 进度缺口（实际 vs 原日历目标） ====================
+function gapRows(){
+  const idx=dayIdx(new Date());
+  const P=D.prog||{};
+  const leftSy=dBetween(E1);
+  return [
+    {name:'白鹭申论·小题', done:P['申论-小题']||0, exp:Math.min(50,idx), total:50, pace:1, tip:'下午锁死1节/天'},
+    {name:'白鹭申论·作文', done:P['申论-作文']||0, exp:idx<=50?0:Math.min(10,idx-50), total:10, pace:1, tip:'小题听完再上'},
+    {name:'公基·系统课', done:P['公基-系统']||0, exp:Math.min(86,idx*2), total:86, pace:2, tip:'晚上2节/天'},
+    {name:'综测·基础', done:P['综测-基础']||0, exp:Math.min(32,Math.floor(idx*0.64)), total:32, pace:3, tip:'不挤申论'},
+    {name:'资料分析·基础', done:P['资料-基础']||0, exp:Math.min(8,Math.max(0,idx>14?8:Math.ceil(idx/2))), total:8, pace:1, tip:'上午优先收尾'},
+    {name:'言语·基础', done:P['言语-基础']||0, exp:Math.min(12,Math.max(0,idx>8?12:idx)), total:12, pace:1, tip:'资料完后主攻'},
+  ].map(r=>{
+    const gap=Math.max(0,r.exp-r.done);
+    const remain=r.total-r.done;
+    const daysNeed=r.pace?Math.ceil(remain/r.pace):remain;
+    return {...r,gap,remain,daysNeed,ok:gap===0,leftSy};
+  });
+}
+function renderDebtBanner(){
+  const el=document.getElementById('debt-banner');
+  if(!el) return;
+  const rows=gapRows();
+  const any=rows.some(r=>r.gap>0);
+  if(!any){el.style.display='none';return;}
+  const left=dBetween(E1);
+  el.style.display='block';
+  el.innerHTML=`<h3>🟧 进度校准 · 日历已到第${dayIdx(new Date())}天，课还在打底</h3>
+    <p>原计划今天该套卷冲刺。现已按<strong>实际进度</strong>排今天的课（不跳节）。距事业编 <strong>${left}</strong> 天：申论每天1节刚好能在冲刺前听完；公基保持每晚2节；逻辑不求听完。上午已加上速算30min。</p>
+    <div class="debt-grid">${rows.map(r=>`
+      <div class="debt-cell ${r.ok?'ok':''}">
+        <div class="n">${r.name}</div>
+        <div class="v">${r.done}/${r.total} · ${r.ok?'跟上':'差'+r.gap+'节'}</div>
+        <div class="n">${r.remain>0?`剩${r.remain}节 ≈ ${r.daysNeed}天 · ${r.tip}`:'已完成'}</div>
+      </div>`).join('')}</div>`;
+}
+function renderPlanGap(){
+  const el=document.getElementById('plan-gap');
+  if(!el) return;
+  const rows=gapRows();
+  el.innerHTML=`<div style="overflow-x:auto"><table class="ltbl"><thead><tr><th>科目</th><th>实际</th><th>原计划今天应到</th><th>缺口</th><th>按校准节奏</th></tr></thead><tbody>
+    ${rows.map(r=>`<tr><td>${r.name}</td><td><strong>${r.done}/${r.total}</strong></td><td>${r.exp}/${r.total}</td><td style="color:${r.ok?'var(--g)':'#c2410c'};font-weight:700">${r.ok?'已跟上':'差 '+r.gap+' 节'}</td><td>${r.tip}${r.remain?` · 还需约${r.daysNeed}天`:''}</td></tr>`).join('')}
+  </tbody></table></div>`;
+  renderScoreGuess();
+}
+function renderScoreGuess(){
+  const el=document.getElementById('score-guess');
+  if(!el) return;
+  const left=dBetween(E1), left2=dBetween(E2);
+  el.innerHTML=`<div style="border:1.5px solid #fed7aa;border-radius:10px;overflow:hidden">
+    <div style="background:linear-gradient(90deg,#fff7ed,#ffedd5);padding:9px 13px;font-weight:700;font-size:13px;color:#9a3412">🎯 按这套校准思路，能考到哪（不是承诺，是区间）</div>
+    <div style="padding:11px 13px;font-size:11px;color:var(--t2);line-height:1.85">
+      校准的目标是<strong>过线 + 地市普通岗有竞争力</strong>，不是成都主城 140+。逻辑砍到高频、公基允许跳节，上限就被锁在中等偏上。距事业编 ${left} 天，距省考 ${left2} 天。
+      <div style="overflow-x:auto;margin-top:8px"><table class="ltbl">
+        <thead><tr><th>场景</th><th>事业编 公基 / 综测 / 合成</th><th>省考 行测 / 申论 / 原始分</th><th>大概能干什么</th></tr></thead>
+        <tbody>
+          <tr><td>继续摆（一周学两三天）</td><td>38–48 / 32–45 / <strong>36–46</strong></td><td>45–55 / 40–50 / <strong>90–105</strong></td><td>热门岗没戏，偏远岗也悬</td></tr>
+          <tr><td>按课表执行（每天≥6h，申论不断）</td><td>58–68 / 55–65 / <strong>58–66</strong></td><td>58–68 / 55–65 / <strong>115–130</strong></td><td>事业编地市综合岗有机会；省考二三梯队</td></tr>
+          <tr><td>执行 + 真刷套卷 + 作业都写</td><td>65–75 / 62–72 / <strong>64–72</strong></td><td>65–72 / 62–70 / <strong>128–140</strong></td><td>多数地市可冲；成都主城仍吃力</td></tr>
+        </tbody>
+      </table></div>
+      <div style="margin-top:8px;color:#9a3412">四川事业编综合岗：公基100 + 综测100，各50%合成。省考：行测100 + 申论100。进面看岗位，成都普通岗常要 140+，地市大约 110–130。</div>
+    </div>
+  </div>`;
 }
 
 // ==================== RENDER SCHEDULE ====================
@@ -1228,7 +1352,7 @@ function addCustomTask(){
       <div style="flex:1">
         <label style="font-size:11px;font-weight:600;color:#475569;display:block;margin-bottom:4px">时段</label>
         <select id="ct-slot" style="width:100%;padding:7px 8px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:12px;background:#f8fafc">
-          <option value="am">🌅 上午场 9:00-11:40</option>
+          <option value="am">🌅 上午场 9:00-12:10</option>
           <option value="pm">☀️ 下午场 14:30-17:30</option>
           <option value="ev" selected>🌙 晚上场 19:00-22:00</option>
         </select>
@@ -1403,8 +1527,9 @@ function elapsedSec(){return Math.floor(elapsedMs()/1000);}
 
 function tickTimer(){
   const f=fmt(elapsedSec());
-  document.getElementById('t-disp').textContent=f;
-  document.getElementById('ft-disp').textContent=f;
+  const a=document.getElementById('t-disp'); if(a) a.textContent=f;
+  const b=document.getElementById('ft-disp'); if(b) b.textContent=f;
+  updateDocTitle();
 }
 
 function _startInterval(){
@@ -1413,9 +1538,212 @@ function _startInterval(){
 }
 
 function _showRunningUI(label){
-  document.getElementById('t-lbl').textContent=`🎯 ${label} · ${curMode}`;
-  document.getElementById('ft-subj').textContent=label;
-  document.getElementById('ft').classList.add('vis');
+  const lb=document.getElementById('t-lbl'); if(lb) lb.textContent=`🎯 ${label} · ${curMode}`;
+  const fs=document.getElementById('ft-subj'); if(fs) fs.textContent=label;
+  const ft=document.getElementById('ft'); if(ft) ft.classList.add('vis');
+}
+
+// ==================== 跟随计时：画中画 / 弹出小窗 / 标题栏 / 防休眠 ====================
+let pipDocWin=null, pipVid=null, pipCvs=null, pipTick=null, wakeLockSentinel=null, keepAudio=null;
+
+async function requestWakeLock(){
+  try{
+    if(navigator.wakeLock){
+      wakeLockSentinel=await navigator.wakeLock.request('screen');
+      wakeLockSentinel.addEventListener('release',()=>{if(tOn) requestWakeLock();});
+    }
+  }catch(e){}
+}
+function startKeepAliveAudio(){
+  try{
+    const AC=window.AudioContext||window.webkitAudioContext;
+    if(!AC) return;
+    if(!keepAudio) keepAudio=new AC();
+    if(keepAudio.state==='suspended') keepAudio.resume();
+    if(keepAudio._osc) return;
+    const osc=keepAudio.createOscillator();
+    const g=keepAudio.createGain();
+    g.gain.value=0.00008;
+    osc.frequency.value=20;
+    osc.connect(g); g.connect(keepAudio.destination);
+    osc.start();
+    keepAudio._osc=osc;
+  }catch(e){}
+}
+function updateDocTitle(){
+  if(tOn) document.title='⏱ '+fmt(elapsedSec())+'  '+((document.getElementById('ft-subj')||{}).textContent||'计时中');
+  else document.title='公考备考 2026 | 四川省考 & 事业编';
+}
+function drawPipCanvas(){
+  if(!pipCvs) return;
+  const ctx=pipCvs.getContext('2d');
+  const w=pipCvs.width,h=pipCvs.height;
+  const grd=ctx.createLinearGradient(0,0,w,h);
+  grd.addColorStop(0,'#1d4ed8'); grd.addColorStop(1,'#4f46e5');
+  ctx.fillStyle=grd; ctx.fillRect(0,0,w,h);
+  ctx.fillStyle='rgba(255,255,255,.75)';
+  ctx.font='28px sans-serif'; ctx.textAlign='center';
+  const label=(document.getElementById('ft-subj')||{}).textContent||'计时中';
+  ctx.fillText(String(label).slice(0,18), w/2, 80);
+  ctx.fillStyle='#fff';
+  ctx.font='bold 92px ui-monospace,Menlo,monospace';
+  ctx.fillText(fmt(elapsedSec()), w/2, 200);
+  ctx.font='24px sans-serif'; ctx.fillStyle='rgba(255,255,255,.7)';
+  ctx.fillText((curMode||'学习中')+' · 公考备考', w/2, 260);
+}
+function pushPipFrame(){
+  updateDocTitle();
+  drawPipCanvas();
+  try{
+    if(navigator.mediaSession){
+      navigator.mediaSession.metadata=new MediaMetadata({
+        title:fmt(elapsedSec()),
+        artist:(document.getElementById('ft-subj')||{}).textContent||sL(curSubj)||'计时中',
+        album:'公考备考 2026'
+      });
+    }
+  }catch(e){}
+  if(pipDocWin){
+    try{
+      const p=pipDocWin.document.getElementById('p');
+      const l=pipDocWin.document.getElementById('l');
+      if(p) p.textContent=fmt(elapsedSec());
+      if(l) l.textContent=(document.getElementById('ft-subj')||{}).textContent||'计时中';
+    }catch(e){}
+  }
+}
+async function enableFollowTimer(){
+  requestWakeLock();
+  startKeepAliveAudio();
+  pushPipFrame();
+  if(!pipTick) pipTick=setInterval(pushPipFrame,400);
+  // 1) Chrome 文档画中画（真正的 HTML 小窗）
+  if(window.documentPictureInPicture && !pipDocWin){
+    try{
+      pipDocWin=await documentPictureInPicture.requestWindow({width:280,height:168});
+      const s=pipDocWin.document.createElement('style');
+      s.textContent='html,body{margin:0;height:100%;background:linear-gradient(135deg,#1d4ed8,#4f46e5);color:#fff;font-family:sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center}#p{font-size:40px;font-weight:800;letter-spacing:2px}#l{font-size:12px;opacity:.85;margin-bottom:6px;padding:0 10px;text-align:center}';
+      pipDocWin.document.head.appendChild(s);
+      pipDocWin.document.body.innerHTML='<div id="l">计时中</div><div id="p">00:00:00</div>';
+      pipDocWin.addEventListener('pagehide',()=>{pipDocWin=null;});
+      pushPipFrame();
+      return true;
+    }catch(e){}
+  }
+  // 2) 视频画中画（iPad Safari / 手机切 App 后小窗仍在）
+  if(document.pictureInPictureEnabled){
+    try{
+      if(!pipCvs){pipCvs=document.createElement('canvas');pipCvs.width=720;pipCvs.height=360;}
+      drawPipCanvas();
+      if(!pipVid){
+        pipVid=document.createElement('video');
+        pipVid.setAttribute('playsinline','');
+        pipVid.setAttribute('webkit-playsinline','');
+        pipVid.muted=true; pipVid.autoplay=true; pipVid.playsInline=true;
+        pipVid.style.cssText='position:fixed;left:8px;bottom:8px;width:160px;height:80px;opacity:.02;z-index:1;pointer-events:none';
+        document.body.appendChild(pipVid);
+      }
+      if(pipCvs.captureStream){
+        pipVid.srcObject=pipCvs.captureStream(8);
+        await pipVid.play();
+        if(!document.pictureInPictureElement) await pipVid.requestPictureInPicture();
+        return true;
+      }
+    }catch(e){console.warn('video PiP',e);}
+  }
+  return false;
+}
+function disableFollowTimer(){
+  if(pipTick){clearInterval(pipTick);pipTick=null;}
+  try{if(document.pictureInPictureElement) document.exitPictureInPicture();}catch(e){}
+  try{if(pipDocWin) pipDocWin.close();}catch(e){}
+  pipDocWin=null;
+  try{if(wakeLockSentinel) wakeLockSentinel.release();}catch(e){}
+  wakeLockSentinel=null;
+  updateDocTitle();
+}
+async function toggleFollowTimer(){
+  if(!tOn){showToast('请先开始计时','orange');return;}
+  if(document.pictureInPictureElement || pipDocWin){
+    disableFollowTimer();
+    if(tOn){requestWakeLock(); if(!pipTick) pipTick=setInterval(pushPipFrame,400);}
+    showToast('已关闭悬浮窗，页面浮窗仍在计时');
+    return;
+  }
+  const ok=await enableFollowTimer();
+  showToast(ok?'📺 悬浮窗已打开，切到网课/刷题 App 也能看见时间':'这台设备不支持画中画，已为你弹出计时小窗，iPad 请分屏钉在右侧');
+  if(!ok) openMiniTimer();
+}
+function openMiniTimer(){
+  const base=location.href.split('#')[0].split('?')[0];
+  const w=window.open(base+'?mini=1','gk_mini_timer','width=320,height=220,menubar=no,toolbar=no,location=no,status=no,resizable=yes');
+  if(!w) showToast('浏览器拦截了弹窗：请允许弹出，或复制地址加 ?mini=1 用 iPad 分屏打开','orange');
+  else showToast('已弹出计时小窗 · iPad 用分屏把它钉在屏幕右侧');
+}
+function isMiniPage(){
+  try{return new URLSearchParams(location.search).get('mini')==='1' || location.hash==='#mini-timer';}catch(e){return false;}
+}
+function bootMiniTimer(){
+  document.documentElement.className='';
+  document.body.className='mini-body';
+  document.body.innerHTML=`<div class="mini-sub" id="mini-sub">等待主页面开始计时…</div>
+    <div class="mini-time" id="mini-disp">00:00:00</div>
+    <div style="display:flex;gap:8px;margin-top:18px">
+      <button onclick="stopTimer()" style="padding:8px 16px;border:none;border-radius:8px;background:#ef4444;color:#fff;font-weight:700;cursor:pointer">⏹ 结束</button>
+      <button onclick="window.close()" style="padding:8px 16px;border:none;border-radius:8px;background:rgba(255,255,255,.2);color:#fff;cursor:pointer">关闭</button>
+    </div>
+    <div style="font-size:11px;opacity:.7;margin-top:12px;text-align:center;padding:0 16px">与主页面共用同一个计时。iPad：点右上角「…」→ 分屏，把本页留在右侧。</div>`;
+  restoreTimer();
+  const tick=()=>{
+    const saved=loadTimer();
+    if(saved && saved.wallStart){
+      _wallStart=saved.wallStart; tOn=true;
+      curSubj=saved.subject||curSubj; curMode=saved.mode||curMode;
+      const el=document.getElementById('mini-disp');
+      const sub=document.getElementById('mini-sub');
+      if(el) el.textContent=fmt(elapsedSec());
+      if(sub) sub.textContent=(sL(curSubj)||'计时中')+' · '+(curMode||'');
+      document.title='⏱ '+fmt(elapsedSec());
+    }else{
+      tOn=false;
+      const el=document.getElementById('mini-disp');
+      if(el) el.textContent='00:00:00';
+      document.title='计时未开始';
+    }
+  };
+  tick();
+  setInterval(tick,400);
+  window.addEventListener('storage',e=>{if(e.key===TKEY) tick();});
+}
+
+// 页面内浮窗可拖动
+function bindFtDrag(){
+  const ft=document.getElementById('ft');
+  if(!ft || ft._dragBound) return;
+  ft._dragBound=true;
+  let sx=0,sy=0,ox=0,oy=0,drag=false;
+  const start=e=>{
+    const p=e.touches?e.touches[0]:e;
+    drag=true; sx=p.clientX; sy=p.clientY;
+    const r=ft.getBoundingClientRect(); ox=r.left; oy=r.top;
+    ft.style.right='auto'; ft.style.bottom='auto';
+    ft.style.left=ox+'px'; ft.style.top=oy+'px';
+  };
+  const move=e=>{
+    if(!drag) return;
+    const p=e.touches?e.touches[0]:e;
+    ft.style.left=Math.max(0,Math.min(window.innerWidth-80,ox+p.clientX-sx))+'px';
+    ft.style.top=Math.max(0,Math.min(window.innerHeight-40,oy+p.clientY-sy))+'px';
+    if(e.cancelable) e.preventDefault();
+  };
+  const end=()=>{drag=false;};
+  const handle=document.getElementById('ft-handle')||ft;
+  handle.addEventListener('mousedown',start);
+  window.addEventListener('mousemove',move);
+  window.addEventListener('mouseup',end);
+  handle.addEventListener('touchstart',start,{passive:true});
+  window.addEventListener('touchmove',move,{passive:false});
+  window.addEventListener('touchend',end);
 }
 
 function startTimer(){
@@ -1428,6 +1756,7 @@ function startTimer(){
   swPost({type:'TIMER_START',wallStart:_wallStart,subject:curSubj,mode:curMode,sessStart});
   _showRunningUI(sL(curSubj));
   _startInterval();
+  enableFollowTimer();
   renderSchedule(); // 同步课表：计时期间隐藏各任务的▶按钮
 }
 
@@ -1436,6 +1765,7 @@ function startTimer(){
 function inferSubj(text){
   if(!text) return '复盘';
   const rules=[
+    [/速算/,'速算'],
     [/小黑政治·理论/,'小黑-理论'],[/小黑.*刷题/,'小黑-刷题'],
     [/白鹭申论·小题/,'申论-小题'],[/白鹭申论·作文/,'申论-作文'],[/申论/,'申论'],
     [/言语·基础|言语理解·基础/,'言语-基础'],[/言语·刷题/,'言语-刷题'],
@@ -1452,7 +1782,7 @@ function inferSubj(text){
 }
 function inferMode(text){
   if(!text) return '听课';
-  if(/刷题|做题|题量|混合|套卷|狂刷/.test(text)) return '刷题';
+  if(/速算|刷题|做题|题量|混合|套卷|狂刷/.test(text)) return '刷题';
   if(/手写|仿写|限时写|写1篇|提纲/.test(text)) return '手写';
   if(/背诵|速记|背5条/.test(text)) return '背诵';
   if(/复盘|归因|错题/.test(text)) return '复盘';
@@ -1476,8 +1806,9 @@ function startTaskTimer(ck){
   swPost({type:'TIMER_START',wallStart:_wallStart,subject:curSubj,mode:curMode,sessStart});
   _showRunningUI(text.slice(0,14)+(text.length>14?'…':''));
   _startInterval();
+  enableFollowTimer();
   renderSchedule();
-  showToast(`▶ 开始计时：${sL(curSubj)} · ${curMode}`);
+  showToast(`▶ 开始计时：${sL(curSubj)} · ${curMode}（可点浮窗「悬浮窗」钉在其他 App 上）`);
 }
 
 function stopTimer(){
@@ -1488,12 +1819,14 @@ function stopTimer(){
   tOn=false;_wallStart=null;
   clearTimerState();
   swPost({type:'TIMER_STOP'});
-  document.getElementById('ft').classList.remove('vis');
+  disableFollowTimer();
+  const ftEl=document.getElementById('ft'); if(ftEl) ftEl.classList.remove('vis');
   activeSlotKey='';
+  const setTxt=(id,v)=>{const n=document.getElementById(id); if(n) n.textContent=v;};
   if(elapsed<30){
-    document.getElementById('t-disp').textContent='00:00:00';
-    document.getElementById('ft-disp').textContent='00:00:00';
-    renderTLog();renderSchedule();return;
+    setTxt('t-disp','00:00:00'); setTxt('ft-disp','00:00:00');
+    if(!isMiniPage()){renderTLog();renderSchedule();}
+    return;
   }
   const dur=Math.round(elapsed/60);
   const end=new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'});
@@ -1501,20 +1834,20 @@ function stopTimer(){
   sv();
   // 计时结束=关键节点：只要配置了云同步就强制上传（不受自动同步开关/防抖限制）
   if(CLOUD.apiKey&&CLOUD.binId) cloudSave(true,true);
-  document.getElementById('t-disp').textContent='00:00:00';
-  document.getElementById('ft-disp').textContent='00:00:00';
-  document.getElementById('t-lbl').textContent=`✅ 已记录 ${dur} 分钟`;
-  renderTLog();updateDayProgress(ds(curDate));renderSchedule();
+  setTxt('t-disp','00:00:00'); setTxt('ft-disp','00:00:00');
+  setTxt('t-lbl',`✅ 已记录 ${dur} 分钟`);
+  if(!isMiniPage()){renderTLog();updateDayProgress(ds(curDate));renderSchedule();}
 }
 
 function resetTimer(){
   clearInterval(tInt);tOn=false;_wallStart=null;
   clearTimerState();
-  document.getElementById('t-disp').textContent='00:00:00';
-  document.getElementById('ft-disp').textContent='00:00:00';
-  document.getElementById('ft').classList.remove('vis');
-  document.getElementById('t-lbl').textContent='选择科目后开始计时';
-  activeSlotKey='';renderSchedule();
+  disableFollowTimer();
+  const td=document.getElementById('t-disp'); if(td) td.textContent='00:00:00';
+  const fd=document.getElementById('ft-disp'); if(fd) fd.textContent='00:00:00';
+  const ft=document.getElementById('ft'); if(ft) ft.classList.remove('vis');
+  const lb=document.getElementById('t-lbl'); if(lb) lb.textContent='选择科目后开始计时';
+  activeSlotKey=''; if(!isMiniPage()) renderSchedule();
 }
 
 // ==================== 计时器时长修改 ====================
@@ -1613,6 +1946,7 @@ function setMode(m,btn){curMode=m;document.querySelectorAll('.mb').forEach(b=>{b
 
 // ==================== 学习科目管理（可增删，跨设备同步） ====================
 const SUBJ_DEFAULT=[
+  {v:'速算',label:'⚡ 资料速算'},
   {v:'资料-基础',label:'📊 资料分析·基础课'},{v:'资料-刷题',label:'📊 资料分析·刷题'},
   {v:'逻辑',label:'🔍 逻辑推理'},
   {v:'数量-基础',label:'🔢 数量关系·基础'},{v:'数量-刷题',label:'🔢 数量关系·刷题'},
@@ -2824,7 +3158,7 @@ function updateProg(key,val){
 }
 
 const PC={'资料':'#6366f1','逻辑':'#06b6d4','数量':'#0ea5e9','言语':'#10b981','综测':'#2563eb','公基':'#f59e0b','申论':'#8b5cf6','复盘':'#94a3b8'};
-function grp(s){if(s.startsWith('资料'))return'资料';if(s==='逻辑')return'逻辑';if(s.startsWith('数量'))return'数量';if(s.startsWith('言语'))return'言语';if(s.startsWith('综测'))return'综测';if(s.startsWith('小黑')||['公基-系统','公基-刷题'].includes(s))return'公基';if(s.startsWith('申论'))return'申论';return'复盘';}
+function grp(s){if(s==='速算'||s.startsWith('资料'))return'资料';if(s==='逻辑')return'逻辑';if(s.startsWith('数量'))return'数量';if(s.startsWith('言语'))return'言语';if(s.startsWith('综测'))return'综测';if(s.startsWith('小黑')||['公基-系统','公基-刷题'].includes(s))return'公基';if(s.startsWith('申论'))return'申论';return'复盘';}
 
 function renderPie(){
   const cv=document.getElementById('pie');const ctx=cv.getContext('2d');
@@ -3305,6 +3639,7 @@ function goTab(name,btn){
   if(name==='wq'){D.wq=D.wq||[];renderWq();}
   if(name==='correct'){D.corrections=D.corrections||[];renderCorrHistory();}
   if(name==='cfg'){renderCloudCfg();renderPauseStatus();document.getElementById('sync-status-big').textContent=document.getElementById('sync-status').textContent;}
+  if(name==='plan') renderPlanGap();
 }
 
 // ==================== RESPONSIVE ====================
@@ -3340,8 +3675,10 @@ window.addEventListener('resize',checkLayout);
 // 每一步单独容错：任何一步失败（如沙箱预览环境禁用 SW/localStorage）都不影响其余功能
 function safeRun(fn){try{fn();}catch(e){console.warn('[init]',e.message);}}
 function init(){
+  if(isMiniPage()){ safeRun(bootMiniTimer); return; }
   safeRun(updateCountdowns);                 // 倒计时最先渲染，绝不被其它错误阻断
   safeRun(registerSW);
+  safeRun(bindFtDrag);
   safeRun(()=>{if(D.notes) D.notes.forEach(n=>{if(!n.id) n.id='n_'+n.ts;});});
   if(!D.wq) D.wq=[];
   if(!D.corrections) D.corrections=[];
@@ -3361,15 +3698,91 @@ function init(){
       // 切回页面时自动拉取云端最新数据（如配置了同步）——换设备打开即自动合并
       if(CLOUD.apiKey&&CLOUD.binId) cloudLoad().catch(()=>{});
     }else{
-      // 切到后台/锁屏前，把当前数据推上云端
+      // 切到后台/锁屏前，把当前数据推上云端；计时中再抢一次悬浮窗
       if(CLOUD.apiKey&&CLOUD.binId) cloudSave(true,true);
+      if(tOn) enableFollowTimer();
     }
   });
   setInterval(()=>{if(tOn){safeRun(saveTimerState);safeRun(()=>swPost({type:'TIMER_PING'}));}},5000);
+  // 小窗结束/开始计时 → 主页面同步
+  window.addEventListener('storage',e=>{
+    if(e.key!==TKEY) return;
+    if(!e.newValue && tOn){
+      tOn=false;_wallStart=null;clearInterval(tInt);
+      disableFollowTimer();
+      const ft=document.getElementById('ft'); if(ft) ft.classList.remove('vis');
+      safeRun(renderTLog); safeRun(()=>updateDayProgress(ds(curDate))); safeRun(renderSchedule);
+    }else if(e.newValue && !tOn){
+      safeRun(restoreTimer); safeRun(renderSchedule);
+    }
+  });
   // 打开页面即自动拉取云端并合并（只要配置了 Key+BinID 就拉，不依赖自动同步开关）
   if(CLOUD.apiKey&&CLOUD.binId) cloudLoad().catch(()=>{});
 }
 init();
-</script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0c238d22fc1a2a1',t:'MTc4MTUzMzI5NA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a0d05a45cf871b46',t:'MTc4MTY4MTQ2NQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a1017d472b76817d',t:'MTc4MjE5NjcwMQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</script></body>
+</html>
+/script></body>
+</html>
+un(renderSchedule);
+    }
+  });
+  // 打开页面即自动拉取云端并合并（只要配置了 Key+BinID 就拉，不依赖自动同步开关）
+  if(CLOUD.apiKey&&CLOUD.binId) cloudLoad().catch(()=>{});
+}
+init();
+</script></body>
+</html>
+/script></body>
+</html>
+ safeRun(renderTLog);
+  safeRun(renderNoteTypes);
+  safeRun(renderSubjs);
+  safeRun(checkLayout);
+  safeRun(renderPauseStatus);
+  safeRun(()=>setSyncStatus(CLOUD.apiKey&&CLOUD.binId?'ok':'none'));
+  setInterval(()=>safeRun(updateCountdowns),60000);
+  // 切回页面/从后台唤醒时立即刷新倒计时与课表（保证跨天后数字准确）
+  document.addEventListener('visibilitychange',()=>{
+    if(!document.hidden){
+      safeRun(updateCountdowns);safeRun(renderSchedule);
+      // 切回页面时自动拉取云端最新数据（如配置了同步）——换设备打开即自动合并
+      if(CLOUD.apiKey&&CLOUD.binId) cloudLoad().catch(()=>{});
+    }else{
+      // 切到后台/锁屏前，把当前数据推上云端；计时中再抢一次悬浮窗
+      if(CLOUD.apiKey&&CLOUD.binId) cloudSave(true,true);
+      if(tOn) enableFollowTimer();
+    }
+  });
+  setInterval(()=>{if(tOn){safeRun(saveTimerState);safeRun(()=>swPost({type:'TIMER_PING'}));}},5000);
+  // 小窗结束/开始计时 → 主页面同步
+  window.addEventListener('storage',e=>{
+    if(e.key!==TKEY) return;
+    if(!e.newValue && tOn){
+      tOn=false;_wallStart=null;clearInterval(tInt);
+      disableFollowTimer();
+      const ft=document.getElementById('ft'); if(ft) ft.classList.remove('vis');
+      safeRun(renderTLog); safeRun(()=>updateDayProgress(ds(curDate))); safeRun(renderSchedule);
+    }else if(e.newValue && !tOn){
+      safeRun(restoreTimer); safeRun(renderSchedule);
+    }
+  });
+  // 打开页面即自动拉取云端并合并（只要配置了 Key+BinID 就拉，不依赖自动同步开关）
+  if(CLOUD.apiKey&&CLOUD.binId) cloudLoad().catch(()=>{});
+}
+init();
+</script></body>
+</html>
+/script></body>
+</html>
+un(renderSchedule);
+    }
+  });
+  // 打开页面即自动拉取云端并合并（只要配置了 Key+BinID 就拉，不依赖自动同步开关）
+  if(CLOUD.apiKey&&CLOUD.binId) cloudLoad().catch(()=>{});
+}
+init();
+</script></body>
+</html>
+/script></body>
 </html>
