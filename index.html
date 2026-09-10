@@ -197,7 +197,7 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
   <div class="lbox">
     <div class="lic">🔒</div>
     <div class="lt">今日未达标，明日已锁定</div>
-    <div class="lm">当日学习时间不足 6 小时，无法切换到下一天。<br>超出时间<strong>不跨天计算</strong>，今天补足才能解锁。</div>
+    <div class="lm" id="lock-lm">当日学习时间不足 6 小时，无法切换到下一天。<br>超出时间<strong>不跨天计算</strong>，今天补足才能解锁。</div>
     <div class="lh" id="lh">0.0h</div>
     <div class="ln" id="ln">今日已学 0.0h，还差 6.0h</div>
     <button class="lbtn" onclick="closeLock()">我知道了，继续学习</button>
@@ -253,7 +253,7 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
       <!-- progress -->
       <div style="background:var(--surface);border-radius:var(--rad);box-shadow:var(--sh);border:1px solid var(--border);padding:12px 14px;margin-bottom:13px">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;flex-wrap:wrap;gap:4px">
-          <span style="font-size:12px;color:var(--t2)">已学 <span id="cur-h" style="color:var(--p);font-weight:700">0.0</span>h / 目标 6h</span>
+          <span style="font-size:12px;color:var(--t2)">已学 <span id="cur-h" style="color:var(--p);font-weight:700">0.0</span>h / <span id="target-h">目标 6h</span></span>
           <span style="font-size:12px;color:var(--g);font-weight:700" id="cur-task-pct">任务 0%</span>
         </div>
         <div class="pbar-outer"><div class="pbar-fill" id="h-bar" style="width:0%;background:linear-gradient(90deg,#10b981,#059669)"></div></div>
@@ -382,9 +382,22 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
     <div id="plan-gap" style="margin-bottom:13px"></div>
     <div id="score-guess" style="margin-bottom:13px"></div>
 
-    <div style="border-radius:10px;overflow:hidden;border:1.5px solid #fed7aa;margin-bottom:13px">
+    <div style="border-radius:10px;overflow:hidden;border:1.5px solid #10b981;margin-bottom:13px">
+      <div style="background:linear-gradient(90deg,#f0fdf4,#dcfce7);padding:10px 14px;font-weight:700;font-size:13px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
+        🔁 14天重启期（省考为主·事业编为辅）— 9/10-9/23 课表已按此排入「每日课表」
+        <span class="chip" style="background:#dcfce7;color:#166534;border-color:#bbf7d0">9/10 - 9/23（14天）</span>
+      </div>
+      <div style="padding:12px 14px;font-size:11px;color:var(--t2);line-height:2">
+        每天只 3-5 条任务：<strong>①速算25题30min（永不砍）②主攻 A资料刷题 / B逻辑+图推20题 / C小黑政治刷题 三天一转</strong> ③申论小题1节（只挑高频题型课，重复/偏门节直接跳）；9/17 起加 <strong>④公基系统2节（非高频跳）⑤综测基础3节</strong>（仿写 9/17、9/19、9/22）。第一周晚上不排课，是故意的——先把"每天没清零"做回默认状态。<br>
+        <strong>日底线：只做①也算今天没清零。跳课要点「顺延」，不许沉默跳。时间不够：先砍⑤ → 再砍③ → 再砍④。</strong><br>
+        <strong>网课=药，不是饭（避坑指南）</strong>：先知道哪疼（错题归因）再买（只补那 1 节，弱项回看可 1 倍速，看完立刻练 5-10 道同类题）；不当背景音、不睡前加课、不自作主张多听。<br>
+        9/23 检查点：速算≥10天 / 资料刷题≥9 / 逻辑≥21 / 言语刷题≥7 / 小黑刷题≥6 / 申论小题≥16 / 公基≥14 / 综测≥21。<strong>触发器：图推若仍&lt;45%，第三周切换集中模式（主攻全给逻辑图推，资料靠速算保活）。</strong><br>
+        9/24 起自动进入「正式版」阶段（恢复并行 → 事业编冲刺 → 省考冲刺 → 最后一周），9/23 检查点结果自动存档显示在每日课表顶部；两个开关：「🇨🇳加报国考」「⚠️图推&lt;45%」（在每日课表顶部检查点卡里勾选，课表自动切换）。10/14 看国考公告，10/24 报名截止。
+      </div>
+    </div>
+    <div style="border-radius:10px;overflow:hidden;border:1.5px solid #fed7aa;margin-bottom:13px;opacity:.65">
       <div style="background:linear-gradient(90deg,#fff7ed,#ffedd5);padding:10px 14px;font-weight:700;font-size:13px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
-        🟧 校准期（原第一阶段未完成部分，并入今天起）
+        🟧 校准期（原第一阶段未完成部分，并入今天起）<span style="font-weight:400;font-size:11px">（9/10 起已被上方重启期覆盖）</span>
         <span class="chip" style="background:#ffedd5;color:#9a3412;border-color:#fed7aa">8/12 - 9/15（35天）</span>
       </div>
       <div style="padding:12px 14px;font-size:12px">
@@ -423,24 +436,25 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
     <div style="border-radius:10px;overflow:hidden;border:1.5px solid var(--border);margin-bottom:13px">
       <div style="background:linear-gradient(90deg,#f0fdf4,#dcfce7);padding:10px 14px;font-weight:700;font-size:13px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
         🟩 第二阶段：套卷并行（理论债继续还）
-        <span class="chip" style="background:#dcfce7;color:#166534;border-color:#bbf7d0">9/16 - 10/8（23天）</span>
+        <span class="chip" style="background:#dcfce7;color:#166534;border-color:#bbf7d0">9/24 - 10/8（15天）</span>
       </div>
       <div style="padding:12px 14px;font-size:11px;color:var(--t2);line-height:2">
-        上午：⚡速算30min + 行测真题套卷1套（能全卷就全卷，否则资料+言语半套卡时）+ 错题归因；理论没听完的课自动插1节补漏<br>
-        下午：白鹭申论继续（此时应进入作文课/作业轮）+ 综测真题闭卷手写<br>
-        晚上：公基刷题课推进 + 错题倒查 + 申论30–40min
+        上午：⚡速算30min + 7天轮换：周一/三 资料1节+15题 / 周二 逻辑+图推20题（开关ON→图推集中40题）/ 周四 数量4类 / 周五 小黑政治 / 周六 全卷模考120min / 周日 言语1节+20题<br>
+        下午：白鹭申论1节锁死（小题高频 → 作文 → 作业轮）+ 综测基础3节（时间不够先砍这里）<br>
+        晚上：公基2节（非高频跳）+ 速记10min · 日目标 5.5h 标准日底线，全量日 +综测 ≈7h
       </div>
     </div>
 
     <div style="border-radius:10px;overflow:hidden;border:1.5px solid var(--border);margin-bottom:13px">
       <div style="background:linear-gradient(90deg,#fff7ed,#ffedd5);padding:10px 14px;font-weight:700;font-size:13px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">
         🟧 第三阶段：事业编冲刺
-        <span class="chip" style="background:#ffedd5;color:#9a3412;border-color:#fed7aa">10/9 - 11/1（考前3.5周）</span>
+        <span class="chip" style="background:#ffedd5;color:#9a3412;border-color:#fed7aa">10/9 - 10/31（11/1 笔试）</span>
       </div>
       <div style="padding:12px 14px;font-size:11px;color:var(--t2);line-height:2">
-        上午：⚡速算30min + 行测全卷模拟（对齐考试时间）+ 数量/资料/言语补弱<br>
-        下午：综测全真模拟（对齐考试时间）+ 公基高频选择狂刷100题<br>
-        晚上：公基高频考点背诵（公文/管理/省情）+ 错题三刷 + 申论
+        上午：同7天轮换 + 2套模考/周（周六全卷+周日半卷40题）+ 第二资料位（周四）<br>
+        下午：申论作业轮（二/四/六 大作文 · 其余日小题套）+ 综测真题闭卷手写2次/周（周三/六）<br>
+        晚上：公基刷题课2节 + 周五公基高频100题<br>
+        🇨🇳 10/14 国考公告：勾选「加报国考」后 11/16 起自动切国考模考（10/24 报名截止）
       </div>
     </div>
 
@@ -450,9 +464,10 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
         <span class="chip" style="background:#fae8ff;color:#6b21a8;border-color:#e9d5ff">11/2（事业编考后）- 12/6</span>
       </div>
       <div style="padding:12px 14px;font-size:11px;color:var(--t2);line-height:2">
-        上午：⚡速算30min + 行测全卷模拟（严格卡时）+ 数量/资料/言语专项补弱<br>
-        下午：申论大作文结构固化（限时写+逐段批改）<br>
-        晚上：高频考点速查 + 时政热词背诵 + 申论50min
+        11/2-11/15：全卷3套/周（周一三五 120min）+ 模块限时2项；下午申论（一/三/五 大作文1篇 · 二/四/六 小题套）；晚上高频速记+时政热词+错题三刷<br>
+        11/16-11/27：已报国考 → 国考全卷5套+省考全卷2套+国考申论真题；未报 → 继续省考冲刺<br>
+        11/28-12/5 最后一周：（报国考则 11/28-29 国考笔试）全卷模考+弱项30题+速记，12/5 轻量日（早睡+整理考试用品）<br>
+        12/6：省考笔试 9:00 行测 / 15:00 申论
       </div>
     </div>
   </div>
@@ -473,7 +488,7 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
         <div style="padding:9px 11px;font-size:11px;color:var(--t2);line-height:1.9">公基系统课2节(2h)+申论<br>30min固定，不挪动</div>
       </div>
     </div>
-    <div class="alert" style="margin-top:10px">⚡ 每日 <strong>6h 硬底线</strong>不变 | 超出不跨天 | 未达标锁定明日 | 想补进度：优先补下午申论和晚上公基，不要用通宵听逻辑硬刚</div>
+    <div class="alert" style="margin-top:10px">⚡ 每日底线：<strong>重启期 3.5h → 9/24 起 5.5h 标准日</strong>（全量日可到 7h）| 超出不跨天 | 未达标锁定明日 | 想补进度：优先补下午申论和晚上公基，不要用通宵听逻辑硬刚</div>
   </div>
 </div>
 
@@ -786,16 +801,33 @@ function getPhaseInfo(date){
   if((D.pauseOffset||0)>0){
     phaseName=`⏸ 已暂停${D.pauseOffset}天 · `;
   }
-  // 8/12 校准：日历进入第二阶段但理论债未还清 → 显示校准期，课表仍按实际进度
-  if(idx>50 && idx<=116 && isTheoryDebt(P)){
-    phaseName+=`🟧 校准期·消化理论债（日历第${idx}天，课表按实际进度不跳节，距事业编${Math.max(0,146-idx)}天）`;
-  }else if(idx<=14)   phaseName+=`🟦 第一阶段·D${idx}/50 · 行测言语与政治基础（单科打底，稳扎稳打）`;
-  else if(idx<=28) phaseName+=`🟦 第一阶段·D${idx}/50 · 资料分析与逻辑推理（黄金提分重点攻克）`;
-  else if(idx<=42) phaseName+=`🟩 第一阶段·D${idx}/50 · 专项高频真题刷题与进阶巩固期`;
-  else if(idx<=50) phaseName+=`🟧 第一阶段·D${idx}/50 · 基础收尾与套卷过渡期（接轨申论节奏）`;
-  else if(idx<=116) phaseName+=`🟩 第二阶段·真题套卷冲刺（第${idx}天，距事业编${Math.max(0,146-idx)}天）`;
-  else if(idx<=145) phaseName+=`🟧 第三阶段·事业编冲刺（第${idx}天，距考试${Math.max(0,146-idx)}天）`;
-  else phaseName+=`🟪 第四阶段·省考冲刺（第${idx}天，距考试${Math.max(0,181-idx)}天）`;
+  // 14天重启期（9/10-9/23）：日期驱动，显示重启横幅
+  if(_inRestart(ds(date))){
+    const _kl={logic:'逻辑+图推20题',data:'资料刷题',pol:'小黑政治刷题'}[RESTART_AM[ds(date)]]||'—';
+    phaseName+=`🔁 14天重启期（9/10-9/23）· 省考为主 · 上午主攻：${_kl} · 速算永不砍`;
+  }else{
+    const _s=_st(ds(date));
+    if(_s===1)phaseName+=`🟩 第二阶段·恢复并行（9/24起 · 真题+理论债并行还 · 距事业编${dBetween(E1)}天）`;
+    else if(_s===2)phaseName+=`🟧 第三阶段·事业编冲刺（2套模考/周+综测真题2次/周 · 距11/1考试${dBetween(E1)}天）`;
+    else if(_s===3)phaseName+=`🎯 今天是事业编笔试（11/1）`;
+    else if(_s===4)phaseName+=`🟪 第四阶段·省考冲刺上半（全卷3套/周 · 距12/6省考${dBetween(E2)}天）`;
+    else if(_s===5)phaseName+=((D.opt&&D.opt.gk)?`🟪 第四阶段·国考+省考双线（11/28-29国考笔试 · 距国考${dBetween(new Date(2026,10,28))}天）`:`🟪 第四阶段·省考冲刺下半（距12/6省考${dBetween(E2)}天）`);
+    else if(_s===6)phaseName+=`🏁 最后一周（距省考笔试${dBetween(E2)}天 · 12/5轻量日）`;
+    else if(_s===7)phaseName+=`🎯 今天是四川省考笔试（12/6）`;
+    else phaseName+=`🎉 考试期结束（省考/事业编${(D.opt&&D.opt.gk)?'/国考':''}全部考完）`;
+  }
+  // 旧 idx 阶段链：只在「9/24 之前 且 非重启期」的日期生效（重启期横幅与正式版由上面的分支接管，整条链包在守卫里）
+  if(_st(ds(date))===0 && !_inRestart(ds(date))){
+    if(idx>50 && idx<=116 && isTheoryDebt(P)){
+      phaseName+=`🟧 校准期·消化理论债（日历第${idx}天，课表按实际进度不跳节，距事业编${Math.max(0,146-idx)}天）`;
+    }else if(idx<=14)   phaseName+=`🟦 第一阶段·D${idx}/50 · 行测言语与政治基础（单科打底，稳扎稳打）`;
+    else if(idx<=28) phaseName+=`🟦 第一阶段·D${idx}/50 · 资料分析与逻辑推理（黄金提分重点攻克）`;
+    else if(idx<=42) phaseName+=`🟩 第一阶段·D${idx}/50 · 专项高频真题刷题与进阶巩固期`;
+    else if(idx<=50) phaseName+=`🟧 第一阶段·D${idx}/50 · 基础收尾与套卷过渡期（接轨申论节奏）`;
+    else if(idx<=116) phaseName+=`🟩 第二阶段·真题套卷冲刺（第${idx}天，距事业编${Math.max(0,146-idx)}天）`;
+    else if(idx<=145) phaseName+=`🟧 第三阶段·事业编冲刺（第${idx}天，距考试${Math.max(0,146-idx)}天）`;
+    else phaseName+=`🟪 第四阶段·省考冲刺（第${idx}天，距考试${Math.max(0,181-idx)}天）`;
+  }
 
   // ---- 临时任务占用 → 课程自动顺延补位 ----
   const dkey=ds(date);
@@ -807,8 +839,8 @@ function getPhaseInfo(date){
   // 没学完的课不会被跳过；打卡/手动改进度后，之后的课表自动接上
 
   return {phaseName, slots:[
-    {key:'am',label:'上午场',clock:'9:00-12:10',  skipped:skippedToday('am'), tasks:skippedToday('am')?[]:getAmSeg(eff('am'),P)},
-    {key:'pm',label:'下午场',clock:'14:30-17:30', skipped:skippedToday('pm'), tasks:skippedToday('pm')?[]:getPmSeg(eff('pm'),P)},
+    {key:'am',label:'上午场',clock:'9:00-12:10',  skipped:skippedToday('am'), tasks:skippedToday('am')?[]:getAmSeg(eff('am'),P,date)},
+    {key:'pm',label:'下午场',clock:'14:30-17:30', skipped:skippedToday('pm'), tasks:skippedToday('pm')?[]:getPmSeg(eff('pm'),P,date)},
     {key:'ev',label:'晚上场',clock:'19:00-22:00', skipped:skippedToday('ev'), tasks:skippedToday('ev')?[]:getEvSeg(eff('ev'),P,date)},
   ]};
 }
@@ -871,8 +903,214 @@ function suanTask(){
 }
 function withSuan(arr){return [suanTask(), ...arr];}
 
-function getAmSeg(idx,P){
+// ===== 🔁 14天重启期（2026-09-10 ~ 2026-09-23，省考为主·事业编为辅）=====
+// 日期驱动：这一段的课表按固定日期排（与下方 idx 日历逻辑解耦）
+// 上午主攻轮换：A资料刷题 / B逻辑+图推20题 / C小黑政治刷题；周日上午加言语刷题1节
+// 节号仍由实际进度决定（nx()），没学完不跳节；跳课用「顺延」
+const RESTART_AM={
+  '2026-09-10':'logic','2026-09-11':'data','2026-09-12':'logic','2026-09-13':'data',
+  '2026-09-14':'logic','2026-09-15':'pol','2026-09-16':'data',
+  '2026-09-17':'logic','2026-09-18':'data','2026-09-19':'pol','2026-09-20':'logic',
+  '2026-09-21':'data','2026-09-22':'pol','2026-09-23':'logic'
+};
+function _inRestart(dk){return !!RESTART_AM[dk];}
+function _restartW2(dk){return dk>='2026-09-17' && dk<='2026-09-23';}
+const RESTART_IMITATE={'2026-09-17':1,'2026-09-19':1,'2026-09-22':1}; // 综测仿写日
+function suanStreak(){
+  const days=new Set((D.logs||[]).filter(l=>l.subject==='速算').map(l=>l.date));
+  let s=0,d=new Date();
+  if(!days.has(ds(d))) d.setDate(d.getDate()-1); // 今天还没做不算断
+  while(days.has(ds(d))){s++;d.setDate(d.getDate()-1);}
+  return s;
+}
+// 每日最低学习目标：重启期 3.5h（保底日）/ 9/24 起正式版 5.5h（标准日底线）/ 9/24 前旧期 6h
+function dayTargetH(){const _dk0=ds(new Date());if(_inRestart(_dk0))return 3.5;return _dk0>='2026-09-24'?5.5:6;}
+
+// ======================================================================
+// 🔥 正式版阶段（2026-09-24 起，替代旧 idx 日历逻辑；9/24 之前的日期走旧逻辑）
+// 设计：日期驱动划段 + 进度驱动节号（nx()）+ 两个运行时开关（D.opt）
+//   D.opt.gk=true        → 加报国考（11/16-11/27 切国考模考，11/28-29 考试日）
+//   D.opt.figTrig=true   → 图推仍<45% 触发器（周二主攻切逻辑图推集中）
+// ======================================================================
+function _st(dk){
+  if(dk<'2026-09-24')return 0;
+  if(dk<='2026-10-08')return 1;  // S1 恢复并行
+  if(dk<='2026-10-31')return 2;  // S2 事业编冲刺
+  if(dk==='2026-11-01')return 3; // S3 事业编笔试日
+  if(dk<='2026-11-15')return 4;  // S4 省考冲刺·上半
+  if(dk<='2026-11-27')return 5;  // S5 省考冲刺·下半（gk 则含国考）
+  if(dk<='2026-12-05')return 6;  // S6 最后一周
+  if(dk==='2026-12-06')return 7; // S7 省考笔试日
+  return 8;                        // S8 已结束
+}
+function _gkDay(dk){return !!(D.opt&&D.opt.gk)&&(dk==='2026-11-28'||dk==='2026-11-29');}
+function _skipHint(s){return `（跳过的节：在「统计」页手动+1，免得重排${s}）`;}
+function setOpt(k,v){D.opt=D.opt||{};D.opt[k]=!!v;sv();if(CLOUD.apiKey&&CLOUD.binId)cloudSave(true,true);renderSchedule();showToast(v?'✅ 开关已打开，课表自动调整':'已关闭');}
+
+function amNew(P,date){
+  const dk=ds(date),st=_st(dk),dow=date.getDay(),o=D.opt||{};
+  if(st===3)return[t('🎯 事业编笔试·上午场（公基/行测）9:00（昨晚保持速算手感，睡足8h）','xt',0)];
+  if(st===7)return[t('🎯 四川省考·行测 9:00-11:00（100题/120min：资料+判断+言语先做，数量只做5道，常识15题）','xt',0)];
+  if(o.gk&&dk==='2026-11-28')return[t('🎯 国考·行测 9:00-11:00（135题/120min：常识+政治先扫，资料15+判断40+言语40主攻，数量做10道）','xt',0)];
+  if(o.gk&&dk==='2026-11-29')return[t('国考·11/29：上午普通岗位无考试（金融/监管等专项岗位以准考证为准，普通岗保持速算25题手感）','xt',25,'题')];
+  if(st===8)return[t('🎉 考试期结束：本时段不再排课（可自愿保持速算25题保手感）','xt',25,'题')];
+  // S6 最后一周（11/28-12/5）
+  if(st===6){
+    if(dk==='2026-12-05')return withSuan([t('🌙 轻量日：只速算25题+公基速记30min，不碰新题，23:00前睡','fx',0)]);
+    if((dk==='2026-11-28'&&!o.gk)||dk==='2026-12-01'||dk==='2026-12-03')return withSuan([
+      t('省考行测全卷模拟1套（120min严格卡时，用历年真题）','xt',0),
+      t('错题归因15min + 弱项模块精练30题限时','xt',30,'题')]);
+    const mod={2:['资料15题25min','判断30题35min'],4:['言语25题30min','政治常识20题15min'],6:['资料15题25min','数量4类10题20min'],0:['言语20题25min','数量4类10题20min'],5:['言语25题30min','政治常识20题15min']}[dow]||['资料15题25min','判断30题35min'];
+    return withSuan([t(`模块限时①：${mod[0]}`,'xt',0),t(`模块限时②：${mod[1]}`,'xt',0)]);
+  }
+  // S4/S5 省考冲刺
+  if(st===4||st===5){
+    if(st===5&&o.gk){
+      if(dow===1||dow===3||dow===5)return withSuan([t('国考行测全卷模拟（135题/120min，周一三五3套/周）','xt',0),t('错题归因15min（国考分布：资料15/判断40/言语40/数量15）','dt',0)]);
+      if(dow===6)return withSuan([t('省考行测全卷模拟1套（120min，周六必做保省考节奏）','xt',0),t('错题归因15min','dt',0)]);
+      const mod={2:['国考资料15题25min','国考判断40题40min'],4:['国考言语40题40min','国考数量15题（做10）20min'],0:['政治+常识25题20min','言语25题30min']}[dow]||['资料15题25min','判断30题35min'];
+      return withSuan([t(`国考模块限时①：${mod[0]}`,'xt',0),t(`国考模块限时②：${mod[1]}`,'xt',0)]);
+    }
+    if(dow===1||dow===3||dow===5)return withSuan([t('行测全卷模拟1套（120min严格卡时，周一三五3套/周）','xt',0),t('错题归因15min：不会/会但慢/粗心 各自标记','dt',0)]);
+    const mod={2:['资料15题25min','判断30题35min'],4:['言语25题30min','政治常识20题15min'],6:['数量4类10题20min','政治20题15min'],0:['言语20题25min','政治20题15min']}[dow]||['资料15题25min','判断30题35min'];
+    return withSuan([t(`模块限时①：${mod[0]}`,'xt',0),t(`模块限时②：${mod[1]}`,'xt',0)]);
+  }
+  // S1/S2 恢复并行 + 事业编冲刺（7天轮换）
+  const arr=[];
+  if(dow===1||dow===3||dow===6){ // 周一/三 资料，周六 全卷模考
+    if(dow===6){
+      arr.push(t('行测真题全卷模拟1套（120min严格卡时：资料15+判断30+言语25先做，数量做5道，常识15题）','xt',0));
+      arr.push(t('错题归因15min（不会→回看那1节；会但慢→刷同类；粗心→强制检查）','dt',0));
+    }else{
+      const r=nx(P,'资料-刷题',1);
+      if(r){arr.push(t(`资料分析·刷题 ${rng(r)}（2倍速1h）`,'xt',0));arr.push(t('资料配套15题限时25min（草稿写算式，截位直除）','xt',15,'题'));}
+      else arr.push(t('资料2篇限时25min（24节刷题课已听完，转真题篇章）','xt',15,'题'));
+    }
+  }else if(dow===2){ // 周二 逻辑
+    if(o.figTrig){
+      arr.push(t('图推集中：图推40题40min（2组20题，只认模式：对称/开闭/笔画/位置/遍历）','xt',40,'题'));
+      arr.push(t('图推针对性课1节（1倍速，只看薄弱模式那种，看完立刻练5题）','xt',0));
+    }else{
+      const r=nx(P,'逻辑',1);
+      if(r)arr.push(t(`行测逻辑推理 ${rng(r)}（只听高频：图推/定义/类比，最多6节）${_skipHint('逻辑课')}`,'xt',0));
+      else arr.push(t('判断混合20题限时25min（定义/类比/因果各5-7题）','xt',20,'题'));
+      arr.push(t('图推20题20min（卡住即跳，记模式库）','xt',20,'题'));
+    }
+  }else if(dow===4){ // 周四 数量（只4类题型）
+    const r=nx(P,'数量-基础',1);
+    if(r)arr.push(t(`数量关系·基础 ${rng(r)}（只学4类：工程/利润/行程/容斥，最多8节）${_skipHint('数量课')}`,'xt',0));
+    else arr.push(t('数量4类题型精练10题限时20min（考场只做5道，其余蒙）','xt',10,'题'));
+    if(st===2){const r2=nx(P,'资料-刷题',1);if(r2)arr.push(t(`资料分析·刷题 ${rng(r2)}（2倍速1h，冲刺周第二资料位）`,'xt',0));else arr.push(t('资料15题限时25min（冲刺周第二资料位）','xt',15,'题'));}
+  }else if(dow===5){ // 周五 小黑政治
+    const r=nx(P,'小黑-刷题',2);
+    if(r){arr.push(t(`小黑政治·刷题课 ${rng(r)}（2倍速30min/节）`,'gj',0));arr.push(t('小黑政治·刷题20题（政治理论限时15min，检验背诵）','xt',20,'题'));}
+    else arr.push(t('政治理论40题限时15min（小黑已听完，转真题政治题）','xt',40,'题'));
+  }else{ // 周日 言语
+    if(st===2)arr.push(t('行测半卷：资料15题25min+言语25题30min（冲刺周第二套模考，不碰数量/政治）','xt',40,'题'));
+    else{
+      const r=nx(P,'言语-刷题',1);
+      if(r){arr.push(t(`行测言语·刷题进阶 ${rng(r)}（2倍速1h）`,'xt',0));arr.push(t('言语20题限时25min（推断10+排序5+表达5）','xt',20,'题'));}
+      else arr.push(t('言语25题限时30min（10节刷题课已听完，转真题）','xt',25,'题'));
+    }
+  }
+  return withSuan(arr);
+}
+
+function pmNew(P,date){
+  const dk=ds(date),st=_st(dk),dow=date.getDay(),o=D.opt||{};
+  if(st===3)return[t('🎯 事业编笔试·下午场（综测）14:30（格子纸+限时，必须动笔）','zt',0)];
+  if(st===7)return[t('🎯 四川省考·申论 15:00-17:30（150min：小题40-50min+大作文70min）','sl',0)];
+  if(o.gk&&dk==='2026-11-28')return[t('🎯 国考·申论 14:00-17:00（3小时：小题+大作文，具体以准考证为准）','sl',0)];
+  if(o.gk&&dk==='2026-11-29')return[t('下午有专项加试则按准考证（普通岗位今日无考试），轻松休整 30min','fx',0)];
+  if(st===8)return[t('🎉 考试期结束：本时段不再排课（下一步：面试准备/规划下一年）','fx',0)];
+  // S6 最后一周
+  if(st===6){
+    if(dk==='2026-12-05')return[t('🌙 轻量日：申论框架+开头结尾模板速记30min（不碰新题）','sl',0)];
+    if((dk==='2026-11-28'&&!o.gk)||dk==='2026-12-01'||dk==='2026-12-03')return[t('申论小题套题1套限时90min（真题，按白鹭方法抠关键词）','sl',0),t('逐段对照批改，标记漏写关键词（20min）','sl',0)];
+    return[t('省考大作文限时1篇60min（结构固化：开头点题+3段主体+结尾升华）','sl',0),t('逐段对照参考答案批改（20min）','sl',0)];
+  }
+  // S4/S5 省考冲刺
+  if(st===4||st===5){
+    if(st===5&&o.gk){
+      if(dow===1||dow===3||dow===5)return[t('国考申论真题1套（180min限时，国考5题式）','sl',0),t('逐段对照批改，标记漏写关键词（25min）','sl',0)];
+      if(dow===2||dow===4)return[t('省考申论小题1套限时90min（保省考节奏）','sl',0),t('逐段对照批改（20min）','sl',0)];
+      if(dow===6)return[t('省科大作文限时1篇60min+逐段批改','sl',0)];
+      return[t('申论素材框架速记40min（高频政策词+开头结尾模板）','sl',0)];
+    }
+    if(dow===1||dow===3||dow===5)return[t('省科大作文限时1篇60min（周一三五，结构固化）','sl',0),t('逐段对照参考答案批改，标记漏写关键词（20min）','sl',0)];
+    if(dow===2||dow===4||dow===6)return[t('申论小题套题1套限时90min（白鹭法：先标关键词再组织）','sl',0),t('逐段对照批改（20min）','sl',0)];
+    return[t('作文提纲2篇40min（真题题目，只列提纲不写全文）','sl',0),t('申论素材框架速记20min','sl',0)];
+  }
+  // S1/S2：申论锁死 + 综测（先砍）
+  const arr=[];
+  const xt=nx(P,'申论-小题',1),zw=nx(P,'申论-作文',1);
+  if(xt){arr.push(t(`⭐白鹭申论·小题课 ${rng(xt)}（2倍速约1.5h/节，只挑高频题型课，其余直接跳）${_skipHint('申论课')}`,'sl',0));
+         arr.push(t('申论作业：今日小题课配套真题1道，限时做完对照答案抠关键词（30min）','sl',0));}
+  else if(zw){arr.push(t(`⭐白鹭申论·作文课 ${rng([zw[0]+50,zw[1]+50])}（2倍速约1.5h/节）`,'sl',0));
+         arr.push(t('作文课作业：按今日方法列大作文提纲1篇（20min）','sl',0));}
+  else{
+    if(dow===2||dow===4||dow===6)arr.push(t('⭐申论作业轮：大作文限时1篇60min+逐段批改','sl',0));
+    else arr.push(t('⭐申论作业轮：真题小题1套限时90min，对照白鹭方法批改','sl',0));
+  }
+  // 综测线（事业编辅）：基础3节 → 刷题1节 → 真题闭卷手写
+  const zb=nx(P,'综测-基础',3),zc2=nx(P,'综测-刷题',1);
+  if(zb)arr.push(t(`金标尺综测·基础 ${rng(zb)}（2倍速每节25min；时间不够先砍这里）`,'zt',0));
+  else if(zc2)arr.push(t(`金标尺综测·刷题 ${rng(zc2)}（2倍速约60min）`,'zt',0));
+  else if(dow===3||dow===6)arr.push(t('综测真题闭卷手写1道（60min，格子纸，标漏写关键词）','zt',0));
+  return arr;
+}
+
+function evNew(P,date){
+  const dk=ds(date),st=_st(dk),dow=date.getDay(),o=D.opt||{};
+  if(st===3)return[t('考完：不排新内容，只轻松翻错题30min+早睡（考前晚睡足8h）','fx',0)];
+  if(st===7)return[t('🎉 省考结束：庆祝日（不学，养精蓄锐等面试）','fx',0)];
+  if(_gkDay(dk))return[t('国考笔试结束：轻松复盘30min+早睡（7-8天后就是省考，别透支）','fx',0)];
+  if(st===8)return[t('🎉 考试期结束：本时段不再排课','fx',0)];
+  if(st===6)return dk==='2026-12-05'
+    ?[t('🌙 轻量日：高频速记20min+整理考试用品（身份证/准考证/笔）+23:00前睡','fx',0)]
+    :[t('公基高频速记30min（公文规范/管理/省情/四川特色）','gj',0),t('申论框架+高频素材词速记30min','sl',0)];
+  if(st===4||st===5)return[
+    t('公基高频考点速记30min（公文规范/管理/省情/四川特色）','gj',0),
+    t('时政热词20min（近6个月大事，只记关键词不抄段）','gj',0),
+    t('错题三刷30min（只刷标记过「不会/会但慢」的）','dt',0)];
+  // S1/S2：公基2节（非高频跳）→ 刷题课2节
+  const sys=nx(P,'公基-系统',2),gst=nx(P,'公基-刷题',2);
+  if(sys)return[t(`马克公基·系统课 ${rng(sys)}（2倍速每节1h，非高频章节直接跳）${_skipHint('公基课')}`,'gj',0),
+                t('公基·高频考点速记10min（只记框架，不抄讲义）','gj',0)];
+  if(gst)return[t(`公基刷题课 ${rng(gst)}（每天2节×2倍速15min=30min）`,'gj',0),
+                t('错题归因标记+倒查理论笔记','dt',0)];
+  return[t('公基错题精炼+高频考点速记（闪卡30条）','gj',0)];
+}
+
+function getAmSeg(idx,P,date){
   P=P||D.prog||{};
+  const _dk=date?ds(date):ds(new Date());
+  if(_inRestart(_dk)){
+    const kind=RESTART_AM[_dk];
+    const arr=[];
+    if(kind==='logic'){
+      const r=nx(P,'逻辑',_dk==='2026-09-10'?2:1);
+      if(r){arr.push(t(`行测逻辑推理 ${rng(r)}（2倍速1h/节，掌握规律秒杀技巧）`,'xt',0));
+            arr.push(t('逻辑·图推专项20题（认模式：对称/开闭/笔画/位置/遍历，卡住即跳）','xt',20,'题'));}
+      else arr.push(t('逻辑课已听完：判断混合专项40题（限时55min）','xt',40,'题'));
+    }else if(kind==='data'){
+      const r=nx(P,'资料-刷题',1);
+      if(r){arr.push(t(`资料分析·刷题 ${rng(r)}（2倍速1h）`,'xt',0));
+            arr.push(t('资料配套刷题15题（限时，卡公式+截位直除）','xt',15,'题'));}
+      else arr.push(t('资料刷题已听完：资料2篇限时25min + 速算10题','xt',15,'题'));
+    }else{
+      const r=nx(P,'小黑-刷题',2);
+      if(r){arr.push(t(`小黑政治·刷题课 ${rng(r)}（2倍速30min/节）`,'xt',0));
+            arr.push(t('小黑政治·刷题 20题（政治理论限时15min，检验背诵）','xt',20,'题'));}
+      else arr.push(t('小黑刷题已听完：政治理论40题限时15min','xt',40,'题'));
+    }
+    if(date&&date.getDay()===0){
+      const ry=nx(P,'言语-刷题',1);
+      if(ry)arr.push(t(`行测言语·刷题进阶 ${rng(ry)}（周日加练：限时练，保语感）`,'xt',15,'题'));
+    }
+    return withSuan(arr);
+  }
+  if(_st(_dk)>=1) return amNew(P,date); // 正式版（9/24 起）
   if(idx>116) return withSuan([
     t('行测全卷模拟（对齐考试时间，严格卡点）','xt',0),
     t('重点补弱：数量+资料+言语各精练20题','xt',60,'题'),
@@ -943,8 +1181,23 @@ function getAmSeg(idx,P){
 // D1-50:  申论小题课 每天1节（2倍速约1.5h）+ 综测基础/刷题（2倍速）
 // D51-60: 申论作文课 每天1节（2倍速约1.5h）+ 综测真题手写
 // D61+:   申论真题作业轮 + 综测真题手写 + 公基刷题课
-function getPmSeg(idx,P){
+function getPmSeg(idx,P,date){
   P=P||D.prog||{};
+  const _dk=date?ds(date):ds(new Date());
+  if(_inRestart(_dk)){
+    const arr=[];
+    const rsl=nx(P,'申论-小题',1);
+    if(rsl) arr.push(t(`⭐白鹭申论·小题课 ${rng(rsl)}（2倍速约1.5h/节：只挑高频题型课，重复/偏门节直接跳）`,'sl',0));
+    arr.push(t('申论作业：今日小题课配套真题1道，限时做完对照答案抠关键词（30min）','sl',0));
+    if(_restartW2(_dk)){
+      const rz=nx(P,'综测-基础',3);
+      if(rz) arr.push(t(`金标尺综测·基础 ${rng(rz)}（2倍速每节25min；时间不够先砍这里）`,'zt',0));
+      else arr.push(t('综测基础已听完：综测真题闭卷手写1道（60min）','zt',0));
+      if(RESTART_IMITATE[_dk]) arr.push(t('综测：格子纸仿写1段（必须动笔，标出漏写关键词）','zt',0));
+    }
+    return arr;
+  }
+  if(_st(_dk)>=1) return pmNew(P,date); // 正式版（9/24 起）
   // 白鹭申论排课（进度驱动）：每节课3h（2倍速1.5h/节），每天只能排1节
   // 先小题课50节×1节/天，再作文课10节×1节/天
   const bl=()=>{
@@ -1007,6 +1260,15 @@ function getPmSeg(idx,P){
 // 每晚最后30min固定申论
 function getEvSeg(idx,P,date){
   P=P||D.prog||{};
+  const _dk=date?ds(date):ds(new Date());
+  if(_inRestart(_dk)){
+    if(!_restartW2(_dk)) return[t('🛌 重启期·第一周：今晚不排课（可选：翻看今天错题 15min）','fx',0)];
+    const rg=nx(P,'公基-系统',2);
+    if(rg) return[t(`马克公基·系统课 ${rng(rg)}（2倍速每节1h，非高频章节直接跳）`,'gj',0),
+                  t('公基·高频考点速记10min（只记框架，不抄讲义）','gj',0)];
+    return[t('公基系统课已听完：转公基刷题课2节（按总规划继续）','gj',0)];
+  }
+  if(_st(_dk)>=1) return evNew(P,date); // 正式版（9/24 起）
   const sl=getApplyShenLun(idx);
   if(idx>116) return[
     t('公基高频考点背诵（公文规范/管理/省情/四川特色考点）','gj',0),
@@ -1149,6 +1411,53 @@ function gapRows(){
 function renderDebtBanner(){
   const el=document.getElementById('debt-banner');
   if(!el) return;
+  // 重启期：显示 9/23 检查点（替代原"理论债"缺口表）
+  if(_inRestart(ds(new Date()))){
+    const P=D.prog||{};const n=k=>P[k]||0;const st=suanStreak();
+    const rows=[
+      {name:'速算连续天数',done:st,need:10,total:14,tip:'每天①25题，≥10天过关'},
+      {name:'资料分析·刷题',done:n('资料-刷题'),need:9,total:24,tip:'A日1节+15题'},
+      {name:'逻辑推理',done:n('逻辑'),need:21,total:62,tip:'B日1节+图推20题'},
+      {name:'言语·刷题',done:n('言语-刷题'),need:7,total:10,tip:'周日加练1节'},
+      {name:'小黑政治·刷题',done:n('小黑-刷题'),need:6,total:8,tip:'C日2节+20题'},
+      {name:'白鹭申论·小题',done:n('申论-小题'),need:16,total:50,tip:'每天1节高频题型课'},
+      {name:'公基·系统课',done:n('公基-系统'),need:14,total:86,tip:'9/17起，非高频跳'},
+      {name:'综测·基础',done:n('综测-基础'),need:21,total:32,tip:'9/17起，每天3节'},
+    ];
+    const anyGap=rows.some(r=>r.done<r.need);
+    el.style.display='block';
+    el.innerHTML=`<h3>🔁 14天重启期 · 9/23 检查点（${anyGap?'还有缺口，按课表补':'全部达标，节奏对了 ✔'}）</h3>
+    <p>重启期课表已替换原排课（9/10-9/23）。日底线：只做速算①也算今天没清零；跳课点「顺延」，不沉默跳。时间不够砍单顺序：先砍⑤综测 → 再砍③申论 → 再砍④公基。</p>
+    <div class="debt-grid">${rows.map(r=>`
+      <div class="debt-cell ${r.done>=r.need?'ok':''}">
+        <div class="n">${r.name}</div>
+        <div class="v">${r.done}/${r.total} · ${r.done>=r.need?'达标':'差'+(r.need-r.done)}</div>
+        <div class="n">${r.tip}</div>
+      </div>`).join('')}</div>`;
+    return;
+  }
+  // 正式版（9/24-12/6）：9/23 检查点结果（首次渲染时冻结存档）+ 两个运行时开关 + 里程碑
+  const _dk2=ds(new Date());
+  if(_dk2>='2026-09-24'&&_dk2<='2026-12-06'){
+    if(!D.cpSnap){D.cpSnap={date:ds(new Date()),st:suanStreak(),prog:Object.assign({},D.prog||{})};sv();}
+    const cp=D.cpSnap,n=k=>cp.prog[k]||0,o=D.opt||{};
+    const hard=[['速算连续天数',cp.st,10,14],['资料分析·刷题',n('资料-刷题'),9,24],['逻辑推理',n('逻辑'),21,62],['言语·刷题',n('言语-刷题'),7,10],['小黑政治·刷题',n('小黑-刷题'),6,8],['白鹭申论·小题',n('申论-小题'),16,50]];
+    const soft=[['公基·系统课',n('公基-系统'),14,86],['综测·基础',n('综测-基础'),21,32]];
+    const hardOk=hard.every(r=>r[1]>=r[2]),softOk=soft.every(r=>r[1]>=r[2]);
+    const cell=r=>`<div class="debt-cell ${r[1]>=r[2]?'ok':''}"><div class="n">${r[0]}</div><div class="v">${r[1]}/${r[3]} · ${r[1]>=r[2]?'达标':'差'+(r[2]-r[1])}</div></div>`;
+    el.style.display='block';
+    el.innerHTML=`<h3>📌 9/23 检查点结果（存档于 ${cp.date}）— ${hardOk?'硬线（省考线）全部达标 🎉':'硬线（省考线）有缺口（不自责，冲刺期继续还）'}</h3>
+    <div class="debt-grid">${hard.map(cell).join('')}</div>
+    <div style="font-size:11px;color:#9a3412;margin:7px 0 5px">弹性线（事业编辅，${softOk?'达标 ✔':'差一点 → 10/1-10/11 用冲刺期补，不自责'}）</div>
+    <div class="debt-grid">${soft.map(cell).join('')}</div>
+    <div style="margin-top:10px;display:flex;gap:16px;flex-wrap:wrap;background:#fff;border:1px solid #fed7aa;border-radius:8px;padding:8px 10px">
+      <label style="font-size:11px;cursor:pointer;user-select:none"><input type="checkbox" ${o.gk?'checked':''} onchange="setOpt('gk',this.checked)" style="width:14px;height:14px;vertical-align:-2px"> 🇨🇳 <strong>加报国考</strong>（10/14公告·10/24报名截止·11/28-29笔试，勾选后 11/16 起课表自动切国考模考）</label>
+      <label style="font-size:11px;cursor:pointer;user-select:none"><input type="checkbox" ${o.figTrig?'checked':''} onchange="setOpt('figTrig',this.checked)" style="width:14px;height:14px;vertical-align:-2px"> ⚠️ <strong>图推仍&lt;45%</strong>（勾选后周二主攻切「图推集中40题+针对性课」）</label>
+    </div>
+    <div style="font-size:11px;margin-top:8px;color:#9a3412">里程碑：10/14 国考公告${o.gk?' → 10/24 报名截止':''} → 11/1 事业编笔试${o.gk?' → 11/28-29 国考笔试':''} → 12/6 四川省考笔试（9/24 起日目标 5.5h 标准日底线）</div>`;
+    return;
+  }
+  if(_dk2>'2026-12-06'){el.style.display='none';return;}
   const rows=gapRows();
   const any=rows.some(r=>r.gap>0);
   if(!any){el.style.display='none';return;}
@@ -1270,6 +1579,7 @@ function renderSchedule(){
   }
 
   renderSidePanel(d);
+  safeRun(renderDebtBanner); // 检查点/开关横幅（原代码只定义未调用，这里接上）
   updateDayProgress(dkey);
 }
 
@@ -1333,8 +1643,11 @@ function updateDayProgress(dkey){
 
   const todayMin=D.logs.filter(l=>l.date===dkey).reduce((s,l)=>s+l.duration,0);
   const h=todayMin/60;
+  const _th=dayTargetH();
+  const _thEl=document.getElementById('target-h');
+  if(_thEl) _thEl.textContent='目标 '+_th+'h'+(_th<3.6?'（重启期底线）':(_th<6?'（标准日底线）':'（硬底线）'));
   document.getElementById('cur-h').textContent=h.toFixed(1);
-  document.getElementById('h-bar').style.width=Math.min(100,h/6*100)+'%';
+  document.getElementById('h-bar').style.width=Math.min(100,h/_th*100)+'%';
 }
 
 function addCustomTask(){
@@ -1484,9 +1797,15 @@ function nextDay(){
   if(curDkey===dkey){
     const todayMin=D.logs.filter(l=>l.date===dkey).reduce((s,l)=>s+l.duration,0);
     const h=todayMin/60;
-    if(h<6){
+    const _min=dayTargetH();
+    if(h<_min){
+      document.getElementById('lock-lm').innerHTML=_inRestart(ds(new Date()))
+        ?`重启期底线 ${_min}h：今天不足 ${_min}h 无法切换下一天。<br>保底日 = 速算 + 主攻 + 申论课 + 作业，做到就不算欠账。`
+        :(ds(new Date())>='2026-09-24'
+        ?`标准日底线 ${_min}h = 速算+主攻+申论+公基2节。<br>保底日（3.5h）每周允许1-2天、不连续；超出时间<strong>不跨天计算</strong>，今天补足才能解锁。`
+        :`当日学习时间不足 6 小时，无法切换到下一天。<br>超出时间<strong>不跨天计算</strong>，今天补足才能解锁。`);
       document.getElementById('lh').textContent=h.toFixed(1)+'h';
-      document.getElementById('ln').textContent=`今日已学 ${h.toFixed(1)}h，还差 ${(6-h).toFixed(1)}h 才能解锁明天`;
+      document.getElementById('ln').textContent=`今日已学 ${h.toFixed(1)}h，还差 ${(_min-h).toFixed(1)}h 达到今日目标`;
       document.getElementById('lock').classList.add('show');
       return;
     }
@@ -2902,6 +3221,10 @@ function mergeData(local,remote){
   // 当日进度快照：本地优先（仅影响当天课表显示，无关紧要的取舍）
   m.dayStart={...(remote.dayStart||{}),...(local.dayStart||{})};
   m.pauseOffset=Math.max((local.pauseOffset||0),(remote.pauseOffset||0));
+  // 正式版开关（加报国考/图推触发器）：两端任一打开即生效（OR 并集）
+  m.opt={gk:!!(((local.opt||{}).gk)||((remote.opt||{}).gk)),figTrig:!!(((local.opt||{}).figTrig)||((remote.opt||{}).figTrig))};
+  // 检查点快照：保留最早一次存档
+  m.cpSnap=(local.cpSnap&&remote.cpSnap)?(local.cpSnap.date<=remote.cpSnap.date?local.cpSnap:remote.cpSnap):(local.cpSnap||remote.cpSnap);
   // 错题分类：并集
   // 错题分类：并集，但排除任一端删除过的（墓碑）
   const catTomb=new Set([...(remote.deletedWqCats||[]),...(local.deletedWqCats||[])]);
@@ -3343,7 +3666,7 @@ async function submitFb(){
 【薄弱模块】${weak||'未填'}
 【下周计划】${plan||'未填'}
 
-背景：备考四川省考（12月）和事业编（11月）。排课逻辑：单科集中推进（资料→逻辑→数量→言语，每天精确节数），下午综测，晚上公基+申论30min。核心短板：资料分析、数量关系、言语理解、申论大作文。每日6h硬底线。
+背景：备考四川省考（12月）和事业编（11月）。排课逻辑：单科集中推进（资料→逻辑→数量→言语，每天精确节数），下午综测，晚上公基+申论30min。核心短板：资料分析、数量关系、言语理解、申论大作文。每日底线：重启期3.5h、9/24起5.5h标准日。
 
 请给出（简洁直接）：
 1. 【进度评估】50字内
@@ -3684,6 +4007,7 @@ function init(){
   if(!D.corrections) D.corrections=[];
   safeRun(restoreTimer);
   safeRun(renderSchedule);
+  safeRun(renderDebtBanner);
   safeRun(renderTLog);
   safeRun(renderNoteTypes);
   safeRun(renderSubjs);
@@ -3720,69 +4044,5 @@ function init(){
   if(CLOUD.apiKey&&CLOUD.binId) cloudLoad().catch(()=>{});
 }
 init();
-</script></body>
-</html>
-/script></body>
-</html>
-un(renderSchedule);
-    }
-  });
-  // 打开页面即自动拉取云端并合并（只要配置了 Key+BinID 就拉，不依赖自动同步开关）
-  if(CLOUD.apiKey&&CLOUD.binId) cloudLoad().catch(()=>{});
-}
-init();
-</script></body>
-</html>
-/script></body>
-</html>
- safeRun(renderTLog);
-  safeRun(renderNoteTypes);
-  safeRun(renderSubjs);
-  safeRun(checkLayout);
-  safeRun(renderPauseStatus);
-  safeRun(()=>setSyncStatus(CLOUD.apiKey&&CLOUD.binId?'ok':'none'));
-  setInterval(()=>safeRun(updateCountdowns),60000);
-  // 切回页面/从后台唤醒时立即刷新倒计时与课表（保证跨天后数字准确）
-  document.addEventListener('visibilitychange',()=>{
-    if(!document.hidden){
-      safeRun(updateCountdowns);safeRun(renderSchedule);
-      // 切回页面时自动拉取云端最新数据（如配置了同步）——换设备打开即自动合并
-      if(CLOUD.apiKey&&CLOUD.binId) cloudLoad().catch(()=>{});
-    }else{
-      // 切到后台/锁屏前，把当前数据推上云端；计时中再抢一次悬浮窗
-      if(CLOUD.apiKey&&CLOUD.binId) cloudSave(true,true);
-      if(tOn) enableFollowTimer();
-    }
-  });
-  setInterval(()=>{if(tOn){safeRun(saveTimerState);safeRun(()=>swPost({type:'TIMER_PING'}));}},5000);
-  // 小窗结束/开始计时 → 主页面同步
-  window.addEventListener('storage',e=>{
-    if(e.key!==TKEY) return;
-    if(!e.newValue && tOn){
-      tOn=false;_wallStart=null;clearInterval(tInt);
-      disableFollowTimer();
-      const ft=document.getElementById('ft'); if(ft) ft.classList.remove('vis');
-      safeRun(renderTLog); safeRun(()=>updateDayProgress(ds(curDate))); safeRun(renderSchedule);
-    }else if(e.newValue && !tOn){
-      safeRun(restoreTimer); safeRun(renderSchedule);
-    }
-  });
-  // 打开页面即自动拉取云端并合并（只要配置了 Key+BinID 就拉，不依赖自动同步开关）
-  if(CLOUD.apiKey&&CLOUD.binId) cloudLoad().catch(()=>{});
-}
-init();
-</script></body>
-</html>
-/script></body>
-</html>
-un(renderSchedule);
-    }
-  });
-  // 打开页面即自动拉取云端并合并（只要配置了 Key+BinID 就拉，不依赖自动同步开关）
-  if(CLOUD.apiKey&&CLOUD.binId) cloudLoad().catch(()=>{});
-}
-init();
-</script></body>
-</html>
-/script></body>
+</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a38b9eb2f8b5eadf',t:'MTc4OTAxMzgxNA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
