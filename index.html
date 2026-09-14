@@ -335,6 +335,14 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
       <div class="sb"><div class="sv" id="s-avg">0h</div><div class="sl2">日均</div></div>
       <div class="sb"><div class="sv" id="s-streak">0天</div><div class="sl2">连续打卡</div></div>
     </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:8px;margin-top:10px">
+      <div class="sb"><div class="sv" id="s-clean">0天</div><div class="sl2">连续无顺延</div></div>
+      <div class="sb"><div class="sv" id="s-skip">0次</div><div class="sl2">累计顺延</div></div>
+      <div class="sb"><div class="sv" id="s-lazy">0次</div><div class="sl2">其中「不想学」</div></div>
+      <div class="sb"><div class="sv" id="s-min">0天</div><div class="sl2">三件套天数</div></div>
+    </div>
+    <div id="skip-ledger" style="font-size:11px;line-height:1.9;color:var(--t2);margin-top:10px;background:var(--s2);border-radius:9px;padding:9px 11px"></div>
+    <button onclick="postponeDay()" style="margin-top:9px;width:100%;padding:8px;border-radius:8px;border:1.5px solid #fdba74;background:#fff7ed;color:#ea580c;font-size:12px;font-weight:700;cursor:pointer">⏭ 处理今天的顺延（三件套 / 单时段 / 整天）</button>
   </div>
   <div class="g2">
     <div class="card">
@@ -378,7 +386,7 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
   <div class="card">
     <div class="ct">🗺 备考总时间线 · 8/12 进度校准版</div>
     <div class="alert" style="background:#fff7ed;border-color:#fed7aa;color:#9a3412">⚠ 原计划默认「按日历走」：今天已是第65天、本该进套卷冲刺。实际课表仍停在打底（申论小题刚开头、公基系统课刚开头）。<strong>已改为按真实进度排课，绝不跳节</strong>；下面各段按「今天起、距事业编81天」重切，宁可砍低性价比内容，也不再假装能追上原日历。</div>
-    <div class="alert alert-b">📌 校准原则：①西实「40天专项刷题」模式：9/10-10/31 统一 8h 底线，三大模块交替（不连刷10天）②网课=药不是饭（全2倍速：逻辑课~15min，其余~75min/节）：先限时刷题→归因→只补那1节（熟则跳）→听完必做配套练习 ③申论每天2小题+多家对照批改，9月素材积累完 ④上午纯刷题（速算30min固定）；晚上🔷刘义恒32节（9/11起1节/天·约10/13学完）+🔴超格政治1节/天+20题（替换小黑刷题，11/1必考）；公基=马克86节·PM1节/天+配套10题（周六2节，✎可改） ⑤时间不够砍单顺序：⑨作文积累→⑧补漏课；<strong>综测不再先砍（11/1占一半分）</strong>；速算/图推20题/申论2小题/马克公基/超格政治 永不砍 ⑥📒每日记录：各模块用时+正确率 ⑦<strong>课没听完不回头重听</strong>：先限时刷题→归因→只补错出来那1节。逻辑62节只补到20节、数量20节只学8节（4类）、申论50节只挑高频≈25节；补课窗口=二/四/日 下午各1节（刘义恒学完后 一/五 晚上再加1节）</div>
+    <div class="alert alert-b">📌 校准原则：①西实「40天专项刷题」模式：9/10-10/31 统一 8h 底线，三大模块交替（不连刷10天）②网课=药不是饭（全2倍速：逻辑课~15min，其余~75min/节）：先限时刷题→归因→只补那1节（熟则跳）→听完必做配套练习 ③申论每天2小题+多家对照批改，9月素材积累完 ④上午纯刷题（速算30min固定）；晚上🔷刘义恒32节（1节/天·约10/13学完）+【9/11-10/7 综测每天1节+手写1道 → 10/8起 换 🔴超格政治1节/天+20题】；公基=马克86节·PM <strong>2节/天</strong>+配套20题（约10/23过完，✎可改） ⑤时间不够砍单顺序：⑨作文积累→⑧补漏课；<strong>综测不再先砍（11/1占一半分）</strong>；速算/图推20题/申论2小题/马克公基/超格政治 永不砍 ⑥📒每日记录：各模块用时+正确率 ⑦<strong>课没听完不回头重听</strong>：先限时刷题→归因→只补错出来那1节。逻辑62节只补到20节、数量20节只学8节（4类）、申论50节只挑高频≈25节；补课窗口=二/四/日 下午各1节（刘义恒学完后 一/五 晚上再加1节）</div>
     <div id="plan-gap" style="margin-bottom:13px"></div>
     <div id="score-guess" style="margin-bottom:13px"></div>
 
@@ -390,11 +398,11 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
       <div style="padding:12px 14px;font-size:11px;color:var(--t2);line-height:2">
         西实「40天专项刷题」模式 · <strong>9/10-10/31 统一 8h 底线</strong> · 三大模块必须交替（不连续10天刷一个模块）· 上午纯刷题无网课，全部成套路不零碎<br>
         🌅 上午3h10：①速算25题30min（永不砍）②🔥主攻块=真题1-2套+同类弱项补强30题（每天55-60题）：<strong>9/10-9/23 三天一转</strong>（A资料2篇 / B言语1套 / C判断1套）→ <strong>9/24-10/8 按周轮换</strong>（一 资料主攻+判断1套 / 二 判断主攻+资料1篇，开关ON→图推集中40题 / 三 半套60min+资料2篇 / 四 数量4类20题+真题10题+资料2篇 / 五 言语主攻+判断1套 / 六 全卷120min+归因 / 日 言语1套+判断1套）③次模块整套1套（判断30题/言语25题/资料2篇）④图推20题20min（每天）⑤复盘10min<br>
-        ☀️ 下午3h-4h：⑥申论小题真题2道40min（单一/综合均衡，格子纸手写）⑦多家答案对照批改30min ⑧📚<strong>马克公基·系统课1节·2倍速~75min+配套公基10题</strong>（共86节，0→86：1节/天+周六2节，非高频直接跳，✎可改节数）⑨二/四/日 补漏课1节·2倍速~75min+配套（申论小题课→10/9起作文课→言语/资料/逻辑课，熟则跳）⑩周三/六 综测1节·2倍速~75min+配套1道（11/1另一门100分）⑪周一 素材积累40min（9月攒完，10/9起转背诵）· 五/六 大作文1篇+批改30min<br>
-        🌙 晚上3h：⑪<strong>🔷图推·刘义恒1节·2倍速（32节，9/11起·约10/13学完）+ 配套图推20题</strong> ⑫🔴超格政治1节+20题（每天） ⑫🔴超格政治1节·2倍速~75min+20题（每天；原小黑刷题课已放弃） · 四 公基100题45min · 日 错题三刷45min · 其余 速记15+回刷30 · 周三 数量课（最多8节·2倍速，11/18前学完4类）⑬📒每日记录：各模块用时+正确率（西实：每天记录，尽早达标）<br>
-        <strong>底线8h = ①速算 + ②主攻块 + ⑥申论2小题 + ⑦批改 + ⑧马克公基1节+10题 + ⑫超格政治1节+20题（约8h）。砍单顺序：⑨作文积累 → ⑧补漏课；速算/图推20题/申论2小题/马克公基/超格政治 永不砍。</strong><br>
+        ☀️ 下午3h-4h：⑥申论小题真题2道40min（单一/综合均衡，格子纸手写）⑦多家答案对照批改30min ⑧📚<strong>马克公基·系统课2节·2倍速~75min/节+配套20题</strong>（共86节：2节/天≈10/23过完，非高频直接跳，✎可改节数）⑨<strong>补课窗口10/8起</strong> 二/四/日 1节·2倍速~75min（申论小题课→作文课→言语/资料/逻辑课，熟则跳）⑩<strong>9/11-10/7：综测挪到晚上每天1节+手写1道</strong>（超格政治10/8才开）；10/8起回周三/六⑪周一 素材积累40min（9月攒完，10/9起转背诵）· 五/六 大作文1篇+批改30min<br>
+        🌙 晚上3h：⑪<strong>🔷图推·刘义恒1节·2倍速（32节·约10/13学完）+ 配套图推20题</strong> ⑫<strong>9/11-10/7 🟠综测1节+手写1道（11/1另一半分）→ 10/8起 🔴超格政治1节+20题</strong> ⑫🔴超格政治1节·2倍速~75min+20题（每天；原小黑刷题课已放弃） · 四 公基100题45min · 日 错题三刷45min · 其余 速记15+回刷30 · 周三 数量课（最多8节·2倍速，11/18前学完4类）⑬📒每日记录：各模块用时+正确率（西实：每天记录，尽早达标）<br>
+        <strong>底线8h = ①速算 + ②主攻块 + ⑥申论2小题 + ⑦批改 + ⑧马克公基2节+20题 + ⑫综测(10/8起超格政治)1节（约8h）。砍单顺序：速记/时政/回刷 → 补课窗口 → 综测改隔天；速算/图推20题/申论2小题/马克2节/综测 永不砍。</strong><br>
         网课=药不是饭（全部2倍速：逻辑课~15min/节，其余课~75min/节）：先刷题找弱项 → 只补那1节（不回看全程）→ <strong>听完必做配套练习（已排进任务，听完立刻做）</strong>；听完勾选后，剩余时间按课表顺序流给下一项（听得多→多刷题）；点任务行 <strong>✎</strong> 可改该课程每天节数（0=恢复默认）；不当背景音、不睡前加课。<br>
-        9/23 阶段检查点：速算≥10天 / 资料刷题≥9 / 逻辑≥21 / 言语刷题≥7 / 超格政治≥10节 / 申论小题≥16 / 马克公基≥10节 / 综测≥4 / 图推刘义恒≥8节。<strong>触发器：图推若仍&lt;45%，9/30 起周二切集中模式（图推40题+针对性课）。</strong><br>
+        9/23 阶段检查点：速算≥10天 / 资料刷题≥9 / 逻辑≥21 / 言语刷题≥7 / 综测≥8节（每天1节）/ 申论小题≥16 / 马克公基≥20节（2节/天）/ 图推刘义恒≥8节。<strong>触发器：图推若仍&lt;45%，9/30 起周二切集中模式（图推40题+针对性课）。</strong><br>
         后续节奏：9/24-10/8 同为 S1（套卷2套/周）→ 10/9-10/31 S2 事业编冲刺（套卷3套/周）→ 11/2 起模考周（底线5.5h：全卷3-7套/周+模块限时3项+申论+公基100题）→ 11/28-12/5 最后一周（5h，12/5 轻量日1h）→ 12/6 省考。9/23 检查点结果自动存档显示在每日课表顶部；两个开关：「🇨🇳加报国考」「⚠️图推&lt;45%」（在每日课表顶部检查点卡里勾选，课表自动切换）。10/14 看国考公告，10/24 报名截止。
 
       </div>
@@ -428,7 +436,7 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
           <div>
             <div style="font-weight:700;color:var(--v);margin-bottom:6px;font-size:11px">🌙 晚上：公基2节 + 申论30min</div>
             <div style="background:var(--s2);border-radius:8px;padding:8px 10px;font-size:11px;color:var(--t2);line-height:2">
-              公基=<strong>马克系统课86节，PM 1节/天 + 配套10题</strong>（周六2节）。<strong>政治理论=超格，每天1节+20题</strong>（原小黑刷题课已放弃，11/1必考）。<br>
+              公基=<strong>马克系统课86节，PM 2节/天 + 配套20题</strong> → 约10/23过完。政治理论=超格，<strong>10/8 起</strong>每天1节+20题（原小黑刷题课已放弃）。<br>
               听不懂/非高频直接跳，打卡后进度照样走，别卡在一节里。<br>
               周三/六穿插综测（11/1另一门100分）。<br>
               <span style="color:var(--r);font-weight:700">每晚最后30min：申论复盘（固定不动）</span>
@@ -477,12 +485,12 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
       </div>
       <div style="border-radius:9px;overflow:hidden;border:1.5px solid #bbf7d0">
         <div style="background:linear-gradient(135deg,#10b981,#059669);color:#fff;padding:8px 11px;font-weight:700;font-size:12px">☀️ 下午 14:30-17:30（3h）</div>
-        <div style="padding:9px 11px;font-size:11px;color:var(--t2);line-height:1.9">⭐小题2道40min + 多家对照批改30min<br>公基1节·2倍速~75min+配套10题（周六2节，✎可改节数）<br>📚马克公基1节~75min+配套10题（周六2节）· 二/四/日 补课窗口1节（申论→逻辑→言语→资料）<br>🟠周三/六 综测1节（11/1另一门100分）
+        <div style="padding:9px 11px;font-size:11px;color:var(--t2);line-height:1.9">⭐小题2道40min + 多家对照批改30min<br>公基1节·2倍速~75min+配套10题（周六2节，✎可改节数）<br>📚马克公基<strong>2节</strong>~75min/节+配套20题<br>9/11-10/7：晚上排综测 · 10/8起：二/四/日 补课窗口 + 周三/六 综测
 </div>
       </div>
       <div style="border-radius:9px;overflow:hidden;border:1.5px solid #e9d5ff">
         <div style="background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;padding:8px 11px;font-weight:700;font-size:12px">🌙 晚上 19:00-22:00（2h40）</div>
-        <div style="padding:9px 11px;font-size:11px;color:var(--t2);line-height:1.9">🔷刘义恒1节~75min+配套图推20题（约10/13学完）<br>🔴超格政治1节~75min+配套政治20题（每天）<br>四 100题45min · 日 三刷45min · 其余速记+回刷 · 📒记录10min · ✎可改节数
+        <div style="padding:9px 11px;font-size:11px;color:var(--t2);line-height:1.9">🔷刘义恒1节~75min+配套图推20题（约10/13学完）<br>🟠综测1节~75min+手写1道（9/11-10/7每天）→ 🔴超格政治1节+20题（10/8起）<br>四 100题45min · 日 三刷45min · 其余速记+回刷 · 📒记录10min · ✎可改节数
 </div>
       </div>
     </div>
@@ -843,14 +851,19 @@ function getPhaseInfo(date){
   const skipsBefore=slot=>(D.skips||[]).filter(s=>s.slot===slot&&s.date<dkey).length;
   const skippedToday=slot=>(D.skips||[]).some(s=>s.slot===slot&&s.date===dkey);
   const eff=slot=>Math.max(1,idx-skipsBefore(slot));
+  // 🧷 三件套模式：被顺延的时段不空着，第一个被顺延的时段塞入底线三项（速算/图推20题/申论1道）
+  const _todayEntry=skipEntryFor(dkey);
+  const _useMin=!!(_todayEntry&&_todayEntry.mode==='min');
+  let _minPlaced=false;
+  const _bottom=()=>{ if(!_useMin||_minPlaced) return []; _minPlaced=true; return minSet(); };
 
   // ⭐ 进度驱动排课：课程节号由「实际已完成进度」决定，而不是按日历推算
   // 没学完的课不会被跳过；打卡/手动改进度后，之后的课表自动接上
 
   return {phaseName, slots:[
-    {key:'am',label:'上午场',clock:'9:00-12:10',  skipped:skippedToday('am'), tasks:skippedToday('am')?[]:getAmSeg(eff('am'),P,date)},
-    {key:'pm',label:'下午场',clock:'14:30-17:30', skipped:skippedToday('pm'), tasks:skippedToday('pm')?[]:getPmSeg(eff('pm'),P,date)},
-    {key:'ev',label:'晚上场',clock:'19:00-22:00', skipped:skippedToday('ev'), tasks:skippedToday('ev')?[]:getEvSeg(eff('ev'),P,date)},
+    {key:'am',label:'上午场',clock:'9:00-12:10',  skipped:skippedToday('am'), tasks:skippedToday('am')?_bottom():getAmSeg(eff('am'),P,date)},
+    {key:'pm',label:'下午场',clock:'14:30-17:30', skipped:skippedToday('pm'), tasks:skippedToday('pm')?_bottom():getPmSeg(eff('pm'),P,date)},
+    {key:'ev',label:'晚上场',clock:'19:00-22:00', skipped:skippedToday('ev'), tasks:skippedToday('ev')?_bottom():getEvSeg(eff('ev'),P,date)},
   ]};
 }
 
@@ -942,20 +955,21 @@ function priorityHTML(){
     <div style="font-size:11px;font-weight:700;color:#1e40af;margin-bottom:5px">🎯 双线优先级（按你截图里的真实进度排的）</div>
     <div style="font-size:10px;color:#1e3a8a;line-height:1.8">
       <strong>🅰 距事业编 ${d1} 天 = 公基100 + 综测100（各50%）→ 这两门是你现在最大的洞（公基0/86 · 综测0/32），必须天天动</strong><br>
-      <strong>🅱 距省考 ${d2} 天 = 行测+申论</strong>：资料基础/言语基础已100% ✔ 别再听基础课，只做「限时+归因」；逻辑封顶24节、数量封顶8节、图推32节(9/29完)、申论听课只挑高频25节
+      <strong>🅱 距省考 ${d2} 天 = 行测+申论</strong>：资料基础/言语基础已100% ✔ 别再听基础课，只做「限时+归因」；逻辑封顶24节、数量封顶8节、图推32节(约10/13完)、申论听课只挑高频25节
     </div>
     <div class="debt-grid" style="margin-top:6px">
-      ${line('📚 公基·系统课（马克86）',gj,86,'PM 1节/天+配套10题（周六2节）')}
-      ${line('🔴 超格政治·系统课',n('小黑-刷题'),30,'每天1节+20题（替换小黑刷题·11/1必考）')}
-      ${line('🟠 金标尺综测·基础',zc,21,'周三+周六，11/1前过完高频')}
+      ${line('📚 公基·系统课（马克86）',gj,86,'PM 2节/天+配套20题 → 约10/23过完')}
+      ${line('🟠 金标尺综测·基础',zc,21,'9/11-10/7 每天1节+手写1道（11/1另一半分）')}
+      ${line('🔴 超格政治·系统课',n('小黑-刷题'),24,'10/8 起每天1节+20题（替换小黑刷题）')}
       ${line('⭐ 白鹭申论·小题课',sl,25,'听课只挑高频；真正主项是每天2小题+批改')}
       ${line('🔥 逻辑推理',lj,24,'62节不听全，补到24节就停')}
       ${line('📈 资料刷题 4/24',zl,24,'每天2篇真题+弱项30题（不是听课）')}
       ${line('📈 言语刷题',yz,10,'只剩5节，1周补完')}
     </div>
     <div style="margin-top:7px;font-size:10px;color:#1e3a8a;line-height:1.8;background:#eff6ff;border:1px solid #bfdbfe;border-radius:6px;padding:6px 9px">
-      ⏱ <strong>小时账本（现在这套排下来约 9.5-10.5h/天）</strong>：上午3.4h + 下午2.7h（+补课日0.8h）+ 晚上4.1h。<br>
-      只能到 8h 时，砍的顺序：<strong>①补课窗口 → ②速记/错题回刷 → ③综测只保周三/六</strong>。绝不能砍：速算25题、图推20题、申论2小题、马克公基1节、超格政治1节+20题。
+      ⏱ <strong>小时账本 ≈ 10.4h/天</strong>（9/11-10/7）：上午3.0h + 下午4.0h（申论1.2h + 马克2节2.8h）+ 晚上3.4h（刘义恒1.6h + 综测1.6h）。<br>
+      10/8 起晚上换成超格政治1节+20题（同样3.4h），下午马克仍是2节。<br>
+      <strong>砍单顺序：①速记/时政/回刷 → ②综测改隔天（隔天就务必保证手写1道）→ ③刘义恒隔天1节</strong>。绝不能砍：速算25题、图推20题、申论2小题、马克2节、综测/超格政治那一节。
     </div>
     <div style="margin-top:7px;font-size:10px;color:#b45309;line-height:1.8;background:#fffbeb;border:1px solid #fde68a;border-radius:6px;padding:6px 9px">
       ⚠️ <strong>正确率40%+不是"课没听完"造成的，是"没限时+没归因"造成的。</strong>本轮改法：①所有刷题必须掐表（判断30-35min/言语30-35min/资料25-30min）；②每道错题当天标「不会／会但慢／粗心」进❌错题本；③每周日错题三刷。<br>
@@ -997,6 +1011,43 @@ function xtCatchup(P,maxItems,prefix){
   return out;
 }
 
+// ==================== ⏭ 顺延预算（防路径依赖）====================
+// 设计：不想学的日子给出「有成本的出口」，而不是「一键消失」
+//   🧷 三件套模式：顺延全部课时，但当天必须完成底线三项（约75min）→ 每周 2 次
+//   ⏭ 只顺延某时段：免费，但计入账本（每周不限制次数，但账本会打脸）
+//   🛑 整天顺延（什么都不做）：消耗「顺延券」→ 每周只有 1 张
+const SKIP_COUPON_PER_WEEK=1, SKIP_MIN_PER_WEEK=2;
+const SKIP_REASONS=[['work','真的有事（工作/家里/突发）'],['sick','身体或状态很差'],['lazy','状态还行，就是不想学'],['social','出去玩/社交'],['other','其他']];
+function weekKey(d){const x=new Date(d.getFullYear(),d.getMonth(),d.getDate());const dow=(x.getDay()+6)%7;x.setDate(x.getDate()-dow);return ds(x);}
+function skipEntryFor(dateKey){return (D.skipLog||[]).find(e=>e.date===dateKey)||null;}
+function skipBudget(){
+  const wk=weekKey(new Date());
+  const mine=(D.skipLog||[]).filter(e=>weekKey(toDate(e.date))===wk);
+  const cu=mine.filter(e=>e.mode==='skip').length, mu=mine.filter(e=>e.mode==='min').length;
+  return {wk,couponUsed:cu,couponLeft:Math.max(0,SKIP_COUPON_PER_WEEK-cu),minUsed:mu,minLeft:Math.max(0,SKIP_MIN_PER_WEEK-mu),entries:mine};
+}
+function skipStats(){
+  const all=D.skipLog||[];
+  const byReason={};all.forEach(e=>{byReason[e.reason]=(byReason[e.reason]||0)+1;});
+  let clean=0,d=new Date();
+  while(clean<400){const k=ds(d);if(skipEntryFor(k))break;if(k<ds(START))break;clean++;d.setDate(d.getDate()-1);}
+  return {total:all.length,byReason,clean,minDays:all.filter(e=>e.mode==='min').length,skipDays:all.filter(e=>e.mode==='skip').length,slotDays:all.filter(e=>e.mode==='slot').length};
+}
+// 底线三件套：顺延也拿不走（永不砍的3项，约75min）
+function minSet(){return [
+  t('🧷底线① ⚡速算25题 · 30min限时（截位直除/分数↔百分数/增长率口算）','xt',25,'题'),
+  t('🧷底线② 图推20题20min限时（对称/开闭/笔画/位置/遍历，卡住即跳）','xt',20,'题'),
+  t('🧷底线③ 申论小题1道 · 25min（格子纸手写）+ 对照批改10min','sl',0),
+];}
+function skipMiniHTML(){
+  const b=skipBudget(),st=skipStats();
+  const lazy=(st.byReason['lazy']||0);
+  const warn=st.clean===0?'你昨天/今天已经用过顺延了，今天正常走。':'';
+  return `<div style="margin-top:8px;font-size:10px;line-height:1.85;background:${st.clean<=1?'#fef2f2':'#f8fafc'};border:1px solid ${st.clean<=1?'#fecaca':'#e2e8f0'};border-radius:7px;padding:7px 10px;color:${st.clean<=1?'#b91c1c':'#475569'}">
+    ⏭ <strong>顺延账本</strong>：本周券 ${SKIP_COUPON_PER_WEEK-b.couponLeft}/${SKIP_COUPON_PER_WEEK} · 三件套 ${b.minUsed}/${SKIP_MIN_PER_WEEK} · <strong>连续无顺延 ${st.clean} 天</strong> · 累计顺延 ${st.total} 次（其中"不想学" ${lazy} 次）${warn?'<br>⚠️ '+warn:''}
+  </div>`;
+}
+
 function suanTask(){
   return t('⚡速算热身 30min：截位直除 / 分数↔百分数 / 增长率口算（每天固定，计时练）','xt',25,'题');
 }
@@ -1026,6 +1077,13 @@ function suanStreak(){
 }
 // 每日最低学习目标：9/10-10/31 西实专项刷题 8h / 考试日(11/1、12/6、国考2天) 2h / 12/5轻量日 1h / 11/2-11/27 模考周 5.5h / 11/28-12/4 最后一周 5h
 function dayTargetH(){const _dk0=ds(new Date());
+  // ⏭ 顺延日：目标跟着降（三件套1.5h / 整天0h / 单时段按2.6h每段抵扣），避免"顺延了还被8h锁死"
+  const _sk=skipEntryFor(_dk0);
+  if(_sk){
+    if(_sk.mode==='min')return 1.5;
+    if(_sk.mode==='skip')return 0;
+    return Math.max(1.5,8-2.6*((_sk.slots||[]).length));
+  }
   if(_dk0>='2026-09-10'&&_dk0<='2026-10-31')return 8;   // 西实专项刷题期（9/10-10/31 连续一段·每天8h+）
   if(_dk0==='2026-11-01'||_dk0==='2026-12-06'||_gkDay(_dk0))return 2; // 考试日
   if(_dk0==='2026-12-05')return 1;                              // 轻量日（早睡）
@@ -1167,9 +1225,9 @@ function pmNew(P,date){
   const arr=[];
   arr.push(t('⭐申论小题真题2道限时40min（单一/综合均衡，格子纸手写——西实：每天2小题）','sl',0));
   arr.push(t('多家答案对照批改30min（囊中对比/白鹭答案，标漏写关键词）','sl',0));
-  const npb=Math.max(dow===6?2:1,COV('公基-系统',1));
+  const npb=Math.max(2,COV('公基-系统',2)); // 马克2节/天 → 86节约10/23过完
   const rg=nx(P,'公基-系统',npb);
-  if(rg)arr.push(t(`📚马克公基·系统课 ${rng(rg)}（2倍速~75min，今天${npb}节，高频优先，非高频直接跳，✎可改节数）+ 配套公基10题15min（听完立刻做，错题当天进❌错题本）`,'gj',10,'题'));
+  if(rg)arr.push(t(`📚马克公基·系统课 ${rng(rg)}（2节·2倍速~75min/节，今天${npb}节，高频优先，非高频直接跳，✎可改节数）+ 配套公基20题20min（听完立刻做，错题当天进❌错题本）`,'gj',20,'题'));
   else arr.push(t('公基系统已完：公基高频100题20题限时45min','gj',20,'题'));
   const xt=nx(P,'申论-小题',COV('申论-小题',1)),zw=nx(P,'申论-作文',COV('申论-作文',1));
   if(dow===2||dow===4){ // 周二/四 补课窗口：按缺口优先补（申论→逻辑高频→言语刷题→资料刷题）
@@ -1191,7 +1249,7 @@ function pmNew(P,date){
     else if(zc2)arr.push(t(`金标尺综测·刷题 ${rng(zc2)}（2倍速60min）+ 配套1道20min`,'zt',0));
     else arr.push(t('综测真题闭卷手写1道（40min，格子纸，标漏写关键词）','zt',0));
   }else{ // 周一 积累（9月）→背诵（10/9起）
-    if(dk<'2026-10-09')arr.push(t('大作文素材积累40min（西实：9月攒完——每天5个政策关键词+1套开头结尾模板，记进小本子）','sl',0));
+    if(dk<'2026-10-09')arr.push(t('大作文素材积累40min（碎片/睡前做：每天5个政策关键词+1套开头结尾模板，存手机备忘录，别占大块时间）','sl',0));
     else arr.push(t('大作文背诵20min（开头/结尾/模板）+ 真题提纲2篇40min','sl',0));
     arr.push(t('申论小题1道精练30min（弱题型，限时）+批改15min','sl',0));
   }
@@ -1225,7 +1283,7 @@ function evNew(P,date){
   }
 
 
-    // S1/S2 西实模式（网课全2倍速~75min/节+配套练习）：刘义恒1节/天到10/13 + 超格政治每天1节+20题 + 周三数量课(最多8节)→100题 + 日三刷
+    // S1/S2 西实模式·晚上：①刘义恒每天1节 ②【9/11-10/7 综测专线 / 10/8起 超格政治】周三=数量课、周日=轻夜
   const arr=[];
   {
     const n=COV('图推-刘义恒',1);
@@ -1235,25 +1293,32 @@ function evNew(P,date){
   }
   if(dow===3){
     const rq=(P['数量-基础']||0)>=8?null:nx(P,'数量-基础',1); // 最多8节（只学4类）
-    if(rq)arr.push(t(`数量关系·基础 ${rng(rq)}（2倍速每节~75min：只学4类——工程/利润/行程/容斥，最多8节，9/30-11/18周三排）+ 配套数量4类10题15min（听完立刻做）`,'xt',10,'题'));
-    else arr.push(t('公基高频100题20题限时45min（真题手感）+ 错题回刷30min','gj',20,'题'));
-  }else if(dow===4||dow===5){
-    arr.push(t('公基高频100题20题限时45min（真题手感）+ 错题回刷30min','gj',20,'题'));
-    // 刘义恒学完后，晚上腾出的时间做第2个补课窗口（周五）
-    if((P['图推-刘义恒']||0)>=32&&dow===5)arr.push(nextMakeup(P));
-  }
-  else if(dow===1||dow===2||dow===6){
-    const rpol=nxCap(P,'小黑-刷题',30,1);
-    if(rpol)arr.push(t(`🔴超格政治·系统课 ${rng(rpol)}（2倍速~75min，每天1节，替换小黑刷题）+ 配套政治20题20min（听完立刻做）`,'gj',20,'题'));
-    else arr.push(t('超格政治已过完：政治真题20题限时20min + 时政10min','gj',20,'题'));
-    if(dow===6)arr.push(t('时政10min（近6个月大事，只记关键词）','gj',0));
-  }else if(dow===0){arr.push(t('周末轻夜：错题三刷45min（只刷标记过「不会/会但慢」的）','dt',0));arr.push(t('时政10min（近6个月大事，只记关键词）','gj',0));arr.push(t('公基速记15min（只记框架不抄讲义）','gj',0));}
-  else{
-    arr.push(t('公基速记15min（只记框架不抄讲义）+ 错题回刷30min','gj',0));
+    if(rq)arr.push(t(`数量关系·基础 ${rng(rq)}（2倍速每节~75min：只学4类——工程/利润/行程/容斥，最多8节，11/18前收尾）+ 配套数量4类10题15min（听完立刻做）`,'xt',10,'题'));
+    else arr.push(t('公基高频100题限时45min（真题手感）+ 错题回刷30min','gj',100,'题'));
+  }else if(dow===0){
+    arr.push(t('周末轻夜：错题三刷45min（只刷标记过「不会/会但慢」的）','dt',0));
     arr.push(t('时政10min（近6个月大事，只记关键词）','gj',0));
-    // 刘义恒学完后，晚上腾出的时间做第2个补课窗口（周一）
-    if((P['图推-刘义恒']||0)>=32&&dow===1)arr.push(nextMakeup(P));
+    arr.push(t('公基速记15min（只记框架不抄讲义）','gj',0));
+  }else{
+    if(dk<='2026-10-07'){
+      // 🟠 综测专线（9/11-10/7）：11/1另一门100分，0/32是你最大的洞；趁超格政治10/8才开始，先把这段抢出来
+      const zb=nxCap(P,'综测-基础',21,COV('综测-基础',1)),zc2=nx(P,'综测-刷题',1);
+      if(zb)arr.push(t(`🟠金标尺综测·基础 ${rng(zb)}（2倍速~75min，11/1另一门100分——趁超格政治10/8才开始，先把这段抢出来）+ 配套1道格子纸手写20min（必须动笔）`,'zt',0));
+      else if(zc2)arr.push(t(`金标尺综测·刷题 ${rng(zc2)}（2倍速60min）+ 配套1道20min`,'zt',0));
+      else arr.push(t('综测真题闭卷手写1道（40min，格子纸，标漏写关键词）','zt',0));
+      arr.push(t('公基速记15min（只记框架不抄讲义）+ 错题回刷30min','gj',0));
+    }else{
+      // 🔴 超格政治（10/8 起，每天1节+20题）
+      const rpol=nxCap(P,'小黑-刷题',24,1);
+      if(rpol)arr.push(t(`🔴超格政治·系统课 ${rng(rpol)}（2倍速~75min，每天1节，高频优先：马原/毛中特/时政）+ 配套政治20题20min（听完立刻做，错题当天进❌错题本）`,'gj',20,'题'));
+      else arr.push(t('超格政治已过完：政治真题20题限时20min + 时政10min','gj',20,'题'));
+      if(dow===6)arr.push(t('时政10min（近6个月大事，只记关键词）','gj',0));
+      else arr.push(t('公基速记15min（只记框架不抄讲义）+ 错题回刷30min','gj',0));
+    }
   }
+  // 图推学完后（约10/13），周一/周五晚上再加一个补课窗口
+  if((P['图推-刘义恒']||0)>=32&&(dow===1||dow===5))arr.push(nextMakeup(P));
+
   arr.push(t('📒每日记录10min：各模块用时+正确率（9月目标55%→10月底75%：只记数，不批斗）','fx',0));
   return arr;
 }
@@ -1365,8 +1430,8 @@ function getPmSeg(idx,P,date){
     const arr=[];
     arr.push(t('⭐申论小题真题2道限时40min（单一/综合均衡，格子纸手写——西实：每天2小题）','sl',0));
     arr.push(t('多家答案对照批改30min（囊中对比/白鹭答案，标漏写关键词）','sl',0));
-    const rg=nxCap(P,'公基-系统',50,COV('公基-系统',1));
-    if(rg)arr.push(t(`📚马克公基·系统课 ${rng(rg)}（2倍速~75min，高频优先，非高频直接跳，✎可改节数）+ 配套公基10题15min（听完立刻做，错题当天进❌错题本）`,'gj',10,'题'));
+    const rg=nxCap(P,'公基-系统',86,COV('公基-系统',2));
+    if(rg)arr.push(t(`📚马克公基·系统课 ${rng(rg)}（2节·2倍速~75min/节≈2h50m，高频优先，非高频直接跳，✎可改节数；累了第2节挪晚上）+ 配套公基20题20min（听完立刻做，错题当天进❌错题本）`,'gj',20,'题'));
     else arr.push(t('公基系统已过完：公基高频100题限时45min + 错题三刷','gj',100,'题'));
     const dow=date.getDay();
     const zcLine=()=>{ // 综测=11/1 另一门100分，不再是"先砍"
@@ -1375,10 +1440,10 @@ function getPmSeg(idx,P,date){
       else if(zc2)arr.push(t(`金标尺综测·刷题 ${rng(zc2)}（2倍速60min）+ 配套1道20min`,'zt',0));
       else arr.push(t('综测真题闭卷手写1道（40min，格子纸，标漏写关键词）','zt',0));
     };
-    if(dow===3||dow===6)zcLine();
-    else if(dow===0||dow===2||dow===4){
-      // 二/四/日 补课窗口：按缺口优先补（申论→逻辑高频→言语刷题→资料刷题）
-      arr.push(nextMakeup(P));
+    // 9/11-10/7：综测专线排在晚上，下午不重复；10/8 起综测回周三/六、补课窗口回二/四/日
+    if((dow===3||dow===6)&&_dk>='2026-10-08')zcLine();
+    else if((dow===0||dow===2||dow===4)&&_dk>='2026-10-08'){
+      arr.push(nextMakeup(P)); // 补课窗口（10/8 起）
     }else{
       arr.push(t('大作文素材积累40min（西实：9月攒完——每天5个政策关键词+1套开头结尾模板，记进小本子）','sl',0));
     }
@@ -1463,9 +1528,12 @@ function getEvSeg(idx,P,date){
       arr.push(t('公基高频100题20题限时45min（真题手感）','gj',20,'题'));
     }else{
       const dow=date.getDay();
-      const rpol=nxCap(P,'小黑-刷题',30,1);
-      if(rpol)arr.push(t(`🔴超格政治·系统课 ${rng(rpol)}（2倍速~75min，每天1节，高频优先：马原/毛中特/时政）+ 配套政治20题20min（听完立刻做，错题当天进❌错题本）`,'gj',20,'题'));
-      else arr.push(t('超格政治已过完：政治真题20题限时20min + 时政10min','gj',20,'题'));
+      if(dow===1||dow===2||dow===4||dow===5||dow===6){
+        const zb0=nxCap(P,'综测-基础',21,COV('综测-基础',1)),zc20=nx(P,'综测-刷题',1);
+        if(zb0)arr.push(t(`🟠金标尺综测·基础 ${rng(zb0)}（2倍速~75min，11/1另一门100分——趁超格政治10/8才开始）+ 配套1道格子纸手写20min（必须动笔）`,'zt',0));
+        else if(zc20)arr.push(t(`金标尺综测·刷题 ${rng(zc20)}（2倍速60min）+ 配套1道20min`,'zt',0));
+        else arr.push(t('综测真题闭卷手写1道（40min，格子纸，标漏写关键词）','zt',0));
+      }
       if(dow===2||dow===6)arr.push(t('时政10min + 错题回刷15min','gj',0));
       else if(dow===4)arr.push(t('公基高频100题20题限时45min（真题手感）','gj',20,'题'));
       else if(dow===0)arr.push(t('周末轻夜：错题三刷45min（只刷标记过「不会/会但慢」的）','dt',0));
@@ -1591,7 +1659,7 @@ function renderSidePanel(date){
     ${row(zcs,7,'综测·刷题','基础完再上',zc>=32 && zcs<7)}
     <div style="font-size:10px;font-weight:700;color:var(--t3);margin:7px 0 3px">🌙 晚上 · 公基 + 申论30min</div>
     ${row(gj,86,'公基·系统课（马克）',gj<86?`还剩 ${86-gj} 节 · 1节/天(周六2节)约 ${Math.ceil((86-gj)/1.3)} 天`:'已过完，转100题',evNow==='马克公基课')}
-    ${row(n('小黑-刷题'),30,'超格政治·系统课',n('小黑-刷题')<30?'每天1节+20题（替换小黑刷题）':'已过完，转刷题',false)}
+    ${row(n('小黑-刷题'),24,'超格政治·系统课',n('小黑-刷题')<24?'10/8起每天1节+20题':'已过完，转刷题',false)}
     ${row(gjs,50,'公基·刷题课',gj<86?'系统课没完，先别跳':'2节/天',evNow==='公基刷题课')}
     <div class="sp-item sp-on">⚡ 申论复盘 30min · 每晚固定，不挪动</div>
     <div style="font-size:10px;color:var(--t3);line-height:1.6;margin-top:8px">打卡课表任务或在「统计」改节数，这里会跟着变。日历数字只用来倒计时，不再用来假装你学完了。</div>
@@ -1625,27 +1693,26 @@ function renderDebtBanner(){
     const P=D.prog||{};const n=k=>P[k]||0;const st=suanStreak();
     const rows=[
       {name:'速算连续天数',done:st,need:10,total:14,tip:'9/10-9/23 窗口内连续≥10天过关（每天①25题30min）'},
-      {name:'资料分析·刷题',done:n('资料-刷题'),need:9,total:24,tip:'A日2篇真题50min+补漏1节'},
+      {name:'资料分析·刷题',done:n('资料-刷题'),need:9,total:24,tip:'A日2篇真题50min（掐表25min/篇）'},
       {name:'逻辑推理',done:n('逻辑'),need:21,total:62,tip:'C日判断1套35min+补漏≤6节'},
       {name:'言语·刷题',done:n('言语-刷题'),need:7,total:10,tip:'B日1套30min+视频复盘'},
-      {name:'超格政治·系统课',done:n('小黑-刷题'),need:10,total:30,tip:'EV每天1节+20题（替换小黑刷题）'},
+      {name:'综测·基础',done:n('综测-基础'),need:8,total:21,tip:'9/11-10/7 每天1节+手写1道'},
       {name:'白鹭申论·小题',done:n('申论-小题'),need:16,total:50,tip:'PM2小题+补漏1节/天'},
-      {name:'公基·系统课（马克）',done:n('公基-系统'),need:10,total:86,tip:'PM每天1节+配套10题（马克86节）'},
-      {name:'综测·基础',done:n('综测-基础'),need:21,total:32,tip:'PM每天1节（先砍）'},
-      {name:'图推·刘义恒',done:n('图推-刘义恒'),need:12,total:32,tip:'EV每天2节（9/11起），9/29学完'},
+      {name:'公基·系统课（马克）',done:n('公基-系统'),need:20,total:86,tip:'PM 2节/天+配套20题（约10/23过完）'},
+      {name:'图推·刘义恒',done:n('图推-刘义恒'),need:8,total:32,tip:'晚上1节/天+图推20题（约10/13学完）'},
 
     ];
     const anyGap=rows.some(r=>r.done<r.need);
     el.style.display='block';
     el.innerHTML=`<h3>📌 9/23 阶段检查点（${anyGap?'还有缺口，按课表补':'全部达标，节奏对了 ✔'}）</h3>
-    <p>西实「40天专项刷题」模式（9/10-10/31 统一 8h 底线）。每天：AM 纯刷题（🔥主攻块 真题+弱项补强30题 + 次模块整套 + 图推20题）+ PM 申论2小题+批改+公基1节·2倍速~75min+配套 + EV 刘义恒2节·2倍速+配套图推20题 + 📒记录。网课全2倍速（逻辑课~15min/节，其余~75min/节），听完必做配套练习，点✎可改每天节数。时间不够砍单顺序：先砍⑩综测 → 再砍⑨作文积累 → 再砍⑧补漏课；<strong>速算/图推20题/申论2小题永不砍</strong>。跳课点「顺延」，不沉默跳。</p>
+    <p>西实「40天专项刷题」模式（9/10-10/31 统一 8h 底线）。每天：AM 纯刷题（🔥主攻块 真题+弱项补强30题 + 次模块整套 + 图推20题）+ PM 申论2小题+批改+公基1节·2倍速~75min+配套 + EV 刘义恒2节·2倍速+配套图推20题 + 📒记录。网课全2倍速（逻辑课~15min/节，其余~75min/节），听完必做配套练习，点✎可改每天节数。时间不够砍单顺序：先砍速记/回刷 → 再砍补课窗口 → 综测改隔天；<strong>速算/图推20题/申论2小题永不砍</strong>。不想学时点「⏭顺延」优先选<strong>🧷三件套模式</strong>（课时顺延，但底线三项今天照做，约75min）；整天顺延每周只有 1 张券，券用完就只能走三件套——不给「一键躺平」留路。</p>
 
     <div class="debt-grid">${rows.map(r=>`
       <div class="debt-cell ${r.done>=r.need?'ok':''}">
         <div class="n">${r.name}</div>
         <div class="v">${r.done}/${r.total} · ${r.done>=r.need?'达标':'差'+(r.need-r.done)}</div>
         <div class="n">${r.tip}</div>
-      </div>`).join('')}</div>${makeupHTML()}${priorityHTML()}`;
+      </div>`).join('')}</div>${skipMiniHTML()}${makeupHTML()}${priorityHTML()}`;
     return;
   }
   // 9/24-12/6：9/23 检查点结果（首次渲染时冻结存档）+ 两个运行时开关 + 里程碑
@@ -1653,7 +1720,7 @@ function renderDebtBanner(){
   if(_dk2>='2026-09-24'&&_dk2<='2026-12-06'){
     if(!D.cpSnap){D.cpSnap={date:ds(new Date()),st:suanStreak(),prog:Object.assign({},D.prog||{})};sv();}
     const cp=D.cpSnap,n=k=>cp.prog[k]||0,o=D.opt||{};
-    const hard=[['速算连续天数',cp.st,10,14],['资料分析·刷题',n('资料-刷题'),9,24],['逻辑推理',n('逻辑'),21,62],['言语·刷题',n('言语-刷题'),7,10],['超格政治·系统课',n('小黑-刷题'),10,30],['白鹭申论·小题',n('申论-小题'),16,50]];
+    const hard=[['速算连续天数',cp.st,10,14],['资料分析·刷题',n('资料-刷题'),9,24],['逻辑推理',n('逻辑'),21,62],['言语·刷题',n('言语-刷题'),7,10],['综测·基础',n('综测-基础'),21,21],['白鹭申论·小题',n('申论-小题'),16,50]];
     const soft=[['公基·系统课（马克）',n('公基-系统'),10,86],['综测·基础',n('综测-基础'),14,21],['图推·刘义恒',n('图推-刘义恒'),12,32]];
 
     const hardOk=hard.every(r=>r[1]>=r[2]),softOk=soft.every(r=>r[1]>=r[2]);
@@ -1667,7 +1734,7 @@ function renderDebtBanner(){
       <label style="font-size:11px;cursor:pointer;user-select:none"><input type="checkbox" ${o.gk?'checked':''} onchange="setOpt('gk',this.checked)" style="width:14px;height:14px;vertical-align:-2px"> 🇨🇳 <strong>加报国考</strong>（10/14公告·10/24报名截止·11/28-29笔试，勾选后 11/16 起课表自动切国考模考）</label>
       <label style="font-size:11px;cursor:pointer;user-select:none"><input type="checkbox" ${o.figTrig?'checked':''} onchange="setOpt('figTrig',this.checked)" style="width:14px;height:14px;vertical-align:-2px"> ⚠️ <strong>图推仍&lt;45%</strong>（勾选后周二主攻切「图推集中40题+针对性课」）</label>
     </div>
-    ${makeupHTML()}${priorityHTML()}
+    ${skipMiniHTML()}${makeupHTML()}${priorityHTML()}
     <div style="font-size:11px;margin-top:8px;color:#9a3412">里程碑：10/14 国考公告${o.gk?' → 10/24 报名截止':''} → 11/1 事业编笔试${o.gk?' → 11/28-29 国考笔试':''} → 12/6 四川省考笔试（9/10-10/31 西实专项刷题 8h底线 · 11/2-11/27 模考周 5.5h底线
 ）</div>`;
     return;
@@ -1791,9 +1858,11 @@ function renderSchedule(){
   if(ppBtn){
     const slotNames={am:'上午',pm:'下午',ev:'晚上'};
     const skipped=['am','pm','ev'].filter(s=>(D.skips||[]).some(x=>x.date===dkey&&x.slot===s));
-    ppBtn.textContent=skipped.length?`⏭ 本日已顺延：${skipped.map(s=>slotNames[s]).join('、')} — 点击调整/撤销`:'⏭ 顺延课程（可选上午/下午/晚上）';
-    ppBtn.style.borderColor=skipped.length?'#86efac':'#fdba74';
-    ppBtn.style.color=skipped.length?'#16a34a':'#ea580c';
+    const _b=skipBudget(),_t=skipEntryFor(dkey);
+    const _mn=_t?({min:'🧷三件套',slot:'⏭单时段',skip:'🛑整天'}[_t.mode]||'顺延'):'';
+    ppBtn.textContent=skipped.length?`⏭ 本日已顺延（${_mn}）— 点击调整/撤销`:`⏭ 顺延（本周券 ${SKIP_COUPON_PER_WEEK-_b.couponLeft}/${SKIP_COUPON_PER_WEEK} · 三件套 ${_b.minUsed}/${SKIP_MIN_PER_WEEK}）`;
+    ppBtn.style.borderColor=skipped.length?'#86efac':(_b.couponLeft<=0&&_b.minLeft<=0?'#fca5a5':'#fdba74');
+    ppBtn.style.color=skipped.length?'#16a34a':(_b.couponLeft<=0&&_b.minLeft<=0?'#dc2626':'#ea580c');
   }
 
   renderSidePanel(d);
@@ -1905,7 +1974,7 @@ function addCustomTask(){
     </div>
     <label style="display:flex;align-items:flex-start;gap:7px;font-size:11px;color:#475569;line-height:1.6;cursor:pointer;background:#fffbeb;border:1px solid #fed7aa;border-radius:8px;padding:8px 10px">
       <input type="checkbox" id="ct-occupy" style="margin-top:2px;width:14px;height:14px;cursor:pointer"/>
-      <span><strong>占用该时段</strong>：当日该时段的原排课不再显示，整条课程线自动顺延1天补位（之后每天的课程编号自动后移，不会漏课）</span>
+      <span><strong>占用该时段</strong>：当日该时段的原排课不再显示，整条课程线自动顺延1天补位（不会漏课）。注意：这也会计入「顺延账本」</span>
     </label>
     <div style="display:flex;gap:8px;margin-top:14px">
       <button onclick="submitCustomTask()" class="btn-p" style="flex:1">✔ 添加</button>
@@ -1935,66 +2004,160 @@ function submitCustomTask(){
   showToast(occupy?'✅ 已添加，该时段原课程自动顺延补位':'✅ 已添加临时任务');
 }
 
-// ==================== 顺延（弹窗自选时段） ====================
+// ==================== ⏭ 顺延（三档出口 + 理由 + 冷静期） ====================
+// 动机：以前"顺延一下就完了"，没有成本 → 路径依赖。现在把出口分成三档：
+//   🧷 三件套（推荐，每周2次）：课时顺延，但底线三项（速算/图推20题/申论1道 ≈75min）留下来
+//   ⏭ 只顺延某时段（免费，但记账）：比如只顺延晚上，白天照常
+//   🛑 整天顺延（消耗每周1张券 + 8秒冷静期）：券用完就只能选三件套
+function recordSkip(dateKey,slots,mode,reason){
+  // 一天只留一条记录，撤销/改档位自动归还配额
+  D.skips=(D.skips||[]).filter(x=>x.date!==dateKey);
+  slots.forEach(sl=>D.skips.push({date:dateKey,slot:sl,mode,reason}));
+  D.skipLog=(D.skipLog||[]).filter(e=>e.date!==dateKey);
+  if(slots.length) D.skipLog.push({date:dateKey,mode,reason,slots});
+  sv();
+}
+function clearSkip(dateKey){D.skips=(D.skips||[]).filter(x=>x.date!==dateKey);D.skipLog=(D.skipLog||[]).filter(e=>e.date!==dateKey);sv();}
+function undoSkipToday(){
+  const dkey=ds(curDate);
+  if(!skipEntryFor(dkey)) return;
+  if(!confirm('撤销今天的顺延，恢复原课表？\n（配额会自动还给你）')) return;
+  clearSkip(dkey);renderSchedule();showToast('↩️ 已撤销顺延，原课表恢复');
+}
+let _ppMode='min';
+function ppPick(mode,el){
+  _ppMode=mode;
+  ['min','slot','skip'].forEach(k=>{
+    const b=document.getElementById('pp-card-'+k);
+    if(b){b.style.borderColor=(k===mode)?'#2563eb':'#e2e8f0';b.style.background=(k===mode)?'#eff6ff':'#fff';}
+  });
+  const slotBox=document.getElementById('pp-slots');
+  if(slotBox)slotBox.style.display=(mode==='slot')?'block':'none';
+  const hit=document.getElementById('pp-hit');
+  if(hit)hit.style.display=(mode==='skip')?'block':'none';
+}
 function postponeDay(){
   const dkey=ds(curDate);
   D.skips=D.skips||[];
-  const slotNames={am:'🌅 上午场',pm:'☀️ 下午场',ev:'🌙 晚上场'};
   const info=getPhaseInfo(curDate);
+  const b=skipBudget(),st=skipStats();
   const old=document.getElementById('pp-modal');if(old)old.remove();
   const wd=['日','一','二','三','四','五','六'][curDate.getDay()];
+  const today=skipEntryFor(dkey);
+  const reasonLabel=r=>{const f=SKIP_REASONS.find(x=>x[0]===r);return f?f[1]:'—';};
 
-  // 各时段状态：已顺延 / 已完成 / 可顺延
-  const rows=['am','pm','ev'].map(key=>{
+  const slotNames={am:'🌅 上午场',pm:'☀️ 下午场',ev:'🌙 晚上场'};
+  const slotRows=['am','pm','ev'].map(key=>{
     const skipped=D.skips.some(x=>x.date===dkey&&x.slot===key);
-    const slot=info.slots.find(s=>s.key===key);
-    const n=slot?slot.tasks.length:0;
-    const allDone=!skipped&&n>0&&slot.tasks.every((_,ti)=>D.checks[`${dkey}_${key}_${ti}`]);
-    let stateTxt,stateColor,disabled=false,checked=false;
-    if(skipped){stateTxt='已顺延（勾选=撤销恢复）';stateColor='#16a34a';checked=true;}
-    else if(allDone){stateTxt='已全部打卡完成 ✓';stateColor='#16a34a';disabled=true;}
-    else{stateTxt='未完成，可顺延';stateColor='#d97706';}
-    return `<label style="display:flex;align-items:center;gap:10px;padding:11px 12px;border:1.5px solid ${skipped?'#86efac':'#e2e8f0'};border-radius:10px;margin-bottom:8px;cursor:${disabled?'not-allowed':'pointer'};opacity:${disabled?.55:1};background:${skipped?'#f0fdf4':'#fff'}">
-      <input type="checkbox" class="pp-cb" value="${key}" ${checked?'checked':''} ${disabled?'disabled':''} style="width:17px;height:17px;flex-shrink:0"/>
-      <div style="flex:1">
-        <div style="font-size:13px;font-weight:700;color:#0f172a">${slotNames[key]}</div>
-        <div style="font-size:11px;color:${stateColor}">${stateTxt}</div>
-      </div>
+    const slot=info.slots.find(x=>x.key===key);
+    const cnt=slot?slot.tasks.length:0;
+    const allDone=!skipped&&cnt>0&&slot.tasks.every((_,ti)=>D.checks[`${dkey}_${key}_${ti}`]);
+    return `<label style="display:flex;align-items:center;gap:10px;padding:9px 11px;border:1.5px solid ${skipped?'#86efac':'#e2e8f0'};border-radius:9px;margin-bottom:7px;cursor:${allDone?'not-allowed':'pointer'};opacity:${allDone?.5:1};background:${skipped?'#f0fdf4':'#fff'}">
+      <input type="checkbox" class="pp-cb" value="${key}" ${skipped?'checked':''} ${allDone?'disabled':''} style="width:17px;height:17px;flex-shrink:0"/>
+      <div style="flex:1"><div style="font-size:12px;font-weight:700;color:#0f172a">${slotNames[key]}</div>
+      <div style="font-size:10px;color:${skipped?'#16a34a':allDone?'#16a34a':'#d97706'}">${skipped?'已顺延（取消勾选=恢复）':allDone?'已全部打卡 ✓':'未完成'}</div></div>
     </label>`;
   }).join('');
 
-  const m=document.createElement('div');m.id='pp-modal';
-  m.style.cssText='position:fixed;inset:0;background:rgba(15,23,42,.55);z-index:1000;display:flex;align-items:center;justify-content:center;padding:18px';
-  m.innerHTML=`<div style="background:#fff;border-radius:14px;padding:18px;width:100%;max-width:380px;box-shadow:0 20px 60px rgba(0,0,0,.35)">
-    <div style="font-size:14px;font-weight:700;color:#0f172a;margin-bottom:4px">⏭ 顺延课程</div>
-    <div style="font-size:11px;color:#64748b;margin-bottom:12px">${curDate.getMonth()+1}月${curDate.getDate()}日（星期${wd}）· 勾选要顺延的时段</div>
-    ${rows}
-    <div style="font-size:10px;color:#94a3b8;line-height:1.7;background:#f8fafc;border-radius:8px;padding:8px 10px;margin:4px 0 12px">勾选的时段：当天课程移到明天，后续整体后移，一节不漏。<br>已顺延的时段取消勾选 = 撤销恢复原课表。</div>
-    <div style="display:flex;gap:8px">
-      <button onclick="submitPostpone()" class="btn-p" style="flex:1">✔ 确认</button>
-      <button onclick="document.getElementById('pp-modal').remove()" style="padding:8px 18px;border-radius:7px;border:1.5px solid #e2e8f0;background:#f8fafc;color:#475569;font-size:12px;cursor:pointer">取消</button>
+  const card=(id,color,icon,title,sub,disabled,tag)=>`<div id="pp-card-${id}" onclick="${disabled?'':`ppPick('${id}',this)`}" style="border:1.5px solid #e2e8f0;border-radius:11px;padding:11px 12px;margin-bottom:8px;cursor:${disabled?'not-allowed':'pointer'};opacity:${disabled?.5:1};background:#fff">
+    <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">
+      <span style="font-size:15px">${icon}</span>
+      <span style="font-size:13px;font-weight:700;color:${color}">${title}</span>
+      ${tag?`<span style="font-size:9px;font-weight:700;background:${color};color:#fff;border-radius:20px;padding:2px 7px">${tag}</span>`:''}
+      <span style="margin-left:auto;font-size:11px;font-weight:700;color:${disabled?'#dc2626':'#166534'}">${disabled?'本周已用完':'额度 '+sub}</span>
     </div>
+    <div style="font-size:10px;color:#64748b;margin-top:5px;line-height:1.7">${disabled?'本周额度用完 → 请用上面那档，或正常学。':'点这里选中'}</div>
+  </div>`;
+
+  const m=document.createElement('div');m.id='pp-modal';
+  m.style.cssText='position:fixed;inset:0;background:rgba(15,23,42,.6);z-index:1000;display:flex;align-items:flex-start;justify-content:center;padding:14px;overflow:auto';
+  m.innerHTML=`<div style="background:#fff;border-radius:14px;padding:16px;width:100%;max-width:420px;box-shadow:0 20px 60px rgba(0,0,0,.35)">
+    <div style="font-size:15px;font-weight:800;color:#0f172a">⏭ 今天怎么处理？</div>
+    <div style="font-size:11px;color:#64748b;margin:3px 0 10px">${curDate.getMonth()+1}月${curDate.getDate()}日（星期${wd}）· 距事业编 ${dBetween(E1)} 天 · 距省考 ${dBetween(E2)} 天</div>
+
+    <div style="font-size:10px;line-height:1.9;background:#fff7ed;border:1px solid #fed7aa;border-radius:9px;padding:8px 10px;margin-bottom:10px;color:#9a3412">
+      📒 本周账本：顺延券 <strong>${SKIP_COUPON_PER_WEEK-b.couponLeft}/${SKIP_COUPON_PER_WEEK}</strong> · 三件套 <strong>${b.minUsed}/${SKIP_MIN_PER_WEEK}</strong> · 连续无顺延 <strong>${st.clean} 天</strong>${st.byReason['lazy']?` · 累计"不想学" <strong>${st.byReason['lazy']} 次</strong>`:''}
+      <br>顺延 1 天 = 所有课程线整体后移 1 天（刘义恒/马克/超格政治学完日期一起后移）。
+    </div>
+
+    ${today?`<div style="font-size:11px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:9px;padding:8px 10px;margin-bottom:10px;color:#166534">
+      今天已顺延：<strong>${today.mode==='min'?'🧷 三件套模式':today.mode==='skip'?'🛑 整天顺延':'⏭ 单时段顺延'}</strong> · 理由：${reasonLabel(today.reason)}
+      <button onclick="undoSkipToday()" style="margin-left:6px;padding:3px 9px;border-radius:6px;border:1px solid #86efac;background:#fff;color:#166534;font-size:10px;font-weight:700;cursor:pointer">↩️ 撤销顺延</button>
+    </div>`:''}
+
+    ${card('min','#059669','🧷','三件套模式','保留 约75min（速算25题+图推20题+申论1道）',b.minLeft<=0,'最推荐')}
+    ${card('slot','#2563eb','⏭','只顺延某时段','不限次（默认全天，下面勾选）',false,'')}
+    ${card('skip','#dc2626','🛑','整天顺延（什么都不做）','每周仅 1 张券',b.couponLeft<=0,'')}
+
+    <div id="pp-slots" style="display:none;margin:2px 0 10px;padding:9px 10px;background:#f8fafc;border-radius:9px">
+      <div style="font-size:11px;font-weight:700;color:#0f172a;margin-bottom:6px">勾选要顺延的时段</div>${slotRows}
+    </div>
+
+    <div id="pp-hit" style="display:none;font-size:10px;line-height:1.8;color:#b91c1c;background:#fef2f2;border:1px solid #fecaca;border-radius:9px;padding:8px 10px;margin-bottom:10px">
+      ⚠️ 整天顺延是本周期最贵的一档：<br>
+      • 消耗本周唯一的顺延券（用完就只能走三件套）<br>
+      • 需要等 8 秒冷静期才能确认<br>
+      • 会被记进账本：连续无顺延天数清零、周末反馈里点名
+    </div>
+
+    <div style="font-size:11px;font-weight:700;color:#0f172a;margin-bottom:5px">理由（必选，会统计）</div>
+    <div id="pp-reason" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px">
+      ${SKIP_REASONS.map(([v,lab],i)=>`<label style="display:flex;align-items:center;gap:6px;font-size:10.5px;border:1.5px solid #e2e8f0;border-radius:8px;padding:7px 8px;cursor:pointer">
+        <input type="radio" name="pp-reason" value="${v}" ${i===0?'':''} style="width:14px;height:14px"/>${lab}</label>`).join('')}
+    </div>
+
+    <div style="display:flex;gap:8px">
+      <button onclick="submitPostponeV2()" class="btn-p" id="pp-confirm" style="flex:1">✔ 确认</button>
+      <button onclick="document.getElementById('pp-modal').remove()" style="padding:8px 16px;border-radius:7px;border:1.5px solid #e2e8f0;background:#f8fafc;color:#475569;font-size:12px;cursor:pointer">取消</button>
+    </div>
+    <div style="font-size:10px;color:#94a3b8;line-height:1.7;margin-top:9px">💡 周末/状态差的正解是「三件套」——课时顺延，手感不断。真正的休息留到周日轻夜（已排好）。</div>
   </div>`;
   m.addEventListener('click',e=>{if(e.target===m)m.remove();});
   document.body.appendChild(m);
+  ppPick(today?(today.mode==='slot'?'slot':today.mode):'min');
 }
 
-function submitPostpone(){
+function submitPostponeV2(){
   const dkey=ds(curDate);
-  D.skips=D.skips||[];
-  const slotNames={am:'上午场',pm:'下午场',ev:'晚上场'};
-  const want=new Set([...document.querySelectorAll('.pp-cb:checked')].map(cb=>cb.value));
-  const added=[],removed=[];
-  ['am','pm','ev'].forEach(key=>{
-    const has=D.skips.some(x=>x.date===dkey&&x.slot===key);
-    if(want.has(key)&&!has){D.skips.push({date:dkey,slot:key});added.push(slotNames[key]);}
-    if(!want.has(key)&&has){D.skips=D.skips.filter(x=>!(x.date===dkey&&x.slot===key));removed.push(slotNames[key]);}
-  });
-  sv();renderSchedule();
-  document.getElementById('pp-modal').remove();
-  const msg=[added.length?`⏭ 已顺延${added.join('、')}`:'',removed.length?`↩️ 已恢复${removed.join('、')}`:''].filter(Boolean).join('；');
-  showToast(msg||'未做任何更改');
+  const reasonEl=document.querySelector('input[name="pp-reason"]:checked');
+  if(!reasonEl){showToast('⚠️ 先选一个理由（会记进账本）','orange');return;}
+  const reason=reasonEl.value;
+  const b=skipBudget();
+
+  if(_ppMode==='min'){
+    if(b.minLeft<=0){showToast('本周三件套额度已用完 → 要么正常学，要么用顺延券','orange');return;}
+    recordSkip(dkey,['am','pm','ev'],'min',reason);
+    renderSchedule();document.getElementById('pp-modal').remove();
+    showToast('🧷 已切三件套：课时顺延，但底线三项今天必须做完（约75min）');return;
+  }
+  if(_ppMode==='slot'){
+    const want=[...document.querySelectorAll('.pp-cb:checked')].map(cb=>cb.value);
+    if(!want.length){showToast('没勾选任何时段 → 没做任何更改','orange');return;}
+    recordSkip(dkey,want,'slot',reason);
+    renderSchedule();document.getElementById('pp-modal').remove();
+    showToast(`⏭ 已顺延${want.map(k=>({am:'上午',pm:'下午',ev:'晚上'})[k]).join('、')}（已记账）`);return;
+  }
+  // 🛑 整天顺延：券 + 冷静期
+  if(b.couponLeft<=0){showToast('🛑 本周顺延券已用完 → 用「三件套模式」，别直接躺','red');return;}
+  const btn=document.getElementById('pp-confirm');
+  if(!btn.dataset.armed){
+    btn.dataset.armed='1';btn.style.background='#dc2626';
+    let left=8;const orig=btn.textContent;
+    btn.textContent=`冷静 ${left}s 后可确认`;
+    const iv=setInterval(()=>{
+      left--;
+      if(left<=0){clearInterval(iv);btn.textContent='🛑 确认整天顺延（券将被消耗）';btn.dataset.armed='';}
+      else btn.textContent=`冷静 ${left}s 后可确认`;
+    },1000);
+    showToast('8 秒冷静期：这 8 秒想一下，今天真的什么都做不了吗？');
+    return;
+  }
+  recordSkip(dkey,['am','pm','ev'],'skip',reason);
+  renderSchedule();document.getElementById('pp-modal').remove();
+  showToast('🛑 已整天顺延（券 -1）。明天按课表回来，别连着顺。','red');
 }
+// 兼容旧调用
+function submitPostpone(){submitPostponeV2();}
 
 function delCustomTask(slotKey,i){
   const arr=D.customTasks[slotKey]||[];
@@ -2020,8 +2183,15 @@ function nextDay(){
     const h=todayMin/60;
     const _min=dayTargetH();
     if(h<_min){
-      document.getElementById('lock-lm').innerHTML=(ds(new Date())>='2026-09-10'&&ds(new Date())<='2026-10-31')
-        ?`西实专项刷题模式底线 ${_min}h = 上午限时刷题3h + 下午申论3h + 晚上课程2h。<br>超出时间<strong>不跨天计算</strong>，今天补足才能解锁。真做不完：先砍⑩综测 → 再砍⑧补漏课，速算和图推20题不砍。`
+      const _sk0=skipEntryFor(ds(new Date()));
+      document.getElementById('lock-lm').innerHTML=_sk0
+        ?(_sk0.mode==='min'
+          ?`🧷 今天是<strong>三件套模式</strong>：底线目标 ${_min}h = 速算25题 + 图推20题 + 申论1道（约75min）。<br>做完就解锁，别把顺延日过成"零学习日"。`
+          :_sk0.mode==='skip'
+          ?`🛑 今天是<strong>整天顺延日</strong>（券已消耗，目标 0h）。<br>不催你今天学，但明天请按课表回来——别连着顺。`
+          :`⏭ 今天顺延了部分时段，底线目标降到 ${_min}h。<br>剩下的时段请照做，别把整个白天都放掉。`)
+        :(ds(new Date())>='2026-09-10'&&ds(new Date())<='2026-10-31')
+        ?`西实专项刷题模式底线 ${_min}h = 上午限时刷题3h + 下午申论3h + 晚上课程2h。<br>超出时间<strong>不跨天计算</strong>，今天补足才能解锁。真做不完：先砍速记/回刷 → 再砍补课窗口，速算/图推20题/申论2小题不砍。`
         :(ds(new Date())<='2026-11-27'
         ?`模考周底线 ${_min}h = 全卷/模考 + 模块限时3项 + 申论 + 公基100题。<br>超出时间<strong>不跨天计算</strong>，今天补足才能解锁。`
         :`当日学习时间不足 ${_min} 小时，无法切换到下一天。<br>超出时间<strong>不跨天计算</strong>，今天补足才能解锁。`);
@@ -3437,6 +3607,11 @@ function mergeData(local,remote){
   const skKey=s=>`${s.date}|${s.slot}`;
   const sks=new Map();[...(remote.skips||[]),...(local.skips||[])].forEach(s=>sks.set(skKey(s),s));
   m.skips=[...sks.values()];
+  // 顺延账本：按日期取并集（本地优先，防止配额被重复计算）
+  const skl=new Map();
+  [...(remote.skipLog||[])].forEach(e=>skl.set(e.date,e));
+  [...(local.skipLog||[])].forEach(e=>skl.set(e.date,e));
+  m.skipLog=[...skl.values()];
   // 课程进度：取较大值
   // 课程进度：默认取大值；但带手动修正时间戳的，以最新一次修正为准（允许往下调）
   m.prog={...(remote.prog||{})};
@@ -3655,7 +3830,7 @@ async function syncDiagnose(){
 // ==================== STATS ====================
 const COURSES=[
   {key:'小黑-理论',label:'小黑政治·理论课',total:4,color:'#ef4444'},
-  {key:'小黑-刷题',label:'超格政治·系统课',total:30,color:'#f87171'},
+  {key:'小黑-刷题',label:'超格政治·系统课',total:24,color:'#f87171'},
   {key:'资料-基础',label:'资料分析·基础',total:8,color:'#6366f1'},
   {key:'资料-刷题',label:'资料分析·刷题',total:24,color:'#818cf8'},
   {key:'逻辑',label:'逻辑推理',total:62,color:'#06b6d4'},
@@ -3682,6 +3857,21 @@ function renderStats(){
   let streak=0;let cd=new Date();
   while(true){const s=ds(cd);if(days.includes(s)){streak++;cd.setDate(cd.getDate()-1);}else break;}
   document.getElementById('s-streak').textContent=streak+'天';
+  // ⏭ 顺延账本
+  const st=skipStats(),b=skipBudget();
+  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+  set('s-clean',st.clean+'天');set('s-skip',st.total+'次');
+  set('s-lazy',(st.byReason['lazy']||0)+'次');set('s-min',st.minDays+'天');
+  const led=document.getElementById('skip-ledger');
+  if(led){
+    const rl={work:'真的有事',sick:'状态差',lazy:'不想学',social:'出去/社交',other:'其他'};
+    const parts=Object.entries(st.byReason).map(([k,v])=>`${rl[k]||k} ${v}次`).join(' · ')||'还没有顺延记录 ✓';
+    const lazyN=st.byReason['lazy']||0;
+    led.innerHTML=`⏭ <strong>顺延账本</strong>（本周额度：券 ${SKIP_COUPON_PER_WEEK-b.couponLeft}/${SKIP_COUPON_PER_WEEK} · 三件套 ${b.minUsed}/${SKIP_MIN_PER_WEEK}）<br>
+      累计顺延 <strong>${st.total}</strong> 次：整天 ${st.skipDays} · 三件套 ${st.minDays} · 单时段 ${st.slotDays}<br>
+      理由分布：${parts}<br>
+      ${lazyN>=3?`<span style="color:#b91c1c;font-weight:700">⚠️ 「不想学」已经 ${lazyN} 次了。下次改三件套：75分钟做完就收工，手感不断线。</span>`:`<span style="color:#166534">连续无顺延 ${st.clean} 天，保持住。</span>`}`;
+  }
 }
 
 function renderProgBars(){
@@ -3900,7 +4090,7 @@ async function submitFb(){
 【薄弱模块】${weak||'未填'}
 【下周计划】${plan||'未填'}
 
-背景：备考四川省考（12/6）和事业编（11/1）。排课逻辑：西实「40天专项刷题」模式（三大模块交替、网课全2倍速~75min/节）；公基=马克86节（PM 1节/天+配套10题）；政治理论=超格（每天1节+20题，替换小黑刷题）；综测=金标尺周三+周六（11/1另一门100分）且听完必配做题、申论每天2小题+多家对照批改、图推刘义恒32节已于9/29学完）。核心短板：资料分析、数量关系、言语理解、申论大作文。每日底线：9/10-10/31 8h（西实专项刷题），11/2-11/27 模考周5.5h，11/28-12/5 最后一周5h（12/5轻量日1h），考试日2h。
+背景：备考四川省考（12/6）和事业编（11/1）。排课逻辑：西实「40天专项刷题」模式（三大模块交替、网课全2倍速~75min/节）；公基=马克86节（PM 2节/天+配套20题，约10/23过完）；9/11-10/7 晚上综测每天1节+手写1道；政治理论=超格（10/8起每天1节+20题，替换小黑刷题）；综测=金标尺周三+周六（11/1另一门100分）且听完必配做题、申论每天2小题+多家对照批改、图推刘义恒32节已于9/29学完）。核心短板：资料分析、数量关系、言语理解、申论大作文。每日底线：9/10-10/31 8h（西实专项刷题），11/2-11/27 模考周5.5h，11/28-12/5 最后一周5h（12/5轻量日1h），考试日2h。
 
 请给出（简洁直接）：
 1. 【进度评估】50字内
@@ -4278,5 +4468,5 @@ function init(){
   if(CLOUD.apiKey&&CLOUD.binId) cloudLoad().catch(()=>{});
 }
 init();
-</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a39432c4dc02fc3d',t:'MTc4OTEwMzc2NQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</script></body>
 </html>
