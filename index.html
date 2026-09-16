@@ -248,7 +248,6 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
 
       <!-- phase banner -->
       <div class="phase-banner" id="phase-banner">🎯 加载中…</div>
-      <div class="debt" id="debt-banner" style="display:none"></div>
 
       <!-- progress -->
       <div style="background:var(--surface);border-radius:var(--rad);box-shadow:var(--sh);border:1px solid var(--border);padding:12px 14px;margin-bottom:13px">
@@ -383,6 +382,8 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
 
 <!-- ======= PLAN ======= -->
 <div class="sec" id="sec-plan">
+  <!-- 检查点/顺延账本/补课清单/优先级横幅（从「每日课表」页挪来，黄色卡片全部在这） -->
+  <div class="debt" id="debt-banner" style="display:none"></div>
   <div class="card">
     <div class="ct">🗺 备考总时间线 · 8/12 进度校准版</div>
     <div class="alert" style="background:#fff7ed;border-color:#fed7aa;color:#9a3412">⚠ 原计划默认「按日历走」：今天已是第65天、本该进套卷冲刺。实际课表仍停在打底（申论小题刚开头、公基系统课刚开头）。<strong>已改为按真实进度排课，绝不跳节</strong>；下面各段按「今天起、距事业编81天」重切，宁可砍低性价比内容，也不再假装能追上原日历。</div>
@@ -4364,7 +4365,7 @@ function goTab(name,btn){
   if(name==='wq'){D.wq=D.wq||[];renderWq();}
   if(name==='correct'){D.corrections=D.corrections||[];renderCorrHistory();}
   if(name==='cfg'){renderCloudCfg();renderPauseStatus();document.getElementById('sync-status-big').textContent=document.getElementById('sync-status').textContent;}
-  if(name==='plan') renderPlanGap();
+  if(name==='plan'){renderPlanGap();safeRun(renderDebtBanner);}
 }
 
 // ==================== RESPONSIVE ====================
@@ -4446,5 +4447,5 @@ function init(){
   if(CLOUD.apiKey&&CLOUD.binId) cloudLoad().catch(()=>{});
 }
 init();
-</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3b8dbcf2f185d07',t:'MTc4OTQ4ODE3Ng=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3bb82fc1ac5f84a',t:'MTc4OTUxNTk5NQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
