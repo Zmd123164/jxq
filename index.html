@@ -753,6 +753,16 @@ function sv(){
 }
 let D=ld();
 
+// 🧱 重复判断推理周自动迁移（用户反馈第1周没学好）
+try{
+  const oldDef=['panduan','gongji_law','zongce','gongji_pol','gz2','yanyu','chongci'];
+  const oldDef2=['panduan','panduan','gongji_law','zongce','gongji_pol','gz2','chongci'];
+  if(D.blockSeq&&(D.blockSeq.join(',')===oldDef.join(',')||D.blockSeq.join(',')===oldDef2.join(','))){
+    D.blockSeq=['panduan','panduan','panduan','gongji_law','zongce','gongji_pol','chongci'];
+    localStorage.setItem(KEY,JSON.stringify(D));
+  }
+}catch(e){}
+
 // ==================== DATES ====================
 const START=new Date(2026,5,9);   // June 9 2026, local midnight
 const E1=new Date(2026,10,1);     // Nov 1 2026, local midnight
@@ -776,6 +786,11 @@ function dayIdx(date){
   const a=new Date(date.getFullYear(),date.getMonth(),date.getDate());
   const b=new Date(START.getFullYear(),START.getMonth(),START.getDate());
   return Math.max(1,Math.round((a-b)/86400000)+1 - (D.pauseOffset||0));
+}
+function idxToDate(idx){
+  const d=new Date(START);
+  d.setDate(d.getDate() + (idx-1) + (D.pauseOffset||0));
+  return d;
 }
 
 let curDate=new Date();
@@ -862,6 +877,19 @@ function getPhaseInfo(date){
   const skipsBefore=slot=>(D.skips||[]).filter(s=>s.slot===slot&&s.date<dkey).length;
   const skippedToday=slot=>(D.skips||[]).some(s=>s.slot===slot&&s.date===dkey);
   const eff=slot=>Math.max(1,idx-skipsBefore(slot));
+  // 🧱 顺延后板块课后移提示：若有效日期与日历日期的板块不同，追加说明
+  if(_blkPI){
+    const _sbAm=skipsBefore('am'),_sbPm=skipsBefore('pm'),_sbEv=skipsBefore('ev');
+    const _maxSb=Math.max(_sbAm,_sbPm,_sbEv);
+    if(_maxSb>0){
+      const _effAny=idxToDate(Math.max(1,idx-_maxSb));
+      const _blkEff=blockFor(ds(_effAny));
+      if(_blkEff && _blkEff.dk!==_blkPI.dk){
+        const _nmEff=(_blkEff.cfg.icon||'')+_blkEff.cfg.name;
+        phaseName+=` · ⏭ 已顺延${_maxSb}天，当前显示为「${_nmEff}」板块课（日历${_blkPI.cfg.name}已后移）`;
+      }
+    }
+  }
   // 🧷 三件套模式：被顺延的时段不空着，第一个被顺延的时段塞入底线三项（速算/图推20题/申论1道）
   const _todayEntry=skipEntryFor(dkey);
   const _useMin=!!(_todayEntry&&_todayEntry.mode==='min');
@@ -1397,7 +1425,7 @@ const BLOCK_LIB={
       pm:[t('批改 + 错题最后一轮回背60min','dt',0),t('速记框架翻看30min（只翻不做）','gj',0)],
       zl:false};}},
 };
-function blockSeqDefault(){return ['panduan','gongji_law','zongce','gongji_pol','gz2','yanyu','chongci'];}
+function blockSeqDefault(){return ['panduan','panduan','panduan','gongji_law','zongce','gongji_pol','chongci'];}
 function blockSeq(){if(!D.blockSeq||!D.blockSeq.length){D.blockSeq=blockSeqDefault();}return D.blockSeq;}
 function blockFor(dk){
   if(dk<BLOCK_ANCHOR||dk>BLOCK_END)return null;
@@ -1451,6 +1479,43 @@ function setBlockTheme(i,key){
   renderSchedule();
   showToast('✅ 第'+(i+1)+'周已改为「'+BLOCK_LIB[key].name+'」（'+BLOCK_LIB[key].desc+'）');
 }
+function repeatBlockWeek(){
+  const seq=blockSeq();
+  const today=ds(new Date());
+  const curB=blockFor(today);
+  const curIdx=curB?curB.week-1:0;
+  const curKey=seq[curIdx]||'panduan';
+  // 在当前周后插入一周同主题
+  seq.splice(curIdx+1,0,curKey);
+  // 保持7周以内且始终保留最后一周冲刺：按优先级丢弃 yanyu > gz2 > gongji_pol > zongce > gongji_law
+  const dropOrder=['yanyu','gz2','gongji_pol','zongce','gongji_law'];
+  while(seq.length>7){
+    let removed=false;
+    for(const k of dropOrder){
+      const idx=seq.lastIndexOf(k);
+      // 不删当前周及刚插入的下一周，且保留最后一周冲刺
+      if(idx>curIdx+1 && idx<seq.length-1){ seq.splice(idx,1); removed=true; break; }
+    }
+    if(!removed){
+      // 若仍超长，删倒数第二周（保留冲刺）
+      if(seq.length>7) seq.splice(seq.length-2,1);
+      else seq.pop();
+    }
+  }
+  D.blockSeq=seq;sv();renderSchedule();
+  showToast('🔁 已重复一周「'+(BLOCK_LIB[curKey]?.name||curKey)+'」，现在连续'+seq.filter(x=>x===curKey).length+'周同板块');
+}
+function resetPanduanProgress(){
+  if(!confirm('确定要重置判断推理进度吗？\n\n• 图推-刘义恒 进度清零\n• 逻辑 进度清零\n• 不影响已打卡记录和刷题本\n\n适合“第1周没学好想重来”的情况')) return;
+  D.prog=D.prog||{};
+  D.prog['图推-刘义恒']=0;
+  D.prog['逻辑']=0;
+  // 同时清理今天之前的dayStart快照，避免进度回跳
+  const today=ds(new Date());
+  if(D.dayStart) Object.keys(D.dayStart).forEach(k=>{ if(k<=today) delete D.dayStart[k]; });
+  sv();renderSchedule();
+  showToast('✅ 判断推理进度已重置，从第1节开始重刷');
+}
 function blockBannerHTML(){
   const today=ds(new Date());
   const B=blockFor(today);
@@ -1489,23 +1554,29 @@ function blockBannerHTML(){
     <div style="font-size:1.02rem;font-weight:800;color:#92400e;margin-bottom:8px">🧱 周板块制（9/17起 · 5天板块 + 第6天模考复盘 + 第7天休息）</div>
     <div style="font-size:.88rem;line-height:1.7;margin-bottom:10px;padding:8px 10px;background:#fefce8;border-radius:7px">${todayLine}</div>
     <div class="debt-grid" style="margin-bottom:10px">${rows}</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+      <button onclick="repeatBlockWeek()" style="padding:6px 12px;border-radius:7px;border:1.5px solid #93c5fd;background:#eff6ff;color:#1e40af;font-size:11px;font-weight:700;cursor:pointer">🔁 重复本周板块（没学好再来一周）</button>
+      <button onclick="resetPanduanProgress()" style="padding:6px 12px;border-radius:7px;border:1.5px solid #fca5a5;background:#fef2f2;color:#b91c1c;font-size:11px;font-weight:700;cursor:pointer">↩️ 重置判断推理进度（图推+逻辑从第1节重学）</button>
+    </div>
     <div style="font-size:.86rem;line-height:1.7">
       <b>规则：</b><br>
       · <b>每日保底包</b>（上午、天天不变）：⚡速算25题 + 📈资料真题2篇 + ⭐申论小题1道手写<br>
       · 板块课按节号自动顺延，一周做不完自动滚入下周同类板块 —— <b>不做不完，不焦虑</b><br>
       · 未来各周主题可用上面的下拉框改；改完当天课表即时生效<br>
-      · 11/1事业编笔试；11/2起自动接回省考冲刺+全真模考周（原逻辑不变）
+      · 11/1事业编笔试；11/2起自动接回省考冲刺+全真模考周（原逻辑不变）<br>
+      · <b>第1周没学好？</b>点上面“重复本周板块”会把本周主题插入到下周，原计划顺延（言语周自动合并），进度不变多给7天；若想从头学点“重置进度”
     </div>`;
 }
 
 
 function getAmSeg(idx,P,date){
-
-
   P=P||D.prog||{};
-  const _dk=date?ds(date):ds(new Date());
-  const _blkA=blockFor(_dk);
-  if(_blkA)return blkAm(P,date,_blkA); // 🧱 周板块制（9/17-10/31）优先
+  const _effDate=idxToDate(idx);
+  const _dkEff=ds(_effDate);
+  const _dkOrig=date?ds(date):ds(new Date());
+  const _blkA=blockFor(_dkEff);
+  if(_blkA)return blkAm(P,_effDate,_blkA); // 🧱 周板块制：用有效日期（已扣除顺延天数），顺延后板块课自动后移
+  const _dk=_dkOrig;
   if(_inS1Phase(_dk)){
     const kind=S1PHASE_AM[_dk]||'data';
     const arr=[];
@@ -1682,9 +1753,12 @@ function evLight(P,date,dk){
 // ===== 下午（9/10-9/23 走减负模板 pmLight；9/24 起 pmNew 同样调用） =====
 function getPmSeg(idx,P,date){
   P=P||D.prog||{};
-  const _dk=date?ds(date):ds(new Date());
-  const _blkP2=blockFor(_dk);
-  if(_blkP2)return blkPm(P,date,_blkP2); // 🧱 周板块制（9/17-10/31）优先
+  const _effDate=idxToDate(idx);
+  const _dkEff=ds(_effDate);
+  const _dkOrig=date?ds(date):ds(new Date());
+  const _blkP2=blockFor(_dkEff);
+  if(_blkP2)return blkPm(P,_effDate,_blkP2); // 🧱 周板块制：用有效日期，顺延后板块课自动后移
+  const _dk=_dkOrig;
   if(_inS1Phase(_dk)){
     // ⏱ 减负版：下午固定180min（原版排到~5.6h，做不完）——细节见 pmLight 注释
     const arr=pmLight(P,date,_dk);
@@ -1755,9 +1829,12 @@ function getPmSeg(idx,P,date){
 // 旧逻辑（历史日期）：公基系统课 + 刷题 + 申论固定30min
 function getEvSeg(idx,P,date){
   P=P||D.prog||{};
-  const _dk=date?ds(date):ds(new Date());
-  const _blkE=blockFor(_dk);
-  if(_blkE)return blkEv(P,date,_blkE); // 🧱 周板块制（9/17-10/31）优先
+  const _effDate=idxToDate(idx);
+  const _dkEff=ds(_effDate);
+  const _dkOrig=date?ds(date):ds(new Date());
+  const _blkE=blockFor(_dkEff);
+  if(_blkE)return blkEv(P,_effDate,_blkE); // 🧱 周板块制：用有效日期，顺延后板块课自动后移
+  const _dk=_dkOrig;
   if(_inS1Phase(_dk)){
     // ⏱ 减负版：晚上~150min（原版排到~4.1h）——一/三/五图推 · 二/四/六综测 · 日轻夜，细节见 evLight 注释
     return evLight(P,date,_dk);
@@ -2031,19 +2108,80 @@ function renderSchedule(){
   const info=getPhaseInfo(d);
   document.getElementById('phase-banner').textContent=info.phaseName;
 
+  // —— 未完成任务自动滚入次日（仅今天及未来日期显示，避免过去日期越滚越多）——
+  const carryMap={am:[],pm:[],ev:[]};
+  try{
+    const todayKey=ds(new Date());
+    if(dkey>=todayKey){
+      for(let off=1;off<=3;off++){
+        const prev=new Date(d); prev.setDate(prev.getDate()-off);
+        const pk=ds(prev);
+        if(pk<'2026-09-10') break;
+        const ent=skipEntryFor(pk);
+        if(ent&&ent.mode==='skip') continue; // 整天顺延的已通过 eff 后移，无需再滚
+        let prevInfo;
+        try{ prevInfo=getPhaseInfo(prev); }catch(e){ continue; }
+        let found=false;
+        prevInfo.slots.forEach(ps=>{
+          if(ps.skipped) return;
+          (ps.tasks||[]).forEach((pt,ti)=>{
+            const ck=`${pk}_${ps.key}_${ti}`;
+            if(D.checks[ck]) return; // 已打卡
+            if(/😴/.test(pt.text)) return; // 休息日提示不滚
+            // 课程类任务靠 P 进度自动重排，不重复滚入
+            let isCourse=false;
+            try{ isCourse=PROG_PATTERNS.some(p=>p.re.test(pt.text)); }catch(e){}
+            if(isCourse) return;
+            // 去重：若今天同文本已存在则不重复滚
+            const dup=(info.slots.find(s=>s.key===ps.key)?.tasks||[]).some(t=>t.text===pt.text);
+            if(dup) return;
+            carryMap[ps.key].push({text:`⏪来自${pk.slice(5)}未完成·${pt.text}`,tag:pt.tag,drill:pt.drill,_carry:true,_from:pk,_origText:pt.text,_origCk:ck});
+            found=true;
+          });
+        });
+        if(found) break; // 只滚最近一天有未完成的，避免堆积
+      }
+    }
+  }catch(e){ console.warn('carry calc err',e); }
+
   const container=document.getElementById('slots-container');
   container.innerHTML='';
 
+  // 替换模式：若有昨日未完成，则用它顶掉今天同槽位的非核心小块任务，总量不堆积
+  function isEssentialTask(t){
+    const s=t.text||'';
+    if(/⚡速算|📈资料真题2篇|⭐申论小题真题1道|申论对照批改|📒每日记录|🧠公基记忆保温|🟠综测保温|📝模考|😴/.test(s)) return true;
+    try{ if(PROG_PATTERNS.some(p=>p.re.test(s))) return true; }catch(e){}
+    return false;
+  }
   info.slots.forEach((slot,si)=>{
     const slotKey=`${dkey}_${slot.key}`;
     const custom=(D.customTasks[slotKey]||[]).map((ct,ci)=>({text:(ct.occupy?'📌 ':'📎 ')+ct.text,tag:ct.tag||'dt',_custom:true,_ci:ci}));
-    const allTasks=[...slot.tasks,...custom];
+    let carry=carryMap[slot.key]||[];
+    // 限量：每时段最多滚3条，避免一天变12h
+    if(carry.length>3) carry=carry.slice(0,3);
+    let baseTasks=slot.tasks||[];
+    if(carry.length>0){
+      // 分出核心任务（保底包+课程+记录+保温+模考）必须保留，非核心可被顶掉
+      const essential=baseTasks.filter(isEssentialTask);
+      const nonEssential=baseTasks.filter(t=>!isEssentialTask(t));
+      // 保留的核心 + 最多保留 (原非核心数 - 滚入数) 条非核心，至少0条
+      const keepNon=Math.max(0, nonEssential.length - carry.length);
+      const keptNon=nonEssential.slice(0, keepNon);
+      baseTasks=[...essential, ...keptNon];
+      // 若滚入后仍超长（极端情况），再截断非核心
+      if(baseTasks.length+carry.length > (slot.tasks||[]).length){
+        // 已通过上面的 keepNon 控制总量 ≈ 原总量
+      }
+    }
+    const allTasks=[...carry,...baseTasks,...custom];
     const isRunning=tOn&&activeSlotKey.startsWith(slotKey);
     const isDoneSlot=allTasks.every((_,ti)=>D.checks[`${dkey}_${slot.key}_${ti}`]);
 
     const taskHTML=allTasks.map((task,ti)=>{
       const ck=`${dkey}_${slot.key}_${ti}`;
       _ckTaskText[ck]=task.text;  // 供打卡时自动同步课程进度
+      if(task._carry&&task._origCk){ _ckCarryOrigin[ck]=task._origCk; }
       const done=D.checks[ck]||false;
       const dk=ck+'_d';
       const dv=D.drills[dk]!==undefined?D.drills[dk]:(task.drill?task.drill.min:0);
@@ -2064,7 +2202,9 @@ function renderSchedule(){
       const _editKeys={'图推-刘义恒':1,'公基-系统':1,'申论-小题':1,'申论-作文':1,'综测-基础':1,'综测-刷题':1,'数量-基础':1,'言语-刷题':1,'资料-刷题':1,'逻辑':1,'小黑-刷题':1};
       const courseBtn=(_ckey&&_editKeys[_ckey])?`<button onclick="event.stopPropagation();editCourseCount('${_ckey}')" style="flex-shrink:0;padding:3px 6px;border-radius:6px;border:1.5px solid #c7d2fe;background:#eef2ff;color:#4338ca;font-size:10px;font-weight:600;cursor:pointer" title="编辑该课程每天节数">✎</button>`:'';
       const minBadge=taskMin>0?`<span style="flex-shrink:0;font-size:10px;color:var(--g);font-weight:700">${taskMin}min</span>`:'';
-      return `<div class="ti ${done?'done':''} ${isTaskRunning?'task-running':''}" id="ti-${ck}" ${isTaskRunning?'style="outline:2px solid var(--p);border-radius:8px"':''}>
+      const carryStyle=task._carry?'border-color:#fb923c;background:#fff7ed;':'';
+      const carryCls=task._carry?' carry-task':'';
+      return `<div class="ti ${done?'done':''} ${isTaskRunning?'task-running':''}${carryCls}" id="ti-${ck}" style="${isTaskRunning?'outline:2px solid var(--p);border-radius:8px;':''}${carryStyle}">
         <div class="tcb" onclick="toggleCheck('${ck}',this)"></div>
         <div class="tbody2">
           <div class="tt" onclick="toggleCheck('${ck}',document.querySelector('#ti-${ck} .tcb'))">${task.text}</div>
@@ -2073,7 +2213,7 @@ function renderSchedule(){
         ${minBadge}${timerBtn}${courseBtn}
         <div class="ttag ${tagCls[task.tag]||'tg-dt'}">${tagMap[task.tag]||task.tag}</div>${delBtn}
       </div>`;
-    }).join('')+(slot.skipped?`<div style="font-size:11px;color:#d97706;background:#fffbeb;border:1px dashed #fed7aa;border-radius:8px;padding:7px 10px;margin-top:6px">⚡ 本时段被临时任务占用，原排课已自动顺延到后续日期（不会漏课）</div>`:'');
+    }).join('')+(slot.skipped?`<div style="font-size:11px;color:#d97706;background:#fffbeb;border:1px dashed #fed7aa;border-radius:8px;padding:7px 10px;margin-top:6px">⚡ 本时段被临时任务占用，原排课已自动顺延到后续日期（不会漏课）</div>`:'')+(carry.length?`<div style="font-size:10px;color:#c2410c;background:#fff7ed;border:1px dashed #fed7aa;border-radius:7px;padding:6px 9px;margin-top:6px">🔄 已用昨日未完成 ${carry.length} 条顶掉今日同类小块任务（保底包/主线课/记录保留，总量不增加）</div>`:'');
 
     const el=document.createElement('div');
     el.className=`slot ${isDoneSlot?'done-slot':''} ${isRunning?'running':''}`;
@@ -2106,6 +2246,8 @@ function renderSchedule(){
 
 function toggleCheck(ck,cbEl){
   D.checks[ck]=!D.checks[ck];
+  // 若是昨日未完成滚入的任务，同步把原始那条也标为已完成/未完成，避免明天重复滚入
+  if(_ckCarryOrigin[ck]){ D.checks[_ckCarryOrigin[ck]]=!!D.checks[ck]; }
   // 打卡课程任务时，自动同步「统计→课程进度」（按任务文本中的节号更新）
   if(D.checks[ck]) autoProg(_ckTaskText[ck]);
   sv();
@@ -2116,6 +2258,7 @@ function toggleCheck(ck,cbEl){
 // ==================== 课程进度自动同步 ====================
 // 任务文本里有「第X节 / 第X-Y节 / 第X至Y节」→ 打卡时把对应课程进度推到该节号
 let _ckTaskText={};
+let _ckCarryOrigin={}; // 今日carry任务ck -> 原始ck
 const PROG_PATTERNS=[
   {re:/小黑政治·理论课/,key:'小黑-理论'},
   {re:/超格政治|小黑(政治·)?刷题课/,key:'小黑-刷题'},
@@ -4331,7 +4474,7 @@ async function submitFb(){
 【薄弱模块】${weak||'未填'}
 【下周计划】${plan||'未填'}
 
-背景：备考四川省考（12/6）和事业编（11/1）。排课逻辑（9/16 起改为「周板块制」，9/17-10/31 生效）：每周7天=5个板块日+第6天模考复盘日+第7天休息日（周四起锚：第1周9/17-9/23判断推理 → 第2周公基·法律 → 第3周综测 → 第4周公基·非法律+政治 → 第5周公基+综测二轮 → 第6周言语+判断二轮 → 第7周考前冲刺10/29-10/31；未来周主题可在总规划页改）。每天上午=固定保底包：速算25题30min+资料真题2篇50min+申论小题1道手写25min+批改20min；下午=本周板块主线~3h（板块网课2节2倍速+配套刷题，或专项限时刷题）；晚上=板块副线~2h+每日记录10min。模考日：上午速算+保底+限时套卷，下午批改归因+错题重刷，晚上申论+错题本+周复盘。休息日0任务。底线：板块日7.5h/模考日6.5h/休息日0h。板块课按节号进度自动顺延，一周做不完滚入下周同类板块。11/1事业编笔试；11/2-11/27省考模考周5.5h底线，11/28-12/5最后一周5h（12/5轻量日1h），12/6省考笔试（此段仍为原每日轮换逻辑）。核心短板：资料分析、数量关系、言语理解、申论大作文。网课全2倍速（逻辑课~15min/节，其余~75min/节），听完必做配套练习。
+背景：备考四川省考（12/6）和事业编（11/1）。排课逻辑（9/16 起改为「周板块制」，9/17-10/31 生效）：每周7天=5个板块日+第6天模考复盘日+第7天休息日（周四起锚：第1周9/17-9/23判断推理 → 第2周9/24-9/30判断推理·重学周 → 第3周10/1-10/7判断推理·再学一周（用户要求连续3周判断推理） → 第4周公基·法律 → 第5周综测 → 第6周公基·非法律+政治 → 第7周考前冲刺10/29-10/31；未来周主题可在总规划页改，言语二轮/二轮已合并，冲刺周保留）。每天上午=固定保底包：速算25题30min+资料真题2篇50min+申论小题1道手写25min+批改20min；下午=本周板块主线~3h（板块网课2节2倍速+配套刷题，或专项限时刷题）；晚上=板块副线~2h+每日记录10min。模考日：上午速算+保底+限时套卷，下午批改归因+错题重刷，晚上申论+错题本+周复盘。休息日0任务。底线：板块日7.5h/模考日6.5h/休息日0h。板块课按节号进度自动顺延，一周做不完滚入下周同类板块。11/1事业编笔试；11/2-11/27省考模考周5.5h底线，11/28-12/5最后一周5h（12/5轻量日1h），12/6省考笔试（此段仍为原每日轮换逻辑）。核心短板：资料分析、数量关系、言语理解、申论大作文。网课全2倍速（逻辑课~15min/节，其余~75min/节），听完必做配套练习。
 
 请给出（简洁直接）：
 1. 【进度评估】50字内
@@ -4709,5 +4852,5 @@ function init(){
   if(CLOUD.apiKey&&CLOUD.binId) cloudLoad().catch(()=>{});
 }
 init();
-</script></body>
+</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a3f7dc3df9f80880',t:'MTc5MDE0ODc5Nw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
