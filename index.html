@@ -224,7 +224,7 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
     <button class="tb" onclick="goTab('cfg',this)">☁️ 云同步</button>
   </div>
   <div style="font-size:10px;margin-top:4px;opacity:.8" id="sync-status">⚪ 未配置</div>
-  <div id="app-version" style="font-size:10px;margin-top:3px;opacity:.8">🔁 三天模块版 v2026-09-28-16（短句版）</div>
+  <div id="app-version" style="font-size:10px;margin-top:3px;opacity:.8">🔁 三天模块版 v2026-09-28-17（默写夸夸刷综合复盘）</div>
 </div>
 
 <div class="main">
@@ -1020,12 +1020,12 @@ const CYCLE_MODS={
     {focus:'刑法+民法继承',am:'学犯罪构成、正当防卫、紧急避险、刑责年龄、民事行为能力、继承顺序',pm1:'刑法+民法继承专项40-60题，错题必须回概念/法条',pm2:'错因分：概念混、主体错、条件漏、题干没读完',ev1:'把刑法/继承最容易混的点做成对照表',pmMin:50},
     {focus:'行政法/公务员法+法律混合',am:'学行政处罚/复议/诉讼、公务员录用考核处分辞退；画救济路径',pm1:'法律混合50题限时，统计A正确率、C数量、S数量',pm2:'复盘法律C题和S题，形成「法律待补清单」',ev1:'回背法律框架图，准备明天公基校准',pmMin:50}
   ]},
-  logicjudge:{icon:'🧠',name:'逻辑判断',tag:'xt',desc:'论证逻辑、翻译推理、真假推理三天闭环',days:[
+  logicjudge:{icon:'🧠',name:'逻辑判断',tag:'xt',desc:'默写思维导图+夸夸刷专项+综合题+讲解复盘',days:[
     {focus:'论证逻辑基础',am:'08:30-09:20 核心课：论点、论据、结论、加强、削弱、前提；09:30-10:30 对应题30题；10:40-11:30 批改并标A/B/C/S',pm1:'14:00-15:20 论证逻辑专项40题：加强、削弱、前提、结论混合',pm2:'15:30-17:00 复盘：没找准论点、无关项、力度判断、偷换概念分别归类',ev1:'21:05-21:30 整理逻辑规则卡：论点、论据、搭桥、削弱方式、无关项特征',amMin:30,pmMin:40},
     {focus:'翻译推理+真假推理',am:'08:30-09:20 核心课：充分/必要、逆否、且/或、矛盾关系；09:30-10:30 翻译推理30题；10:40-11:30 真假推理20题',pm1:'14:00-15:20 翻译+真假专项40题：每题写符号或真假关系',pm2:'15:30-17:00 复盘：翻译错、逆否错、条件关系错、代入慢分别归类',ev1:'21:05-21:30 默写翻译推理公式和真假推理步骤',amMin:50,pmMin:40},
     {focus:'逻辑判断限时小测',am:'08:30-09:50 逻辑判断40题限时小测；10:00-11:30 批改并统计A/B/C/S',pm1:'14:00-15:20 回刷C题和S题30题',pm2:'15:30-17:00 输出逻辑判断做题顺序：先论证，再翻译/真假；卡住即跳',ev1:'21:05-21:30 合上答案讲10道错题',amMin:40,pmMin:30}
   ]},
-  figpush:{icon:'🔷',name:'图形推理',tag:'xt',desc:'位置、样式、数量、属性、空间重构三天闭环',days:[
+  figpush:{icon:'🔷',name:'图形推理',tag:'xt',desc:'默写规律树+夸夸刷专项+综合题+讲解复盘',days:[
     {focus:'位置+样式规律',am:'08:30-09:20 核心课：平移、旋转、翻转、遍历、样式叠加；09:30-10:30 对应题30题；10:40-11:30 批改并归类规律',pm1:'14:00-15:20 图推位置/样式专项40题',pm2:'15:30-17:00 复盘：规律没想到、元素看漏、题组关系看错分别归类',ev1:'21:05-21:30 整理图推规律表：位置、样式、遍历各写3个识别信号',amMin:30,pmMin:40},
     {focus:'数量+属性规律',am:'08:30-09:20 核心课：点线面角、封闭空间、对称、曲直、开闭；09:30-10:40 对应题40题；10:50-11:30 批改归类',pm1:'14:00-15:20 图推数量/属性专项50题',pm2:'15:30-17:00 复盘：先查哪个规律、何时换规律、何时跳题',ev1:'21:05-21:30 默写图推排查顺序：位置→样式→数量→属性→空间',amMin:40,pmMin:50},
     {focus:'空间重构+图推限时',am:'08:30-09:20 核心课：六面体、截面、立体拼合；09:30-10:20 空间题20题；10:30-11:30 图推混合30题限时',pm1:'14:00-15:20 图推混合50题限时',pm2:'15:30-17:00 复盘C/S题，输出图推考场排查顺序',ev1:'21:05-21:30 回刷20道错题，按规律表讲题',amMin:50,pmMin:50}
@@ -1035,12 +1035,12 @@ const CYCLE_MODS={
     {focus:'专项内化',am:'集中补一个最弱专项：加强削弱/翻译推理/图推规律三选一，先方法后题',pm1:'专项40-60题分组限时，练老师方法，不重复自己的旧习惯',pm2:'把每道错题归因到方法：没找论点、翻译错、规律漏、定义关键词漏',ev1:'合上答案讲10题，讲不出来仍算C',pmMin:50},
     {focus:'限时小套+复盘',am:'判断推理35题限时小测，对比第1天C题和S题是否下降',pm1:'复盘全部C/S题，形成「判断限时稳定清单」',pm2:'确定考场策略：先做哪类、哪类超过多久跳',ev1:'轻刷定义/类比20题保持手感，不开新课',amMin:35}
   ]},
-  pianduan:{icon:'📖',name:'言语理解',tag:'xt',desc:'中心理解、逻辑填空、混合小测三天闭环',days:[
+  pianduan:{icon:'📖',name:'言语理解',tag:'xt',desc:'默写方法图+夸夸刷专项+综合题+讲解复盘',days:[
     {focus:'中心理解',am:'08:30-09:20 核心课：转折、递进、结论词、例子和背景；09:30-10:30 中心理解30题；10:40-11:30 批改并写主旨句',pm1:'14:00-15:20 中心理解专项40题：每题先写一句主旨再选',pm2:'15:30-17:00 复盘：主旨偏、例子带跑、选项偷换、过度推断分别归类',ev1:'21:05-21:30 整理中心理解信号词和错误选项模板',amMin:30,pmMin:40},
     {focus:'逻辑填空',am:'08:30-09:20 核心课：语境、搭配、感情色彩、递进转折提示；09:30-10:30 逻辑填空30题；10:40-11:30 批改并积累词组',pm1:'14:00-15:20 逻辑填空+语句表达40题',pm2:'15:30-17:00 复盘：成语不认识、搭配错、语境提示没抓住分别归类',ev1:'21:05-21:30 积累高频成语/实词20组',amMin:30,pmMin:40},
     {focus:'言语限时小测',am:'08:30-09:50 言语40题限时小测；10:00-11:30 批改并统计A/B/C/S',pm1:'14:00-15:20 回刷C题和S题30题',pm2:'15:30-17:00 输出言语做题顺序和易错词/关联词清单',ev1:'21:05-21:30 回看10道猜对题，确认是否真会',amMin:40,pmMin:30}
   ]},
-  data:{icon:'📊',name:'资料分析',tag:'xt',desc:'自选：专项题/模考解析/错题本/例题',days:[
+  data:{icon:'📊',name:'资料分析',tag:'xt',desc:'默写公式+夸夸刷专项+综合题+讲解复盘',days:[
     {focus:'资料自选 Day1',am:[
       ['08:30-08:40 选1项：专项题 / 模考解析 / 错题本 / 例题拆解','xt',0],
       ['08:40-09:30 拆5题或听解析：记错因+正确路径','xt',5,'题'],
@@ -1081,7 +1081,7 @@ const CYCLE_MODS={
       ['21:05-21:30 整理最终一页纸','xt',0]
     ]}
   ]},
-  quantity:{icon:'🔢',name:'数量关系',tag:'xt',desc:'只拿基础分，建立取舍规则',days:[
+  quantity:{icon:'🔢',name:'数量关系',tag:'xt',desc:'默写公式+夸夸刷专项+综合题+讲解复盘',days:[
     {focus:'方程+和差倍比+工程',am:'08:30-09:20 核心课：方程、和差倍比、工程基础模型；09:30-10:30 对应题20题；10:40-11:30 批改并标能否1分钟启动',pm1:'14:00-15:20 基础模型30题：方程、和差倍比、工程混合',pm2:'15:30-17:00 复盘：模型识别错、方程列错、计算慢；整理基础模型表',ev1:'21:05-21:30 默写数量基础公式和题型识别词',amMin:20,pmMin:30},
     {focus:'利润+行程+容斥',am:'08:30-09:20 核心课：利润、行程、容斥基础模型；09:30-10:30 对应题20题；10:40-11:30 批改并标A/B/C/S',pm1:'14:00-15:20 利润/行程/容斥专项30题：超过2分钟无思路即标S或C',pm2:'15:30-17:00 复盘：哪些题值得做，哪些题考场放弃',ev1:'21:05-21:30 整理数量可做题清单和放弃题清单',amMin:20,pmMin:30},
     {focus:'数量限时取舍',am:'08:30-09:20 核心课：考场取舍和扫题顺序；09:30-10:20 数量15题限时；10:30-11:30 批改并统计做/跳选择',pm1:'14:00-15:20 数量基础题30题限时回刷',pm2:'15:30-17:00 输出数量考场策略：先扫题、先拿基础、1分钟没思路跳',ev1:'21:05-21:30 背公式表，回看5道最亏错题',amMin:15,pmMin:30}
@@ -1176,13 +1176,66 @@ function taskList(v,tag,min){
   if(Array.isArray(v))return v.map(x=>Array.isArray(x)?ctask(x[0],x[1]||tag,x[2]||0,x[3]||'题'):ctask(x,tag,0));
   return [ctask(v,tag,min)];
 }
+function moduleMemo(key,name){
+  const m={
+    data:'资料公式+读题流程图',
+    quantity:'数量公式+题型模型图',
+    logicjudge:'逻辑判断思维导图',
+    figpush:'图推规律树',
+    pianduan:'言语方法图+易错词',
+    law:'法律框架图',
+    gongwen:'公文文种/格式图',
+    politics:'政治理论框架图',
+    econman:'经济管理概念图',
+    zongshen:'材料题答题流程图'
+  };
+  return m[key]||`${name}思维导图`;
+}
+function moduleKua(key,name,focus){
+  const m={
+    data:'夸夸刷资料专项40题',
+    quantity:'夸夸刷数量专项30题',
+    logicjudge:'夸夸刷逻辑判断专项40题',
+    figpush:'夸夸刷图推专项40题',
+    pianduan:'夸夸刷言语专项40题',
+    law:'法律专项40题',
+    gongwen:'公文专项40题',
+    politics:'政治理论专项40题',
+    econman:'经济管理专项40题',
+    zongshen:'材料题/综测专项2题'
+  };
+  return `${m[key]||name+'专项40题'}：${focus}`;
+}
+function moduleMix(key,name){
+  const m={
+    data:'资料综合题2篇+综合判断10题',
+    quantity:'数量混合20题',
+    logicjudge:'逻辑判断综合40题',
+    figpush:'图推混合40题',
+    pianduan:'言语混合40题',
+    law:'法律混合50题',
+    gongwen:'公文混合40题',
+    politics:'政治+时政混合50题',
+    econman:'经济+管理混合50题',
+    zongshen:'材料题综合训练1套'
+  };
+  return m[key]||`${name}综合题`;
+}
 function cycleModuleTasks(C,slot){
-  const M=C.mod,R=M.days[C.dayIn]||M.days[0];
-  if(slot==='am')return taskList(R.am,M.tag,R.amMin);
-  if(slot==='pm')return [...taskList(R.pm1,M.tag,R.pmMin),...taskList(R.pm2,'dt')];
+  const M=C.mod,R=M.days[C.dayIn]||M.days[0],key=C.key,name=M.name,focus=R.focus;
+  const memo=moduleMemo(key,name);
+  if(slot==='am')return[
+    ctask(`08:30-08:50 默写：${memo}`,M.tag),
+    ctask(`08:50-10:20 ${moduleKua(key,name,focus)}`,M.tag, key==='quantity'?30:40,'题'),
+    ctask('10:30-11:30 批改+标A/B/C/S','dt')
+  ];
+  if(slot==='pm')return[
+    ctask(`14:00-15:20 综合题：${moduleMix(key,name)}`,M.tag, key==='quantity'?20:30,'题'),
+    ctask('15:30-17:00 听讲解复盘：错题/C题/S题','dt')
+  ];
   return[
-    ...taskList(R.ev1,M.tag),
-    ctask(`21:30-22:30 ${M.name} C/S同类20题`,M.tag,20,'题'),
+    ctask(`21:05-21:30 二次默写：${memo}`,M.tag),
+    ctask(`21:30-22:30 ${name} C/S同类20题`,M.tag,20,'题'),
     ctask('22:30-23:00 记录A/B/C/S+明日3问题','fx')
   ];
 }
@@ -5227,5 +5280,5 @@ function init(){
   if(CLOUD.apiKey&&CLOUD.binId) cloudLoad().catch(()=>{});
 }
 init();
-</script></body>
+</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a420d7360bdf2c1d',t:'MTc5MDU3ODUwNw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
