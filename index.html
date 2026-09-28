@@ -224,7 +224,7 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
     <button class="tb" onclick="goTab('cfg',this)">☁️ 云同步</button>
   </div>
   <div style="font-size:10px;margin-top:4px;opacity:.8" id="sync-status">⚪ 未配置</div>
-  <div id="app-version" style="font-size:10px;margin-top:3px;opacity:.8">🔁 三天模块版 v2026-09-28-11（课题复盘闭环版）</div>
+  <div id="app-version" style="font-size:10px;margin-top:3px;opacity:.8">🔁 三天模块版 v2026-09-28-14（自选专项落地版）</div>
 </div>
 
 <div class="main">
@@ -907,7 +907,7 @@ function getPhaseInfo(date){
 
   // 9/28起使用新循环课表。
   if(_cyPI){
-    const _clk={am:'08:30-11:30',pm:'14:00-17:00',ev:'19:30-21:30'};
+    const _clk={am:'08:30-11:30',pm:'14:00-17:00',ev:'19:30-23:00'};
     return {phaseName, slots:[
       {key:'am',label:'上午场',clock:_clk.am, skipped:skippedToday('am'), tasks:skippedToday('am')?_bottom():cycleAm(P,date,_cyPI)},
       {key:'pm',label:'下午场',clock:_clk.pm, skipped:skippedToday('pm'), tasks:skippedToday('pm')?_bottom():cyclePm(P,date,_cyPI)},
@@ -919,7 +919,7 @@ function getPhaseInfo(date){
   // 没学完的课不会被跳过；打卡/手动改进度后，之后的课表自动接上
 
   const _cySlot=cycleFor(dkey);
-  const _clk=_cySlot?{am:'08:30-11:30',pm:'14:00-17:00',ev:'19:30-21:30'}:{am:'9:00-12:10',pm:'14:30-17:30',ev:'19:00-22:00'};
+  const _clk=_cySlot?{am:'08:30-11:30',pm:'14:00-17:00',ev:'19:30-23:00'}:{am:'9:00-12:10',pm:'14:30-17:30',ev:'19:00-22:00'};
   return {phaseName, slots:[
     {key:'am',label:'上午场',clock:_clk.am,  skipped:skippedToday('am'), tasks:skippedToday('am')?_bottom():getAmSeg(eff('am'),P,date)},
     {key:'pm',label:'下午场',clock:_clk.pm, skipped:skippedToday('pm'), tasks:skippedToday('pm')?_bottom():getPmSeg(eff('pm'),P,date)},
@@ -1040,10 +1040,46 @@ const CYCLE_MODS={
     {focus:'逻辑填空',am:'08:30-09:20 核心课：语境、搭配、感情色彩、递进转折提示；09:30-10:30 逻辑填空30题；10:40-11:30 批改并积累词组',pm1:'14:00-15:20 逻辑填空+语句表达40题',pm2:'15:30-17:00 复盘：成语不认识、搭配错、语境提示没抓住分别归类',ev1:'21:05-21:30 积累高频成语/实词20组',amMin:30,pmMin:40},
     {focus:'言语限时小测',am:'08:30-09:50 言语40题限时小测；10:00-11:30 批改并统计A/B/C/S',pm1:'14:00-15:20 回刷C题和S题30题',pm2:'15:30-17:00 输出言语做题顺序和易错词/关联词清单',ev1:'21:05-21:30 回看10道猜对题，确认是否真会',amMin:40,pmMin:30}
   ]},
-  data:{icon:'📊',name:'资料分析',tag:'xt',desc:'先补找数和题型识别，再攻表格和综合判断',days:[
-    {focus:'找数+主体+基础公式',am:'08:30-09:20 核心课：主体、时间、单位、增长率/增长量；09:30-10:30 对应题25题；10:40-11:30 批改并标A/B/C/S',pm1:'14:00-15:20 资料专项30题：增长率、增长量、基期现期，草稿必须写列式',pm2:'15:30-17:00 复盘：读错主体/年份/单位、公式错、计算慢分别归类；整理公式A4',ev1:'21:05-21:30 回看今日C/S题10道，背公式表',amMin:25,pmMin:30},
-    {focus:'表格材料+定位',am:'08:30-09:20 核心课：表格定位、单位换算、多表对比；09:30-10:40 表格材料2篇限时；10:50-11:30 批改定位错误',pm1:'14:00-15:20 表格专项30题：年份、主体、单位、指标逐项圈出',pm2:'15:30-17:00 复盘：行列定位慢、单位错、主体错；写读表检查顺序',ev1:'21:05-21:30 回刷表格错题10道，只练先定位再计算',amMin:20,pmMin:30},
-    {focus:'综合判断+限时小测',am:'08:30-09:20 核心课：综合判断选项顺序、估算、排除；09:30-10:40 资料2篇限时；10:50-11:30 批改统计A/B/C/S',pm1:'14:00-15:20 综合判断专项30题：先易后难，不从最复杂项死算',pm2:'15:30-17:00 复盘S题，输出资料考场顺序和用时上限',ev1:'21:05-21:30 整理资料分析一页纸：公式、读表顺序、综合判断策略',amMin:20,pmMin:30}
+  data:{icon:'📊',name:'资料分析',tag:'xt',desc:'自选专项：你选练什么，我只规定流程和产出',days:[
+    {focus:'资料自选专项 Day1',am:[
+      ['08:30-08:40 选今天专项：从【增长率/增长量/基期现期/比重/平均数/表格定位/综合判断】里选1个，只选1个','xt',0],
+      ['08:40-09:20 拆例题5题：必须写出主体、时间、单位、指标、公式、列式理由','xt',5,'题'],
+      ['09:30-10:30 同专项仿做20题：先写4要素再计算，不会就回看例题','xt',20,'题'],
+      ['10:40-11:30 独立做15题+批改：标A/B/C/S，统计错因','dt',15,'题']
+    ],pm1:[
+      ['14:00-14:10 重新选下午专项：可以继续上午专项，也可以换【表格定位/综合判断】','xt',0],
+      ['14:10-15:20 同专项30题限时：每题写列式，综合判断写选项处理顺序','xt',30,'题']
+    ],pm2:[
+      ['15:30-16:20 复盘错题：按【找数错/主体错/单位错/公式错/计算慢/选项顺序错】分类','dt',0],
+      ['16:20-17:00 整理一页纸：今天专项的公式、陷阱、下次先看什么','xt',0]
+    ],ev1:[
+      ['21:05-21:30 回看今日C/S题10道：只写错因和下一次避免办法','xt',10,'题']
+    ]},
+    {focus:'资料自选专项 Day2',am:[
+      ['08:30-08:40 选今天专项：优先选昨天C题最多的专项；若没有，就选【表格定位】或【综合判断】','xt',0],
+      ['08:40-09:20 拆例题5题：对照解析写清找数路径和列式理由','xt',5,'题'],
+      ['09:30-10:30 同专项仿做20题：严格按昨天整理的一页纸执行','xt',20,'题'],
+      ['10:40-11:30 独立做15题+批改：统计A/B/C/S和每题耗时','dt',15,'题']
+    ],pm1:[
+      ['14:00-15:20 资料材料2篇限时：自己选择材料类型，优先表格/综合判断多的材料','xt',0]
+    ],pm2:[
+      ['15:30-16:20 复盘2篇材料：错题按错因分类，S题写慢在哪里','dt',0],
+      ['16:20-17:00 更新资料一页纸：删掉没用的，补上今天真错的规则','xt',0]
+    ],ev1:[
+      ['21:05-21:30 回刷今日最亏10题：遮住答案重新列式','xt',10,'题']
+    ]},
+    {focus:'资料自选专项 Day3',am:[
+      ['08:30-08:40 选小测范围：从前两天练过的2个专项里各选一组题','xt',0],
+      ['08:40-10:10 资料限时小测：2篇材料或40题，严格计时，到点停','xt',40,'题'],
+      ['10:20-11:30 批改统计：A题正确率、C题数量、S题数量、最亏题型','dt',0]
+    ],pm1:[
+      ['14:00-15:20 针对最亏专项回刷30题：只刷上午暴露的问题','xt',30,'题']
+    ],pm2:[
+      ['15:30-16:30 深复盘C/S题：每题写错因、正确路径、下次先看什么','dt',0],
+      ['16:30-17:00 输出资料考场顺序：先做什么、综合判断怎么取舍、单篇用时上限','xt',0]
+    ],ev1:[
+      ['21:05-21:30 整理最终资料一页纸：公式、读表顺序、综合判断策略、易错清单','xt',0]
+    ]}
   ]},
   quantity:{icon:'🔢',name:'数量关系',tag:'xt',desc:'只拿基础分，建立取舍规则',days:[
     {focus:'方程+和差倍比+工程',am:'08:30-09:20 核心课：方程、和差倍比、工程基础模型；09:30-10:30 对应题20题；10:40-11:30 批改并标能否1分钟启动',pm1:'14:00-15:20 基础模型30题：方程、和差倍比、工程混合',pm2:'15:30-17:00 复盘：模型识别错、方程列错、计算慢；整理基础模型表',ev1:'21:05-21:30 默写数量基础公式和题型识别词',amMin:20,pmMin:30},
@@ -1136,11 +1172,19 @@ function cycleFor(dk){
   const week=Math.floor(cycDateDiff(CYCLE_ANCHOR,dk)/7)+1;
   return {type:'module',dk,week,key:b.key,mod,dayIn,start:b.start,end:b.end,name:mod.name,icon:mod.icon,tag:mod.tag};
 }
+function taskList(v,tag,min){
+  if(Array.isArray(v))return v.map(x=>Array.isArray(x)?ctask(x[0],x[1]||tag,x[2]||0,x[3]||'题'):ctask(x,tag,0));
+  return [ctask(v,tag,min)];
+}
 function cycleModuleTasks(C,slot){
   const M=C.mod,R=M.days[C.dayIn]||M.days[0];
-  if(slot==='am')return[ctask(R.am,M.tag,R.amMin)];
-  if(slot==='pm')return[ctask(R.pm1,M.tag,R.pmMin),ctask(R.pm2,'dt')];
-  return[ctask(R.ev1,M.tag)];
+  if(slot==='am')return taskList(R.am,M.tag,R.amMin);
+  if(slot==='pm')return [...taskList(R.pm1,M.tag,R.pmMin),...taskList(R.pm2,'dt')];
+  return[
+    ...taskList(R.ev1,M.tag),
+    ctask(`21:30-22:30 ${M.name}错题回刷：只做今日C题/S题对应题20道，做完立刻订正`,M.tag,20,'题'),
+    ctask('22:30-23:00 当日闭环：A/B/C/S数据入表，写明天优先解决的3个问题','fx')
+  ];
 }
 function cycleAm(P,date,C){ if(C.type==='module')return cycleModuleTasks(C,'am'); return C.plan.am; }
 function cyclePm(P,date,C){ if(C.type==='module')return cycleModuleTasks(C,'pm'); return C.plan.pm; }
@@ -1148,8 +1192,8 @@ function politicsDailyTask(P,date){
   const dk=ds(date);
   if(dk<'2026-09-28'||dk>'2026-11-30')return null;
   const r=nx(P,'小黑-刷题',1);
-  if(r)return ctask(`🔴政治理论每日1节｜超格政治·系统课 ${rng(r)}（2倍速约75min）+ 配套政治20题20min，逐题A/B/C/S`, 'gj',20,'题');
-  return ctask('🔴政治理论已听完：时政关键词20min + 政治错题20题回刷（继续每日保温）','gj',20,'题');
+  if(r)return ctask(`19:30-21:05 政治理论每日1节｜超格政治·系统课 ${rng(r)}（2倍速约75min）+ 配套政治20题，逐题A/B/C/S`, 'gj',20,'题');
+  return ctask('19:30-21:05 政治理论保温：时政关键词40min + 政治错题20题回刷','gj',20,'题');
 }
 function addPoliticsDaily(arr,P,date,C){
   if(C&&C.type==='exam')return arr;
@@ -1212,7 +1256,7 @@ function cycleSideHTML(date,C){
   const upcoming=rows.filter(r=>r.e>=today).slice(0,8);
   return `<div class="alert" style="margin-bottom:10px;background:#eff6ff;border-color:#93c5fd;color:#1e3a8a">🔁 当前执行「三天一个模块」：${cycleLabel(C)}</div>
     <div style="font-size:10px;color:#1e3a8a;line-height:1.75;background:#fff;border:1px solid #bfdbfe;border-radius:8px;padding:8px 10px;margin-bottom:8px">
-      上午8:30-11:30主模块；下午14:00-17:00专项+复盘；晚上19:30-21:30背诵+闭环。只看当天主模块，不再一天塞满所有科。
+      上午8:30-11:30主模块；下午14:00-17:00专项+复盘；晚上19:30-23:00政治理论+主模块错题闭环。
     </div>
     ${upcoming.map(r=>`<div class="sp-item ${today>=r.s&&today<=r.e?'sp-on':'sp-off'}"><strong>${mk(r.s)}${r.s!==r.e?' - '+mk(r.e):''}</strong> · ${r.type}<br>${r.title}</div>`).join('')}
     <div class="sp-item sp-on">标记规则：A确定会 / B排除后选 / C猜或没读完 / S会但超时</div>`;
@@ -1423,7 +1467,7 @@ function dayTargetH(){const _dk0=ds(new Date());
   const _sk=skipEntryFor(_dk0);
   const _cyT=cycleFor(_dk0);
   const _blkT=_cyT?null:blockFor(_dk0); // 9/24-11/30 已由三天模块循环接管
-  const _cyBase=_cyT?(_cyT.type==='module'?8:_cyT.type==='check'?6.5:_cyT.type==='exam'?2:6):null;
+  const _cyBase=_cyT?(_cyT.type==='module'?9:_cyT.type==='check'?7.5:_cyT.type==='exam'?2:6):null;
   if(_sk){
     if(_sk.mode==='min')return 1.5;
     if(_sk.mode==='skip')return 0;
@@ -5183,5 +5227,5 @@ function init(){
   if(CLOUD.apiKey&&CLOUD.binId) cloudLoad().catch(()=>{});
 }
 init();
-</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a41f4ae51b65b612',t:'MTc5MDU2MjI3NA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a41f6af84911b4c1',t:'MTc5MDU2MzU4Nw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
