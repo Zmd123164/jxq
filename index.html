@@ -224,6 +224,7 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
     <button class="tb" onclick="goTab('cfg',this)">☁️ 云同步</button>
   </div>
   <div style="font-size:10px;margin-top:4px;opacity:.8" id="sync-status">⚪ 未配置</div>
+  <div id="app-version" style="font-size:10px;margin-top:3px;opacity:.8">🔁 三天模块版 v2026-09-28-11（课题复盘闭环版）</div>
 </div>
 
 <div class="main">
@@ -385,9 +386,9 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
   <!-- 检查点/顺延账本/补课清单/优先级横幅（从「每日课表」页挪来，黄色卡片全部在这） -->
   <div class="debt" id="debt-banner" style="display:none"></div>
   <div class="card">
-    <div class="ct">🗺 备考总时间线 · 9/24三天模块循环版</div>
-    <div class="alert" style="background:#eff6ff;border-color:#93c5fd;color:#1e3a8a">🔁 已按你的要求改成「三天一个模块」：9/24-11/30 每3天完成一个主模块闭环，穿插大周天限时检验。公文按0基础；公基表面高正确率暂不当强项；每天只做一个主模块，避免一天塞满所有模块。</div>
-    <div class="alert alert-b">📌 新校准原则（9/24循环版）：①三天小周天=框架/校准 → 专项内化 → 限时小测+深复盘；②大周天=严格计时套卷/模块测，不允许暂停、查答案、超时补做；③所有题标A/B/C/S：A确定会、B排除后选、C猜/没读完、S会但超时；④复盘顺序固定为C题（猜对也复盘）→A题做错→S题→普通错题；⑤每天只安排一个主模块，晚上只做背诵和闭环，不再用多模块浅刷制造忙碌感。</div>
+    <div class="ct">🗺 备考总时间线 · 9/29三天模块循环版</div>
+    <div class="alert" style="background:#eff6ff;border-color:#93c5fd;color:#1e3a8a">🔁 已按你的要求改成「三天一个模块」：9/28-11/30 每3天完成一个主模块闭环，穿插大周天限时检验。公文按0基础；公基表面高正确率暂不当强项；每天只做一个主模块，避免一天塞满所有模块。</div>
+    <div class="alert alert-b">📌 新校准原则（9/29正式版）：①三天小周天=框架/校准 → 专项内化 → 限时小测+深复盘；②大周天=严格计时套卷/模块测，不允许暂停、查答案、超时补做；③所有题标A/B/C/S：A确定会、B排除后选、C猜/没读完、S会但超时；④复盘顺序固定为C题（猜对也复盘）→A题做错→S题→普通错题；⑤每天只安排一个主模块，晚上只做背诵和闭环，不再用多模块浅刷制造忙碌感。</div>
     <div id="plan-gap" style="margin-bottom:13px"></div>
     <div id="score-guess" style="margin-bottom:13px"></div>
 
@@ -401,7 +402,7 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
         西实「40天专项刷题」模式 · <strong>9/10-10/31 底线 7.5h（减负版：任务全部压进时段内，约8.2h/天）</strong> · 三大模块必须交替（不连续10天刷一个模块）· 上午纯刷题无网课，全部成套路不零碎<br>
         🌅 上午3h10：①速算25题30min（永不砍）②🔥主攻块=真题1-2套+同类弱项补强30题（每天55-60题）：<strong>9/10-9/23 三天一转</strong>（A资料2篇 / B言语1套 / C判断1套）→ <strong>9/24-10/8 按周轮换</strong>（一 资料主攻+判断1套 / 二 判断主攻+资料1篇，开关ON→图推集中40题 / 三 半套60min+资料2篇 / 四 数量4类20题+真题10题+资料2篇 / 五 言语主攻+判断1套 / 六 全卷120min+归因 / 日 言语1套+判断1套）③次模块整套1套（判断30题/言语25题/资料2篇）④图推20题20min（每天）⑤复盘10min<br>
         ☀️ 下午3h（固定180min）：⑥申论小题真题<strong>1道</strong>限时25min（格子纸手写：先圈关键词再写要点）⑦对照答案批改20min ⑧主线1节95min：<strong>一/二/四/六 📚马克公基1节·2倍速~75min+配套20题</strong>（86节只挑高频，非高频直接跳，✎可改节数）· <strong>三 🟠综测1节+手写1道</strong> · <strong>五 📝大作文1篇60min+批改30min</strong> · <strong>日 补课窗口1节</strong>（10/9起换作文课）⑨小块40min：素材积累（一/六）或 错题回刷30+时政10（二/四）或 公基高频20题+速记（三/五）<br>
-        🌙 晚上2.5h（固定~150min）：⑩主线1节95min：<strong>一/三/五 🔷图推·刘义恒1节</strong>（32节只挑高频24节；周三数量课优先，最多8节）· <strong>二/四/六 🟠综测1节+手写1道</strong>（学完自动接 🔴超格政治1节+20题，只挑高频12节）· <strong>日 轻夜</strong>（错题三刷45+时政10+速记15，不排网课）⑪小块45min：公基速记15+错题回刷30（一/三/五）或 错题回刷30+时政10（二/四/六）⑫📒每日记录10min：各模块用时+正确率（只记数，不批斗）<br>
+        🌙 晚上2.5h（固定~150min）：⑩主线1节95min：<strong>一/三/五 🔷图推·刘义恒1节</strong>（32节只挑高频24节；周三数量课优先，最多8节）· <strong>二/四/六 🟠综测1节+手写1道</strong>（政治理论已前置为每日1节+20题，只挑高频12节）· <strong>日 轻夜</strong>（错题三刷45+时政10+速记15，不排网课）⑪小块45min：公基速记15+错题回刷30（一/三/五）或 错题回刷30+时政10（二/四/六）⑫📒每日记录10min：各模块用时+正确率（只记数，不批斗）<br>
         <strong>底线7.5h = ①速算 + ②主攻块 + ⑥申论1道手写 + ⑦批改 + 下午/晚上各1节主线课（约8.2h排量，留0.7h缓冲）。砍单顺序：速记/时政/回刷 → 当天小块40min → ⏭顺延（优先三件套）；速算/图推20题/申论1道手写/主线课1节 永不砍。</strong><br>
         网课=药不是饭（全部2倍速：逻辑课~15min/节，其余课~75min/节）：先刷题找弱项 → 只补那1节（不回看全程）→ <strong>听完必做配套练习（已排进任务，听完立刻做）</strong>；听完勾选后，剩余时间按课表顺序流给下一项（听得多→多刷题）；点任务行 <strong>✎</strong> 可改该课程每天节数（0=恢复默认）；不当背景音、不睡前加课。<br>
         9/23 阶段检查点（减负版口径）：速算≥10天 / 资料刷题≥6 / 逻辑≥15 / 言语刷题≥5 / 综测≥4节（每周4节）/ 申论小题听课≥2 / 马克公基≥4节（每周4节）/ 图推刘义恒≥6节。<strong>触发器：图推若仍&lt;45%，9/30 起周二切集中模式（图推40题+针对性课）。</strong><br>
@@ -438,7 +439,7 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
           <div>
             <div style="font-weight:700;color:var(--v);margin-bottom:6px;font-size:11px">🌙 晚上：公基2节 + 申论30min</div>
             <div style="background:var(--s2);border-radius:8px;padding:8px 10px;font-size:11px;color:var(--t2);line-height:2">
-              公基=<strong>马克系统课86节，PM 2节/天 + 配套20题</strong> → 约10/23过完。政治理论=超格，<strong>10/8 起</strong>每天1节+20题（原小黑刷题课已放弃）。<br>
+              公基=<strong>马克系统课86节，PM 2节/天 + 配套20题</strong> → 约10/23过完。政治理论=超格，<strong>9/28 起</strong>每天1节+20题（原小黑刷题课已放弃）。<br>
               听不懂/非高频直接跳，打卡后进度照样走，别卡在一节里。<br>
               周三/六穿插综测（11/1另一门100分）。<br>
               <span style="color:var(--r);font-weight:700">每晚最后30min：申论复盘（固定不动）</span>
@@ -835,7 +836,7 @@ function getPhaseInfo(date){
     else if(_cyPI.type==='exam') phaseName+=`🎯 ${_cyPI.icon}${_cyPI.name}（考试/恢复日 · 按准考证和身体状态执行）`;
     else phaseName+=`🔁 ${_cyPI.icon||''}${_cyPI.name||'三天模块循环'}`;
   }
-  // 🧱 旧周板块制（保留历史；9/24-11/30已被三天模块循环接管）
+  // 🧱 旧周板块制（保留历史；9/28-11/30已被三天模块循环接管）
   else if(_blkPI){
     const _nm=(_blkPI.cfg.icon||'')+_blkPI.cfg.name;
     if(_blkPI.type==='block')phaseName+=`🧱 周板块·第${_blkPI.week}周「${_nm}」— 板块日${_blkPI.dayInWeek+1}/5（保底包2.25h + ${_blkPI.cfg.name}主线 · 底线7.5h · 距事业编${dBetween(E1)}天）`;
@@ -904,6 +905,16 @@ function getPhaseInfo(date){
   let _minPlaced=false;
   const _bottom=()=>{ if(!_useMin||_minPlaced) return []; _minPlaced=true; return minSet(); };
 
+  // 9/28起使用新循环课表。
+  if(_cyPI){
+    const _clk={am:'08:30-11:30',pm:'14:00-17:00',ev:'19:30-21:30'};
+    return {phaseName, slots:[
+      {key:'am',label:'上午场',clock:_clk.am, skipped:skippedToday('am'), tasks:skippedToday('am')?_bottom():cycleAm(P,date,_cyPI)},
+      {key:'pm',label:'下午场',clock:_clk.pm, skipped:skippedToday('pm'), tasks:skippedToday('pm')?_bottom():cyclePm(P,date,_cyPI)},
+      {key:'ev',label:'晚上场',clock:_clk.ev, skipped:skippedToday('ev'), tasks:skippedToday('ev')?_bottom():cycleEv(P,date,_cyPI)},
+    ]};
+  }
+
   // ⭐ 进度驱动排课：课程节号由「实际已完成进度」决定，而不是按日历推算
   // 没学完的课不会被跳过；打卡/手动改进度后，之后的课表自动接上
 
@@ -933,26 +944,26 @@ function progAt(dkey){
 function t(text,tag,drillMin,drillUnit){const o={text,tag};if(drillMin)o.drill={min:drillMin,unit:drillUnit||'题'};return o;}
 
 // ======================================================================
-// 🔁 9/24-11/30「三天一个模块」循环版（根据两份刷题视频 + 用户真实情况重排）
+// 🔁 9/28-11/30「三天一个模块」循环版（根据两份刷题视频 + 用户真实情况重排）
 //   核心：3天小周天 = 框架/校准 → 专项内化 → 限时小测+深复盘；
 //         每7天大周天 = 严格限时模考/模块测 + 当天复盘。
 //   用户修正：公文按0基础；公基表面正确率不作数；所有题标 A/B/C/S，猜对题也复盘。
 //   本段优先级高于旧「5天板块+模考+休息」和旧西实轮换，11月内完成一轮+二轮循环。
 // ======================================================================
-const CYCLE_ANCHOR='2026-09-24';
+const CYCLE_ANCHOR='2026-09-28';
 const CYCLE_END='2026-11-30';
 const CYCLE_SCHEDULE=[
-  {start:'2026-09-24',end:'2026-09-26',key:'gongwen'},
-  {start:'2026-09-27',end:'2026-09-29',key:'law'},
-  {start:'2026-10-01',end:'2026-10-03',key:'panduan'},
-  {start:'2026-10-04',end:'2026-10-06',key:'pianduan'},
-  {start:'2026-10-08',end:'2026-10-10',key:'data'},
-  {start:'2026-10-11',end:'2026-10-13',key:'quantity'},
-  {start:'2026-10-15',end:'2026-10-17',key:'politics'},
-  {start:'2026-10-18',end:'2026-10-20',key:'econman'},
-  {start:'2026-10-22',end:'2026-10-24',key:'zongshen'},
-  {start:'2026-10-25',end:'2026-10-27',key:'gj2'},
-  {start:'2026-10-29',end:'2026-10-31',key:'sy_chongci'},
+  {start:'2026-09-28',end:'2026-09-30',key:'data'},
+  {start:'2026-10-01',end:'2026-10-03',key:'quantity'},
+  {start:'2026-10-04',end:'2026-10-06',key:'logicjudge'},
+  {start:'2026-10-07',end:'2026-10-09',key:'figpush'},
+  {start:'2026-10-10',end:'2026-10-12',key:'pianduan'},
+  {start:'2026-10-14',end:'2026-10-16',key:'law'},
+  {start:'2026-10-17',end:'2026-10-19',key:'gongwen'},
+  {start:'2026-10-20',end:'2026-10-22',key:'politics'},
+  {start:'2026-10-23',end:'2026-10-25',key:'econman'},
+  {start:'2026-10-27',end:'2026-10-29',key:'zongshen'},
+  {start:'2026-10-30',end:'2026-10-31',key:'sy_chongci'},
   {start:'2026-11-02',end:'2026-11-04',key:'xt_mix1'},
   {start:'2026-11-05',end:'2026-11-07',key:'yanyu2'},
   {start:'2026-11-09',end:'2026-11-11',key:'data_quantity2'},
@@ -963,42 +974,30 @@ const CYCLE_SCHEDULE=[
   {start:'2026-11-26',end:'2026-11-28',key:'yanyu3'},
 ];
 const CYCLE_CHECKS={
-  '2026-09-30':{name:'公基限时校准',icon:'📝',tag:'gj',kind:'check',
-    am:[['08:30-10:00 公基100题严格90min：完整读题干和四个选项，逐题标A/B/C/S；到点停', 'gj',100,'题'],['10:15-11:30 初步批改：先统计A题正确率、C题数量、S题数量，不急着看总分','dt',0]],
-    pm:[['14:00-15:30 深复盘①：公文+法律全部C题（猜对也复盘），写清「考点—错因—正确规则」','dt',0],['15:45-17:00 深复盘②：把政治/经济/管理中没完整读的题全部标C，列下一轮待校准点','gj',0]],
-    ev:[['19:30-20:20 背诵：公文规则表+法律易错点，只背今天错出来的','gj',0],['20:30-21:30 周复盘：本周A/B/C/S数据入表，决定下周行测模块的弱项顺序','fx',0]]},
-  '2026-10-07':{name:'行测限时校准①',icon:'📝',tag:'xt',kind:'check',
-    am:[['08:30-10:30 行测限时半套/整套按考试时长折算：判断+言语为主，到点停，不许做4小时','xt',70,'题'],['10:40-11:30 批改并统计：判断、片段、逻辑填空分别算A题正确率/C题率/S题数','dt',0]],
-    pm:[['14:00-15:30 深复盘①：判断推理错题按图推/定义/类比/论证/形式逻辑分类','xt',0],['15:45-17:00 深复盘②：片段阅读错因按主旨偏移/细节偷换/排序断点分类','xt',0]],
-    ev:[['19:30-20:20 错题重刷：只重刷今天C题和S题，不刷新题','dt',0],['20:30-21:30 周复盘：写出下周资料+数量的限时策略','fx',0]]},
-  '2026-10-14':{name:'行测限时校准②',icon:'📝',tag:'xt',kind:'check',
-    am:[['08:30-10:30 行测限时训练：资料+数量+少量言判，严格卡时；数量1分钟没思路就标记跳过','xt',80,'题'],['10:40-11:30 批改统计：资料表格/综合判断、数量基础题分别统计A/B/C/S','dt',0]],
-    pm:[['14:00-15:30 资料复盘：单位、年份、主体、综合判断四选项逐项核对','xt',0],['15:45-17:00 数量复盘：把值得做/应放弃的题分两栏，形成考场取舍表','xt',0]],
-    ev:[['19:30-20:20 公式和速算回背：增长率/比重/平均数/基期现期 + 数量基础公式','xt',0],['20:30-21:30 周复盘：下轮行测按「先拿基础分、别耗难题」调整','fx',0]]},
-  '2026-10-21':{name:'公基限时校准②',icon:'📝',tag:'gj',kind:'check',
-    am:[['08:30-10:00 公基100题严格90min：政治/时政/经济/管理/公文/法律混合，逐题A/B/C/S','gj',100,'题'],['10:15-11:30 批改统计：表面正确率作废，重点看确定会率和猜题比例','dt',0]],
-    pm:[['14:00-15:30 深复盘①：政治时政固定表述、经济管理概念题逐项回讲','gj',0],['15:45-17:00 深复盘②：整理「蒙对清单」——所有C题对了也写进错题本','dt',0]],
-    ev:[['19:30-20:20 背诵：政治关键词+经济管理易混概念','gj',0],['20:30-21:30 周复盘：为10/22-10/31事业编综合冲刺定两个最弱点','fx',0]]},
-  '2026-10-28':{name:'事业编合卷校准',icon:'📝',tag:'gj',kind:'check',
-    am:[['08:30-10:00 公基模拟100题90min：按正式节奏，不提前交卷，不跳读选项','gj',100,'题'],['10:15-11:30 综测/材料题1道闭卷手写：列点、分层、限时完成','zt',0]],
-    pm:[['14:00-15:30 公基批改：只看真实确定会率，公文/法律/政治错题优先','dt',0],['15:45-17:00 综测对照：标漏点、漏词、结构问题，整理答题模板','zt',0]],
-    ev:[['19:30-20:20 考前三天清单：公文规则、法律易错、时政关键词各一页','gj',0],['20:30-21:30 轻复盘+早睡：明天进入事业编考前三天冲刺','fx',0]]},
+  '2026-10-13':{name:'行测阶段校准',icon:'📝',tag:'xt',kind:'check',
+    am:[['08:30-10:30 行测限时训练：资料+数量+逻辑判断+图推+言语，按正式节奏到点停','xt',100,'题'],['10:40-11:30 批改统计：资料、数量、逻辑判断、图推、言语分别统计A题正确率/C题率/S题数','dt',0]],
+    pm:[['14:00-15:30 复盘资料+数量：表格/综合判断、数量取舍题优先','xt',0],['15:45-17:00 复盘判断+图推+言语：C题和S题优先','xt',0]],
+    ev:[['19:30-20:20 政治理论每日1节｜超格政治·系统课 + 配套政治20题','gj',20,'题'],['20:30-21:30 行测阶段复盘：确定后续保温模块和公基开始后的行测维持量','fx',0]]},
+  '2026-10-26':{name:'公基限时校准',icon:'📝',tag:'gj',kind:'check',
+    am:[['08:30-10:00 公基100题严格90min：法律、公文、政治、时政、经济、管理混合，逐题A/B/C/S','gj',100,'题'],['10:15-11:30 批改统计：确定会率、猜题比例、超时题数量','dt',0]],
+    pm:[['14:00-15:30 复盘法律+公文C题：猜对题也写规则和错因','dt',0],['15:45-17:00 复盘政治/经济/管理：固定表述和易混概念分栏','gj',0]],
+    ev:[['19:30-20:20 政治理论每日1节｜超格政治·系统课 + 配套政治20题','gj',20,'题'],['20:30-21:30 公基漏洞清单：写出10/27-10/31最后补点','fx',0]]},
   '2026-11-08':{name:'省考行测全真①',icon:'📝',tag:'xt',kind:'check',
-    am:[['08:30-10:30 行测全真/准全真120min：到点停，严禁超时补做','xt',100,'题'],['10:40-11:30 快速批改：模块得分、放弃题、超时题分别统计','dt',0]],
-    pm:[['14:00-15:30 复盘①：资料/判断/言语先复盘C题和S题','xt',0],['15:45-17:00 复盘②：确定下周数量、资料、申论的训练权重','fx',0]],
-    ev:[['19:30-20:20 错题重刷：只重刷今天最亏的20题','dt',20,'题'],['20:30-21:30 周复盘+休息：今天不再开新题','fx',0]]},
+    am:[['08:30-10:30 行测全真/准全真120min：到点停','xt',100,'题'],['10:40-11:30 批改统计：模块得分、放弃题、超时题','dt',0]],
+    pm:[['14:00-15:30 复盘资料/判断/言语C题和S题','xt',0],['15:45-17:00 确定下周数量、资料、申论训练权重','fx',0]],
+    ev:[['19:30-20:20 政治理论每日1节｜超格政治·系统课 + 配套政治20题','gj',20,'题'],['20:30-21:30 错题重刷：最亏20题','dt',20,'题']]},
   '2026-11-15':{name:'省考全真模考②',icon:'📝',tag:'xt',kind:'check',
     am:[['08:30-10:30 行测全真120min：固定顺序演练，数量只拿可拿分题','xt',100,'题'],['10:40-11:30 批改统计：行测各模块限时真实分','dt',0]],
-    pm:[['14:00-16:00 申论小题/作文限时训练：按考试格子纸写，不只列提纲','sl',0],['16:10-17:00 对照批改：标关键词、结构、表达问题','sl',0]],
-    ev:[['19:30-20:20 全真复盘：行测错题优先级C→A错→S→普通错','dt',0],['20:30-21:30 写下11/16-11/21二轮补弱清单','fx',0]]},
+    pm:[['14:00-16:00 申论限时训练：按考试格子纸写','sl',0],['16:10-17:00 对照批改：关键词、结构、表达问题','sl',0]],
+    ev:[['19:30-20:20 政治理论每日1节｜超格政治·系统课 + 配套政治20题','gj',20,'题'],['20:30-21:30 全真复盘：C→A错→S→普通错','dt',0]]},
   '2026-11-22':{name:'省考全真模考③',icon:'📝',tag:'xt',kind:'check',
-    am:[['08:30-10:30 行测全真120min：执行固定顺序和跳题规则','xt',100,'题'],['10:40-11:30 批改统计：看分数，更看节奏是否稳定','dt',0]],
-    pm:[['14:00-16:00 申论套题/大作文限时：完整写，不看资料','sl',0],['16:10-17:00 对照批改：列出模板化表达和漏点','sl',0]],
-    ev:[['19:30-20:20 错题回刷：资料+言语+判断各选最亏题','xt',30,'题'],['20:30-21:30 周复盘：最后一周只补能涨分的点','fx',0]]},
+    am:[['08:30-10:30 行测全真120min：执行固定顺序和跳题规则','xt',100,'题'],['10:40-11:30 批改统计：节奏是否稳定','dt',0]],
+    pm:[['14:00-16:00 申论套题/大作文限时：完整写','sl',0],['16:10-17:00 对照批改：模板化表达和漏点','sl',0]],
+    ev:[['19:30-20:20 政治理论每日1节｜超格政治·系统课 + 配套政治20题','gj',20,'题'],['20:30-21:30 错题回刷：资料+言语+判断各选最亏题','xt',30,'题']]},
   '2026-11-29':{name:'省考全真模考④',icon:'📝',tag:'xt',kind:'check',
-    am:[['08:30-10:30 行测全真120min：最终版做题顺序，不临场换打法','xt',100,'题'],['10:40-11:30 批改统计：找12月第一周最后补点','dt',0]],
-    pm:[['14:00-16:00 申论全套/大作文：限时完整输出','sl',0],['16:10-17:00 批改：只改结构、关键词、结尾升华','sl',0]],
-    ev:[['19:30-20:20 错题轻回看：不再大规模开新题','dt',0],['20:30-21:30 制定12/1-12/5考前轻量清单','fx',0]]},
+    am:[['08:30-10:30 行测全真120min：最终版做题顺序','xt',100,'题'],['10:40-11:30 批改统计：找12月第一周最后补点','dt',0]],
+    pm:[['14:00-16:00 申论全套/大作文：限时完整输出','sl',0],['16:10-17:00 批改：结构、关键词、结尾升华','sl',0]],
+    ev:[['19:30-20:20 政治理论每日1节｜超格政治·系统课 + 配套政治20题','gj',20,'题'],['20:30-21:30 错题轻回看','dt',0]]},
 };
 const CYCLE_SPECIAL={
   '2026-11-01':{name:'事业编笔试日',icon:'🎯',tag:'fx',kind:'exam',
@@ -1011,35 +1010,45 @@ const CYCLE_SPECIAL={
     ev:[['19:30-20:20 复盘闭环：写「12月不再做什么」清单，防止考前乱加量','fx',0],['20:30-21:30 早睡准备：明天进入12月考前轻量周','fx',0]]}
 };
 const CYCLE_MODS={
-  gongwen:{icon:'📄',name:'公文0基础',tag:'gj',desc:'按零基础：先背规则，不用表面正确率骗自己',days:[
-    {focus:'文种/行文关系/格式框架',am:'看公文课/讲义：通知、通报、请示、报告、函、批复、纪要；上行/下行/平行；标题/主送/落款/日期',pm1:'公文基础题20-30道慢做：题干和四个选项必须读完，不限时',pm2:'错因分三类：文种不会、格式不会、行文关系不会；整理一页公文规则表',ev1:'背请示/报告/函/批复/纪要的区别；所有靠感觉选的题标C',pmMin:25},
-    {focus:'规则背诵+专项内化',am:'先默写公文规则表，再补看不会的课；重点：请示一文一事、不能多头主送、报告不夹带请示、函用于不相隶属机关',pm1:'公文专项40-60题：每题标A/B/C/S，猜对也进复盘',pm2:'把错题贴回规则：到底是文种、格式、行文关系，还是没读完题',ev1:'整理「公文高频陷阱清单」：公告/通告、通知/通报、请示/报告、纪要/记录',pmMin:50},
-    {focus:'公文小测+易错清单',am:'公文40-50题限时小测：完整读题，不许扫一眼就选',pm1:'逐题复盘小测：C题全复盘，A题做错重点复盘，S题写提速办法',pm2:'输出一页《公文易错清单》，能合上答案讲清每题才算会',ev1:'回背规则表+错题清单，明天法律模块只带这张纸',amMin:45}
+  gongwen:{icon:'📄',name:'公文0基础',tag:'gj',desc:'按零基础：学规则、做题、复盘一起走',days:[
+    {focus:'文种/行文关系/格式框架',am:'08:50-09:40 学公文文种和行文关系；09:50-10:30 默写文种用途对照表；10:40-11:30 公文基础题30题，完整读题并标A/B/C/S',pm1:'公文基础题30题慢做：请示/报告/通知/通报/函/批复/纪要混合',pm2:'批改60题并整理一页公文规则表：文种用途、行文方向、格式陷阱、易混点',ev1:'默写请示/报告/函/批复/纪要区别；复盘所有C题，猜对也写规则',amMin:30,pmMin:30},
+    {focus:'规则背诵+专项内化',am:'08:50-09:20 默写昨日规则表；09:30-10:20 学格式规则和高频陷阱；10:30-11:30 公文专项40题限时',pm1:'公文专项50题：重点请示/报告/函/批复/纪要，逐题标A/B/C/S',pm2:'把错题贴回规则：文种、格式、行文关系、题没读完整分别归类',ev1:'整理「公文高频陷阱清单」：公告/通告、通知/通报、请示/报告、纪要/记录',amMin:40,pmMin:50},
+    {focus:'公文小测+易错清单',am:'公文50题限时小测：完整读题，不许扫一眼就选；做完立刻统计A/B/C/S',pm1:'逐题复盘小测：C题全复盘，A题做错重点复盘，S题写提速办法',pm2:'输出一页《公文易错清单》，能合上答案讲清每题才算会',ev1:'回背规则表+错题清单，明天法律模块只带这张纸',amMin:50}
   ]},
   law:{icon:'⚖️',name:'法律基础',tag:'gj',desc:'宪法/民刑/行政公务员法，先概念后刷题',days:[
     {focus:'宪法+公民权利',am:'建立法律框架：宪法、国家机构、公民基本权利义务；先听/看最基础部分',pm1:'宪法与公民权利基础题30-40道，所有不确定标B/C',pm2:'错题回到概念：主体、权利、机关关系分别整理',ev1:'背宪法高频表述和国家机构关系图',pmMin:35},
     {focus:'刑法+民法继承',am:'学犯罪构成、正当防卫、紧急避险、刑责年龄、民事行为能力、继承顺序',pm1:'刑法+民法继承专项40-60题，错题必须回概念/法条',pm2:'错因分：概念混、主体错、条件漏、题干没读完',ev1:'把刑法/继承最容易混的点做成对照表',pmMin:50},
     {focus:'行政法/公务员法+法律混合',am:'学行政处罚/复议/诉讼、公务员录用考核处分辞退；画救济路径',pm1:'法律混合50题限时，统计A正确率、C数量、S数量',pm2:'复盘法律C题和S题，形成「法律待补清单」',ev1:'回背法律框架图，准备明天公基校准',pmMin:50}
   ]},
+  logicjudge:{icon:'🧠',name:'逻辑判断',tag:'xt',desc:'论证逻辑、翻译推理、真假推理三天闭环',days:[
+    {focus:'论证逻辑基础',am:'08:30-09:20 核心课：论点、论据、结论、加强、削弱、前提；09:30-10:30 对应题30题；10:40-11:30 批改并标A/B/C/S',pm1:'14:00-15:20 论证逻辑专项40题：加强、削弱、前提、结论混合',pm2:'15:30-17:00 复盘：没找准论点、无关项、力度判断、偷换概念分别归类',ev1:'21:05-21:30 整理逻辑规则卡：论点、论据、搭桥、削弱方式、无关项特征',amMin:30,pmMin:40},
+    {focus:'翻译推理+真假推理',am:'08:30-09:20 核心课：充分/必要、逆否、且/或、矛盾关系；09:30-10:30 翻译推理30题；10:40-11:30 真假推理20题',pm1:'14:00-15:20 翻译+真假专项40题：每题写符号或真假关系',pm2:'15:30-17:00 复盘：翻译错、逆否错、条件关系错、代入慢分别归类',ev1:'21:05-21:30 默写翻译推理公式和真假推理步骤',amMin:50,pmMin:40},
+    {focus:'逻辑判断限时小测',am:'08:30-09:50 逻辑判断40题限时小测；10:00-11:30 批改并统计A/B/C/S',pm1:'14:00-15:20 回刷C题和S题30题',pm2:'15:30-17:00 输出逻辑判断做题顺序：先论证，再翻译/真假；卡住即跳',ev1:'21:05-21:30 合上答案讲10道错题',amMin:40,pmMin:30}
+  ]},
+  figpush:{icon:'🔷',name:'图形推理',tag:'xt',desc:'位置、样式、数量、属性、空间重构三天闭环',days:[
+    {focus:'位置+样式规律',am:'08:30-09:20 核心课：平移、旋转、翻转、遍历、样式叠加；09:30-10:30 对应题30题；10:40-11:30 批改并归类规律',pm1:'14:00-15:20 图推位置/样式专项40题',pm2:'15:30-17:00 复盘：规律没想到、元素看漏、题组关系看错分别归类',ev1:'21:05-21:30 整理图推规律表：位置、样式、遍历各写3个识别信号',amMin:30,pmMin:40},
+    {focus:'数量+属性规律',am:'08:30-09:20 核心课：点线面角、封闭空间、对称、曲直、开闭；09:30-10:40 对应题40题；10:50-11:30 批改归类',pm1:'14:00-15:20 图推数量/属性专项50题',pm2:'15:30-17:00 复盘：先查哪个规律、何时换规律、何时跳题',ev1:'21:05-21:30 默写图推排查顺序：位置→样式→数量→属性→空间',amMin:40,pmMin:50},
+    {focus:'空间重构+图推限时',am:'08:30-09:20 核心课：六面体、截面、立体拼合；09:30-10:20 空间题20题；10:30-11:30 图推混合30题限时',pm1:'14:00-15:20 图推混合50题限时',pm2:'15:30-17:00 复盘C/S题，输出图推考场排查顺序',ev1:'21:05-21:30 回刷20道错题，按规律表讲题',amMin:50,pmMin:50}
+  ]},
   panduan:{icon:'🧩',name:'判断推理',tag:'xt',desc:'有基础但要限时稳定，不再连续几周只学判断',days:[
     {focus:'完整35题摸底+弱项定位',am:'判断推理35题完整限时：图推/定义/类比/逻辑一起做，先暴露弱项',pm1:'按上午错题做专项：图推规律/定义关键词/类比关系/加强削弱，选最弱两类',pm2:'复盘卡壳题和犹豫题，不只看错题',ev1:'整理判断推理做题顺序和跳题规则',amMin:35,pmMin:35},
     {focus:'专项内化',am:'集中补一个最弱专项：加强削弱/翻译推理/图推规律三选一，先方法后题',pm1:'专项40-60题分组限时，练老师方法，不重复自己的旧习惯',pm2:'把每道错题归因到方法：没找论点、翻译错、规律漏、定义关键词漏',ev1:'合上答案讲10题，讲不出来仍算C',pmMin:50},
     {focus:'限时小套+复盘',am:'判断推理35题限时小测，对比第1天C题和S题是否下降',pm1:'复盘全部C/S题，形成「判断限时稳定清单」',pm2:'确定考场策略：先做哪类、哪类超过多久跳',ev1:'轻刷定义/类比20题保持手感，不开新课',amMin:35}
   ]},
-  pianduan:{icon:'📖',name:'片段阅读/言语',tag:'xt',desc:'片段阅读弱，三天只把方法吃透',days:[
-    {focus:'中心理解',am:'学中心理解：转折/递进/结论词，例子和背景不是重点；每段先一句话概括',pm1:'中心理解30-40题：先写主旨再看选项',pm2:'错因分：主旨偏、例子带跑、选项偷换、过度推断',ev1:'整理中心理解信号词和错误选项模板',pmMin:35},
-    {focus:'细节/标题/衔接/排序',am:'学细节定位、标题题、语句衔接、排序题的指代词和关联词',pm1:'分题型练40题：每类都要说出排除理由',pm2:'复盘错题：是原文没定位，还是选项偷换概念',ev1:'整理片段阅读错题模板',pmMin:40},
-    {focus:'言语限时小测',am:'片段阅读+逻辑填空30题限时小测：严格卡时',pm1:'复盘主旨、细节、排序、填空四类错题',pm2:'输出「言语做题顺序」和易错词/关联词清单',ev1:'回看10道猜对题，确认是不是真会',amMin:30}
+  pianduan:{icon:'📖',name:'言语理解',tag:'xt',desc:'中心理解、逻辑填空、混合小测三天闭环',days:[
+    {focus:'中心理解',am:'08:30-09:20 核心课：转折、递进、结论词、例子和背景；09:30-10:30 中心理解30题；10:40-11:30 批改并写主旨句',pm1:'14:00-15:20 中心理解专项40题：每题先写一句主旨再选',pm2:'15:30-17:00 复盘：主旨偏、例子带跑、选项偷换、过度推断分别归类',ev1:'21:05-21:30 整理中心理解信号词和错误选项模板',amMin:30,pmMin:40},
+    {focus:'逻辑填空',am:'08:30-09:20 核心课：语境、搭配、感情色彩、递进转折提示；09:30-10:30 逻辑填空30题；10:40-11:30 批改并积累词组',pm1:'14:00-15:20 逻辑填空+语句表达40题',pm2:'15:30-17:00 复盘：成语不认识、搭配错、语境提示没抓住分别归类',ev1:'21:05-21:30 积累高频成语/实词20组',amMin:30,pmMin:40},
+    {focus:'言语限时小测',am:'08:30-09:50 言语40题限时小测；10:00-11:30 批改并统计A/B/C/S',pm1:'14:00-15:20 回刷C题和S题30题',pm2:'15:30-17:00 输出言语做题顺序和易错词/关联词清单',ev1:'21:05-21:30 回看10道猜对题，确认是否真会',amMin:40,pmMin:30}
   ]},
-  data:{icon:'📊',name:'资料分析',tag:'xt',desc:'重点攻表格和综合判断，别只会公式',days:[
-    {focus:'公式+速算',am:'复盘增长量/增长率/比重/平均数/倍数/基期现期，配合截位直除',pm1:'基础计算题30-40题限时，草稿必须写列式',pm2:'错因分：公式错、单位错、计算慢、读错主体',ev1:'整理资料公式一页纸和常用分数百分数',pmMin:35},
-    {focus:'表格材料',am:'表格材料专项：行列定位、单位换算、多表对比、年份主体不看错',pm1:'表格材料3篇限时，逐题记录定位时间',pm2:'复盘单位/年份/主体错误，写「读表检查顺序」',ev1:'回刷今天表格错题，练先定位再计算',pmMin:15},
-    {focus:'综合判断',am:'综合判断专项：四个选项逐个判断，先做容易验证项，不从最复杂项死算',pm1:'综合判断+资料小套限时，记录每题耗时',pm2:'复盘S题，找提速路径：估算、排除、跳题',ev1:'形成资料考场顺序：先易后难、综合判断不硬刚',pmMin:20}
+  data:{icon:'📊',name:'资料分析',tag:'xt',desc:'先补找数和题型识别，再攻表格和综合判断',days:[
+    {focus:'找数+主体+基础公式',am:'08:30-09:20 核心课：主体、时间、单位、增长率/增长量；09:30-10:30 对应题25题；10:40-11:30 批改并标A/B/C/S',pm1:'14:00-15:20 资料专项30题：增长率、增长量、基期现期，草稿必须写列式',pm2:'15:30-17:00 复盘：读错主体/年份/单位、公式错、计算慢分别归类；整理公式A4',ev1:'21:05-21:30 回看今日C/S题10道，背公式表',amMin:25,pmMin:30},
+    {focus:'表格材料+定位',am:'08:30-09:20 核心课：表格定位、单位换算、多表对比；09:30-10:40 表格材料2篇限时；10:50-11:30 批改定位错误',pm1:'14:00-15:20 表格专项30题：年份、主体、单位、指标逐项圈出',pm2:'15:30-17:00 复盘：行列定位慢、单位错、主体错；写读表检查顺序',ev1:'21:05-21:30 回刷表格错题10道，只练先定位再计算',amMin:20,pmMin:30},
+    {focus:'综合判断+限时小测',am:'08:30-09:20 核心课：综合判断选项顺序、估算、排除；09:30-10:40 资料2篇限时；10:50-11:30 批改统计A/B/C/S',pm1:'14:00-15:20 综合判断专项30题：先易后难，不从最复杂项死算',pm2:'15:30-17:00 复盘S题，输出资料考场顺序和用时上限',ev1:'21:05-21:30 整理资料分析一页纸：公式、读表顺序、综合判断策略',amMin:20,pmMin:30}
   ]},
-  quantity:{icon:'🔢',name:'数量关系',tag:'xt',desc:'30%模块先拿基础分，难题不拖全卷',days:[
-    {focus:'基础可拿分题型',am:'学和差倍比、方程、工程、行程基础、利润问题；只抓基础模型',pm1:'基础题30题：会的做熟，不会的标C，不硬耗',pm2:'复盘哪些题1分钟内能启动，哪些题直接放弃',ev1:'整理数量基础公式和题型识别词',pmMin:30},
-    {focus:'中频基础模型',am:'排列组合基础、概率基础、容斥、几何基础、最值问题；只学能上考场的模型',pm1:'分题型练30-40题，每题限时，超过就标S/跳过',pm2:'错因分：模型没识别、方程列错、计算慢、题目该放弃',ev1:'建立数量「可做题清单」和「放弃题清单」',pmMin:35},
-    {focus:'限时策略',am:'数量关系15-20题限时：先扫题，能做先拿，1分钟没思路标记',pm1:'复盘取舍：哪些题值得做，哪些题不该拖全卷',pm2:'形成数量考场策略：目标先拿基础分，不追全会',ev1:'轻背公式，准备行测校准',amMin:18}
+  quantity:{icon:'🔢',name:'数量关系',tag:'xt',desc:'只拿基础分，建立取舍规则',days:[
+    {focus:'方程+和差倍比+工程',am:'08:30-09:20 核心课：方程、和差倍比、工程基础模型；09:30-10:30 对应题20题；10:40-11:30 批改并标能否1分钟启动',pm1:'14:00-15:20 基础模型30题：方程、和差倍比、工程混合',pm2:'15:30-17:00 复盘：模型识别错、方程列错、计算慢；整理基础模型表',ev1:'21:05-21:30 默写数量基础公式和题型识别词',amMin:20,pmMin:30},
+    {focus:'利润+行程+容斥',am:'08:30-09:20 核心课：利润、行程、容斥基础模型；09:30-10:30 对应题20题；10:40-11:30 批改并标A/B/C/S',pm1:'14:00-15:20 利润/行程/容斥专项30题：超过2分钟无思路即标S或C',pm2:'15:30-17:00 复盘：哪些题值得做，哪些题考场放弃',ev1:'21:05-21:30 整理数量可做题清单和放弃题清单',amMin:20,pmMin:30},
+    {focus:'数量限时取舍',am:'08:30-09:20 核心课：考场取舍和扫题顺序；09:30-10:20 数量15题限时；10:30-11:30 批改并统计做/跳选择',pm1:'14:00-15:20 数量基础题30题限时回刷',pm2:'15:30-17:00 输出数量考场策略：先扫题、先拿基础、1分钟没思路跳',ev1:'21:05-21:30 背公式表，回看5道最亏错题',amMin:15,pmMin:30}
   ]},
   politics:{icon:'🇨🇳',name:'政治理论+时政',tag:'gj',desc:'表面正确率不可靠，按固定表述重新校准',days:[
     {focus:'政治理论框架',am:'看政治理论高频：马原、毛中特、新时代关键词，先搭框架不刷快题',pm1:'政治基础题30-40道，所有凭语感选的标C',pm2:'把错题回到固定表述，不只背答案',ev1:'背政治关键词：主体、目标、路径、地位类表述',pmMin:35},
@@ -1110,7 +1119,7 @@ const CYCLE_MODS={
 function cycDateDiff(a,b){return Math.round((toDate(b)-toDate(a))/86400000);}
 function ctask(text,tag,min,unit){return t(text,tag,min||0,unit||'题');}
 function cycleFor(dk){
-  if(dk<CYCLE_ANCHOR||dk>CYCLE_END)return null;
+  if((dk<CYCLE_ANCHOR||dk>CYCLE_END)&&!CYCLE_SPECIAL[dk])return null;
   if(D.opt&&D.opt.gk&&(dk==='2026-11-28'||dk==='2026-11-29')){
     return {type:'exam',dk,icon:'🇨🇳',name:dk==='2026-11-28'?'国考行测':'国考申论',tag:'fx',plan:{
       am:[ctask(dk==='2026-11-28'?'🇨🇳 国考行测：按准考证时间执行；考前只看最终顺序，不刷新题':'🇨🇳 国考第二天上午：普通岗无考试则轻量休息；特殊岗位按准考证执行','fx')],
@@ -1128,23 +1137,30 @@ function cycleFor(dk){
   return {type:'module',dk,week,key:b.key,mod,dayIn,start:b.start,end:b.end,name:mod.name,icon:mod.icon,tag:mod.tag};
 }
 function cycleModuleTasks(C,slot){
-  const M=C.mod,R=M.days[C.dayIn]||M.days[0],d=C.dayIn+1;
-  if(slot==='am')return[
-    ctask(`08:30-08:50 启动｜${M.icon}${M.name} Day${d}/3：${R.focus}；写下今天A/B/C/S标记规则（没完整读题= C）`,'fx'),
-    ctask(`08:50-11:30 主模块｜${R.am}`,M.tag,R.amMin)
-  ];
-  if(slot==='pm')return[
-    ctask(`14:00-15:30 专项训练｜${R.pm1}`,M.tag,R.pmMin),
-    ctask(`15:45-17:00 复盘归因｜${R.pm2}；优先级：C题（对错都复盘）→A题做错→S题→普通错题`,'dt')
-  ];
-  return[
-    ctask(`19:30-20:20 背诵/整理｜${R.ev1}`,M.tag),
-    ctask('20:30-21:30 当日闭环｜A/B/C/S数据入表 + 合上答案讲5题 + 写明天补弱点（不再开新题）','fx')
-  ];
+  const M=C.mod,R=M.days[C.dayIn]||M.days[0];
+  if(slot==='am')return[ctask(R.am,M.tag,R.amMin)];
+  if(slot==='pm')return[ctask(R.pm1,M.tag,R.pmMin),ctask(R.pm2,'dt')];
+  return[ctask(R.ev1,M.tag)];
 }
 function cycleAm(P,date,C){ if(C.type==='module')return cycleModuleTasks(C,'am'); return C.plan.am; }
 function cyclePm(P,date,C){ if(C.type==='module')return cycleModuleTasks(C,'pm'); return C.plan.pm; }
-function cycleEv(P,date,C){ if(C.type==='module')return cycleModuleTasks(C,'ev'); return C.plan.ev; }
+function politicsDailyTask(P,date){
+  const dk=ds(date);
+  if(dk<'2026-09-28'||dk>'2026-11-30')return null;
+  const r=nx(P,'小黑-刷题',1);
+  if(r)return ctask(`🔴政治理论每日1节｜超格政治·系统课 ${rng(r)}（2倍速约75min）+ 配套政治20题20min，逐题A/B/C/S`, 'gj',20,'题');
+  return ctask('🔴政治理论已听完：时政关键词20min + 政治错题20题回刷（继续每日保温）','gj',20,'题');
+}
+function addPoliticsDaily(arr,P,date,C){
+  if(C&&C.type==='exam')return arr;
+  if((arr||[]).some(x=>/政治理论每日1节/.test(x.text||'')))return arr;
+  const pol=politicsDailyTask(P,date);
+  return pol?[pol,...arr]:arr;
+}
+function cycleEv(P,date,C){
+  const arr=(C.type==='module')?cycleModuleTasks(C,'ev'):(C.plan.ev||[]);
+  return addPoliticsDaily(arr,P,date,C);
+}
 function cycleLabel(C){
   if(!C)return '';
   if(C.type==='module')return `${C.icon}${C.name} Day${C.dayIn+1}/3（${C.mod.days[C.dayIn].focus}）`;
@@ -1158,10 +1174,10 @@ function cyclePlanOverviewHTML(){
   const rows=[];
   CYCLE_SCHEDULE.forEach(b=>{const m=CYCLE_MODS[b.key];rows.push({s:b.start,e:b.end,title:`${m.icon} ${m.name}`,desc:m.desc,type:'模块3天'});});
   Object.entries(CYCLE_CHECKS).forEach(([dk,x])=>rows.push({s:dk,e:dk,title:`${x.icon} ${x.name}`,desc:'严格限时 + 深复盘，不学新内容',type:'大周天'}));
-  Object.entries(CYCLE_SPECIAL).forEach(([dk,x])=>rows.push({s:dk,e:dk,title:`${x.icon} ${x.name}`,desc:x.kind==='exam'?'考试/恢复日':'11月循环总清算',type:x.kind==='exam'?'考试':'总复盘'}));
+  Object.entries(CYCLE_SPECIAL).forEach(([dk,x])=>rows.push({s:dk,e:dk,title:`${x.icon} ${x.name}`,desc:x.kind==='exam'?'考试/恢复日':x.kind==='study'?'当日学习课表':'11月循环总清算',type:x.kind==='exam'?'考试':x.kind==='study'?'学习日':'总复盘'}));
   rows.sort((a,b)=>a.s.localeCompare(b.s));
   return `<div style="border:1.5px solid #2563eb;border-radius:10px;overflow:hidden;background:#fff;margin-bottom:13px">
-    <div style="background:linear-gradient(90deg,#eff6ff,#dbeafe);padding:10px 14px;font-weight:800;color:#1e3a8a;font-size:13px">🔁 三天一个模块循环表（9/24-11/30）— 11月内完成一轮+二轮</div>
+    <div style="background:linear-gradient(90deg,#eff6ff,#dbeafe);padding:10px 14px;font-weight:800;color:#1e3a8a;font-size:13px">🔁 三天一个模块循环表（9/28-11/30）— 11月内完成一轮+二轮</div>
     <div style="padding:10px 12px;font-size:11px;color:#334155;line-height:1.8">
       <b>执行规则：</b>①每天只认一个主模块；②三天闭环=框架校准→专项内化→限时小测+深复盘；③每7天左右一次大周天严格限时；④所有题标A/B/C/S，C题猜对也复盘；⑤公文按0基础，公基高正确率暂不作数。
       <div class="debt-grid" style="margin-top:8px">${rows.map(r=>{
@@ -1177,8 +1193,8 @@ function cyclePlanOverviewHTML(){
 function cycleBannerHTML(){
   const today=ds(new Date()),C=cycleFor(today);
   const todayLine=C?`<b>今天 = ${cycleLabel(C)}</b>`:'<b>今天不在三天循环范围内</b>';
-  const target=C?(C.type==='module'?'底线8h：上午框架/训练 + 下午专项/复盘 + 晚上背诵闭环':C.type==='check'?'底线6.5h：严格限时 + 深复盘，不学新内容':C.type==='exam'?'考试/恢复日：按准考证和身体状态执行':'总复盘日'):'—';
-  return `${skipMiniHTML()}<div style="font-size:1.02rem;font-weight:800;color:#1e3a8a;margin-bottom:8px">🔁 三天一个模块循环版（9/24-11/30 · 替代旧5天板块）</div>
+  const target=C?(C.type==='module'?'底线8h：上午训练 + 下午刷题复盘 + 晚上政治理论+闭环':C.type==='check'?'底线6.5h：严格限时 + 深复盘':C.type==='exam'?'考试日':C.kind==='study'?'上午学练 + 下午刷题复盘 + 晚上政治理论+闭环':'总复盘日'):'—';
+  return `${skipMiniHTML()}<div style="font-size:1.02rem;font-weight:800;color:#1e3a8a;margin-bottom:8px">🔁 三天一个模块循环版（9/28 Day1）</div>
     <div style="font-size:.88rem;line-height:1.7;margin-bottom:10px;padding:8px 10px;background:#eff6ff;border-radius:7px;color:#1e3a8a">${todayLine} —— ${target}</div>
     ${cyclePlanOverviewHTML()}
     <div style="font-size:.86rem;line-height:1.75;color:#1e3a8a;background:#fff;border:1px solid #bfdbfe;border-radius:8px;padding:8px 10px">
@@ -1191,7 +1207,7 @@ function cycleSideHTML(date,C){
   const today=ds(date),mk=s=>s.slice(5).replace('-','/');
   CYCLE_SCHEDULE.forEach(b=>{const m=CYCLE_MODS[b.key];rows.push({s:b.start,e:b.end,title:`${m.icon}${m.name}`,type:'3天模块'});});
   Object.entries(CYCLE_CHECKS).forEach(([dk,x])=>rows.push({s:dk,e:dk,title:`${x.icon}${x.name}`,type:'大周天'}));
-  Object.entries(CYCLE_SPECIAL).forEach(([dk,x])=>rows.push({s:dk,e:dk,title:`${x.icon}${x.name}`,type:x.kind==='exam'?'考试':'总复盘'}));
+  Object.entries(CYCLE_SPECIAL).forEach(([dk,x])=>rows.push({s:dk,e:dk,title:`${x.icon}${x.name}`,type:x.kind==='exam'?'考试':x.kind==='study'?'学习日':'总复盘'}));
   rows.sort((a,b)=>a.s.localeCompare(b.s));
   const upcoming=rows.filter(r=>r.e>=today).slice(0,8);
   return `<div class="alert" style="margin-bottom:10px;background:#eff6ff;border-color:#93c5fd;color:#1e3a8a">🔁 当前执行「三天一个模块」：${cycleLabel(C)}</div>
@@ -1279,7 +1295,7 @@ function priorityHTML(){
     <div class="debt-grid" style="margin-top:6px">
       ${line('📚 公基·系统课（马克86）',gj,86,'PM 一/二/四/六各1节+三/五高频20题——只挑高频，非高频手动跳过')}
       ${line('🟠 金标尺综测·基础',zc,21,'每周4节（PM三+EV二/四/六）+每节手写1道 → 约10/20过完')}
-      ${line('🔴 超格政治·系统课',n('小黑-刷题'),12,'综测学完后接EV二/四/六 + 11/2起一/三/五，只挑高频12节')}
+      ${line('🔴 超格政治·系统课',n('小黑-刷题'),12,'9/28起每日1节+20题，先听高频；学完后每日错题/时政保温')}
       ${line('⭐ 白鹭申论·小题课',sl,25,'听课只占周日补课窗口；主项是每天1小题手写+批改')}
       ${line('🔥 逻辑推理',lj,24,'62节不听全，补到24节就停')}
       ${line('📈 资料刷题 4/24',zl,24,'每天2篇真题+弱项30题（不是听课）')}
@@ -1401,7 +1417,7 @@ function suanStreak(){
   while(days.has(ds(d))){s++;d.setDate(d.getDate()-1);}
   return s;
 }
-// 每日最低学习目标：9/24-11/30 三天模块循环，模块日8h / 大周天6.5h / 考试日2h；旧阶段保留兜底
+// 每日最低学习目标：9/28-11/30 三天模块循环，模块日8h / 大周天6.5h / 考试日2h；旧阶段保留兜底
 function dayTargetH(){const _dk0=ds(new Date());
   // ⏭ 顺延日：目标跟着降（三件套1.5h / 整天0h / 单时段按2.6h每段抵扣），避免"顺延了还被8h锁死"
   const _sk=skipEntryFor(_dk0);
@@ -2255,7 +2271,7 @@ function renderSidePanel(date){
     ${row(zcs,7,'综测·刷题','基础完再上',zc>=32 && zcs<7)}
     <div style="font-size:10px;font-weight:700;color:var(--t3);margin:7px 0 3px">🌙 晚上 · 主线课1节（图推/综测→超格）</div>
     ${row(gj,86,'公基·系统课（马克）',gj<86?`还剩 ${86-gj} 节 · PM一/二/四/六各1节，只挑高频，非高频直接跳`:'已过完，转100题',pmNow==='马克公基课')}
-    ${row(n('小黑-刷题'),24,'超格政治·系统课',n('小黑-刷题')<12?'综测学完后接EV二/四/六+11/2起一/三/五，只挑高频12节':'高频已听完，转刷题',false)}
+    ${row(n('小黑-刷题'),24,'超格政治·系统课',n('小黑-刷题')<12?'9/28起每日1节+20题，学完后保温':'高频已听完，转刷题',false)}
     ${row(gjs,50,'公基·刷题课',gj<86?'系统课没完，先别跳':'系统课完后开始',evNow==='公基刷题课')}
     <div class="sp-item sp-on">⚡ 底线三件套：速算25题 + 图推20题 + 申论1道手写 · 顺延日也照做</div>
     <div style="font-size:10px;color:var(--t3);line-height:1.6;margin-top:8px">打卡课表任务或在「统计」改节数，这里会跟着变。日历数字只用来倒计时，不再用来假装你学完了。</div>
@@ -2284,7 +2300,7 @@ function gapRows(){
 function renderDebtBanner(){
   const el=document.getElementById('debt-banner');
   if(!el) return;
-  // 🔁 9/24-11/30 三天模块循环卡片优先展示
+  // 🔁 9/28-11/30 三天模块循环卡片优先展示
   const _dkBB=ds(new Date());
   if(cycleFor(_dkBB)){
     el.style.display='block';
@@ -2324,7 +2340,7 @@ function renderDebtBanner(){
       </div>`).join('')}</div>${skipMiniHTML()}${makeupHTML()}${priorityHTML()}`;
     return;
   }
-  // 9/24-12/6：9/23 检查点结果（首次渲染时冻结存档）+ 两个运行时开关 + 里程碑
+  // 9/28-12/6：9/23 检查点结果（首次渲染时冻结存档）+ 两个运行时开关 + 里程碑
   const _dk2=ds(new Date());
   if(_dk2>='2026-11-01'&&_dk2<='2026-12-06'){
     if(!D.cpSnap){D.cpSnap={date:ds(new Date()),st:suanStreak(),prog:Object.assign({},D.prog||{})};sv();}
@@ -2423,11 +2439,15 @@ function renderSchedule(){
   const carryMap={am:[],pm:[],ev:[]};
   try{
     const todayKey=ds(new Date());
-    if(dkey>=todayKey){
+    if(dkey>=todayKey && !cycleFor(dkey)){
       for(let off=1;off<=3;off++){
         const prev=new Date(d); prev.setDate(prev.getDate()-off);
         const pk=ds(prev);
         if(pk<'2026-09-10') break;
+        // 
+        // 
+        if(dkey>='2026-09-28' && pk<'2026-09-28') break;
+        if(dkey>='2026-09-29' && pk<'2026-09-29') break;
         const ent=skipEntryFor(pk);
         if(ent&&ent.mode==='skip') continue; // 整天顺延的已通过 eff 后移，无需再滚
         let prevInfo;
@@ -5163,5 +5183,5 @@ function init(){
   if(CLOUD.apiKey&&CLOUD.binId) cloudLoad().catch(()=>{});
 }
 init();
-</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4009fcd1e48cdc7',t:'MTc5MDI0MDY5Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a41f4ae51b65b612',t:'MTc5MDU2MjI3NA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
