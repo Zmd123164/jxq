@@ -5341,6 +5341,22 @@ init();
     {id:'rewrite',time:'20:20',title:'对照改写 + 错题转卡',detail:'小题合成自己的答案；作文按三改进度推进。今天错题最多转15张，只转盲区、重复错和高频考点。',out:'记录：转卡__张；作文改到第__稿'},
     {id:'report',time:'21:30',title:'关账：没勾完的自动滚明天',detail:'只看结果：没做完的不要补写“学过了”。保持未勾选，明天面板会把它列为欠账先补。',out:'记录：两套分数 / 最弱模块 / 睡眠时间'}
   );
+  window.startLandingTimer=function(id){
+    var t=null; for(var i=0;i<tasks.length;i++){ if(tasks[i].id===id) t=tasks[i]; }
+    if(!t) return;
+    var key='landing_'+ds+'_'+id;
+    try{ _ckTaskText[key]=t.time+' '+t.title+' '+t.detail; }catch(e){}
+    if(typeof startTaskTimer==='function'){ startTaskTimer(key); setTimeout(render,450); }
+  };
+  window.stopLandingTimer=function(){
+    if(typeof stopTimer==='function') stopTimer();
+    setTimeout(render,450);
+  };
+  window.openTimerTab=function(){
+    var btns=document.querySelectorAll('.tb');
+    for(var i=0;i<btns.length;i++){ if((btns[i].textContent||'').indexOf('计时器')>=0){ goTab('timer', btns[i]); window.scrollTo(0,0); return; } }
+    if(typeof goTab==='function') goTab('timer', null);
+  };
   function render(){
     var host=document.getElementById('landing-panel'); if(!host) return;
     var total=tasks.length, finished=tasks.filter(function(t){return !!done[t.id];}).length;
@@ -5351,13 +5367,20 @@ init();
       var checked=done[t.id]?'checked':'';
       var style=done[t.id]?'opacity:.62;text-decoration:line-through':'';
       var hot=(t.id==='debt_zongce'||t.id==='xingfa')?'border-color:#f59e0b;background:#fffbeb':'';
-      return '<label style="display:flex;gap:9px;align-items:flex-start;padding:9px 10px;border:1px solid var(--border);border-radius:10px;margin-top:7px;background:var(--s2);'+hot+'">'
+      var key='landing_'+ds+'_'+t.id;
+      var running=false;
+      try{ running=(typeof tOn!=='undefined' && tOn && typeof activeSlotKey!=='undefined' && activeSlotKey===key); }catch(e){}
+      var timerBtn=running
+        ? '<button type="button" onclick="event.preventDefault();event.stopPropagation();stopLandingTimer()" style="flex:0 0 auto;padding:5px 10px;border-radius:999px;border:none;background:#dc2626;color:#fff;font-size:11px;font-weight:800;cursor:pointer">⏹ 结束</button>'
+        : '<button type="button" onclick="event.preventDefault();event.stopPropagation();startLandingTimer(\''+t.id+'\')" style="flex:0 0 auto;padding:5px 10px;border-radius:999px;border:1.5px solid #2563eb;background:#eff6ff;color:#1d4ed8;font-size:11px;font-weight:800;cursor:pointer">▶ 计时</button>';
+      return '<div style="display:flex;gap:9px;align-items:flex-start;padding:9px 10px;border:1px solid var(--border);border-radius:10px;margin-top:7px;background:var(--s2);'+hot+'">'
         +'<input type="checkbox" data-landing="'+t.id+'" '+checked+' style="width:19px;height:19px;margin-top:2px;flex:0 0 auto">'
-        +'<span style="flex:1;'+style+'"><b style="font-size:12px">'+esc(t.time)+' · '+esc(t.title)+'</b><br><span style="font-size:12px;color:var(--t2);line-height:1.55">'+esc(t.detail)+'</span><br><span style="font-size:11px;color:var(--p);font-weight:700">'+esc(t.out)+'</span></span></label>';
+        +'<span style="flex:1;'+style+'"><b style="font-size:12px">'+esc(t.time)+' · '+esc(t.title)+'</b><br><span style="font-size:12px;color:var(--t2);line-height:1.55">'+esc(t.detail)+'</span><br><span style="font-size:11px;color:var(--p);font-weight:700">'+esc(t.out)+'</span></span>'+timerBtn+'</div>';
     }).join('');
     host.innerHTML='<div style="background:var(--surface);border:1.5px solid #2563eb;border-radius:var(--rad);box-shadow:var(--sh);padding:12px 14px;margin-bottom:13px">'
       +'<div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:center"><div style="font-size:15px;font-weight:800">📌 今日落地执行单</div><div style="font-size:12px;color:var(--t2)">'+ds+' '+wk+' · '+esc(dayInfo[0])+' · 距11/15 '+Math.max(0,diff(ds,EXAM))+'天</div></div>'
       +'<div style="font-size:12px;color:var(--t2);margin-top:4px">'+esc(dayInfo[1])+' · 已完成 <b style="color:var(--p)">'+finished+'/'+total+'</b></div>'
+      +'<button type="button" onclick="openTimerTab()" style="margin-top:8px;padding:6px 12px;border-radius:999px;border:none;background:#2563eb;color:#fff;font-size:12px;font-weight:800;cursor:pointer">⏱ 打开专注计时器</button>'
       +'<div style="font-size:11px;color:#991b1b;margin-top:4px">执行顺序只看这张单；下方旧课表仍是历史排课（按11/1旧逻辑），先不要跟它走。</div>'
       +(debt.length?'<div style="margin-top:8px;padding:8px 10px;border-radius:9px;background:#fef2f2;border:1px solid #fecaca;color:#991b1b;font-size:12px;line-height:1.6"><b>昨日欠账已滚入今天：'+debt.join('、')+'。</b>先补账，再开新任务；今晚没勾完，明天继续滚，不许用“看过答案”冒充完成。</div>':'')
       +rows
@@ -9928,5 +9951,5 @@ function showMemoryCard(){
 function showDashboard(){ document.getElementById('memory-view').style.display='none'; }
 window.addEventListener('message', function(e){ if(e.data && e.data.type==='showDashboard') showDashboard(); });
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4b54e67aef62f43',t:'MTc5MjEzNTI4MQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4b5a5f38ed1847d',t:'MTc5MjEzODg2Nw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
