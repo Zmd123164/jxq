@@ -220,13 +220,22 @@ function save(){ if(!LS_OK) return; try{ localStorage.setItem(LS_KEY, JSON.strin
 function load(){ if(!LS_OK) return false; try{ const s=localStorage.getItem(LS_KEY); if(!s) return false; const o=JSON.parse(s); if(!o||!o.cards) return false; state=Object.assign(state,o); state.cfg=Object.assign({},CFG0,o.cfg||{}); return true; }catch(e){ return false; } }
 function countNew(){ return state.cards.filter(c=>c.step<0).length; }
 
+const BAD_CARD_RE=/对应的重要讲话\/文件\/会议标题是什么/;
+function isBadCard(c){ return !!(c && BAD_CARD_RE.test(c.q||'')); }
 function mergeDeck(){
+  /* 清理第一批PDF生成的低质“日期问标题”卡：题面只有日期、无法正常检索记忆 */
+  if(state.cards.some(isBadCard)) state.cards=state.cards.filter(c=>!isBadCard(c));
   const have=new Set(state.cards.map(c=>c.id));
+  const deckById={};
+  DECK.cards.forEach((c,i)=>{ deckById['d'+i]=c; });
+  /* 给老卡补来源标记，便于在卡片库排查 */
+  state.cards.forEach(c=>{ const dc=deckById[c.id]; if(dc && !c.src && dc.src) c.src=dc.src; });
   let added=0;
   DECK.cards.forEach((c,i)=>{
+    if(isBadCard(c)) return;
     const id='d'+i;
     if(!have.has(id)){
-      state.cards.push({id:id,d:c.d,q:c.q,a:c.a,p:c.p||2,step:-1,due:null,lapses:0,seen:0});
+      state.cards.push({id:id,d:c.d,q:c.q,a:c.a,p:c.p||2,src:c.src||'',step:-1,due:null,lapses:0,seen:0});
       added++;
     }
   });
@@ -395,12 +404,19 @@ function renderToday(){
       <p class="footnote">下一次复习：忘记→今天 · 模糊→${addDays(todayStr(),INTERVALS[Math.max(0,(c.step<0?0:c.step-1))])===todayStr()?'今天':fmtDate(addDays(todayStr(),INTERVALS[Math.max(0,(c.step<0?0:c.step-1))]))} · 记得→${fmtDate(addDays(todayStr(),INTERVALS[Math.min(8,(c.step<0?1:c.step+1))]))} · 熟练→${fmtDate(addDays(todayStr(),INTERVALS[Math.min(8,(c.step<0?2:c.step+2))]))}</p>`
     :`<div class="row" style="margin-top:14px"><button class="btn primary wide" id="btnShow">显示答案（空格）</button></div>
       <p class="footnote">先自己回忆 3 秒再翻面，记忆效果最好。</p>`}
+    <div class="row" style="margin-top:10px">
+      <button class="btn ghost small" id="btnEditCur">编辑这张卡</button>
+      <button class="btn ghost small" id="btnLocateCur">去卡片库定位</button>
+    </div>
   </div>`;
   if(session.revealed){
     $$('.rate button').forEach(b=>{ b.onclick=()=>rate(b.getAttribute('data-r')); });
   }else{
     $('#btnShow').onclick=reveal;
   }
+  const ec=$('#btnEditCur'), lc=$('#btnLocateCur');
+  if(ec) ec.onclick=()=>{ editingId=c.id; browseFilter={kw:'',deck:''}; switchTab('browse'); renderBrowse(true); };
+  if(lc) lc.onclick=()=>{ browseFilter={kw:(c.q||'').slice(0,18),deck:''}; editingId=null; switchTab('browse'); renderBrowse(); const inp=$('#bkw'); if(inp){ inp.focus(); inp.setSelectionRange(inp.value.length,inp.value.length); } };
 }
 function draftNewPlan(){
   const remain=countNew();
@@ -568,23 +584,89 @@ function renderStats(){
 /* ---------- 渲染：卡片库 ---------- */
 let browseFilter={kw:'',deck:''};
 let editingId=null;
-function renderBrowse(){
-  const el=$('#tab-browse');
-  const kw=browseFilter.kw.trim();
-  let list=state.cards.filter(c=>{
+function normKw(s){ return String(s||'').replace(/\s+/g,'').toLowerCase(); }
+function srcLabel(src){
+  const m={'pdf1016':'10·16 PDF·时政政治','pdf1016_common':'10·16 PDF·常识','xi_extreme':'习思想极简版','koujue':'口诀整理','fb450':'450高频考点','mock1014':'10·14模考错题'};
+  return m[src]||src||'';
+}
+function filteredBrowse(){
+  const kw=normKw(browseFilter.kw);
+  return state.cards.filter(c=>{
+    if(isBadCard(c)) return false;
     if(browseFilter.deck && c.d!==browseFilter.deck) return false;
-    if(kw && !(c.q.indexOf(kw)>=0 || c.a.indexOf(kw)>=0)) return false;
+    if(kw){
+      const hay=normKw([c.q||'',c.a||'',c.d||'',deckName(c.d),c.src||'',srcLabel(c.src||'')].join(' '));
+      if(!hay.includes(kw)) return false;
+    }
     return true;
   });
+}
+function browseItemHtml(c){
+  if(editingId===c.id){
+    return `<div class="item" id="edit-${esc(c.id)}" style="border-color:#9db9f5;background:#fbfcff">
+      <label class="f">科目</label>
+      <select id="ed-${esc(c.id)}">${allDecks().map(d=>`<option value="${d}" ${d===c.d?'selected':''}>${esc(deckName(d))}</option>`).join('')}</select>
+      <label class="f">问题</label>
+      <textarea id="eq-${esc(c.id)}" style="min-height:64px">${esc(c.q)}</textarea>
+      <label class="f">答案</label>
+      <textarea id="ea-${esc(c.id)}" style="min-height:80px">${esc(c.a)}</textarea>
+      <div class="row" style="margin-top:8px">
+        <button class="btn primary" data-save="${esc(c.id)}">保存</button>
+        <button class="btn ghost" data-cancel="1">取消</button>
+      </div>
+    </div>`;
+  }
+  return `<div class="item" id="card-${esc(c.id)}">
+    <div class="row" style="justify-content:space-between">
+      <div><span class="chip">${esc(deckName(c.d))}</span>${c.p===1?'<span class="chip orange">高频</span>':''}${c.step<0?'<span class="chip gray">未学</span>':'<span class="chip green">第'+(c.step+1)+'档</span>'}${c.src?`<span class="chip gray">${esc(srcLabel(c.src))}</span>`:''}</div>
+      <div class="row" style="gap:6px">
+        <button class="btn ghost small" data-edit="${esc(c.id)}">编辑</button>
+        <button class="btn ghost small" data-del="${esc(c.id)}">删除</button>
+      </div>
+    </div>
+    <div class="qq">${esc(c.q)}</div>
+    <div class="aa">${esc(c.a)}</div>
+  </div>`;
+}
+function bindBrowseButtons(){
+  $$('[data-edit]').forEach(b=>{ b.onclick=()=>{ editingId=b.getAttribute('data-edit'); updateBrowseList(); const t=document.getElementById('edit-'+editingId); if(t) t.scrollIntoView({block:'center'}); const ta=document.getElementById('eq-'+editingId); if(ta) ta.focus(); }; });
+  $$('[data-cancel]').forEach(b=>{ b.onclick=()=>{ editingId=null; updateBrowseList(); }; });
+  $$('[data-save]').forEach(b=>{ b.onclick=()=>{
+    const id=b.getAttribute('data-save'); const c=cardById(id); if(!c) return;
+    const q=document.getElementById('eq-'+id).value.trim(), a=document.getElementById('ea-'+id).value.trim(), d=document.getElementById('ed-'+id).value;
+    if(!q||!a){ alert('问题和答案不能为空'); return; }
+    c.q=q; c.a=a; if(d) c.d=d;
+    editingId=null; save(); updateBrowseList();
+    const t=document.getElementById('card-'+id); if(t) t.scrollIntoView({block:'center'});
+  };});
+  $$('[data-del]').forEach(b=>{ b.onclick=()=>{
+    const id=b.getAttribute('data-del');
+    const c=cardById(id); if(!c) return;
+    if(!confirm('删除这张卡片？\n\n'+c.q)) return;
+    state.cards=state.cards.filter(x=>x.id!==id); if(editingId===id) editingId=null; save(); updateBrowseList();
+  };});
+}
+function updateBrowseList(){
+  const wrap=document.getElementById('cardListWrap');
+  const meta=document.getElementById('browseMeta');
+  if(!wrap) return;
+  const list=filteredBrowse();
   const shown=list.slice(0,80);
+  if(meta) meta.textContent=`共 ${list.length} 张${list.length>80?'，显示前80张':''} · 搜索会匹配问题、答案、科目和来源；每张卡都能编辑`;
+  wrap.innerHTML=shown.length?shown.map(browseItemHtml).join(''):'<p class="muted">没有找到匹配卡片。换个关键词，或清空搜索。</p>';
+  bindBrowseButtons();
+}
+function renderBrowse(focusEdit){
+  const el=$('#tab-browse');
   el.innerHTML=`
   <div class="panel">
     <h2>检索卡片</h2>
     <div class="row">
-      <input type="text" id="bkw" placeholder="搜索关键词，如：诉讼时效 / 公文 / 剩余价值" value="${esc(browseFilter.kw)}" style="flex:1;min-width:200px">
+      <input type="text" id="bkw" placeholder="搜索关键词，如：诉讼时效 / 中央纪委 / 河姆渡" value="${esc(browseFilter.kw)}" style="flex:1;min-width:200px">
       <select id="bdeck" style="max-width:190px"><option value="">全部科目</option>${allDecks().map(d=>`<option value="${d}">${esc(deckName(d))}</option>`).join('')}</select>
+      <button class="btn ghost" id="btnClearKw">清空</button>
     </div>
-    <p class="muted small" style="margin-top:8px">共 ${list.length} 张${list.length>80?'，显示前80张':''} · 每张卡片都能【编辑】——觉得题干别扭就改顺口</p>
+    <p class="muted small" id="browseMeta" style="margin-top:8px"></p>
   </div>
   <div class="panel">
     <h2>新建卡片（把错题变成记忆卡）</h2>
@@ -614,64 +696,26 @@ function renderBrowse(){
         <li>每张卡以 <b>[科目]</b> 开头：下一行是问题，再下面是答案（答案可多行）。</li>
         <li>一行写法：<b>[科目] 问题 ||| 答案</b>；想标高频就写 <b>[科目!]</b></li>
         <li>科目可写简称（刑法）或全名（法律·刑法）；不认识的名字会自动新建科目。</li>
-        <li>重复的卡片自动跳过；也支持直接粘贴JSON：<span class="small">[{"d":"刑法","q":"…","a":"…"}]</span></li>
+        <li>重复的卡片自动跳过；也支持直接粘贴JSON。</li>
       </ul>
     </details>
   </div>
   <div class="panel cardlist">
     <h2>卡片列表</h2>
-    ${shown.map(c=>{
-      if(editingId===c.id){
-        return `<div class="item" style="border-color:#9db9f5;background:#fbfcff">
-          <label class="f">科目</label>
-          <select id="ed-${esc(c.id)}">${allDecks().map(d=>`<option value="${d}" ${d===c.d?'selected':''}>${esc(deckName(d))}</option>`).join('')}</select>
-          <label class="f">问题</label>
-          <textarea id="eq-${esc(c.id)}" style="min-height:64px">${esc(c.q)}</textarea>
-          <label class="f">答案</label>
-          <textarea id="ea-${esc(c.id)}" style="min-height:80px">${esc(c.a)}</textarea>
-          <div class="row" style="margin-top:8px">
-            <button class="btn primary" data-save="${esc(c.id)}">保存</button>
-            <button class="btn ghost" data-cancel="1">取消</button>
-          </div>
-        </div>`;
-      }
-      return `<div class="item">
-        <div class="row" style="justify-content:space-between">
-          <div><span class="chip">${esc(deckName(c.d))}</span>${c.p===1?'<span class="chip orange">高频</span>':''}${c.step<0?'<span class="chip gray">未学</span>':'<span class="chip green">第'+(c.step+1)+'档</span>'}</div>
-          <div class="row" style="gap:6px">
-            <button class="btn ghost small" data-edit="${esc(c.id)}">编辑</button>
-            <button class="btn ghost small" data-del="${esc(c.id)}">删除</button>
-          </div>
-        </div>
-        <div class="qq">${esc(c.q)}</div>
-        <div class="aa">${esc(c.a)}</div>
-      </div>`;
-    }).join('')}
+    <div id="cardListWrap"></div>
   </div>`;
-  $('#bkw').oninput=e=>{ browseFilter.kw=e.target.value; renderBrowse(); };
-  $('#bdeck').onchange=e=>{ browseFilter.deck=e.target.value; renderBrowse(); };
+  const inp=$('#bkw');
+  inp.oninput=e=>{ browseFilter.kw=e.target.value; updateBrowseList(); };
+  $('#btnClearKw').onclick=()=>{ browseFilter.kw=''; inp.value=''; updateBrowseList(); inp.focus(); };
+  $('#bdeck').onchange=e=>{ browseFilter.deck=e.target.value; updateBrowseList(); };
   $('#bdeck').value=browseFilter.deck;
+  updateBrowseList();
   $('#btnAdd').onclick=()=>{
     const q=$('#nQ').value.trim(), a=$('#nA').value.trim();
     if(!q||!a){ alert('问题和答案都要填哦'); return; }
-    state.cards.push({id:'u'+Date.now(),d:$('#nDeck').value,q:q,a:a,p:$('#nP').checked?1:2,step:-1,due:null,lapses:0,seen:0});
+    state.cards.push({id:'u'+Date.now(),d:$('#nDeck').value,q:q,a:a,p:$('#nP').checked?1:2,src:'manual',step:-1,due:null,lapses:0,seen:0});
     save(); alert('已加入，今日队列刷新后就能学到它'); renderBrowse();
   };
-  $$('[data-edit]').forEach(b=>{ b.onclick=()=>{ editingId=b.getAttribute('data-edit'); renderBrowse(); window.scrollTo({top:0,behavior:'smooth'}); }; });
-  $$('[data-cancel]').forEach(b=>{ b.onclick=()=>{ editingId=null; renderBrowse(); }; });
-  $$('[data-save]').forEach(b=>{ b.onclick=()=>{
-    const id=b.getAttribute('data-save'); const c=cardById(id); if(!c) return;
-    const q=document.getElementById('eq-'+id).value.trim(), a=document.getElementById('ea-'+id).value.trim(), d=document.getElementById('ed-'+id).value;
-    if(!q||!a){ alert('问题和答案不能为空'); return; }
-    c.q=q; c.a=a; if(d) c.d=d;
-    editingId=null; save(); renderBrowse();
-  };});
-  $$('[data-del]').forEach(b=>{ b.onclick=()=>{
-    const id=b.getAttribute('data-del');
-    const c=cardById(id); if(!c) return;
-    if(!confirm('删除这张卡片？\n\n'+c.q)) return;
-    state.cards=state.cards.filter(x=>x.id!==id); save(); renderBrowse();
-  };});
   $('#btnImp').onclick=()=>{
     const {out,errs}=parseCardText($('#impText').value);
     if(!out.length){ alert('没有解析到卡片。\n\n'+(errs.slice(0,3).join('\n')||'请检查格式：每张卡要以 [科目] 开头')); return; }
@@ -681,7 +725,7 @@ function renderBrowse(){
       const key=String(c.q).replace(/\s+/g,'').trim();
       if(seen.has(key)){ skipped++; return; }
       seen.add(key);
-      state.cards.push({id:'u'+Date.now()+'_'+i,d:c.d,q:c.q,a:c.a,p:c.p,step:-1,due:null,lapses:0,seen:0});
+      state.cards.push({id:'u'+Date.now()+'_'+i,d:c.d,q:c.q,a:c.a,p:c.p,src:'import',step:-1,due:null,lapses:0,seen:0});
       added++;
     });
     save();
@@ -690,9 +734,12 @@ function renderBrowse(){
     renderBrowse();
   };
   $('#btnImpSample').onclick=()=>{
-    $('#impText').value='[刑法!] 转化型抢劫后对方反击致死，如何定性？\n盗窃当场使用暴力抗拒抓捕→转化为抢劫；对方构成特殊防卫，不负刑事责任\n\n[公文] 请示可以同时主送两个上级机关吗？ ||| 不可以，请示只主送一个上级机关';
+    $('#impText').value='[刑法!] 转化型抢劫后对方反击致死，如何定性？\n盗窃当场使用暴力抗拒抓捕→转化为抢劫；对方构成特殊防卫，不负刑事责任\n\n[公文] 请示可以同时主送两个上级机关吗？ ||| 不可以，只主送一个上级机关';
   };
   $('#btnImpClear').onclick=()=>{ $('#impText').value=''; };
+  if(focusEdit && editingId){
+    setTimeout(()=>{ const t=document.getElementById('edit-'+editingId); if(t) t.scrollIntoView({block:'center'}); const ta=document.getElementById('eq-'+editingId); if(ta) ta.focus(); },60);
+  }
 }
 
 /* ---------- 渲染：设置 ---------- */
@@ -789,5 +836,5 @@ document.addEventListener('keydown',e=>{
 })();
 
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4b444ffdb356a2a',t:'MTc5MjEyNDQxMA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>
