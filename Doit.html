@@ -5299,9 +5299,13 @@ init();
   var hasY=Object.keys(ydone).length>0;
   var debtZ = (hasY && !ydone.zongce) || ds==='2026-10-16';
   var debtX = (hasY && !ydone.xingfa && !ydone.set2) || ds==='2026-10-16';
+  if(ds==='2026-10-19'){ debtZ=false; debtX=false; }
   var wk=['周日','周一','周二','周三','周四','周五','周六'][now.getDay()];
   var special={
     '2026-10-16':['B 补账日','刑法补题 + 综测欠账先清；套②可换错题复做套'],
+    '2026-10-19':['R 重启日','15–18号归零，不补旧账；今天只恢复手感和秩序'],
+    '2026-10-20':['B 刑法歼灭日','综合套① + 刑法专项100题；综测不断'],
+    '2026-10-21':['C 回炉日','新鲜套 + 错题复做套 + 本周答案重写'],
     '2026-10-18':['C 回炉日','错题复做套 + 作文三改'],
     '2026-10-22':['B 歼灭日','弱科专项套（默认法律，按近3套最低替换）'],
     '2026-10-25':['C 回炉日','错题复做套 + 本周答案重写'],
@@ -5341,6 +5345,29 @@ init();
     {id:'rewrite',time:'20:20',title:'对照改写 + 错题转卡',detail:'小题合成自己的答案；作文按三改进度推进。今天错题最多转15张，只转盲区、重复错和高频考点。',out:'记录：转卡__张；作文改到第__稿'},
     {id:'report',time:'21:30',title:'关账：没勾完的自动滚明天',detail:'只看结果：没做完的不要补写“学过了”。保持未勾选，明天面板会把它列为欠账先补。',out:'记录：两套分数 / 最弱模块 / 睡眠时间'}
   );
+  if(ds==='2026-10-19'){
+    tasks=[
+      {id:'cards',time:'现在起',title:'记忆卡到期清零（重启第一步）',detail:'先清到期复习，40分钟封顶；今天不追新卡数量。目的不是学多少，是把系统重新打开。',out:'记录：复习__张 / 忘记__张'},
+      {id:'set1',time:'第1块',title:'公基综合套①（90分钟）',detail:'做一套未做过的公基卷；不暂停、不查答案；蒙对打“?”。这套是重启诊断分，不许因为手生中途停。',out:'记录：总分__ / 最弱模块__'},
+      {id:'correct1',time:'第2块',title:'套①订正闭环',detail:'错题和蒙对题只记三行：考点 / 错因 / 正确规则。订正没完，不许开手机、不许开下一套。',out:'产出：错题规则清单（最多10条）'},
+      {id:'numdata',time:'第3块',title:'数量15题 + 资料2篇（不断线）',detail:'数量2分钟没思路就跳；资料每篇限时，错题标明找错数/公式错/算错/超时。',out:'记录：数量对__/15；资料对__/10'},
+      {id:'xingfa',time:'第4块',title:'刑法A轮60题（把15号欠的先开工）',detail:'构成10/防卫10/共同10/形态8/量刑12/分则10。只求开工和暴露盲区，不许边做边看解析。',out:'记录：A轮对__/60；最弱点__'},
+      {id:'set2',time:'第5块',title:'公基综合套②（90分钟）',detail:'第二套继续全真计时。累了可以休息10分钟再开，但不许把套②换成零散刷题。',out:'记录：总分__ / 最弱模块__'},
+      {id:'correct2',time:'第6块',title:'套②订正 + 刑法错题合并',detail:'合并两套和刑法A轮：同考点错2次的，明天晨读先背；近3套最低模块写出来。',out:'产出：明天晨读3个错点'},
+      {id:'zongce',time:'晚上',title:'综测概括题1道（必须手写）',detail:'25分钟手写 → 20分钟对照 → 改成自己的最终版。今天不追求题量，先把综测断掉的线接上。',out:'完成标准：自己的最终版答案'},
+      {id:'rewrite',time:'睡前',title:'错题转卡≤10张 + 关账',detail:'只转盲区、重复错、高频考点。没勾完的保持未勾，明天继续滚；不许补勾假装完成。',out:'记录：转卡__张 / 明早第一件事__'}
+    ];
+  }
+  if(ds==='2026-10-20'){
+    tasks.forEach(function(t){
+      if(t.id==='set2'){ t.title='刑法专项套100题（B日第二套）'; t.detail='A轮没完先补A轮；A轮已完：B补洞40 + 案例40 + D小测20。今天目标是把刑法从“看过”变成“做过”。'; t.out='记录：A__/60 B__/40 C__/40 D__/20'; }
+    });
+  }
+  if(ds==='2026-10-21'){
+    tasks.forEach(function(t){
+      if(t.id==='set2'){ t.title='错题复做套（90分钟）'; t.detail='只复做15–20号错题、蒙对题和同考点题；做对不算完，要能说出正确规则。'; t.out='记录：复做对__/总__；仍错考点__'; }
+    });
+  }
   window.startLandingTimer=function(id){
     var t=null; for(var i=0;i<tasks.length;i++){ if(tasks[i].id===id) t=tasks[i]; }
     if(!t) return;
@@ -9951,5 +9978,5 @@ function showMemoryCard(){
 function showDashboard(){ document.getElementById('memory-view').style.display='none'; }
 window.addEventListener('message', function(e){ if(e.data && e.data.type==='showDashboard') showDashboard(); });
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4b5a5f38ed1847d',t:'MTc5MjEzODg2Nw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>
