@@ -5388,15 +5388,32 @@ init();
     var t=null; for(var i=0;i<tasks.length;i++){ if(tasks[i].id===id) t=tasks[i]; }
     if(!t) return;
     var key='landing_'+ds+'_'+id;
-    try{ _ckTaskText[key]=t.time+' '+t.title+' '+t.detail; }catch(e){}
-    if(typeof startTaskTimer==='function'){ startTaskTimer(key); setTimeout(render,450); }
+    var text=t.time+' '+t.title+' '+t.detail;
+    try{ _ckTaskText[key]=text; }catch(e){}
+    var ok=false;
+    try{ if(typeof startTaskTimer==='function'){ startTaskTimer(key); ok=(typeof tOn!=='undefined' && tOn); } }catch(e){ console.warn('startTaskTimer failed', e); }
+    if(!ok){
+      try{
+        activeSlotKey=key;
+        curSubj=(typeof inferSubj==='function')?inferSubj(text):'复盘';
+        curMode=(typeof inferMode==='function')?inferMode(text):'刷题';
+        sessStart=new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'});
+        _wallStart=Date.now(); tOn=true;
+        if(typeof saveTimerState==='function') saveTimerState();
+        if(typeof _showRunningUI==='function') _showRunningUI(t.title.slice(0,16));
+        if(typeof _startInterval==='function') _startInterval();
+        if(typeof showToast==='function') showToast('▶ 开始计时：'+t.title);
+        ok=true;
+      }catch(e2){ console.warn('landing timer fallback failed', e2); if(typeof showToast==='function') showToast('计时启动失败，请刷新页面再点','red'); }
+    }
+    setTimeout(render,450);
   };
   window.stopLandingTimer=function(){
     if(typeof stopTimer==='function') stopTimer();
     setTimeout(render,450);
   };
   window.toggleLandingTimer=function(id,ev){
-    if(ev && ev.target && (ev.target.tagName==='INPUT' || ev.target.tagName==='BUTTON')) return;
+    if(ev && ev.target && ev.target.tagName==='INPUT') return;
     var key='landing_'+ds+'_'+id;
     var running=false;
     try{ running=(typeof tOn!=='undefined' && tOn && typeof activeSlotKey!=='undefined' && activeSlotKey===key); }catch(e){}
@@ -10009,5 +10026,5 @@ function showMemoryCard(){
 function showDashboard(){ document.getElementById('memory-view').style.display='none'; }
 window.addEventListener('message', function(e){ if(e.data && e.data.type==='showDashboard') showDashboard(); });
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4cc46a3db2643e9',t:'MTc5MjM3NjEzNg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4cc77703f88266b',t:'MTc5MjM3ODEzNQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
