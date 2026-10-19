@@ -5295,6 +5295,7 @@ init();
   function loadAll(){try{return JSON.parse(localStorage.getItem(KEY)||'{}');}catch(e){return{};}}
   function saveAll(o){try{localStorage.setItem(KEY,JSON.stringify(o));}catch(e){}}
   function esc(s){return String(s||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function fmtDur(sec){sec=Math.max(0,Math.floor(sec||0));var h=Math.floor(sec/3600),m=Math.floor(sec%3600/60),ss=sec%60;return (h?((h<10?'0':'')+h+':'):'')+((m<10?'0':'')+m)+':'+((ss<10?'0':'')+ss);}
   var now=new Date(), ds=fmt(now), yds=addDays(ds,-1), all=loadAll(), done=all[ds]||{}, ydone=all[yds]||{};
   var hasY=Object.keys(ydone).length>0;
   var debtZ = (hasY && !ydone.zongce) || ds==='2026-10-16';
@@ -5394,6 +5395,14 @@ init();
     if(typeof stopTimer==='function') stopTimer();
     setTimeout(render,450);
   };
+  window.toggleLandingTimer=function(id,ev){
+    if(ev && ev.target && (ev.target.tagName==='INPUT' || ev.target.tagName==='BUTTON')) return;
+    var key='landing_'+ds+'_'+id;
+    var running=false;
+    try{ running=(typeof tOn!=='undefined' && tOn && typeof activeSlotKey!=='undefined' && activeSlotKey===key); }catch(e){}
+    if(running){ window.stopLandingTimer(); }
+    else{ window.startLandingTimer(id); }
+  };
   window.openTimerTab=function(){
     var btns=document.querySelectorAll('.tb');
     for(var i=0;i<btns.length;i++){ if((btns[i].textContent||'').indexOf('计时器')>=0){ goTab('timer', btns[i]); window.scrollTo(0,0); return; } }
@@ -5412,12 +5421,18 @@ init();
       var key='landing_'+ds+'_'+t.id;
       var running=false;
       try{ running=(typeof tOn!=='undefined' && tOn && typeof activeSlotKey!=='undefined' && activeSlotKey===key); }catch(e){}
+      var durBadge='';
+      try{
+        var mins=(typeof taskMinutes==='function')?taskMinutes(key):0;
+        if(running){ durBadge='<span style="flex:0 0 auto;font-size:11px;font-weight:800;color:#dc2626;background:#fef2f2;border:1px solid #fecaca;border-radius:999px;padding:4px 8px">⏱ '+fmtDur((typeof elapsedSec==='function')?elapsedSec():0)+'</span>'; }
+        else if(mins>0){ durBadge='<span style="flex:0 0 auto;font-size:11px;font-weight:800;color:#15803d;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:999px;padding:4px 8px">已计 '+mins+'min</span>'; }
+      }catch(e){ if(running){ try{durBadge='<span style="flex:0 0 auto;font-size:11px;font-weight:800;color:#dc2626;background:#fef2f2;border:1px solid #fecaca;border-radius:999px;padding:4px 8px">⏱ '+fmtDur(elapsedSec())+'</span>';}catch(_e){} } }
       var timerBtn=running
-        ? '<button type="button" onclick="event.preventDefault();event.stopPropagation();stopLandingTimer()" style="flex:0 0 auto;padding:5px 10px;border-radius:999px;border:none;background:#dc2626;color:#fff;font-size:11px;font-weight:800;cursor:pointer">⏹ 结束</button>'
-        : '<button type="button" onclick="event.preventDefault();event.stopPropagation();startLandingTimer(\''+t.id+'\')" style="flex:0 0 auto;padding:5px 10px;border-radius:999px;border:1.5px solid #2563eb;background:#eff6ff;color:#1d4ed8;font-size:11px;font-weight:800;cursor:pointer">▶ 计时</button>';
-      return '<div style="display:flex;gap:9px;align-items:flex-start;padding:9px 10px;border:1px solid var(--border);border-radius:10px;margin-top:7px;background:var(--s2);'+hot+'">'
-        +'<input type="checkbox" data-landing="'+t.id+'" '+checked+' style="width:19px;height:19px;margin-top:2px;flex:0 0 auto">'
-        +'<span style="flex:1;'+style+'"><b style="font-size:12px">'+esc(t.time)+' · '+esc(t.title)+'</b><br><span style="font-size:12px;color:var(--t2);line-height:1.55">'+esc(t.detail)+'</span><br><span style="font-size:11px;color:var(--p);font-weight:700">'+esc(t.out)+'</span></span>'+timerBtn+'</div>';
+        ? '<button type="button" onclick="event.preventDefault();event.stopPropagation();toggleLandingTimer(\''+t.id+'\',event)" style="flex:0 0 auto;padding:5px 10px;border-radius:999px;border:none;background:#dc2626;color:#fff;font-size:11px;font-weight:800;cursor:pointer">⏹ 结束</button>'
+        : '<button type="button" onclick="event.preventDefault();event.stopPropagation();toggleLandingTimer(\''+t.id+'\',event)" style="flex:0 0 auto;padding:5px 10px;border-radius:999px;border:1.5px solid #2563eb;background:#eff6ff;color:#1d4ed8;font-size:11px;font-weight:800;cursor:pointer">▶ 计时</button>';
+      return '<div onclick="toggleLandingTimer(\''+t.id+'\',event)" style="display:flex;gap:9px;align-items:flex-start;padding:9px 10px;border:1px solid var(--border);border-radius:10px;margin-top:7px;background:var(--s2);cursor:pointer;'+hot+'">'
+        +'<input type="checkbox" data-landing="'+t.id+'" '+checked+' onclick="event.stopPropagation()" style="width:19px;height:19px;margin-top:2px;flex:0 0 auto">'
+        +'<span style="flex:1;'+style+'"><b style="font-size:12px">'+esc(t.time)+' · '+esc(t.title)+'</b><br><span style="font-size:12px;color:var(--t2);line-height:1.55">'+esc(t.detail)+'</span><br><span style="font-size:11px;color:var(--p);font-weight:700">'+esc(t.out)+'</span><br><span style="font-size:10px;color:var(--t3)">点这条任务开始计时；计时中再点这条结束。勾选框只打钩，不计时。</span></span>'+durBadge+timerBtn+'</div>';
     }).join('');
     host.innerHTML='<div style="background:var(--surface);border:1.5px solid #2563eb;border-radius:var(--rad);box-shadow:var(--sh);padding:12px 14px;margin-bottom:13px">'
       +'<div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:center"><div style="font-size:15px;font-weight:800">📌 今日落地执行单</div><div style="font-size:12px;color:var(--t2)">'+ds+' '+wk+' · '+esc(dayInfo[0])+' · 距11/15 '+Math.max(0,diff(ds,EXAM))+'天</div></div>'
@@ -5426,7 +5441,7 @@ init();
       +'<div style="font-size:11px;color:#991b1b;margin-top:4px">执行顺序只看这张单；下方旧课表仍是历史排课（按11/1旧逻辑），先不要跟它走。</div>'
       +(debt.length?'<div style="margin-top:8px;padding:8px 10px;border-radius:9px;background:#fef2f2;border:1px solid #fecaca;color:#991b1b;font-size:12px;line-height:1.6"><b>昨日欠账已滚入今天：'+debt.join('、')+'。</b>先补账，再开新任务；今晚没勾完，明天继续滚，不许用“看过答案”冒充完成。</div>':'')
       +rows
-      +'<div style="font-size:11px;color:var(--t2);line-height:1.7;margin-top:9px">用法：做完一项勾一项。综测必须有手写最终版；刑法刷题必须有题量和对数。没勾的项目，明天会自动变成欠账顶到前面。</div>'
+      +'<div style="font-size:11px;color:var(--t2);line-height:1.7;margin-top:9px">用法：点任务条开始计时，计时中再点同一条结束；时长会显示在任务条右侧，结束后显示已计分钟。做完再勾选。没勾的项目，明天会自动变成欠账顶到前面。</div>'
       +'</div>';
     host.querySelectorAll('[data-landing]').forEach(function(cb){
       cb.addEventListener('change',function(){
@@ -5435,6 +5450,7 @@ init();
       });
     });
   }
+  setInterval(function(){ try{ if(typeof tOn!=='undefined' && tOn && typeof activeSlotKey!=='undefined' && activeSlotKey.indexOf('landing_')===0) render(); }catch(e){} },1000);
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',render); else render();
 })();
 </script>
@@ -9993,5 +10009,5 @@ function showMemoryCard(){
 function showDashboard(){ document.getElementById('memory-view').style.display='none'; }
 window.addEventListener('message', function(e){ if(e.data && e.data.type==='showDashboard') showDashboard(); });
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4cc17809c711278',t:'MTc5MjM3NDIwNQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4cc46a3db2643e9',t:'MTc5MjM3NjEzNg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
