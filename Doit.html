@@ -5305,10 +5305,12 @@ init();
     '2026-10-16':['B 补账日','刑法补题 + 综测欠账先清；套②可换错题复做套'],
     '2026-10-19':['R 重启日','15–18号归零，不补旧账；今天只恢复手感和秩序'],
     '2026-10-20':['B 刑法歼灭日','综合套① + 刑法专项100题；综测不断'],
-    '2026-10-21':['C 回炉日','新鲜套 + 错题复做套 + 本周答案重写'],
+    '2026-10-21':['开荒日·公文','第二套换公文开荒：先补框架，再做题验证'],
     '2026-10-18':['C 回炉日','错题复做套 + 作文三改'],
-    '2026-10-22':['B 歼灭日','弱科专项套（默认法律，按近3套最低替换）'],
-    '2026-10-25':['C 回炉日','错题复做套 + 本周答案重写'],
+    '2026-10-22':['开荒日·行政法','第二套换行政法开荒：先画骨架，再做题验证'],
+    '2026-10-23':['开荒日·经济','第二套换经济开荒：先扫高频概念，再做题验证'],
+    '2026-10-24':['开荒日·时政','第二套换时政以题代学：错一题记一条'],
+    '2026-10-25':['开荒日·综测','第二套先拆综测答案结构，晚上作文三改照常'],
     '2026-10-28':['B 歼灭日','弱科专项套（默认时政/公文）'],
     '2026-11-07':['M 模考日','公基+综测全真连考，只订正统计'],
     '2026-11-13':['M 模考日','最后一次全真连考'],
@@ -5366,6 +5368,19 @@ init();
   if(ds==='2026-10-21'){
     tasks.forEach(function(t){
       if(t.id==='set2'){ t.title='错题复做套（90分钟）'; t.detail='只复做15–20号错题、蒙对题和同考点题；做对不算完，要能说出正确规则。'; t.out='记录：复做对__/总__；仍错考点__'; }
+    });
+  }
+  var primerSet2={
+    '2026-10-21':{title:'公文开荒专项（第二套：先框架后题）',detail:'先补框架90分钟：文种用途35分钟、行文方向25分钟、格式要素30分钟；再做公文30题慢做（可看规则表），错题贴回文种/方向/格式三栏。',out:'产出：一页公文规则表；公文对__/30'},
+    '2026-10-22':{title:'行政法开荒专项（第二套：先骨架后题）',detail:'先画骨架60分钟：处罚、许可、强制、复议、诉讼分别记主体/程序/期限；再做行政法40题慢做，错题按主体错/程序错/期限错归类。',out:'产出：一页行政法骨架图；行政法对__/40'},
+    '2026-10-23':{title:'经济开荒专项（第二套：先概念后题）',detail:'先扫高频概念60分钟：GDP、通胀通缩、财政政策、货币政策、市场结构、供需价格；再做经济40题，定义题先圈题干限定词。',out:'产出：经济易混概念表；经济对__/40'},
+    '2026-10-24':{title:'时政以题代学专项（第二套）',detail:'时政不先听课：做80题，按重要会议/文件/时间线分组；错一题记一条，重复错和高频点转卡，不许只把答案抄一遍。',out:'产出：时政时间线清单；转卡__张'},
+    '2026-10-25':{title:'综测开荒专项（第二套：先拆答案）',detail:'先拆4类题各1道参考答案：概括、分析、对策、公文分别看它怎么分点；再手写概括题1道并对照改成最终版。晚上综测作文三改照常。',out:'产出：四类题答题骨架表 + 概括最终版'}
+  };
+  if(primerSet2[ds]){
+    tasks.forEach(function(t){
+      if(t.id==='set2'){ t.title=primerSet2[ds].title; t.detail=primerSet2[ds].detail; t.out=primerSet2[ds].out; }
+      if(t.id==='correct2'){ t.title='开荒订正：把错题贴回框架'; t.detail='今天不开新课：错题必须贴回框架表对应位置；同考点错2次的写进明天晨读。正确率低没关系，关键是知道错在哪个格子。'; t.out='产出：框架表补完 + 明天晨读3个错点'; }
     });
   }
   window.startLandingTimer=function(id){
@@ -9978,5 +9993,5 @@ function showMemoryCard(){
 function showDashboard(){ document.getElementById('memory-view').style.display='none'; }
 window.addEventListener('message', function(e){ if(e.data && e.data.type==='showDashboard') showDashboard(); });
 </script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4cc17809c711278',t:'MTc5MjM3NDIwNQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
