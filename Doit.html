@@ -2944,6 +2944,7 @@ function closeLock(){document.getElementById('lock').classList.remove('show');}
 // ==================== TIMER ====================
 // State persisted to localStorage so closing/refreshing browser restores the running timer
 const TKEY='gk2026_timer';
+const LKEY='gk2026_logrelay';
 let tInt=null,tOn=false,curSubj='',curMode='听课',sessStart='',activeSlotKey='';
 
 // Read persisted timer state
@@ -3279,10 +3280,15 @@ function stopTimer(){
   }
   const dur=Math.round(elapsed/60);
   const end=new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'});
-  D.logs.push({date:ds(new Date()),subject:curSubj,mode:curMode,start:sessStart,end,duration:dur,...(taskKey?{taskKey}:{})});
-  sv();
-  // 计时结束=关键节点：只要配置了云同步就强制上传（不受自动同步开关/防抖限制）
-  if(CLOUD.apiKey&&CLOUD.binId) cloudSave(true,true);
+  const entry={date:ds(new Date()),subject:curSubj,mode:curMode,start:sessStart,end,duration:dur,...(taskKey?{taskKey}:{})};
+  if(isMiniPage()){
+    // 小窗不回写整包数据（会覆盖主页面新记录），只把这一条记录放进接力键
+    try{ localStorage.setItem(LKEY, JSON.stringify({entry:entry,ts:Date.now(),r:Math.random()})); }catch(e){}
+  }else{
+    D.logs.push(entry); sv();
+    // 计时结束=关键节点：只要配置了云同步就强制上传（不受自动同步开关/防抖限制）
+    if(CLOUD.apiKey&&CLOUD.binId) cloudSave(true,true);
+  }
   setTxt('t-disp','00:00:00'); setTxt('ft-disp','00:00:00');
   setTxt('t-lbl',`✅ 已记录 ${dur} 分钟`);
   if(!isMiniPage()){renderTLog();updateDayProgress(ds(curDate));renderSchedule();}
@@ -5238,8 +5244,19 @@ function init(){
     }
   });
   setInterval(()=>{if(tOn){safeRun(saveTimerState);safeRun(()=>swPost({type:'TIMER_PING'}));}},5000);
-  // 小窗结束/开始计时 → 主页面同步
+  // 启动时补收：主页面没开期间小窗结束的记录
+  try{ const pr=localStorage.getItem(LKEY); if(pr){ const o=JSON.parse(pr), en=o&&o.entry;
+    if(en && !D.logs.some(l=>l.date===en.date&&l.subject===en.subject&&l.start===en.start&&l.duration===en.duration)){ D.logs.push(en); sv(); } } }catch(e){}
   window.addEventListener('storage',e=>{
+    if(e.key===LKEY && e.newValue){
+      try{
+        const o=JSON.parse(e.newValue), en=o.entry;
+        const dup=D.logs.some(l=>l.date===en.date&&l.subject===en.subject&&l.start===en.start&&l.duration===en.duration);
+        if(!dup){ D.logs.push(en); sv(); if(CLOUD.apiKey&&CLOUD.binId) cloudSave(true,true); }
+      }catch(err){}
+      safeRun(renderTLog); safeRun(()=>updateDayProgress(ds(curDate))); safeRun(renderSchedule);
+      return;
+    }
     if(e.key!==TKEY) return;
     if(!e.newValue && tOn){
       tOn=false;_wallStart=null;clearInterval(tInt);
@@ -5280,7 +5297,7 @@ init();
     '2026-10-16':['B 补账日','刑法补题 + 综测欠账先清；套②可换错题复做套'],
     '2026-10-19':['R 重启日','15–18号归零，不补旧账；今天只恢复手感和秩序'],
     '2026-10-20':['背卡日·今晚只背100张卡','其余全部块（数量资料/刑法/图推/综合套①/综测/政治）已整批滚到21号执行单；以后只上传 index.html 一个文件'],
-    '2026-10-21':['还账+主任务日·20号滚入全排','数量资料/刑法/图推/综合套①/综测概括/政治补套全部排进今天；公文压缩40分钟；作文提纲+初稿滚22号晚'],
+    '2026-10-21':['还账日·11:30起步压缩版','锚点不动：14:05综合套①、21:05黑十2套；11:30晨读热身→11:45背卡→13:10刑法，其余块顺延重排，21:50关账不熬夜'],
     '2026-10-18':['C 回炉日','错题复做套 + 作文三改'],
     '2026-10-22':['开荒日·行政法','第二套换行政法开荒：先画骨架，再做题验证'],
     '2026-10-23':['开荒日·经济','第二套换经济开荒：先扫高频概念，再做题验证'],
@@ -5349,20 +5366,20 @@ init();
   if(ds==='2026-10-21'){
     debtZ=false; debtX=false;
     tasks=[
-      {id:'numdata',time:'08:30',title:'数量20题 + 资料3篇 + 订正（含20号滚入）',detail:'数量2分钟没思路就跳；资料先看问题再找数，每篇限时12分钟；最后15分钟订正，错因只写四种：找错数/公式错/算错/超时。比平时多的5题+1篇就是20号滚进来的部分，一次清掉。',out:'记录：数量对__/20；资料对__/30'},
-      {id:'xingfa',time:'10:00',title:'刑法专项40题限时（20号滚入）',detail:'构成10/防卫10/共同10/形态10，40分钟连做不查书；10分钟订正进六栏快记，只写"考点+正确规则"两行。',out:'记录：对__/40；六栏错题记__条'},
-      {id:'chaoge',time:'11:00',title:'超哥晨读§四时间账10分钟＋带背3点写进补栏',detail:'记忆卡页签「超哥晨读」轮读§四；把带背课里最容易忘的3个点写进页签底部「我的补充」。',out:'记录：晨读§四完成；补充3点已写'},
-      {id:'cards',time:'11:15',title:'背卡：到期清零＋新卡≤10张（45分钟）',detail:'昨晚100张新卡已把今明配额预支，今天只清到期＋最多补10张新卡；点"忘记"的卡今晚自动回来，不丢。',out:'记录：复习__张 / 新学__张'},
-      {id:'set1',time:'14:00',title:'公基综合套① 全真90分钟（20号滚入）',detail:'没做过的公基卷，全真计时、不暂停、不查答案；蒙对的题打"?"，订正时按错题处理。',out:'记录：总分__ / 最弱模块__'},
-      {id:'correct1',time:'15:30',title:'套①订正闭环',detail:'错题三行：考点/错因/正确规则；最多挑10条转卡。订正没完不开下一项。',out:'产出：错题规则清单；转卡__张'},
-      {id:'tutui',time:'16:20',title:'图推30题＋五栏归类（20号滚入）',detail:'25分钟限时，40秒没规律就跳；15分钟归类位置/样式/数量/属性/空间，每栏写3个识别信号。',out:'产出：图推五栏错因表'},
-      {id:'set2',time:'17:10',title:'公文开荒压缩版',detail:'占位',out:'占位'},
-      {id:'correct2',time:'17:50',title:'开荒订正：把错题贴回框架表',detail:'错题贴回文种/行文方向/格式三栏表对应位置；同考点错2次的写进明天晨读。',out:'产出：框架表补完＋明天晨读3个错点'},
-      {id:'zongce',time:'19:00',title:'综测概括题1道手写（20号欠的）',detail:'先暂停自己写25分钟→听拆点→改成自己的最终版。只此一道，不加码。',out:'产出：概括最终版'},
-      {id:'rewrite',time:'19:40',title:'错题转卡≤15张＋明日晨读3条',detail:'只转盲区/重复错/高频；作文提纲和初稿都滚22号晚上，今晚不碰。',out:'记录：转卡__张'},
-      {id:'zhengzhi',time:'21:05',title:'政治黑十2套（补20号＋21号正套）＋四桶×2',detail:'每套20题限时10–12分钟；做完分四桶记数：新思想/马原/时政方针/十五五；同桶连3套<60%才开片段。',out:'记录：套一__/20 套二__/20；四桶×2'},
-      {id:'report',time:'21:50',title:'关账：没勾的保持未勾，自动滚明天',detail:'滚账清单：作文提纲+初稿→22号晚。其余今天全清。手机放另一个房间，23:00前躺下。',out:'记录：睡觉时间__'}
-    ];
+      {id:'chaoge',time:'11:30',title:'超哥晨读§四时间账＋带背3点写进补栏',detail:'记忆卡页签「超哥晨读」轮读§四10分钟；把3个最考点的带背点写进「我的补充」。热身，不恋战。'},
+      {id:'cards',time:'11:45',title:'背卡：今日任务一轮清零（45分钟）',detail:'含昨晚没背完的和今天到期的；「忘记」的会自动排到队尾，不用管。不加学新卡。出门直接锁屏走，回来接着背那张——进度不清零了。'},
+      {id:'xingfa',time:'13:10',title:'刑法专项40题限时',detail:'构成10/防卫10/共同10/形态10，40分钟连做不查书；10分钟订正贴六栏表。过关线：专项≥70%，不到则明天补债槽加做10题。'},
+      {id:'set1',time:'14:05',title:'公基综合套① 全真90分钟',detail:'没做过的公基卷，全真计时、不暂停、不查答案。今天的锚，天塌了也不砍。'},
+      {id:'correct1',time:'15:45',title:'套①订正闭环',detail:'错题三行：考点/错因/正确规则；最多挑10条转卡。订正没完不开下一块。'},
+      {id:'numdata',time:'16:45',title:'数量20题＋资料3篇＋订正',detail:'数量2分钟没思路就跳；资料先看问题再找材料。过关线：数量≥60%、资料≥75%。'},
+      {id:'tutui',time:'17:45',title:'图推30题＋五栏归类',detail:'25分钟限时，40秒没思路跳；错题按位置/样式/数量/属性/折叠归五栏。图推是你的高错区，归类归到看出套路为止。'},
+      {id:'set2',time:'19:05',title:'公文开荒压缩版（40分钟）',detail:'框架速览25分钟：只看15种法定格式的标题和适用场景；15题15分钟。开荒不求正确率，求见过。'},
+      {id:'correct2',time:'19:45',title:'开荒订正：错题贴回框架表',detail:'错题贴回文种/行文方向/格式三栏，20分钟收工，不展开。'},
+      {id:'zongce',time:'20:05',title:'综测概括题1道手写',detail:'先暂停自己手写25分钟，再对参考答案15分钟找采分点。必须手写，不许打字。'},
+      {id:'rewrite',time:'20:45',title:'错题转卡≤15张＋明日晨读3条',detail:'只转盲区/重复错/高频考点；晨读3条写进「我的补充」。'},
+      {id:'zhengzhi',time:'21:05',title:'政治黑十2套＋四桶×2',detail:'每套20题限时13分钟；错题按考点入四桶。题和卡归小黑，框架归超哥——今天只做题。'},
+      {id:'report',time:'21:50',title:'关账：没勾的保持未勾，滚明天补债槽',detail:'没做完的只占明天≤1小时补债槽，不滚雪球。关账后手机放客厅，今晚不熬夜。'}
+    ];];
   }
   var primerSet2={
     '2026-10-21':{title:'公文开荒压缩版（40分钟：框架速览＋15题）',detail:'框架速览25分钟：文种用途10分钟/行文方向8分钟/格式要素7分钟，只翻高频表不听课；再做公文15题慢做（可看规则表）。完整90分钟版滚22号与作文错开。',out:'产出：公文规则表速览版；公文对__/15'},
@@ -24369,5 +24386,5 @@ window.addEventListener('storage', function(e){
   if(e.key==='scsyd_gk_srs_v1'){ renderSrsStatus(); if(CLOUD.autoSync) queueCloudSave(); }
 });
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4d954a2aab1e0ee',t:'MTc5MjUxMzAyNA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
 </html>
