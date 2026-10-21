@@ -224,7 +224,7 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
     <button class="tb" onclick="goTab('cfg',this)">☁️ 云同步</button>
     <button class="tb" onclick="showMemoryCard()" style="display:inline-flex;align-items:center">🧠 记忆卡</button>
   </div>
-  <div style="font-size:10px;margin-top:4px;opacity:.8" id="sync-status">⚪ 未配置</div>
+  <div style="font-size:10px;margin-top:4px;opacity:.8;cursor:pointer;display:inline-block" id="sync-status" onclick="manualSync()" title="点击立即同步合并">⚪ 未配置</div>
   <div id="app-version" style="font-size:10px;margin-top:3px;opacity:.8">✅ 落地执行单版 v2026-10-16（每天具体任务 · 欠账自动滚到明天）</div>
 </div>
 
@@ -3273,9 +3273,10 @@ function stopTimer(){
   const ftEl=document.getElementById('ft'); if(ftEl) ftEl.classList.remove('vis');
   activeSlotKey='';
   const setTxt=(id,v)=>{const n=document.getElementById(id); if(n) n.textContent=v;};
+  try{ localStorage.setItem('gk2026_timer_stopped', String(Date.now())); }catch(e){}
   if(elapsed<30){
     setTxt('t-disp','00:00:00'); setTxt('ft-disp','00:00:00');
-    if(!isMiniPage()){renderTLog();renderSchedule();}
+    if(!isMiniPage()){renderTLog();renderSchedule();safeRun(window.renderLanding);}
     return;
   }
   const dur=Math.round(elapsed/60);
@@ -3291,7 +3292,7 @@ function stopTimer(){
   }
   setTxt('t-disp','00:00:00'); setTxt('ft-disp','00:00:00');
   setTxt('t-lbl',`✅ 已记录 ${dur} 分钟`);
-  if(!isMiniPage()){renderTLog();updateDayProgress(ds(curDate));renderSchedule();}
+  if(!isMiniPage()){renderTLog();updateDayProgress(ds(curDate));renderSchedule();safeRun(window.renderLanding);}
 }
 
 function resetTimer(){
@@ -3302,7 +3303,7 @@ function resetTimer(){
   const fd=document.getElementById('ft-disp'); if(fd) fd.textContent='00:00:00';
   const ft=document.getElementById('ft'); if(ft) ft.classList.remove('vis');
   const lb=document.getElementById('t-lbl'); if(lb) lb.textContent='选择科目后开始计时';
-  activeSlotKey=''; if(!isMiniPage()) renderSchedule();
+  activeSlotKey=''; try{ localStorage.setItem('gk2026_timer_stopped', String(Date.now())); }catch(e){} if(!isMiniPage()){ renderSchedule(); safeRun(window.renderLanding); }
 }
 
 // ==================== 计时器时长修改 ====================
@@ -4321,6 +4322,23 @@ function stripImgs(data){
   return d;
 }
 
+
+async function fetchWithTimeout(url, options={}, timeoutMs=7000){
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    const res = await fetch(url, { ...options, signal: controller.signal });
+    clearTimeout(timer);
+    return res;
+  } catch(err) {
+    clearTimeout(timer);
+    if(err.name === 'AbortError') {
+      throw new Error('网络请求超时（7秒未响应），请检查网络');
+    }
+    throw err;
+  }
+}
+
 let _lastSaveTs=0;
 async function cloudSave(silent=true,force=false){
   if(!CLOUD.apiKey||!CLOUD.binId) return;
@@ -4331,7 +4349,7 @@ async function cloudSave(silent=true,force=false){
   try{ const srsRaw=localStorage.getItem(SRS_LS_KEY); if(srsRaw&&srsRaw.length<95000) payload.srs=JSON.parse(srsRaw); }catch(e){}
   setSyncStatus('saving');
   try{
-    const r=await fetch(`https://api.jsonbin.io/v3/b/${CLOUD.binId}`,{
+    const r=await fetchWithTimeout(`https://api.jsonbin.io/v3/b/${CLOUD.binId}`,{
       method:'PUT',
       headers:{'Content-Type':'application/json','X-Master-Key':CLOUD.apiKey,'X-Bin-Versioning':'false'},
       body:JSON.stringify(payload)  // ⚠️ 直接发数据本身，不能再套{record:}壳（JSONBin会自动包装）
@@ -4426,11 +4444,26 @@ function mergeData(local,remote){
   return m;
 }
 
+
+async function manualSync(){
+  if(!CLOUD.apiKey || !CLOUD.binId){
+    try{ goTab('cfg', document.querySelectorAll('.tb')[4]); }catch(e){}
+    showToast('请先配置云同步的 API Key 与 Bin ID','orange');
+    return;
+  }
+  showToast('⏳ 正在同步合并…');
+  try{
+    await cloudLoad();
+  }catch(e){
+    showToast('❌ 同步失败: '+(e.message||'网络错误'), 'red');
+  }
+}
+
 async function cloudLoad(){
   if(!CLOUD.apiKey||!CLOUD.binId){showToast('请先填写 API Key 和 Bin ID','orange');return;}
   setSyncStatus('loading');
   try{
-    const r=await fetch(`https://api.jsonbin.io/v3/b/${CLOUD.binId}/latest`,{
+    const r=await fetchWithTimeout(`https://api.jsonbin.io/v3/b/${CLOUD.binId}/latest`,{
       headers:{'X-Master-Key':CLOUD.apiKey}
     });
     if(!r.ok) throw new Error(await r.text());
@@ -4458,7 +4491,7 @@ async function cloudLoad(){
         renderSrsStatus();
       }
     }
-    cloudSave(true,true); // 把合并结果传回云端
+    await cloudSave(true,true); // 把合并结果传回云端
     setSyncStatus('ok');
     showToast('✅ 已同步（本机与云端记录已合并，互不覆盖）');
     // 全量刷新：课表、计时记录、当日进度、统计页（若打开）
@@ -4482,7 +4515,7 @@ async function cloudCreateBin(){
   if(!/^\$2[aby]\$/.test(CLOUD.apiKey)){showToast('⚠️ Key 格式不对，请确认复制的是 X-Master-Key（$2a$10$ 或 $2b$10$ 开头）','orange');return;}
   setSyncStatus('saving');
   try{
-    const r=await fetch('https://api.jsonbin.io/v3/b',{
+    const r=await fetchWithTimeout('https://api.jsonbin.io/v3/b',{
       method:'POST',
       headers:{'Content-Type':'application/json','X-Master-Key':CLOUD.apiKey,'X-Bin-Name':'gongkao2026','X-Bin-Private':'true'},
       body:JSON.stringify(stripImgs(D))
@@ -4531,7 +4564,7 @@ function saveCfg(){
   CLOUD.autoSync=document.getElementById('cfg-auto-sync').checked;
   saveCloudCfg(CLOUD);
   showToast('✅ 配置已保存');
-  setSyncStatus(CLOUD.apiKey&&CLOUD.binId?'ok':'none'); renderSrsStatus();
+  renderSrsStatus();
 }
 
 function renderCloudCfg(){
@@ -5254,17 +5287,20 @@ function init(){
         const dup=D.logs.some(l=>l.date===en.date&&l.subject===en.subject&&l.start===en.start&&l.duration===en.duration);
         if(!dup){ D.logs.push(en); sv(); if(CLOUD.apiKey&&CLOUD.binId) cloudSave(true,true); }
       }catch(err){}
-      safeRun(renderTLog); safeRun(()=>updateDayProgress(ds(curDate))); safeRun(renderSchedule);
+      tOn=false; _wallStart=null; clearInterval(tInt); activeSlotKey='';
+      safeRun(renderTLog); safeRun(()=>updateDayProgress(ds(curDate))); safeRun(renderSchedule); safeRun(window.renderLanding);
       return;
     }
-    if(e.key!==TKEY) return;
-    if(!e.newValue && tOn){
-      tOn=false;_wallStart=null;clearInterval(tInt);
+    if(e.key==='gk2026_timer_stopped' || (e.key===TKEY && !e.newValue)){
+      tOn=false; _wallStart=null; clearInterval(tInt);
+      activeSlotKey='';
       disableFollowTimer();
       const ft=document.getElementById('ft'); if(ft) ft.classList.remove('vis');
-      safeRun(renderTLog); safeRun(()=>updateDayProgress(ds(curDate))); safeRun(renderSchedule);
-    }else if(e.newValue && !tOn){
-      safeRun(restoreTimer); safeRun(renderSchedule);
+      safeRun(renderTLog); safeRun(()=>updateDayProgress(ds(curDate))); safeRun(renderSchedule); safeRun(window.renderLanding);
+      return;
+    }
+    if(e.key===TKEY && e.newValue && !tOn){
+      safeRun(restoreTimer); safeRun(renderSchedule); safeRun(window.renderLanding);
     }
   });
   // 打开页面即自动拉取云端并合并（只要配置了 Key+BinID 就拉，不依赖自动同步开关）
@@ -5486,7 +5522,28 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
       });
     });
   }
-  setInterval(function(){ try{ if(typeof tOn!=='undefined' && tOn && typeof activeSlotKey!=='undefined' && activeSlotKey.indexOf('landing_')===0) render(); }catch(e){} },1000);
+  var _lastRunningKey = '';
+  function syncLandingTimerState(){
+    try{
+      var curKey = '';
+      if(typeof tOn!=='undefined' && tOn && typeof activeSlotKey!=='undefined' && activeSlotKey.indexOf('landing_')===0){
+        curKey = activeSlotKey;
+      }
+      if(curKey !== _lastRunningKey){
+        _lastRunningKey = curKey;
+        render();
+      } else if(curKey){
+        render();
+      }
+    }catch(e){}
+  }
+  setInterval(syncLandingTimerState, 500);
+  window.addEventListener('storage', function(e){
+    if(e.key === 'gk2026_timer' || e.key === 'gk2026_logrelay' || e.key === 'gk2026_timer_stopped' || e.key === 'gk2026v3'){
+      setTimeout(render, 50);
+      setTimeout(render, 300);
+    }
+  });
   setInterval(function(){
     try{
       var sel=null; try{ sel=fmt(curDate); }catch(e){}
@@ -24396,5 +24453,5 @@ window.addEventListener('storage', function(e){
   if(e.key==='scsyd_gk_srs_v1'){ renderSrsStatus(); if(CLOUD.autoSync) queueCloudSave(); }
 });
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4de209abd8e8abe',t:'MTc5MjU2MzMyMg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4de5d1dfc542a95',t:'MTc5MjU2NTgwMA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
