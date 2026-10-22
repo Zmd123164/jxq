@@ -5322,6 +5322,23 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
   function fmtDur(sec){sec=Math.max(0,Math.floor(sec||0));var h=Math.floor(sec/3600),m=Math.floor(sec%3600/60),ss=sec%60;return (h?((h<10?'0':'')+h+':'):'')+((m<10?'0':'')+m)+':'+((ss<10?'0':'')+ss);}
   var all=loadAll();
   var viewDs=fmt(new Date());
+
+  // ===== 欠账规则（v2）=====
+  // 1) 从 GEN_START 起，昨天没勾的任务（含昨天自己的欠账）进入今天的「补债槽」
+  // 2) 今天最多显示 GEN_MAX 项，其余按日期排队，不删除、不堆在一天里
+  // 3) 欠账的勾选会写回原来那一天，避免重复滚入
+  // 4) 不滚：关账、记忆卡、超哥晨读；综测/刑法已由 debtZ/debtX 处理，不重复
+  // 5) 公文类开荒（set2）如果今天的开荒是同一学科，就不重复滚入
+  var GEN_START='2026-10-22';
+  var GEN_RESET={'2026-10-19':1,'2026-10-20':1,'2026-10-21':1};
+  var GEN_MAX=3;
+  var GEN_MAX_AGE=3;
+  var GEN_EXCLUDE={report:1,cards:1,chaoge:1};
+  var KW=['公文','行政法','经济','时政','综测','刑法','图推','数量','资料','政治','公基'];
+  function kwOf(t){var s=(t&&t.rawTitle)||(t&&t.title)||''; for(var i=0;i<KW.length;i++){ if(s.indexOf(KW[i])>=0) return KW[i]; } return null;}
+  function isDone(t){ var o=all[t.origDay]||{}; return !!o[t.origId]; }
+  function setDone(t,checked){ all[t.origDay]=all[t.origDay]||{}; all[t.origDay][t.origId]=!!checked; saveAll(all); }
+
   function computeFor(vds){
     var ydone=all[addDays(vds,-1)]||{};
     var hasY=Object.keys(ydone).length>0;
@@ -5336,7 +5353,7 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
     '2026-10-20':['背卡日·今晚只背100张卡','其余全部块（数量资料/刑法/图推/综合套①/综测/政治）已整批滚到21号执行单；以后只上传 index.html 一个文件'],
     '2026-10-21':['还账日·11:30起步压缩版','锚点不动：14:05综合套①、21:05黑十2套；11:30晨读热身→11:45背卡→13:10刑法，其余块顺延重排，21:50关账不熬夜'],
     '2026-10-18':['C 回炉日','错题复做套 + 作文三改'],
-    '2026-10-22':['开荒日·行政法','第二套换行政法开荒：先画骨架，再做题验证'],
+    '2026-10-22':['开荒日·公文','第二套换公文完整版90分钟；行政法开荒顺延到补债槽'],
     '2026-10-23':['开荒日·经济','第二套换经济开荒：先扫高频概念，再做题验证'],
     '2026-10-24':['开荒日·时政','第二套换时政以题代学：错一题记一条'],
     '2026-10-25':['开荒日·综测','第二套先拆综测答案结构，晚上作文三改照常'],
@@ -5346,97 +5363,194 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
     '2026-11-14':['T 收官日','半剂量：错题复做 + 高频卡 + 早睡'],
     '2026-11-15':['考试日','笔试：会做的做对，不会的果断放弃']
   };
-  function buildFor(vds){
+
+  // 基础任务（不含欠账），每个任务带 origDay/origId，用于勾选写回原日
+  function buildBase(vds){
     var ds=vds; var _st=computeFor(vds); var now=_st.now; var debtZ=_st.debtZ; var debtX=_st.debtX;
     var dayInfo=special[ds]||['A 标准日','公基综合套①+套② + 综测1套'];
-  if(ds>='2026-11-08' && ds<='2026-11-12') dayInfo=['C 回炉日','套②=错题复做套，综测以改写和晨读为主'];
+    if(ds>='2026-11-08' && ds<='2026-11-12') dayInfo=['C 回炉日','套②=错题复做套，综测以改写和晨读为主'];
     if(!special[ds] && ds>='2026-10-26' && ds<='2026-10-31') dayInfo=['阶段二·弱点歼灭','综合套①保底；第二套触发时换弱科专项100题（每周≤2天）'];
     if(!special[ds] && ds>='2026-11-01' && ds<='2026-11-07') dayInfo=['阶段三·全真节奏','按真实考试时间走；套②可换错题复做套，订正优先'];
-  var zongByDow={
-    0:'综测：作文三改 + 本周小题答案重写（不新开大题）',
-    1:'综测小题套：概括题1道 + 对策题1道，都要手写完整答案',
-    2:'综测：大作文初稿1篇，限时写全篇；写完只改立意和分论点',
-    3:'综测小题套：公文片段1道 + 综合分析1道',
-    4:'综测：作文二改 + 小题1道；二改只改标题、开头、分论点、解释句',
-    5:'综测小题套：挑本周最弱题型1道，手写后对照改写',
-    6:'综测全套：按真实考试时段做，做完只订正统计'
-  };
-  var tasks=[
-    {id:'cards',time:'07:40',title:'记忆卡到期清零',detail:'打开公基记忆卡，先清到期复习；40分钟封顶。到期没清完，今天不学普通新卡。',out:'记录：复习__张 / 忘记__张'},
-    {id:'set1',time:'08:30',title:'公基综合套①（90分钟）',detail:'做一套未做过的公基卷；不暂停、不查答案；蒙对的题也打“?”，订正时按错题处理。',out:'记录：总分__ / 最弱模块__'},
-    {id:'correct1',time:'10:10',title:'套①订正闭环',detail:'错题只记三行：考点 / 错因（盲区·记不清·审题·蒙错）/ 正确规则。订正没完，不开下一套。',out:'产出：错题规则清单，最多挑10张转卡'},
-    {id:'numdata',time:'11:35',title:'数量15题 + 资料2篇',detail:'数量只练当天题型，2分钟没思路就跳；资料每篇限时，先看问题再找数，错题标明找错数/公式错/算错/超时。',out:'记录：数量对__/15；资料对__/10，用时__+__分钟'}
-  ];
-  if(debtZ){
-    tasks.push({id:'debt_zongce',time:'13:20',title:'先补昨日综测欠账',detail:'把昨天没学的综测先补掉：概括题1道，25分钟手写 → 20分钟对照答案 → 改成自己的最终版本。不许只看答案。',out:'完成标准：有一版自己写改后的答案'});
-  }
-  if(debtX){
-    tasks.push({id:'xingfa',time:'14:10',title:'补昨日刑法刷题',detail:'停在哪补哪：没做A轮→刑法诊断60题（构成10/防卫10/共同10/形态8/量刑12/分则10）；A轮做完→B轮补洞40题；B轮做完→案例40题 + D轮小测30题。',out:'记录：A__/60 B__/40 C__/40 D__/30（没做的写0）'});
-  }
-  tasks.push(
-    {id:'set2',time:'15:00',title: debtX?'公基套② / 错题复做套（90分钟）':'公基综合套②（90分钟）',detail: debtX?'如果刑法补题已经超过90分钟，这套直接换成错题复做套；不许为了刷套卷挤掉综测改写。':'第二套继续全真计时；没有整卷就用100题拼套，不许用零散专项冒充。',out:'记录：总分__ / 最弱模块__'},
-    {id:'correct2',time:'16:40',title:'套②订正 + 最弱模块歼灭',detail:'合并两套数据：近3套最低的模块就是歼灭对象。正确率<60%才听对应小节课；≥60%只看讲义易错点+同类题。',out:'产出：明天晨读的3个错点'},
-    {id:'zongce',time:'18:10',title:zongByDow[now.getDay()],detail:'综测课程只用刷题课打法：老师读题后先暂停，自己手写，再听老师拆要点，最后改成自己的最终版。理论课只在听不懂题型框架时补对应小节，不许整套理论先听完。',out:'完成标准：自己的最终版 + 3句明天晨读要点'},
-    {id:'rewrite',time:'20:20',title:'对照改写 + 错题转卡',detail:'小题合成自己的答案；作文按三改进度推进。今天错题最多转15张，只转盲区、重复错和高频考点。',out:'记录：转卡__张；作文改到第__稿'},
-    {id:'zhengzhi',time:'21:20',title:'政治理论·黑十专项卷1套（20题·限时10–12分钟）',detail:'只做题不整课：做完把错题分四桶——新思想/马原/时政方针/十五五。题跟小黑（黑十专项卷+小黑卡同源）；同一桶连3套正确率<60%才开片段补：框架类桶（新思想/马原）看超哥带背/早自习对应章，坑题类桶（时政方针/十五五）看小黑排坑/母题片段，一次只一章；看完默写＋复做10道同类题才算看过；xs思想与新思想重复只看一套。',out:'记录：对__/20；四桶 新__ 马__ 时__ 十五__'},
-    {id:'report',time:'21:50',title:'关账：没勾完的自动滚明天',detail:'只看结果：没做完的不要补写“学过了”。保持未勾选，明天面板会把它列为欠账先补。',out:'记录：两套分数 / 最弱模块 / 睡眠时间'}
-  );
-  if(ds==='2026-10-19'){
-    tasks=[
-      {id:'cards',time:'现在起',title:'记忆卡到期清零（重启第一步）',detail:'先清到期复习，40分钟封顶；今天不追新卡数量。目的不是学多少，是把系统重新打开。',out:'记录：复习__张 / 忘记__张'},
-      {id:'set1',time:'第1块',title:'公基综合套①（90分钟）',detail:'做一套未做过的公基卷；不暂停、不查答案；蒙对打“?”。这套是重启诊断分，不许因为手生中途停。',out:'记录：总分__ / 最弱模块__'},
-      {id:'correct1',time:'第2块',title:'套①订正闭环',detail:'错题和蒙对题只记三行：考点 / 错因 / 正确规则。订正没完，不许开手机、不许开下一套。',out:'产出：错题规则清单（最多10条）'},
-      {id:'numdata',time:'第3块',title:'数量15题 + 资料2篇（不断线）',detail:'数量2分钟没思路就跳；资料每篇限时，错题标明找错数/公式错/算错/超时。',out:'记录：数量对__/15；资料对__/10'},
-      {id:'xingfa',time:'第4块',title:'刑法A轮60题（把15号欠的先开工）',detail:'构成10/防卫10/共同10/形态8/量刑12/分则10。只求开工和暴露盲区，不许边做边看解析。',out:'记录：A轮对__/60；最弱点__'},
-      {id:'set2',time:'第5块',title:'公基综合套②（90分钟）',detail:'第二套继续全真计时。累了可以休息10分钟再开，但不许把套②换成零散刷题。',out:'记录：总分__ / 最弱模块__'},
-      {id:'correct2',time:'第6块',title:'套②订正 + 刑法错题合并',detail:'合并两套和刑法A轮：同考点错2次的，明天晨读先背；近3套最低模块写出来。',out:'产出：明天晨读3个错点'},
-      {id:'zongce',time:'晚上',title:'综测概括题1道（必须手写）',detail:'25分钟手写 → 20分钟对照 → 改成自己的最终版。今天不追求题量，先把综测断掉的线接上。',out:'完成标准：自己的最终版答案'},
-      {id:'rewrite',time:'睡前',title:'错题转卡≤10张 + 关账',detail:'只转盲区、重复错、高频考点。没勾完的保持未勾，明天继续滚；不许补勾假装完成。',out:'记录：转卡__张 / 明早第一件事__'}
+    var zongByDow={
+      0:'综测：作文三改 + 本周小题答案重写（不新开大题）',
+      1:'综测小题套：概括题1道 + 对策题1道，都要手写完整答案',
+      2:'综测：大作文初稿1篇，限时写全篇；写完只改立意和分论点',
+      3:'综测小题套：公文片段1道 + 综合分析1道',
+      4:'综测：作文二改 + 小题1道；二改只改标题、开头、分论点、解释句',
+      5:'综测小题套：挑本周最弱题型1道，手写后对照改写',
+      6:'综测全套：按真实考试时段做，做完只订正统计'
+    };
+    var tasks=[
+      {id:'cards',time:'07:40',title:'记忆卡到期清零',detail:'打开公基记忆卡，先清到期复习；40分钟封顶。到期没清完，今天不学普通新卡。',out:'记录：复习__张 / 忘记__张'},
+      {id:'set1',time:'08:30',title:'公基综合套①（90分钟）',detail:'做一套未做过的公基卷；不暂停、不查答案；蒙对的题也打“?”，订正时按错题处理。',out:'记录：总分__ / 最弱模块__'},
+      {id:'correct1',time:'10:10',title:'套①订正闭环',detail:'错题只记三行：考点 / 错因（盲区·记不清·审题·蒙错）/ 正确规则。订正没完，不开下一套。',out:'产出：错题规则清单，最多挑10张转卡'},
+      {id:'numdata',time:'11:35',title:'数量20题 + 资料2篇',detail:'数量2分钟没思路就跳；资料每篇限时，先看问题再找数，错题标明找错数/公式错/算错/超时。',out:'记录：数量对__/20；资料对__/10，用时__+__分钟'}
     ];
-  }
-  if(ds==='2026-10-20'){
-    debtZ=false; debtX=false;
-    tasks=[
-      {id:'cards',time:'今晚',title:'背100张卡就睡（今晚唯一任务）',detail:'开始今日任务背完配额后，点"加学10张新卡"点到100；背到困就停，90张也是赢。点"忘记"的卡明天自动回来，不丢。今晚不改设置、不看别的块——它们已经全部排在明天的执行单上。',out:'记录：新学__张 / 忘记__张（明天自动回）'}
-    ];
-  }
-  if(ds==='2026-10-21'){
-    debtZ=false; debtX=false;
-    tasks=[
-      {id:'chaoge',time:'11:30',title:'超哥晨读§四时间账＋带背3点写进补栏',detail:'记忆卡页签「超哥晨读」轮读§四10分钟；把3个最考点的带背点写进「我的补充」。热身，不恋战。'},
-      {id:'cards',time:'11:45',title:'背卡：今日任务一轮清零（45分钟）',detail:'含昨晚没背完的和今天到期的；「忘记」的会自动排到队尾，不用管。不加学新卡。出门直接锁屏走，回来接着背那张——进度不清零了。'},
-      {id:'xingfa',time:'13:10',title:'刑法专项40题限时',detail:'构成10/防卫10/共同10/形态10，40分钟连做不查书；10分钟订正贴六栏表。过关线：专项≥70%，不到则明天补债槽加做10题。'},
-      {id:'set1',time:'14:05',title:'公基综合套① 全真90分钟',detail:'没做过的公基卷，全真计时、不暂停、不查答案。今天的锚，天塌了也不砍。'},
-      {id:'correct1',time:'15:45',title:'套①订正闭环',detail:'错题三行：考点/错因/正确规则；最多挑10条转卡。订正没完不开下一块。'},
-      {id:'numdata',time:'16:45',title:'数量20题＋资料3篇＋订正',detail:'数量2分钟没思路就跳；资料先看问题再找材料。过关线：数量≥60%、资料≥75%。'},
-      {id:'tutui',time:'17:45',title:'图推30题＋五栏归类',detail:'25分钟限时，40秒没思路跳；错题按位置/样式/数量/属性/折叠归五栏。图推是你的高错区，归类归到看出套路为止。'},
-      {id:'set2',time:'19:05',title:'公文开荒压缩版（40分钟）',detail:'框架速览25分钟：只看15种法定格式的标题和适用场景；15题15分钟。开荒不求正确率，求见过。'},
-      {id:'correct2',time:'19:45',title:'开荒订正：错题贴回框架表',detail:'错题贴回文种/行文方向/格式三栏，20分钟收工，不展开。'},
-      {id:'zongce',time:'20:05',title:'综测概括题1道手写',detail:'先暂停自己手写25分钟，再对参考答案15分钟找采分点。必须手写，不许打字。'},
-      {id:'rewrite',time:'20:45',title:'错题转卡≤15张＋明日晨读3条',detail:'只转盲区/重复错/高频考点；晨读3条写进「我的补充」。'},
-      {id:'zhengzhi',time:'21:05',title:'政治黑十2套＋四桶×2',detail:'每套20题限时13分钟；错题按考点入四桶。题和卡归小黑，框架归超哥——今天只做题。'},
-      {id:'report',time:'21:50',title:'关账：没勾的保持未勾，滚明天补债槽',detail:'没做完的只占明天≤1小时补债槽，不滚雪球。关账后手机放客厅，今晚不熬夜。'}
-    ];
-  }
-  var primerSet2={
-    '2026-10-21':{title:'公文开荒压缩版（40分钟：框架速览＋15题）',detail:'框架速览25分钟：文种用途10分钟/行文方向8分钟/格式要素7分钟，只翻高频表不听课；再做公文15题慢做（可看规则表）。完整90分钟版滚22号与作文错开。',out:'产出：公文规则表速览版；公文对__/15'},
-    '2026-10-22':{title:'行政法开荒专项（第二套：先骨架后题）',detail:'先画骨架60分钟：处罚、许可、强制、复议、诉讼分别记主体/程序/期限；再做行政法40题慢做，错题按主体错/程序错/期限错归类。',out:'产出：一页行政法骨架图；行政法对__/40'},
-    '2026-10-23':{title:'经济开荒专项（第二套：先概念后题）',detail:'先扫高频概念60分钟：GDP、通胀通缩、财政政策、货币政策、市场结构、供需价格；再做经济40题，定义题先圈题干限定词。',out:'产出：经济易混概念表；经济对__/40'},
-    '2026-10-24':{title:'时政以题代学专项（第二套）',detail:'时政不先听课：做80题，按重要会议/文件/时间线分组；错一题记一条，重复错和高频点转卡，不许只把答案抄一遍。',out:'产出：时政时间线清单；转卡__张'},
-    '2026-10-25':{title:'综测开荒专项（第二套：刷题课主导）',detail:'不先听整套理论。先用刷题课拆4类题各1道：老师读题先暂停，自己写要点，再听拆分逻辑；理论只补题型框架。最后手写概括题1道并改成最终版，晚上作文三改照常。',out:'产出：四类题答题骨架表 + 概括最终版'}
-  };
-  if(primerSet2[ds]){
+    // 做题 → 听没学过的板块：数量、图推各配一个听课块
+    tasks.push(
+      {id:'lec_num',time:'午间',title:'听课补板块：数量/资料（只听没学过的小节）',detail:'做完数量题后，订正时把错题涉及的板块记下来；没学过的板块，只听对应小节，每节不超过30分钟，听完回做本板块同类题5题。不整课听。',out:'记录：听了__节 / 回做__题'},
+      {id:'tutui',time:'午后',title:'图推20题（25分钟限时，40秒没思路跳）',detail:'只做题，错题按位置/样式/数量/属性/折叠标注。这一步不听课。',out:'记录：图推对__/20；卡住__题'},
+      {id:'lec_tutui',time:'午后',title:'听课补图推：只听没学过的小节',detail:'按错题所属题型，只听没学过的图推小节，每节不超过25分钟，听完回做同类题5题。学过的题型不再重听。',out:'记录：听了__节 / 回做__题'}
+    );
+    if(debtZ){
+      tasks.push({id:'debt_zongce',time:'13:20',title:'先补昨日综测欠账',detail:'把昨天没学的综测先补掉：概括题1道，25分钟手写 → 20分钟对照答案 → 改成自己的最终版本。不许只看答案。',out:'完成标准：有一版自己写改后的答案'});
+    }
+    if(debtX){
+      tasks.push({id:'xingfa',time:'14:10',title:'补昨日刑法刷题',detail:'停在哪补哪：没做A轮→刑法诊断60题（构成10/防卫10/共同10/形态8/量刑12/分则10）；A轮做完→B轮补洞40题；B轮做完→案例40题 + D轮小测30题。',out:'记录：A__/60 B__/40 C__/40 D__/30（没做的写0）'});
+    }
+    tasks.push(
+      {id:'set2',time:'15:00',title: debtX?'公基套② / 错题复做套（90分钟）':'公基综合套②（90分钟）',detail: debtX?'如果刑法补题已经超过90分钟，这套直接换成错题复做套；不许为了刷套卷挤掉综测改写。':'第二套继续全真计时；没有整卷就用100题拼套，不许用零散专项冒充。',out:'记录：总分__ / 最弱模块__'},
+      {id:'correct2',time:'16:40',title:'套②订正 + 最弱模块歼灭',detail:'合并两套数据：近3套最低的模块就是歼灭对象。没学过的板块先听对应小节再回做同类题；学过的板块正确率<60%才听小节，≥60%只看讲义易错点+同类题。',out:'产出：明天晨读的3个错点'},
+      {id:'zongce',time:'18:10',title:zongByDow[now.getDay()],detail:'综测课程只用刷题课打法：老师读题后先暂停，自己手写，再听老师拆要点，最后改成自己的最终版。理论课只在听不懂题型框架时补对应小节，不许整套理论先听完。',out:'完成标准：自己的最终版 + 3句明天晨读要点'},
+      {id:'rewrite',time:'20:20',title:'对照改写 + 错题转卡',detail:'小题合成自己的答案；作文按三改进度推进。今天错题最多转15张，只转盲区、重复错和高频考点。',out:'记录：转卡__张；作文改到第__稿'},
+      {id:'zhengzhi',time:'21:20',title:'政治理论·黑十专项卷1套（20题·限时10–12分钟）',detail:'只做题不整课：做完把错题分四桶——新思想/马原/时政方针/十五五。题跟小黑（黑十专项卷+小黑卡同源）；同一桶连3套正确率<60%才开片段补：框架类桶（新思想/马原）看超哥带背/早自习对应章，坑题类桶（时政方针/十五五）看小黑排坑/母题片段，一次只一章；看完默写＋复做10道同类题才算看过；xs思想与新思想重复只看一套。',out:'记录：对__/20；四桶 新__ 马__ 时__ 十五__'},
+      {id:'report',time:'21:50',title:'关账：没勾完的自动滚明天',detail:'只看结果：没做完的不要补写“学过了”。保持未勾选，明天面板会把它列为欠账先补。',out:'记录：两套分数 / 最弱模块 / 睡眠时间'}
+    );
+    if(ds==='2026-10-19'){
+      tasks=[
+        {id:'cards',time:'现在起',title:'记忆卡到期清零（重启第一步）',detail:'先清到期复习，40分钟封顶；今天不追新卡数量。目的不是学多少，是把系统重新打开。',out:'记录：复习__张 / 忘记__张'},
+        {id:'set1',time:'第1块',title:'公基综合套①（90分钟）',detail:'做一套未做过的公基卷；不暂停、不查答案；蒙对打“?”。这套是重启诊断分，不许因为手生中途停。',out:'记录：总分__ / 最弱模块__'},
+        {id:'correct1',time:'第2块',title:'套①订正闭环',detail:'错题和蒙对题只记三行：考点 / 错因 / 正确规则。订正没完，不许开手机、不许开下一套。',out:'产出：错题规则清单（最多10条）'},
+        {id:'numdata',time:'第3块',title:'数量15题 + 资料2篇（不断线）',detail:'数量2分钟没思路就跳；资料每篇限时，错题标明找错数/公式错/算错/超时。',out:'记录：数量对__/15；资料对__/10'},
+        {id:'xingfa',time:'第4块',title:'刑法A轮60题（把15号欠的先开工）',detail:'构成10/防卫10/共同10/形态8/量刑12/分则10。只求开工和暴露盲区，不许边做边看解析。',out:'记录：A轮对__/60；最弱点__'},
+        {id:'set2',time:'第5块',title:'公基综合套②（90分钟）',detail:'第二套继续全真计时。累了可以休息10分钟再开，但不许把套②换成零散刷题。',out:'记录：总分__ / 最弱模块__'},
+        {id:'correct2',time:'第6块',title:'套②订正 + 刑法错题合并',detail:'合并两套和刑法A轮：同考点错2次的，明天晨读先背；近3套最低模块写出来。',out:'产出：明天晨读3个错点'},
+        {id:'zongce',time:'晚上',title:'综测概括题1道（必须手写）',detail:'25分钟手写 → 20分钟对照 → 改成自己的最终版。今天不追求题量，先把综测断掉的线接上。',out:'完成标准：自己的最终版答案'},
+        {id:'rewrite',time:'睡前',title:'错题转卡≤10张 + 关账',detail:'只转盲区、重复错、高频考点。没勾完的保持未勾，明天继续滚；不许补勾假装完成。',out:'记录：转卡__张 / 明早第一件事__'}
+      ];
+    }
+    if(ds==='2026-10-20'){
+      debtZ=false; debtX=false;
+      tasks=[
+        {id:'cards',time:'今晚',title:'背100张卡就睡（今晚唯一任务）',detail:'开始今日任务背完配额后，点"加学10张新卡"点到100；背到困就停，90张也是赢。点"忘记"的卡明天自动回来，不丢。今晚不改设置、不看别的块——它们已经全部排在明天的执行单上。',out:'记录：新学__张 / 忘记__张（明天自动回）'}
+      ];
+    }
+    if(ds==='2026-10-21'){
+      debtZ=false; debtX=false;
+      tasks=[
+        {id:'chaoge',time:'11:30',title:'超哥晨读§四时间账＋带背3点写进补栏',detail:'记忆卡页签「超哥晨读」轮读§四10分钟；把3个最考点的带背点写进「我的补充」。热身，不恋战。'},
+        {id:'cards',time:'11:45',title:'背卡：今日任务一轮清零（45分钟）',detail:'含昨晚没背完的和今天到期的；「忘记」的会自动排到队尾，不用管。不加学新卡。出门直接锁屏走，回来接着背那张——进度不清零了。'},
+        {id:'xingfa',time:'13:10',title:'刑法专项40题限时',detail:'构成10/防卫10/共同10/形态10，40分钟连做不查书；10分钟订正贴六栏表。过关线：专项≥70%，不到则明天补债槽加做10题。'},
+        {id:'set1',time:'14:05',title:'公基综合套① 全真90分钟',detail:'没做过的公基卷，全真计时、不暂停、不查答案。今天的锚，天塌了也不砍。'},
+        {id:'correct1',time:'15:45',title:'套①订正闭环',detail:'错题三行：考点/错因/正确规则；最多挑10条转卡。订正没完不开下一块。'},
+        {id:'numdata',time:'16:45',title:'数量20题＋资料3篇＋订正',detail:'数量2分钟没思路就跳；资料先看问题再找材料。过关线：数量≥60%、资料≥75%。'},
+        {id:'tutui',time:'17:45',title:'图推30题＋五栏归类',detail:'25分钟限时，40秒没思路跳；错题按位置/样式/数量/属性/折叠归五栏。图推是你的高错区，归类归到看出套路为止。'},
+        {id:'set2',time:'19:05',title:'公文开荒压缩版（40分钟）',detail:'框架速览25分钟：只看15种法定格式的标题和适用场景；15题15分钟。开荒不求正确率，求见过。'},
+        {id:'correct2',time:'19:45',title:'开荒订正：错题贴回框架表',detail:'错题贴回文种/行文方向/格式三栏，20分钟收工，不展开。'},
+        {id:'zongce',time:'20:05',title:'综测概括题1道手写',detail:'先暂停自己手写25分钟，再对参考答案15分钟找采分点。必须手写，不许打字。'},
+        {id:'rewrite',time:'20:45',title:'错题转卡≤15张＋明日晨读3条',detail:'只转盲区/重复错/高频考点；晨读3条写进「我的补充」。'},
+        {id:'zhengzhi',time:'21:05',title:'政治黑十2套＋四桶×2',detail:'每套20题限时13分钟；错题按考点入四桶。题和卡归小黑，框架归超哥——今天只做题。'},
+        {id:'report',time:'21:50',title:'关账：没勾的保持未勾，滚明天补债槽',detail:'没做完的只占明天≤1小时补债槽，不滚雪球。关账后手机放客厅，今晚不熬夜。'}
+      ];
+    }
+    var primerSet2={
+      '2026-10-21':{title:'公文开荒压缩版（40分钟：框架速览＋15题）',detail:'框架速览25分钟：文种用途10分钟/行文方向8分钟/格式要素7分钟，只翻高频表不听课；再做公文15题慢做（可看规则表）。完整90分钟版滚22号与作文错开。',out:'产出：公文规则表速览版；公文对__/15'},
+      '2026-10-22':{title:'公文开荒完整版（90分钟：框架速览＋20题＋订正）',detail:'框架速览25分钟：文种用途10/行文方向8/格式要素7，只翻高频表；没学过的文种小节听≤20分钟；公文20题慢做约30分钟；订正15分钟。',out:'产出：公文规则表速览版；公文对__/20'},
+      '2026-10-23':{title:'经济开荒专项（第二套：先概念后题）',detail:'先扫高频概念60分钟：GDP、通胀通缩、财政政策、货币政策、市场结构、供需价格；再做经济40题，定义题先圈题干限定词。',out:'产出：经济易混概念表；经济对__/40'},
+      '2026-10-24':{title:'时政以题代学专项（第二套）',detail:'时政不先听课：做80题，按重要会议/文件/时间线分组；错一题记一条，重复错和高频点转卡，不许只把答案抄一遍。',out:'产出：时政时间线清单；转卡__张'},
+      '2026-10-25':{title:'综测开荒专项（第二套：刷题课主导）',detail:'不先听整套理论。先用刷题课拆4类题各1道：老师读题先暂停，自己写要点，再听拆分逻辑；理论只补题型框架。最后手写概括题1道并改成最终版，晚上作文三改照常。',out:'产出：四类题答题骨架表 + 概括最终版'}
+    };
+    if(primerSet2[ds]){
+      tasks.forEach(function(t){
+        if(t.id==='set2'){ t.title=primerSet2[ds].title; t.detail=primerSet2[ds].detail; t.out=primerSet2[ds].out; }
+        if(t.id==='correct2'){ t.title='开荒订正：把错题贴回框架'; t.detail='今天不开新课：错题必须贴回框架表对应位置；同考点错2次的写进明天晨读。正确率低没关系，关键是知道错在哪个格子。'; t.out='产出：框架表补完 + 明天晨读3个错点'; }
+      });
+    }
+    // 10-22：行政法开荒顺延到补债槽（只画骨架，不做题）
+    if(ds==='2026-10-22'){
+      var ri=-1; tasks.forEach(function(t,i){ if(t.id==='report') ri=i; });
+      var sh={id:'xf_shunyan',time:'补债槽',title:'顺延：行政法骨架（只画骨架，≤40分钟）',detail:'原定10-22的行政法开荒顺延到这里：先画处罚/许可/强制/复议/诉讼的主体-程序-期限骨架，不做题；画不完就停，没画完的明天接着画。',out:'产出：行政法骨架图（半页也算）'};
+      if(ri>=0) tasks.splice(ri,0,sh); else tasks.push(sh);
+    }
     tasks.forEach(function(t){
-      if(t.id==='set2'){ t.title=primerSet2[ds].title; t.detail=primerSet2[ds].detail; t.out=primerSet2[ds].out; }
-      if(t.id==='correct2'){ t.title='开荒订正：把错题贴回框架'; t.detail='今天不开新课：错题必须贴回框架表对应位置；同考点错2次的写进明天晨读。正确率低没关系，关键是知道错在哪个格子。'; t.out='产出：框架表补完 + 明天晨读3个错点'; }
+      t.origDay=vds; t.origId=t.id;
+      t.rawTitle=t.title; t.rawDetail=t.detail; t.rawOut=t.out||'';
     });
-  }
     return {tasks:tasks, dayInfo:dayInfo, wk:_st.wk, debtZ:debtZ, debtX:debtX};
   }
-  var tasks=[], done={}, dayInfo=['A 标准日','公基综合套①+套② + 综测1套'], wk='', debtZ=false, debtX=false;
-  function applyView(vds){ viewDs=vds; var b=buildFor(vds); tasks=b.tasks; dayInfo=b.dayInfo; wk=b.wk; debtZ=b.debtZ; debtX=b.debtX; done=all[vds]||{}; }
+
+  // 欠账候选（未完成且未被其他规则覆盖的任务），按日期先后排序
+  function genCands(vds, base){
+    if(vds<GEN_START || GEN_RESET[vds]) return [];
+    var y=addDays(vds,-1);
+    var prev=fullList(y);
+    var out=[];
+    prev.forEach(function(c){
+      if(isDone(c)) return;
+      if(diff(c.origDay, vds)>GEN_MAX_AGE) return;   // 欠账最多保留3天，过期不再滚
+      var oid=c.origId;
+      if(GEN_EXCLUDE[oid]) return;
+      if(/^debt_/.test(oid)) return;
+      if(oid==='zongce' && base.debtZ) return;
+      if((oid==='xingfa'||oid==='set2') && base.debtX) return;
+      if(oid==='set2'){
+        var k=kwOf(c);
+        var hit=k && base.tasks.some(function(bt){ return bt.origId==='set2' && kwOf(bt)===k; });
+        if(hit) return;
+      }
+      out.push(c);
+    });
+    out.sort(function(a,b){ return a.origDay<b.origDay?-1:(a.origDay>b.origDay?1:0); });
+    return out;
+  }
+  function candToTask(c){
+    return {
+      id:'gen_'+c.origDay+'_'+c.origId,
+      time:'补债槽',
+      title:'欠账('+c.origDay.slice(5)+')·'+c.rawTitle,
+      detail:'昨天没完成，今天先补，≤60分钟，做不完就停。'+c.rawDetail,
+      out:c.rawOut||'',
+      gen:true,
+      origDay:c.origDay, origId:c.origId,
+      rawTitle:c.rawTitle, rawDetail:c.rawDetail, rawOut:c.rawOut
+    };
+  }
+  // 某天的全部任务（基础 + 全部欠账，不截断，供后续日期递归使用）
+  function fullList(vds){
+    var base=buildBase(vds);
+    var gens=genCands(vds, base).map(candToTask);
+    return base.tasks.concat(gens);
+  }
+
+  // 补债时长：从标题里读「N分钟」，读不到按30分钟算
+  function minOf(c){
+    var t=/(\d+)\s*分钟/.exec(c.rawTitle||'');
+    if(t) return +t[1];
+    var best=0, re=/(\d+)\s*分钟/g, m;
+    while((m=re.exec(c.rawDetail||''))){ if(+m[1]>=10 && +m[1]>best) best=+m[1]; }   // 忽略「2分钟没思路就跳」这类短语
+    return best||30;
+  }
+  var GEN_BUDGET=60;
+
+  function buildFor(vds){
+    var base=buildBase(vds);
+    var cands=genCands(vds, base);
+    var showGen=(vds>=fmt(new Date()));
+    var shown=[], queue=[], dropped=[], used=0;
+    if(showGen){
+      cands.forEach(function(c){
+        var m=minOf(c);
+        if(m>=GEN_BUDGET){ dropped.push(c); return; }   // 超过补债时长：不进补债，单独安排
+        if(shown.length<GEN_MAX && used+m<=GEN_BUDGET){ shown.push(c); used+=m; }
+        else queue.push(c);
+      });
+    }
+    return {
+      tasks:shown.map(candToTask).concat(base.tasks),
+      dayInfo:base.dayInfo, wk:base.wk, debtZ:base.debtZ, debtX:base.debtX,
+      queue:queue, dropped:dropped, genUsed:used
+    };
+  }
+
+  var tasks=[], dayInfo=['A 标准日','公基综合套①+套② + 综测1套'], wk='', debtZ=false, debtX=false, queue=[], dropped=[], genUsed=0;
+  function applyView(vds){
+    viewDs=vds; var b=buildFor(vds);
+    tasks=b.tasks; dayInfo=b.dayInfo; wk=b.wk; debtZ=b.debtZ; debtX=b.debtX; queue=b.queue; dropped=b.dropped; genUsed=b.genUsed;
+  }
+  function findTask(id){ for(var i=0;i<tasks.length;i++){ if(tasks[i].id===id) return tasks[i]; } return null; }
+
   window.startLandingTimer=function(id){
-    var t=null; for(var i=0;i<tasks.length;i++){ if(tasks[i].id===id) t=tasks[i]; }
+    var t=findTask(id);
     if(!t) return;
     var key='landing_'+viewDs+'_'+id;
     var text=t.time+' '+t.title+' '+t.detail;
@@ -5464,7 +5578,7 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
     setTimeout(render,450);
   };
   window.toggleLandingCheck=function(id, checked){
-    try{ done[id]=!!checked; all[viewDs]=done; saveAll(all); render(); }catch(e){}
+    try{ var t=findTask(id); if(t){ setDone(t,checked); } render(); }catch(e){}
   };
   window.toggleLandingTimer=function(id,ev){
     if(ev && ev.target && ev.target.tagName==='INPUT') return;
@@ -5482,14 +5596,14 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
   function render(){
     var host=document.getElementById('landing-panel'); if(!host) return;
     var pb=document.getElementById('phase-banner'); if(pb) pb.textContent='🎯 '+viewDs+' · '+dayInfo[0]+'：'+dayInfo[1];
-    var total=tasks.length, finished=tasks.filter(function(t){return !!done[t.id];}).length;
+    var total=tasks.length, finished=tasks.filter(function(t){return isDone(t);}).length;
     var debt=[];
     if(debtZ) debt.push('综测');
     if(debtX) debt.push('刑法刷题');
     var rows=tasks.map(function(t){
-      var checked=done[t.id]?'checked':'';
-      var style=done[t.id]?'opacity:.62;text-decoration:line-through':'';
-      var hot=(t.id==='debt_zongce'||t.id==='xingfa')?'border-color:#f59e0b;background:#fffbeb':'';
+      var checked=isDone(t)?'checked':'';
+      var style=isDone(t)?'opacity:.62;text-decoration:line-through':'';
+      var hot=(t.id==='debt_zongce'||t.id==='xingfa'||t.gen)?'border-color:#f59e0b;background:#fffbeb':'';
       var key='landing_'+viewDs+'_'+t.id;
       var running=false;
       try{ running=(typeof tOn!=='undefined' && tOn && typeof activeSlotKey!=='undefined' && activeSlotKey===key); }catch(e){}
@@ -5506,19 +5620,31 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
         +'<input type="checkbox" data-landing="'+t.id+'" '+checked+' onclick="event.stopPropagation()" onchange="toggleLandingCheck(\''+t.id+'\',this.checked)" style="width:19px;height:19px;margin-top:2px;flex:0 0 auto">'
         +'<span style="flex:1;'+style+'"><b style="font-size:12px">'+esc(t.time)+' · '+esc(t.title)+'</b><br><span style="font-size:12px;color:var(--t2);line-height:1.55">'+esc(t.detail)+'</span><br><span style="font-size:11px;color:var(--p);font-weight:700">'+esc(t.out)+'</span><br><span style="font-size:10px;color:var(--t3)">点这条任务开始计时；计时中再点这条结束。勾选框只打钩，不计时。</span></span>'+durBadge+timerBtn+'</div>';
     }).join('');
+    var genNames=tasks.filter(function(t){return t.gen;}).map(function(t){return t.rawTitle;});
+    var genBanner=genNames.length
+      ?'<div style="margin-top:8px;padding:8px 10px;border-radius:9px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;font-size:12px;line-height:1.6"><b>昨日未完成已滚入今天（补债槽≤60分钟，先补再开新任务）：</b>'+esc(genNames.join('；'))+'。做完勾选，会同步记在原来那一天。</div>'
+      :'';
+    var queueBanner=(queue&&queue.length)
+      ?'<div style="margin-top:8px;padding:8px 10px;border-radius:9px;background:#f8fafc;border:1px solid #e2e8f0;color:#475569;font-size:12px;line-height:1.6"><b>欠账排队中（'+queue.length+'项，今天补债槽已满）：</b>'+esc(queue.map(function(c){return c.origDay.slice(5)+' '+c.rawTitle;}).join('；'))+'。不删除，按日期依次排进补债槽。</div>'
+      :'';
+    var dropBanner=(dropped&&dropped.length)
+      ?'<div style="margin-top:8px;padding:8px 10px;border-radius:9px;background:#fef2f2;border:1px solid #fecaca;color:#991b1b;font-size:12px;line-height:1.6"><b>超过补债时长（≥60分钟），不进补债槽，需单独安排：</b>'+esc(dropped.map(function(c){return c.origDay.slice(5)+' '+c.rawTitle;}).join('；'))+'。</div>'
+      :'';
     host.innerHTML='<div style="background:var(--surface);border:1.5px solid #2563eb;border-radius:var(--rad);box-shadow:var(--sh);padding:12px 14px;margin-bottom:13px">'
       +'<div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:center"><div style="font-size:15px;font-weight:800">'+(viewDs===fmt(new Date())?'📌 今日落地执行单':'📌 这一天的执行单')+'</div><div style="font-size:12px;color:var(--t2)">'+viewDs+' '+wk+' · '+esc(dayInfo[0])+' · 距11/15 '+Math.max(0,diff(viewDs,EXAM))+'天</div></div>'
       +'<div style="font-size:12px;color:var(--t2);margin-top:4px">'+esc(dayInfo[1])+' · 已完成 <b style="color:var(--p)">'+finished+'/'+total+'</b></div>'
       +'<button type="button" onclick="openTimerTab()" style="margin-top:8px;padding:6px 12px;border-radius:999px;border:none;background:#2563eb;color:#fff;font-size:12px;font-weight:800;cursor:pointer">⏱ 打开专注计时器</button>'
       +'<div style="font-size:11px;color:#991b1b;margin-top:4px">这张单跟着上方日历走：勾选和计时都按这天单独保存，和前后日期不串。</div>'
       +(debt.length?'<div style="margin-top:8px;padding:8px 10px;border-radius:9px;background:#fef2f2;border:1px solid #fecaca;color:#991b1b;font-size:12px;line-height:1.6"><b>昨日欠账已滚入今天：'+debt.join('、')+'。</b>先补账，再开新任务；今晚没勾完，明天继续滚，不许用“看过答案”冒充完成。</div>':'')
+      +genBanner+queueBanner+dropBanner
       +rows
-      +'<div style="font-size:11px;color:var(--t2);line-height:1.7;margin-top:9px">用法：点任务条开始计时，计时中再点同一条结束；时长会显示在任务条右侧，结束后显示已计分钟。做完再勾选。没勾的项目，明天会自动变成欠账顶到前面。</div>'
+      +'<div style="font-size:11px;color:var(--t2);line-height:1.7;margin-top:9px">用法：点任务条开始计时，计时中再点同一条结束；时长会显示在任务条右侧，结束后显示已计分钟。做完再勾选。没勾的项目，明天会自动进入补债槽（每天≤60分钟、最多 '+GEN_MAX+' 项），欠账最多保留 '+GEN_MAX_AGE+' 天，超过的自动过期。</div>'
       +'</div>';
     host.querySelectorAll('[data-landing]').forEach(function(cb){
       cb.addEventListener('change',function(){
-        done[cb.getAttribute('data-landing')]=cb.checked;
-        all[viewDs]=done; saveAll(all); render();
+        var t=findTask(cb.getAttribute('data-landing'));
+        if(t){ setDone(t,cb.checked); }
+        render();
       });
     });
   }
@@ -26641,5 +26767,5 @@ window.addEventListener('storage', function(e){
   if(e.key==='scsyd_gk_srs_v1'){ renderSrsStatus(); if(CLOUD.autoSync) queueCloudSave(); }
 });
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4e129460c6b08e0',t:'MTc5MjU5NTEzNA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4e129460c6b08e0',t:'MTc5MjU5NTEzNA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4e43255b94fd66d',t:'MTc5MjYyNjk2Mg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
