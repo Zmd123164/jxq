@@ -229,7 +229,7 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
     <button class="tb" onclick="showMemoryCard()" style="display:inline-flex;align-items:center">🧠 记忆卡</button>
   </div>
   <div style="font-size:10px;margin-top:4px;opacity:.8;cursor:pointer;display:inline-block" id="sync-status" onclick="manualSync()" title="点击立即同步合并">⚪ 未配置</div>
-  <div id="app-version" style="font-size:10px;margin-top:3px;opacity:.8">✅ 落地执行单版 v2026-10-23g（刑法记忆卡 246 张 · 开荒栏加民法/管理 · 同步自动重试 · 记录直接填写）</div>
+  <div id="app-version" style="font-size:10px;margin-top:3px;opacity:.8">✅ 落地执行单版 v2026-10-23i（切换开荒科目不再误标完成 · 刑法记忆卡 246 张 · 开荒栏含民法/管理）</div>
 </div>
 
 <div class="main">
@@ -644,7 +644,7 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
 // ==================== STORE ====================
 const KEY='gk2026v3';
 function ld(){try{const r=localStorage.getItem(KEY);if(r)return JSON.parse(r);}catch(e){}
-  return{checks:{},drills:{},logs:[],notes:[],feedbacks:{},customTasks:{},pauseOffset:0,landing:{},landingTs:{},landingProg:{},landingDone:{},pioneerDone:{},pioneerDay:{},pioneerPref:'',pioneerSeeded:false,
+  return{checks:{},drills:{},logs:[],notes:[],feedbacks:{},customTasks:{},pauseOffset:0,landing:{},landingTs:{},landingProg:{},landingDone:{},pioneerDone:{},pioneerDay:{},pioneerDoneDay:{},pioneerPref:'',pioneerSeeded:false,
     prog:{'小黑-理论':0,'小黑-刷题':0,'资料-基础':0,'资料-刷题':0,'逻辑':0,'数量-基础':0,'数量-刷题':0,'言语-基础':0,'言语-刷题':0,'综测-基础':0,'综测-刷题':0,'申论-小题':0,'申论-作文':0,'公基-系统':0,'公基-刷题':0}};}
 // ===== 同步快照：每次保存时对比上次同步的状态，自动记录「取消勾选」和「删除」 =====
 let _syncSnap=null;
@@ -4569,7 +4569,7 @@ function gzc_gunzip(src){
 }
 
 let _pulledOnce=false, _pulling=false; // 本次会话必须先拉取合并一次，才允许上传（防止新设备空数据覆盖云端）
-// ===== 同步总控（v2026-10-23g）=====
+// ===== 同步总控（v2026-10-23i）=====
 // 目标：网络慢/JSONBin 抽风时不再满屏红字，也不丢数据：
 //  · 同一时间只允许一个同步在跑，其余排队（避免互相打断/重复请求）
 //  · 失败 → 本地照常保存，标「待上传」，按 15s→30s→60s→120s→180s 自动退避重试
@@ -4812,6 +4812,9 @@ function mergeData(local,remote){
       const dL=local.pioneerDay||{}, dR=remote.pioneerDay||{}, PD={};
       new Set([...Object.keys(dR),...Object.keys(dL)]).forEach(function(d){ PD[d]=dR[d]||dL[d]; });
       m.pioneerDay=PD;
+      const ddL=local.pioneerDoneDay||{}, ddR=remote.pioneerDoneDay||{}, DDD={};
+      new Set([...Object.keys(ddR),...Object.keys(ddL)]).forEach(function(d){ DDD[d]=ddR[d]||ddL[d]; });
+      m.pioneerDoneDay=DDD;
       m.pioneerPref=remote.pioneerPref||local.pioneerPref||'';
       m.pioneerSeeded=!!(remote.pioneerSeeded||local.pioneerSeeded);
     }
@@ -5833,7 +5836,7 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
   //   D.landing[日期][任务id] = true/false
   //   D.landingTs[日期][任务id] = 修改时间（云合并时按它取最新一次）
   //   D.landingProg['日期|任务id'] = {note,ts}   ← 进度记录，换设备也在
-  function store(){ if(typeof D==='undefined'||!D) return null; D.landing=D.landing||{}; D.landingTs=D.landingTs||{}; D.landingProg=D.landingProg||{}; D.landingDone=D.landingDone||{}; D.pioneerDone=D.pioneerDone||{}; D.pioneerDay=D.pioneerDay||{}; return D; }
+  function store(){ if(typeof D==='undefined'||!D) return null; D.landing=D.landing||{}; D.landingTs=D.landingTs||{}; D.landingProg=D.landingProg||{}; D.landingDone=D.landingDone||{}; D.pioneerDone=D.pioneerDone||{}; D.pioneerDay=D.pioneerDay||{}; D.pioneerDoneDay=D.pioneerDoneDay||{}; return D; }
   function dayMap(d){ var s=store(); return (s&&s.landing[d])||{}; }
   function isDoneId(d,id){ return !!dayMap(d)[id]; }
   function isDone(t){ return !!(t&&isDoneId(t.origDay,t.origId)); }
@@ -5858,13 +5861,19 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
       try{
         var sP=store();
         var key=t.pioneerKey;
+        sP.pioneerDoneDay=sP.pioneerDoneDay||{};
         if(checked){
-          sP.pioneerDone[key]=now;      // 队列前进（不改写历史那几天）
-          sP.pioneerDay[viewDs]=key;    // 今天做的就是这一科
+          sP.pioneerDone[key]=now;          // 队列前进（不改写历史那几天）
+          sP.pioneerDoneDay[viewDs]=key;    // 只记录“这一天真正做完的是哪一科”
+          sP.pioneerDay[viewDs]=key;        // 视觉上标记今天做的是这一科
           if(sP.pioneerPref===key) sP.pioneerPref='';   // 想做的这科做完了，明天回到队首
         }else{
-          delete sP.pioneerDone[key];
+          delete sP.pioneerDoneDay[viewDs];
           delete sP.pioneerDay[viewDs];
+          // 只有别的日子没记录这一科时，才把队列里的“已完成”撤掉
+          var still=false;
+          Object.keys(sP.pioneerDoneDay||{}).forEach(function(d){ if(sP.pioneerDoneDay[d]===key) still=true; });
+          if(!still) delete sP.pioneerDone[key];
         }
       }catch(e){}
     }
@@ -5986,13 +5995,17 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
   }
   // 完成判定：队列里勾过 / 任意一天的第二套勾了且科目相同 / 行政法那天的骨架勾了
   function pioneerDoneKeys(){
-    var s=store(), out={};
+    var s=store(), out={}, todayK=fmt(new Date());
+    // ① 勾选时写下的「实做科目」——只在这一科被勾选时才存在
     Object.keys(s.pioneerDone||{}).forEach(function(k){ if(s.pioneerDone[k]) out[k]=1; });
+    // ② 按天记录的真实完成科目（勾选当天写入，改做别的科目时不会被改写）
+    Object.keys(s.pioneerDoneDay||{}).forEach(function(d){ var k=(s.pioneerDoneDay||{})[d]; if(k) out[k]=1; });
+    // ③ 兼容队列出现之前的历史勾选：只对今天之前的日子按“原定科目”补认，绝不用可变的“今天改做某科”
     Object.keys(s.landing||{}).forEach(function(d){
+      if(d>=todayK) return;
       if(!(s.landing[d]||{}).set2) return;
-      // 那天真正做的是哪一科（队列结算记录优先），不能拿"原定科目"顶替
-      var k=(s.pioneerDay||{})[d] || plannedSet2Subject(d);
-      if(k) out[k]=1;
+      if((s.pioneerDoneDay||{})[d]) return;
+      var k=plannedSet2Subject(d); if(k) out[k]=1;
     });
     if(isDoneId('2026-10-22','xf_shunyan')) out['行政法']=1;
     return out;
@@ -6008,7 +6021,7 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
     try{
       var raw=pioneerDayKey(vds);
       if(raw==='@head') return '';
-      if(raw) return raw;
+      if(raw){ return pioneerDoneKeys()[raw] ? '' : raw; }
       if(vds===fmt(new Date())){
         var pref=(store().pioneerPref||'');
         if(pref && !pioneerDoneKeys()[pref]) return pref;
@@ -6016,6 +6029,35 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
     }catch(e){}
     return '';
   }
+  // 一次性迁移：把历史上「勾了第二套但没记实做科目」的日子补上真实科目
+  //  ① 优先用 pioneerDone 的时间戳反推是哪一天做的哪一科（老版本只在勾选时写这个）
+  //  ② 队列出现之前的日子，按当天原定科目补
+  function migratePioneerDoneDay(){
+    try{
+      var s=store(); if(!s||s.pioneerDoneDayMigrated) return;
+      s.pioneerDoneDay=s.pioneerDoneDay||{};
+      var keys=PIONEER_SEQ.map(function(x){return x.key;});
+      Object.keys(s.pioneerDone||{}).forEach(function(k){
+        if(!s.pioneerDone[k] || keys.indexOf(k)<0) return;
+        var d=fmt(new Date(s.pioneerDone[k]));
+        var L=(s.landing||{})[d]||{};
+        if(L.set2 && !s.pioneerDoneDay[d]) s.pioneerDoneDay[d]=k;
+      });
+      Object.keys(s.landing||{}).forEach(function(d){
+        if(!(s.landing[d]||{}).set2 || s.pioneerDoneDay[d]) return;
+        var k=plannedSet2Subject(d);
+        if(k && keys.indexOf(k)>=0) s.pioneerDoneDay[d]=k;
+      });
+      // 已勾选的那天：把“今天改做某科”的标记对齐到「实际做完的那一科」
+      Object.keys(s.pioneerDoneDay||{}).forEach(function(d){
+        if(((s.landing||{})[d]||{}).set2 && s.pioneerDoneDay[d]) s.pioneerDay[d]=s.pioneerDoneDay[d];
+      });
+      s.pioneerDoneDayMigrated=true;
+      if(typeof saveLocal==='function') saveLocal();
+      if(typeof onDirty==='function') onDirty();
+    }catch(e){}
+  }
+
   // 首次打开时把"今天想做刑法"记成偏好（只种一次；用户点「改回队首」后不再种）
   function seedPioneer(){
     try{
@@ -6333,6 +6375,9 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
         var doneSet=pioneerDoneKeys();
         var todayK=fmt(new Date());
         var pk=pioneerPickOf(vds);
+        // 已经勾掉的那天：按“实做科目”显示，避免勾完再改做别的导致勾着的卡换名字
+        var _ddk=(store().pioneerDoneDay||{})[vds];
+        if(_ddk && (((store().landing||{})[vds])||{}).set2) pk=_ddk;
         if(!pk && vds>=todayK){ var h=pioneerHead(); pk=h?h.key:''; }
         if(vds<todayK) pk='';        // 过去的日子保留原样，不回改历史
         if(pk){
@@ -6505,7 +6550,7 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
             var pendDebt=[];
             PIONEER_SEQ.forEach(function(it){ if(it.slot==='debt' && !done[it.key]) pendDebt.push(it); });
             if(!pendDebt.length) return '';
-            return '<div style="margin-top:4px;color:#b45309">📌 队列里还有短项没勾：'+pendDebt.map(function(it){return it.key+'（'+it.min+'min）';}).join('、')+' —— 在补债槽那张卡上，先把它清掉再开下一科更稳。</div>';
+            return '<div style="margin-top:4px;color:#b45309">📌 队列里还有短项没勾：'+pendDebt.map(function(it){return it.key+'（'+it.min+'min）';}).join('、')+' —— 点它的名字就能把<b>今天第二套</b>换成这一科（只改今天，队列顺序不变）。</div>';
           })()
           +'</div>';
       }catch(e){ return ''; }
@@ -6748,6 +6793,33 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
   window.landingPickPioneer=function(key){
     try{
       var sP=store(), today=fmt(new Date());
+      var prevDone='';
+      if(key && ((sP.landing||{})[today]||{}).set2){
+        var ck=window.__pickConfirm||{};
+        if(ck.key!==key || (Date.now()-ck.ts)>8000){
+          window.__pickConfirm={key:key,ts:Date.now()};
+          var nowKey=(sP.pioneerDoneDay||{})[today]||sP.pioneerDay[today]||'';
+          showToast('今天第二套已经勾了《'+nowKey+'开荒》。再点一次「'+key+'」就改成《'+key+'开荒》（会取消刚才那个勾）','orange');
+          return;
+        }
+        window.__pickConfirm=null;
+      }
+      if(key){
+        // 今天第二套已经勾了：先把旧的那一科的勾选撤掉，再换成新科目（可再点一次改回）
+        try{
+          var L=(sP.landing||{})[today]||{};
+          if(L.set2){
+            prevDone=(sP.pioneerDoneDay||{})[today]||sP.pioneerDay[today]||''; 
+            L.set2=false; sP.landingTs=sP.landingTs||{}; (sP.landingTs[today]=sP.landingTs[today]||{}).set2=Date.now();
+            if(prevDone){
+              delete sP.pioneerDoneDay[today];
+              var still=false;
+              Object.keys(sP.pioneerDoneDay||{}).forEach(function(d){ if(sP.pioneerDoneDay[d]===prevDone) still=true; });
+              if(!still) delete sP.pioneerDone[prevDone];
+            }
+          }
+        }catch(e){}
+      }
       if(!key){ sP.pioneerDay[today]='@head'; sP.pioneerPref=''; }   // 明确回到队首（压住默认偏好）
       else{ sP.pioneerDay[today]=key; }                              // 只改今天，不动长期偏好
       CACHE_VER++;
@@ -6759,7 +6831,7 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
         else{
           var before=[]; var dd=pioneerDoneKeys();
           PIONEER_SEQ.forEach(function(it){ if(it.key!==key && !dd[it.key]) before.push(it.key); });
-          showToast('今天改做《'+key+'开荒》'+(before.length?('；'+before.join('、')+'仍留在队列里，明天不会跳过'):''),'#1d4ed8');
+          showToast((prevDone?('已取消《'+prevDone+'开荒》的勾选（还没做完不算完成），'):'')+'今天改做《'+key+'开荒》'+(before.length?('；'+before.join('、')+'仍留在队列里，明天不会跳过'):''),'#1d4ed8');
         }
       }
     }catch(e){}
@@ -6775,6 +6847,7 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
   window.renderLanding=render;
   window.applyLandingView=applyView;
   seedPioneer();
+  migratePioneerDoneDay();
   applyView(viewDs);
   render();
   if(document.readyState==='loading'){
@@ -6834,5 +6907,6 @@ window.addEventListener('storage', function(e){
   if(e.key==='scsyd_gk_srs_v1'){ renderSrsStatus(); if(CLOUD.autoSync) queueCloudSave(); }
 });
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4e129460c6b08e0',t:'MTc5MjU5NTEzNA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4e9eddeef442a56',t:'MTc5MjY4NzA3Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4ef63bebbebc4e1',t:'MTc5Mjc0NDMzMA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4e129460c6b08e0',t:'MTc5MjU5NTEzNA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4e9eddeef442a56',t:'MTc5MjY4NzA3Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
+</body>
 </html>
