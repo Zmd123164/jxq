@@ -225,7 +225,7 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
     <button class="tb" onclick="showMemoryCard()" style="display:inline-flex;align-items:center">🧠 记忆卡</button>
   </div>
   <div style="font-size:10px;margin-top:4px;opacity:.8;cursor:pointer;display:inline-block" id="sync-status" onclick="manualSync()" title="点击立即同步合并">⚪ 未配置</div>
-  <div id="app-version" style="font-size:10px;margin-top:3px;opacity:.8">✅ 落地执行单版 v2026-10-16（每天具体任务 · 欠账自动滚到明天）</div>
+  <div id="app-version" style="font-size:10px;margin-top:3px;opacity:.8">✅ 落地执行单版 v2026-10-23（勾选跨设备同步 · 练习类同套重做 · 进度类欠账保留进度）</div>
 </div>
 
 <div class="main">
@@ -544,6 +544,7 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
       2. 进入 <strong>Account Settings → API Keys</strong>，复制 Master Key<br>
       3. 粘贴到下方「API Key」栏，点「🆕 自动创建 Bin」<br>
       4. <strong style="color:#dc2626">另一台设备：必须填入完全相同的 API Key + Bin ID，再点「💾 保存配置」</strong><br>
+      5. <strong style="color:#166534">执行单勾选、进度记录、计时都走同一条云端</strong>：一台勾了，另一台打开或切回页面会自动变勾、划线（不用手动点）<br>
       <span style="color:#dc2626;font-weight:600">⚠️ 必须用 Safari/Chrome 等浏览器直接打开本文件。App 内置预览窗口禁止联网，永远无法同步！</span>
     </div>
     <div style="margin-bottom:11px">
@@ -573,7 +574,7 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
       <div style="font-size:12px;font-weight:700;color:var(--t);margin-bottom:6px">当前状态</div>
       <div style="font-size:13px;font-weight:700" id="sync-status-big">⚪ 未配置</div>
       <div class="small muted" id="srs-sync-line" style="margin-top:6px"></div>
-      <div style="font-size:10px;color:var(--t3);margin-top:5px;line-height:1.6">✅ 同步=双向合并：手机和平板的学习记录、打卡、笔记、错题取并集，互不覆盖、不会丢数据<br>📲 多设备使用习惯：换设备前先在旧设备点「☁️ 立即上传」，新设备打开页面会自动拉取合并（计时结束也会自动上传）<br>⚠️ 错题图片体积较大，仅保存在本设备；其余数据均可同步</div>
+      <div style="font-size:10px;color:var(--t3);margin-top:5px;line-height:1.6">✅ 同步=双向合并：手机和平板的学习记录、打卡、笔记、错题取并集，互不覆盖、不会丢数据<br>📲 多设备使用习惯：勾选/取消勾选会立刻上传（连点会合并成一次）；换设备打开页面或切回页面时自动拉取合并 · 计时结束也会自动上传<br>⚠️ 错题图片体积较大，仅保存在本设备；其余数据均可同步</div>
     </div>
   </div>
   <div class="card">
@@ -636,7 +637,7 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
 // ==================== STORE ====================
 const KEY='gk2026v3';
 function ld(){try{const r=localStorage.getItem(KEY);if(r)return JSON.parse(r);}catch(e){}
-  return{checks:{},drills:{},logs:[],notes:[],feedbacks:{},customTasks:{},pauseOffset:0,
+  return{checks:{},drills:{},logs:[],notes:[],feedbacks:{},customTasks:{},pauseOffset:0,landing:{},landingTs:{},landingProg:{},
     prog:{'小黑-理论':0,'小黑-刷题':0,'资料-基础':0,'资料-刷题':0,'逻辑':0,'数量-基础':0,'数量-刷题':0,'言语-基础':0,'言语-刷题':0,'综测-基础':0,'综测-刷题':0,'申论-小题':0,'申论-作文':0,'公基-系统':0,'公基-刷题':0}};}
 // ===== 同步快照：每次保存时对比上次同步的状态，自动记录「取消勾选」和「删除」 =====
 let _syncSnap=null;
@@ -655,6 +656,11 @@ function stampDiff(){
   gone((D.notes||[]).map(function(x){return x.id||x.ts;}), _syncSnap.notes, D.tomb.notes);
   gone((D.corrections||[]).map(function(x){return x.id;}), _syncSnap.corr, D.tomb.corrections);
   syncSnapshot();
+}
+// 旧版把落地执行单勾选存成顶层 'YYYY-MM-DD' 键（每台设备各存各的，云同步不到）。
+// v2026-10-23 起统一并进 D.landing / D.landingTs，这里负责清掉旧键，避免同一份数据两个来源。
+function dropLegacyDayKeys(){
+  try{ Object.keys(D).forEach(k=>{ if(/^\d{4}-\d{2}-\d{2}$/.test(k)) delete D[k]; }); delete D.dayTs; }catch(e){}
 }
 function sv(){
   stampDiff();
@@ -4596,7 +4602,7 @@ async function pullMergeForSave(){
   const localWqImgs={};
   (D.wq||[]).forEach(q=>{if(q.imgData&&q.imgData!=='[img]') localWqImgs[q.id]=q.imgData;});
   const merged=mergeData(D,remote);
-  Object.keys(merged).forEach(k=>{D[k]=merged[k];}); syncSnapshot();
+  Object.keys(merged).forEach(k=>{D[k]=merged[k];}); dropLegacyDayKeys(); syncSnapshot();
   if(D.wq) D.wq=D.wq.map(q=>({...q,imgData:localWqImgs[q.id]||(q.imgData==='[img]'?null:q.imgData)||null}));
   try{localStorage.setItem(KEY,JSON.stringify(D));}catch(e){}
   if(remote.srs&&remote.srs.cards){
@@ -4714,21 +4720,54 @@ function mergeData(local,remote){
   m.opt={gk:!!(((local.opt||{}).gk)||((remote.opt||{}).gk)),figTrig:!!(((local.opt||{}).figTrig)||((remote.opt||{}).figTrig))};
   // 🧱 周板块主题序列：本地优先（代表用户最近一次修改）
   if(local.blockSeq&&local.blockSeq.length)m.blockSeq=local.blockSeq;
-  // 落地执行单每日勾选（顶层 'YYYY-MM-DD' 对象）：按天、按任务分别合并，取各自最新一次修改（dayTs）
+  // ===== 落地执行单勾选（v2026-10-23）=====
+  // 统一存 D.landing[日期][任务id] / D.landingTs[日期][任务id]，勾上或取消都带时间戳，
+  // 合并规则：同一条任务取「最新一次修改」，所以手机勾了平板会变勾，平板取消了手机也会取消。
   const dayRe=/^\d{4}-\d{2}-\d{2}$/;
-  const tsL=local.dayTs||{}, tsR=remote.dayTs||{};
-  m.dayTs={};
-  new Set([...Object.keys(remote),...Object.keys(local)].filter(k=>dayRe.test(k))).forEach(d=>{
-    const a=(remote[d]&&typeof remote[d]==='object')?remote[d]:{}, b=(local[d]&&typeof local[d]==='object')?local[d]:{};
-    const ta=tsR[d]||{}, tb=tsL[d]||{};
-    const out={}, ots={};
-    new Set([...Object.keys(a),...Object.keys(b)]).forEach(id=>{
-      const va=a[id], vb=b[id], xa=ta[id]||0, xb=tb[id]||0;
-      out[id]=(vb!==undefined && (va===undefined || xb>=xa)) ? vb : va;
-      ots[id]=Math.max(xa,xb);
-    });
-    m[d]=out; m.dayTs[d]=ots;
-  });
+  {
+    const pickOne=function(va,vb,ta,tb){
+      if(va===undefined) return {v:vb,t:tb};
+      if(vb===undefined) return {v:va,t:ta};
+      if(ta>tb) return {v:va,t:ta};
+      if(tb>ta) return {v:vb,t:tb};
+      return {v:!!(va||vb),t:ta};          // 时间相同：任一端勾了就算完成
+    };
+    const L={}, T={};
+    const addSide=function(map,tsMap){
+      Object.keys(map||{}).forEach(function(d){
+        if(!dayRe.test(d)) return;
+        const o=map[d]||{}, tt=(tsMap||{})[d]||{};
+        L[d]=L[d]||{}; T[d]=T[d]||{};
+        Object.keys(o).forEach(function(id){
+          if(id==='dayTs') return;
+          const r=pickOne(L[d][id],o[id],T[d][id],tt[id]||0);
+          L[d][id]=!!r.v; T[d][id]=r.t||0;
+        });
+      });
+    };
+    addSide(remote.landing||{}, remote.landingTs||{});
+    addSide(local.landing||{},  local.landingTs||{});
+    // 兼容旧版：顶层 'YYYY-MM-DD' 对象 + dayTs，一并折进 landing
+    const legR={}, legRT={}, legL={}, legLT={};
+    Object.keys(remote).forEach(k=>{ if(dayRe.test(k)){legR[k]=remote[k]||{}; legRT[k]=(remote.dayTs||{})[k]||{};} });
+    Object.keys(local ).forEach(k=>{ if(dayRe.test(k)){legL[k]=local[k] ||{}; legLT[k]=(local.dayTs ||{})[k]||{};} });
+    addSide(legR,legRT); addSide(legL,legLT);
+    m.landing=L; m.landingTs=T;
+    // 进度备注（按「日期|任务」存，取最新一次填写）
+    {
+      const pL=local.landingProg||{}, pR=remote.landingProg||{}, P={};
+      new Set([...Object.keys(pR),...Object.keys(pL)]).forEach(function(k){
+        const a=pR[k], b=pL[k];
+        if(!a){P[k]=b;return;}
+        if(!b){P[k]=a;return;}
+        P[k]=((b.ts||0)>=(a.ts||0))?b:a;
+      });
+      m.landingProg=P;
+    }
+    // 旧顶层日期键已折进 landing，不再写回云端（只留一个数据来源）
+    Object.keys(m).forEach(k=>{ if(dayRe.test(k)) delete m[k]; });
+    delete m.dayTs;
+  }
   // 检查点快照：保留最早一次存档
   m.cpSnap=(local.cpSnap&&remote.cpSnap)?(local.cpSnap.date<=remote.cpSnap.date?local.cpSnap:remote.cpSnap):(local.cpSnap||remote.cpSnap);
   // 课程每天节数覆盖（✎编辑）：按课程取较大值
@@ -4761,7 +4800,7 @@ async function manualSync(){
   }
 }
 
-async function cloudLoad(){
+async function cloudLoad(silent){
   if(!CLOUD.apiKey||!CLOUD.binId){showToast('请先填写 API Key 和 Bin ID','orange');return;}
   setSyncStatus('loading');
   try{
@@ -4774,14 +4813,14 @@ async function cloudLoad(){
     // 兼容旧版双重包裹的数据：{record:{record:{logs:...}}}，逐层解开
     let guard=0;
     while(remote&&!remote.logs&&remote.record&&guard<5){remote=remote.record;guard++;}
-    if(!remote||!remote.logs&&!remote.checks){_pulledOnce=true;showToast('云端暂无数据，已用本机数据初始化','orange');cloudSave(true,true);return;}
+    if(!remote||!remote.logs&&!remote.checks){_pulledOnce=true;if(!silent)showToast('云端暂无数据，已用本机数据初始化','orange');cloudSave(true,true);return;}
     // 保留本地错题图片
     const localWqImgs={};
     (D.wq||[]).forEach(q=>{if(q.imgData&&q.imgData!=='[img]') localWqImgs[q.id]=q.imgData;});
     // ⭐ 双向合并（不再整体覆盖），合并结果回传云端，两边数据都不丢
     _pulledOnce=true;
     const merged=mergeData(D,remote);
-    Object.keys(merged).forEach(k=>{D[k]=merged[k];}); syncSnapshot();
+    Object.keys(merged).forEach(k=>{D[k]=merged[k];}); dropLegacyDayKeys(); syncSnapshot();
     if(D.wq) D.wq=D.wq.map(q=>({...q,imgData:localWqImgs[q.id]||(q.imgData==='[img]'?null:q.imgData)||null}));
     try{localStorage.setItem(KEY,JSON.stringify(D));}catch(e){}
     if(remote.srs && remote.srs.cards){
@@ -4790,13 +4829,13 @@ async function cloudLoad(){
       if(merged){
         try{ localStorage.setItem(SRS_LS_KEY,JSON.stringify(merged)); localStorage.setItem(SRS_LS_KEY+'_backup',JSON.stringify(merged)); }catch(e){}
         try{ document.getElementById('memory-frame').contentWindow.postMessage({type:'SRS_RELOAD'},'*'); }catch(e){}
-        showToast('✅ 记忆卡进度已与云端合并（按卡取并集，互不覆盖）');
+        if(!silent)showToast('✅ 记忆卡进度已与云端合并（按卡取并集，互不覆盖）');
         renderSrsStatus();
       }
     }
     await cloudSave(true,true); // 把合并结果传回云端
     setSyncStatus('ok');
-    showToast('✅ 已同步（本机与云端记录已合并，互不覆盖）');
+    if(!silent)showToast('✅ 已同步（本机与云端记录已合并，互不覆盖）');
     // 全量刷新：课表、计时记录、当日进度、统计页（若打开）
     renderSchedule();renderTLog();updateDayProgress(ds(curDate));safeRun(window.renderLanding);
     try{
@@ -4892,7 +4931,7 @@ async function syncDiagnose(){
   const lines=[];
   const log=s=>{lines.push(s);el.textContent=lines.join('\n');};
   log('🩺 开始诊断…');
-  log('0️⃣ 页面版本: codec-2026-10-22（看到这行才是新版；没有这行说明打开的是旧文件）');
+  log('0️⃣ 页面版本: codec-2026-10-23（看到这行才是新版；没有这行说明打开的是旧文件）');
 
   // 1. 运行环境
   const proto=location.protocol;
@@ -4941,6 +4980,9 @@ async function syncDiagnose(){
     log('4️⃣ 数据对比:');
     log('   云端: 学习记录 '+(rec.logs||[]).length+' 条 / 共 '+(rMin/60).toFixed(1)+'h / 打卡 '+Object.values(rec.checks||{}).filter(Boolean).length+' 项');
     log('   本机: 学习记录 '+(D.logs||[]).length+' 条 / 共 '+(lMin/60).toFixed(1)+'h / 打卡 '+Object.values(D.checks||{}).filter(Boolean).length+' 项');
+    const cntLanding=function(o){ try{ return Object.keys(o||{}).reduce(function(n,d){ return n+Object.keys(o[d]||{}).filter(function(id){return !!o[d][id];}).length; },0); }catch(e){ return 0; } };
+    log('   执行单勾选: 云端 '+cntLanding(rec.landing)+' 项 / 本机 '+cntLanding(D.landing)+' 项'+(cntLanding(D.landing)>cntLanding(rec.landing)?' → 本机更新，点「☁️ 立即上传」':''));
+    if(cntLanding(rec.landing)>0 && cntLanding(D.landing)===0) log('   ⚠️ 云端有勾选、本机没有 → 点「🔄 同步合并（拉取+上传）」即可拉下来');
     if((rec.logs||[]).length===0&&(D.logs||[]).length>0){
       log('   ⚠️ 云端是空的但本机有数据 → 另一台设备从未成功上传过！');
       log('   请在学习的那台设备上点「☁️ 立即上传」');
@@ -5572,8 +5614,11 @@ function init(){
   document.addEventListener('visibilitychange',()=>{
     if(!document.hidden){
       safeRun(updateCountdowns);safeRun(renderSchedule);
-      // 切回页面时自动拉取云端最新数据（如配置了同步）——换设备打开即自动合并
-      if(CLOUD.apiKey&&CLOUD.binId) cloudLoad().catch(()=>{});
+      // 切回页面/换设备打开时自动拉取云端最新数据（静默合并，勾选状态随之刷新）
+      if(CLOUD.apiKey&&CLOUD.binId){
+        const _now=Date.now();
+        if(!window.__lastAutoPull || _now-window.__lastAutoPull>3000){ window.__lastAutoPull=_now; cloudLoad(true).catch(()=>{}); }
+      }
     }else{
       // 切到后台/锁屏前，把当前数据推上云端；计时中再抢一次悬浮窗
       if(CLOUD.apiKey&&CLOUD.binId) cloudSave(true,true);
@@ -5608,48 +5653,151 @@ function init(){
     }
   });
   // 打开页面即自动拉取云端并合并（只要配置了 Key+BinID 就拉，不依赖自动同步开关）
-  if(CLOUD.apiKey&&CLOUD.binId) cloudLoad().catch(()=>{});
+  if(CLOUD.apiKey&&CLOUD.binId){ window.__lastAutoPull=Date.now(); cloudLoad(true).catch(()=>{}); }
 }
 init();
 try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
 </script><script>
 (function(){
-  var EXAM='2026-11-15', KEY='landing_tasks_v1016';
+  var EXAM='2026-11-15', KEY='landing_tasks_v1016';   // KEY 只用于把旧版本的本地勾选迁移进来
   function pad(n){return (n<10?'0':'')+n;}
   function fmt(d){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());}
   function parse(s){var a=s.split('-');return new Date(+a[0],+a[1]-1,+a[2]);}
   function addDays(s,n){var d=parse(s);d.setDate(d.getDate()+n);return fmt(d);}
   function diff(s,e){return Math.round((parse(e)-parse(s))/86400000);}
-  function loadAll(){try{return JSON.parse(localStorage.getItem(KEY)||'{}');}catch(e){return{};}}
-  function saveAll(o){try{localStorage.setItem(KEY,JSON.stringify(o));}catch(e){}}
   function esc(s){return String(s||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
   function fmtDur(sec){sec=Math.max(0,Math.floor(sec||0));var h=Math.floor(sec/3600),m=Math.floor(sec%3600/60),ss=sec%60;return (h?((h<10?'0':'')+h+':'):'')+((m<10?'0':'')+m)+':'+((ss<10?'0':'')+ss);}
-  var all=loadAll();
   var viewDs=fmt(new Date());
 
-  // ===== 欠账规则（v2）=====
-  // 1) 从 GEN_START 起，昨天没勾的任务（含昨天自己的欠账）进入今天的「补债槽」
-  // 2) 今天最多显示 GEN_MAX 项，其余按日期排队，不删除、不堆在一天里
-  // 3) 欠账的勾选会写回原来那一天，避免重复滚入
-  // 4) 不滚：关账、记忆卡、超哥晨读；综测/刑法已由 debtZ/debtX 处理，不重复
-  // 5) 公文类开荒（set2）如果今天的开荒是同一学科，就不重复滚入
+  // ==================== 数据层（v2026-10-23 改）====================
+  // 以前勾选只写 localStorage 的 landing_tasks_v1016，从来不进云同步 —— 手机勾了平板永远不划线。
+  // 现在一律写进主数据 D，跟着 sv() → cloudSave() 上云：
+  //   D.landing[日期][任务id] = true/false
+  //   D.landingTs[日期][任务id] = 修改时间（云合并时按它取最新一次）
+  //   D.landingProg['日期|任务id'] = {note,ts}   ← 进度记录，换设备也在
+  function store(){ if(typeof D==='undefined'||!D) return null; D.landing=D.landing||{}; D.landingTs=D.landingTs||{}; D.landingProg=D.landingProg||{}; return D; }
+  function dayMap(d){ var s=store(); return (s&&s.landing[d])||{}; }
+  function isDoneId(d,id){ return !!dayMap(d)[id]; }
+  function isDone(t){ return !!(t&&isDoneId(t.origDay,t.origId)); }
+  function saveLocal(){ try{ if(typeof sv==='function') sv(); }catch(e){} }
+  var _pushT=0;
+  function saveCloud(){
+    try{ clearTimeout(_pushT); }catch(e){}
+    _pushT=setTimeout(function(){
+      try{ if(typeof CLOUD!=='undefined'&&CLOUD&&CLOUD.apiKey&&CLOUD.binId&&typeof cloudSave==='function') cloudSave(true,true); }catch(e){}
+    },1200);   // 连点多个勾选时合并成一次上传
+  }
+  function setDone(t,checked,days){
+    var s=store(); if(!s||!t) return;
+    var now=Date.now(), list=(days&&days.length)?days.slice():[];
+    if(list.indexOf(t.origDay)<0) list.push(t.origDay);
+    list.forEach(function(d){
+      s.landing[d]=s.landing[d]||{}; s.landing[d][t.origId]=!!checked;
+      s.landingTs[d]=s.landingTs[d]||{}; s.landingTs[d][t.origId]=now;
+    });
+    CACHE_VER++;
+    saveLocal(); saveCloud();
+    try{
+      if(typeof showToast==='function'){
+        showToast(checked
+          ? (list.length>1?'✅ 已勾选：这套重做连同之前没勾的一并结清，正在上传云端':'✅ 已勾选并上传云端（另一台设备打开会自动变勾）')
+          : '已取消勾选（会同步到另一台设备）');
+      }
+    }catch(e){}
+  }
+  function keyOf(d,id){ return 'landing_'+d+'_'+id; }
+  function minsOf(d,id){
+    var t=0;
+    try{ t=(D.logs||[]).filter(function(l){return l.taskKey===keyOf(d,id);}).reduce(function(s,l){return s+(l.duration||0);},0); }catch(e){}
+    return t;
+  }
+  function minsChain(days,id){ var t=0;(days||[]).forEach(function(d){t+=minsOf(d,id);});return t; }
+  function noteOf(d,id){ try{ var p=(D.landingProg||{})[(d+'|'+id)]; return (p&&p.note)||''; }catch(e){ return ''; } }
+  function setNote(d,id,v){
+    var s=store(); if(!s) return;
+    s.landingProg[d+'|'+id]={note:String(v||'').slice(0,160),ts:Date.now()};
+    saveLocal(); saveCloud();
+  }
+  window.landingSaveNote=function(el){
+    try{
+      var k=el.getAttribute('data-lp')||''; var i=k.indexOf('|'); if(i<0) return;
+      setNote(k.slice(0,i),k.slice(i+1),el.value);
+    }catch(e){}
+  };
+
+  // 旧数据迁移：旧本地键 + 旧顶层日期键 → D.landing（启动时跑一次）
+  function migrate(){
+    var s=store(); if(!s) return;
+    var changed=false, now=Date.now();
+    function fold(d,id,val,ts){
+      if(!/^\d{4}-\d{2}-\d{2}$/.test(d)||!id||id==='dayTs') return;
+      var cur=s.landing[d]||{}, cts=s.landingTs[d]||{};
+      ts=+ts||0;
+      if(cur[id]!==undefined && !(ts>(cts[id]||0))) return;
+      cur[id]=!!val; s.landing[d]=cur;
+      cts[id]=ts||0; s.landingTs[d]=cts;   // 旧数据没有时间戳就记 0：永远让位给云端的真实修改
+      changed=true;
+    }
+    try{
+      var lg=JSON.parse(localStorage.getItem(KEY)||'null');
+      if(lg){ var lts=lg.dayTs||{}; Object.keys(lg).forEach(function(d){ if(!/^\d{4}-\d{2}-\d{2}$/.test(d))return; var o=lg[d]||{}, t=lts[d]||{}; Object.keys(o).forEach(function(id){ fold(d,id,o[id],t[id]); }); }); }
+    }catch(e){}
+    try{
+      Object.keys(s).forEach(function(d){ if(!/^\d{4}-\d{2}-\d{2}$/.test(d)) return; var o=s[d]||{}, t=(s.dayTs||{})[d]||{}; Object.keys(o).forEach(function(id){ fold(d,id,o[id],t[id]); }); });
+    }catch(e){}
+    try{ if(typeof dropLegacyDayKeys==='function') dropLegacyDayKeys(); }catch(e){}
+    if(changed) saveLocal();
+  }
+  migrate();
+
+  // ===== 欠账 / 重做规则（v3 · 2026-10-23）=====
+  // A 练习类（图推/黑十/数量资料/刑法选择题/背卡，每天都有同类题组）：不做欠账。
+  //   昨天没勾 → 今天「同一套重做」，题组内容原样保留，直到勾选为止。
+  // B 进度类（套卷/订正/开荒/综测/听课，一次性且有产出）：进补债槽，保留上次进度；
+  //   超过 60 分钟的不进补债槽，单独列出，同样保留进度。
+  // C 不滚：关账、超哥晨读。
   var GEN_START='2026-10-22';
   var GEN_RESET={'2026-10-19':1,'2026-10-20':1,'2026-10-21':1};
-  var GEN_MAX=3;
-  var GEN_MAX_AGE=3;
-  var GEN_EXCLUDE={report:1,cards:1,chaoge:1};
+  var GEN_MAX=3, GEN_BUDGET=60, GEN_MAX_AGE=3;
+  var KIND_NONE={report:1,chaoge:1};
+  var KIND_DRILL={cards:1,tutui:1,zhengzhi:1,numdata:1,xingfa:1};
+  function kindOf(t){
+    var id=t&&(t.origId||t.id); if(!id) return 'prog';
+    if(KIND_NONE[id]) return 'none';
+    if(KIND_DRILL[id]) return 'drill';
+    return 'prog';
+  }
   var KW=['公文','行政法','经济','时政','综测','刑法','图推','数量','资料','政治','公基'];
   function kwOf(t){var s=(t&&t.rawTitle)||(t&&t.title)||''; for(var i=0;i<KW.length;i++){ if(s.indexOf(KW[i])>=0) return KW[i]; } return null;}
-  function isDone(t){ var o=all[t.origDay]||{}; return !!o[t.origId]; }
-  function setDone(t,checked){
-    all[t.origDay]=all[t.origDay]||{}; all[t.origDay][t.origId]=!!checked;
-    all.dayTs=all.dayTs||{}; all.dayTs[t.origDay]=all.dayTs[t.origDay]||{}; all.dayTs[t.origDay][t.origId]=Date.now();
-    saveAll(all);
-    try{ if(typeof D!=='undefined'&&D){ D[t.origDay]=all[t.origDay]; D.dayTs=all.dayTs; } }catch(e){}
+  var BASE_CACHE={}, RPT_CACHE={}, FL_CACHE={}, CACHE_VER=0, _cacheVer=-1;
+  function cacheVer(){ if(_cacheVer!==CACHE_VER){ BASE_CACHE={}; RPT_CACHE={}; FL_CACHE={}; _cacheVer=CACHE_VER; } }
+  function baseOf(d){
+    cacheVer();
+    if(!BASE_CACHE[d]){ try{ BASE_CACHE[d]=buildBase(d); }catch(e){ BASE_CACHE[d]={tasks:[],dayInfo:['',''],wk:'',debtZ:false,debtX:false}; } }
+    return BASE_CACHE[d];
+  }
+  // 练习类连续没勾的链条：返回 {root:最早没勾那天, days:[...], count:连续未勾天数}
+  function repeatInfo(vds,id){
+    cacheVer();
+    var ck=vds+'|'+id;
+    if(RPT_CACHE[ck]!==undefined) return RPT_CACHE[ck];
+    var days=[], d=vds;
+    for(var i=1;i<=14;i++){
+      d=addDays(vds,-i);
+      if(d<GEN_START) break;
+      var bs=baseOf(d).tasks||[], has=false, hidden=false;
+      for(var j=0;j<bs.length;j++){ if(bs[j].id===id){ has=true; hidden=/^【明天再做】/.test(bs[j].title||''); break; } }
+      if(!has) break;                 // 那天没有同类任务：链条不连续
+      if(hidden) break;               // 那天明确顺延到今天 → 今天这条本来就是同一套，不算重做
+      if(isDoneId(d,id)) break;       // 那天勾过：链条结束
+      days.push(d);
+    }
+    var r=days.length?{root:days[days.length-1],days:days.slice().reverse(),count:days.length}:null;
+    RPT_CACHE[ck]=r; return r;
   }
 
   function computeFor(vds){
-    var ydone=all[addDays(vds,-1)]||{};
+    var ydone=dayMap(addDays(vds,-1));
     var hasY=Object.keys(ydone).length>0;
     var debtZ=(hasY && !ydone.zongce) || vds==='2026-10-16';
     var debtX=(hasY && !ydone.xingfa && !ydone.set2) || vds==='2026-10-16';
@@ -5797,7 +5945,7 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
     return {tasks:tasks, dayInfo:dayInfo, wk:_st.wk, debtZ:debtZ, debtX:debtX};
   }
 
-  // 欠账候选（未完成且未被其他规则覆盖的任务），按日期先后排序
+  // 欠账候选：只收「进度类」未完成任务（练习类走同一套重做，不在这里堆欠账）
   function genCands(vds, base){
     if(vds<GEN_START || GEN_RESET[vds]) return [];
     var y=addDays(vds,-1);
@@ -5807,10 +5955,17 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
       if(isDone(c)) return;
       if(diff(c.origDay, vds)>GEN_MAX_AGE) return;   // 欠账最多保留3天，过期不再滚
       var oid=c.origId;
-      if(GEN_EXCLUDE[oid]) return;
+      if(KIND_NONE[oid]) return;                     // 关账/晨读不滚
       if(/^debt_/.test(oid)) return;
       if(oid==='zongce' && base.debtZ) return;
       if((oid==='xingfa'||oid==='set2') && base.debtX) return;
+      var todayHas=(base.tasks||[]).some(function(bt){ return bt.origId===oid; });
+      if(KIND_DRILL[oid]){
+        // 练习类：今天也有同一项 → 今天直接「同一套重做」，不再单列欠账
+        if(todayHas) return;
+      }
+      // 那天已经明确写了「明天再做」（顺延），而今天本来就有同 id 的正式任务 → 不再重复挂欠账
+      if(/^【明天再做】/.test(c.rawTitle||'') && todayHas) return;
       if(oid==='set2'){
         var k=kwOf(c);
         var hit=k && base.tasks.some(function(bt){ return bt.origId==='set2' && kwOf(bt)===k; });
@@ -5826,22 +5981,26 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
     return out;
   }
   function candToTask(c){
+    var mins=minsOf(c.origDay,c.origId), note=noteOf(c.origDay,c.origId);
     return {
       id:'gen_'+c.origDay+'_'+c.origId,
       time:'补债槽',
       title:'欠账('+c.origDay.slice(5)+')·'+c.rawTitle,
-      detail:'昨天没完成，今天先补，≤60分钟，做不完就停。'+c.rawDetail,
+      detail:'今天先补，≤60分钟，做不完就停。'+c.rawDetail,
       out:c.rawOut||'',
-      gen:true,
+      gen:true, kind:'prog', mins:mins, note:note,
       origDay:c.origDay, origId:c.origId,
       rawTitle:c.rawTitle, rawDetail:c.rawDetail, rawOut:c.rawOut
     };
   }
   // 某天的全部任务（基础 + 全部欠账，不截断，供后续日期递归使用）
   function fullList(vds){
-    var base=buildBase(vds);
+    cacheVer();
+    if(FL_CACHE[vds]) return FL_CACHE[vds];
+    var base=baseOf(vds);
     var gens=genCands(vds, base).map(candToTask);
-    return base.tasks.concat(gens);
+    FL_CACHE[vds]=base.tasks.concat(gens);
+    return FL_CACHE[vds];
   }
 
   // 补债时长：从标题里读「N分钟」，读不到按30分钟算
@@ -5855,7 +6014,7 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
   var GEN_BUDGET=60;
 
   function buildFor(vds){
-    var base=buildBase(vds);
+    var base=baseOf(vds);
     var cands=genCands(vds, base);
     var showGen=(vds>=fmt(new Date()));
     var shown=[], queue=[], dropped=[], used=0;
@@ -5867,11 +6026,28 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
         else queue.push(c);
       });
     }
+    var keep=function(t){ return !/^【明天再做】/.test(t.title); };
+    var list=(vds==='2026-10-22')
+      ? base.tasks.filter(keep).concat(shown.map(candToTask))
+      : shown.map(candToTask).concat(base.tasks.filter(keep));
+
+    // 练习类：昨天没勾 → 今天还是同一套（题组内容原样保留），直到勾选为止
+    if(vds>=GEN_START && !GEN_RESET[vds]){
+      list.forEach(function(t){
+        if(t.gen) return;
+        if(kindOf(t)!=='drill') return;
+        var rp=repeatInfo(vds,t.origId);
+        if(!rp) return;
+        var src=null, bs=baseOf(rp.root).tasks||[];
+        for(var i=0;i<bs.length;i++){ if(bs[i].id===t.origId){ src=bs[i]; break; } }
+        t.repeat=rp; t.setDay=rp.root;
+        if(src){ t.setTitle=String(src.title||'').replace(/^【明天再做】/,''); t.setDetail=src.detail; t.setOut=src.out||''; }
+        t.setMins=minsChain(rp.days,t.origId);
+        t.setNote=noteOf(rp.root,t.origId);
+      });
+    }
     return {
-      // 已推到明天的【明天再做】条目不再出现在今天的课表（仍保留为明天的欠账）
-      tasks:(vds==='2026-10-22'
-              ? base.tasks.filter(function(t){ return !/^【明天再做】/.test(t.title); }).concat(shown.map(candToTask))
-              : shown.map(candToTask).concat(base.tasks.filter(function(t){ return !/^【明天再做】/.test(t.title); }))),
+      tasks:list,
       dayInfo:base.dayInfo, wk:base.wk, debtZ:base.debtZ, debtX:base.debtX,
       queue:queue, dropped:dropped, genUsed:used
     };
@@ -5888,7 +6064,7 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
     var t=findTask(id);
     if(!t) return;
     var key='landing_'+viewDs+'_'+id;
-    var text=t.time+' '+t.title+' '+t.detail;
+    var text=t.time+' '+(t.setTitle||t.title)+' '+(t.setDetail||t.detail);
     try{ _ckTaskText[key]=text; }catch(e){}
     var ok=false;
     try{ if(typeof startTaskTimer==='function'){ startTaskTimer(key); ok=(typeof tOn!=='undefined' && tOn); } }catch(e){ console.warn('startTaskTimer failed', e); }
@@ -5913,7 +6089,14 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
     setTimeout(render,450);
   };
   window.toggleLandingCheck=function(id, checked){
-    try{ var t=findTask(id); if(t){ setDone(t,checked); } render(); }catch(e){}
+    try{
+      var t=findTask(id);
+      if(t){
+        var days=(t.repeat&&t.repeat.days)?t.repeat.days.concat([viewDs]):[t.origDay];
+        setDone(t,checked,days);
+      }
+      render();
+    }catch(e){}
   };
   window.toggleLandingTimer=function(id,ev){
     if(ev && ev.target && ev.target.tagName==='INPUT') return;
@@ -5930,16 +6113,30 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
   };
   function render(){
     var host=document.getElementById('landing-panel'); if(!host) return;
+    try{ applyView(viewDs); }catch(e){}   // 勾选/取消后重新算一遍「同一套重做」和补债槽
+    // 正在填「进度记录」时不重绘，免得把输入打断
+    try{ var ae0=document.activeElement; if(ae0&&ae0.getAttribute&&ae0.getAttribute('data-lp')) return; }catch(e){}
     var pb=document.getElementById('phase-banner'); if(pb) pb.textContent='🎯 '+viewDs+' · '+dayInfo[0]+'：'+dayInfo[1];
     var total=tasks.length, finished=tasks.filter(function(t){return isDone(t);}).length;
     var debt=[];
     if(debtZ) debt.push('综测');
     if(debtX) debt.push('刑法刷题');
+
+    function syncLine(){
+      var cfg=false;
+      try{ cfg=!!(typeof CLOUD!=='undefined'&&CLOUD&&CLOUD.apiKey&&CLOUD.binId); }catch(e){}
+      if(!cfg) return '<div style="margin-top:6px;font-size:11px;color:#92400e;background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:6px 8px;line-height:1.6">⚠️ 云同步还没配置：勾选只存这台设备。<a href="javascript:void(0)" onclick="event.stopPropagation();manualSync()" style="color:#92400e;font-weight:800;text-decoration:underline">去配置</a></div>';
+      var ts=0; try{ ts=CLOUD.lastSyncTs||0; }catch(e){}
+      var dd=ts?new Date(ts):null;
+      return '<div style="margin-top:6px;font-size:11px;color:#166534;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:6px 8px;line-height:1.6">☁️ 勾选跟着云同步：最近上传 '+(dd?(pad(dd.getHours())+':'+pad(dd.getMinutes())):'--:--')+' · 另一台设备打开或切回页面会自动合并 <a href="javascript:void(0)" onclick="event.stopPropagation();manualSync()" style="color:#166534;font-weight:800;text-decoration:underline">立即同步</a></div>';
+    }
+
     var rows=tasks.map(function(t){
-      var checked=isDone(t)?'checked':'';
-      var style=isDone(t)?'opacity:.62;text-decoration:line-through':'';
-      var hot=(t.id==='debt_zongce'||t.id==='xingfa'||t.gen)?'border-color:#f59e0b;background:#fffbeb':'';
-      var key='landing_'+viewDs+'_'+t.id;
+      var done=isDone(t);
+      var checked=done?'checked':'';
+      var style=done?'opacity:.62;text-decoration:line-through':'';
+      var hot=(t.gen||t.repeat||t.id==='debt_zongce'||t.id==='xingfa')?'border-color:#f59e0b;background:#fffbeb':'';
+      var key=keyOf(viewDs,t.id);
       var running=false;
       try{ running=(typeof tOn!=='undefined' && tOn && typeof activeSlotKey!=='undefined' && activeSlotKey===key); }catch(e){}
       var durBadge='';
@@ -5951,41 +6148,72 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
       var timerBtn=running
         ? '<button type="button" onclick="event.preventDefault();event.stopPropagation();toggleLandingTimer(\''+t.id+'\',event)" style="flex:0 0 auto;padding:5px 10px;border-radius:999px;border:none;background:#dc2626;color:#fff;font-size:11px;font-weight:800;cursor:pointer">⏹ 结束</button>'
         : '<button type="button" onclick="event.preventDefault();event.stopPropagation();toggleLandingTimer(\''+t.id+'\',event)" style="flex:0 0 auto;padding:5px 10px;border-radius:999px;border:1.5px solid #2563eb;background:#eff6ff;color:#1d4ed8;font-size:11px;font-weight:800;cursor:pointer">▶ 计时</button>';
+      var title=(t.setTitle||t.title||'');
+      var detail=(t.setDetail||t.detail||'');
+      var outTxt=(t.setOut!==undefined?t.setOut:(t.out||''));
+      var badge='';
+      if(t.repeat){
+        badge='<span style="font-size:10px;font-weight:800;color:#b45309;background:#fef3c7;border:1px solid #fcd34d;border-radius:999px;padding:1px 7px;margin-left:6px;white-space:nowrap">🔁 同一套重做·第'+(t.repeat.count+1)+'次</span>';
+      }
+      var pmin=(t.repeat?t.setMins:(t.gen?t.mins:minsOf(viewDs,t.id)));
+      var pnote=(t.repeat?t.setNote:(t.gen?t.note:noteOf(viewDs,t.id)));
+      var progLine=(pmin||pnote)
+        ? '<div style="font-size:11px;color:#b45309;margin-top:3px;line-height:1.55">⏳ 上次进度：'+(pmin?('已计 '+pmin+'min'):'')+(pmin&&pnote?' · ':'')+(pnote?('记录：'+esc(pnote)):'')+' <span style="color:#92400e">（保留进度，接着做不重来）</span></div>'
+        : '';
+      var noteKey=(t.repeat?t.setDay:(t.gen?t.origDay:viewDs))+'|'+t.origId;
+      var ph=String(outTxt||'').replace(/^\s*(记录|产出)[:：]\s*/,'');
+      var noteRow=(kindOf(t)==='none')?'':('<div onclick="event.stopPropagation()" style="display:flex;gap:6px;align-items:center;margin-top:6px">'
+        +'<span style="font-size:10px;color:var(--t3);flex:0 0 auto">进度记录</span>'
+        +'<input data-lp="'+esc(noteKey)+'" value="'+esc(pnote)+'" placeholder="'+esc(ph||'对__/20；错题号__')+'" onchange="landingSaveNote(this)" onblur="landingSaveNote(this)" style="flex:1;min-width:0;border:1.5px solid #dbeafe;border-radius:8px;padding:4px 8px;font-size:12px;color:#1e293b;background:#fff;outline:none">'
+        +'</div>');
       return '<div onclick="toggleLandingTimer(\''+t.id+'\',event)" style="display:flex;gap:9px;align-items:flex-start;padding:9px 10px;border:1px solid var(--border);border-radius:10px;margin-top:7px;background:var(--s2);cursor:pointer;'+hot+'">'
         +'<input type="checkbox" data-landing="'+t.id+'" '+checked+' onclick="event.stopPropagation()" onchange="toggleLandingCheck(\''+t.id+'\',this.checked)" style="width:19px;height:19px;margin-top:2px;flex:0 0 auto">'
-        +'<span style="flex:1;'+style+'"><b style="font-size:12px">'+esc(t.time)+' · '+esc(t.title)+'</b><br><span style="font-size:12px;color:var(--t2);line-height:1.55">'+esc(t.detail)+'</span><br><span style="font-size:11px;color:var(--p);font-weight:700">'+esc(t.out)+'</span><br><span style="font-size:10px;color:var(--t3)">点这条任务开始计时；计时中再点这条结束。勾选框只打钩，不计时。</span></span>'+durBadge+timerBtn+'</div>';
+        +'<span style="flex:1;min-width:0;'+style+'"><b style="font-size:12px">'+esc(t.time)+' · '+esc(title)+'</b>'+badge
+        +'<br><span style="font-size:12px;color:var(--t2);line-height:1.55">'+esc(detail)+'</span>'
+        +(outTxt?('<br><span style="font-size:11px;color:var(--p);font-weight:700">'+esc(outTxt)+'</span>'):'')
+        +progLine+noteRow
+        +'<div style="font-size:10px;color:var(--t3);margin-top:4px">点条＝计时 · 勾选＝完成（自动上云，另一台设备会跟着变勾）</div>'
+        +'</span>'+durBadge+timerBtn+'</div>';
     }).join('');
-    var genNames=tasks.filter(function(t){return t.gen;}).map(function(t){return t.rawTitle;});
+
+    var genNames=tasks.filter(function(t){return t.gen;}).map(function(t){
+      var m=t.mins, n=t.note;
+      return t.origDay.slice(5)+' '+t.rawTitle+((m||n)?('（'+(m?('已计'+m+'min'):'')+(m&&n?' · ':'')+(n?('记录：'+n):'')+'）'):'');
+    });
     var genBanner=genNames.length
-      ?'<div style="margin-top:8px;padding:8px 10px;border-radius:9px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;font-size:12px;line-height:1.6"><b>昨日未完成已滚入今天（补债槽≤60分钟，先补再开新任务）：</b>'+esc(genNames.join('；'))+'。做完勾选，会同步记在原来那一天。</div>'
+      ?'<div style="margin-top:8px;padding:8px 10px;border-radius:9px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;font-size:12px;line-height:1.6"><b>没勾的「进度类」任务已滚进补债槽（≤60分钟，先补再开新的）：</b>'+esc(genNames.join('；'))+'。勾掉会连原来那天一起标完成。</div>'
       :'';
-    var queueBanner=(queue&&queue.length)
-      ?'<div style="margin-top:8px;padding:8px 10px;border-radius:9px;background:#f8fafc;border:1px solid #e2e8f0;color:#475569;font-size:12px;line-height:1.6"><b>欠账排队中（'+queue.length+'项，今天补债槽已满）：</b>'+esc(queue.map(function(c){return c.origDay.slice(5)+' '+c.rawTitle;}).join('；'))+'。不删除，按日期依次排进补债槽。</div>'
+    var queueNames=(queue||[]).map(function(c){ var m=minsOf(c.origDay,c.origId); return c.origDay.slice(5)+' '+c.rawTitle+(m?('（已计'+m+'min）'):''); });
+    var queueBanner=queueNames.length
+      ?'<div style="margin-top:8px;padding:8px 10px;border-radius:9px;background:#f8fafc;border:1px solid #e2e8f0;color:#475569;font-size:12px;line-height:1.6"><b>还在排队（'+queueNames.length+'项，今天补债槽满了）：</b>'+esc(queueNames.join('；'))+'。不删除，按日期依次补。</div>'
       :'';
-    var dropBanner=(dropped&&dropped.length)
-      ?'<div style="margin-top:8px;padding:8px 10px;border-radius:9px;background:#fef2f2;border:1px solid #fecaca;color:#991b1b;font-size:12px;line-height:1.6"><b>超过补债时长（≥60分钟），不进补债槽，需单独安排：</b>'+esc(dropped.map(function(c){return c.origDay.slice(5)+' '+c.rawTitle;}).join('；'))+'。</div>'
+    var dropNames=(dropped||[]).map(function(c){ var m=minsOf(c.origDay,c.origId), n=noteOf(c.origDay,c.origId); return c.origDay.slice(5)+' '+c.rawTitle+((m||n)?('（'+(m?('已计'+m+'min'):'')+(m&&n?' · ':'')+(n?('记录：'+n):'')+'）'):''); });
+    var dropBanner=dropNames.length
+      ?'<div style="margin-top:8px;padding:8px 10px;border-radius:9px;background:#fef2f2;border:1px solid #fecaca;color:#991b1b;font-size:12px;line-height:1.6"><b>🔒 进度类 · 超过60分钟，不进补债槽但要单独安排（进度保留）：</b>'+esc(dropNames.join('；'))+'。</div>'
       :'';
+    var repList=tasks.filter(function(t){ return !!t.repeat; });
+    var repBanner=repList.length
+      ?'<div style="margin-top:8px;padding:8px 10px;border-radius:9px;background:#fefce8;border:1px solid #fde68a;color:#854d0e;font-size:12px;line-height:1.6"><b>🔁 练习类没勾的不进欠账：</b>'+esc(repList.map(function(t){return t.setDay.slice(5)+'起「'+t.setTitle+'」';}).join('；'))+'。今天做的还是这一套，勾一次就结清。</div>'
+      :'';
+
     host.innerHTML='<div style="background:var(--surface);border:1.5px solid #2563eb;border-radius:var(--rad);box-shadow:var(--sh);padding:12px 14px;margin-bottom:13px">'
       +'<div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:center"><div style="font-size:15px;font-weight:800">'+(viewDs===fmt(new Date())?'📌 今日落地执行单':'📌 这一天的执行单')+'</div><div style="font-size:12px;color:var(--t2)">'+viewDs+' '+wk+' · '+esc(dayInfo[0])+' · 距11/15 '+Math.max(0,diff(viewDs,EXAM))+'天</div></div>'
       +'<div style="font-size:12px;color:var(--t2);margin-top:4px">'+esc(dayInfo[1])+' · 已完成 <b style="color:var(--p)">'+finished+'/'+total+'</b></div>'
+      +syncLine()
       +'<button type="button" onclick="openTimerTab()" style="margin-top:8px;padding:6px 12px;border-radius:999px;border:none;background:#2563eb;color:#fff;font-size:12px;font-weight:800;cursor:pointer">⏱ 打开专注计时器</button>'
-      +'<div style="font-size:11px;color:#991b1b;margin-top:4px">这张单跟着上方日历走：勾选和计时都按这天单独保存，和前后日期不串。</div>'
-      +(debt.length?'<div style="margin-top:8px;padding:8px 10px;border-radius:9px;background:#fef2f2;border:1px solid #fecaca;color:#991b1b;font-size:12px;line-height:1.6"><b>昨日欠账已滚入今天：'+debt.join('、')+'。</b>先补账，再开新任务；今晚没勾完，明天继续滚，不许用“看过答案”冒充完成。</div>':'')
-      +genBanner+queueBanner+dropBanner
+      +'<div style="font-size:11px;color:var(--t2);margin-top:7px;line-height:1.7;background:#f8fafc;border:1px dashed #cbd5e1;border-radius:8px;padding:6px 8px">规则：<b>练习类</b>（图推/黑十/数量资料/刑法选择题/背卡）没勾不算欠账，明天<b>同一套重做</b>，做到勾选为止；<b>进度类</b>（套卷/订正/开荒/综测/听课）进补债槽并<b>保留上次进度</b>。</div>'
+      +(debt.length?('<div style="margin-top:8px;padding:8px 10px;border-radius:9px;background:#fef2f2;border:1px solid #fecaca;color:#991b1b;font-size:12px;line-height:1.6"><b>昨日欠账已滚入今天：'+esc(debt.join('、'))+'。</b>先补账，再开新任务。</div>'):'')
+      +genBanner+repBanner+queueBanner+dropBanner
       +rows
-      +'<div style="font-size:11px;color:var(--t2);line-height:1.7;margin-top:9px">用法：点任务条开始计时，计时中再点同一条结束；时长会显示在任务条右侧，结束后显示已计分钟。做完再勾选。没勾的项目，明天会自动进入补债槽（每天≤60分钟、最多 '+GEN_MAX+' 项），欠账最多保留 '+GEN_MAX_AGE+' 天，超过的自动过期。</div>'
+      +'<div style="font-size:11px;color:var(--t2);line-height:1.7;margin-top:9px">勾选保存在云端：这台勾了，另一台打开或切回页面会自动变勾、划线。补债槽每天 ≤60 分钟、最多 '+GEN_MAX+' 项；欠账最多保留 '+GEN_MAX_AGE+' 天。</div>'
       +'</div>';
-    host.querySelectorAll('[data-landing]').forEach(function(cb){
-      cb.addEventListener('change',function(){
-        var t=findTask(cb.getAttribute('data-landing'));
-        if(t){ setDone(t,cb.checked); }
-        render();
-      });
-    });
   }
   var _lastRunningKey = '';
   function syncLandingTimerState(){
     try{
+      // 正在填进度记录时不重绘
+      var ae=document.activeElement;
+      if(ae&&ae.getAttribute&&ae.getAttribute('data-lp')) return;
       var curKey = '';
       if(typeof tOn!=='undefined' && tOn && typeof activeSlotKey!=='undefined' && activeSlotKey.indexOf('landing_')===0){
         curKey = activeSlotKey;
@@ -6011,6 +6239,10 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
       if(sel && sel!==viewDs){ applyView(sel); render(); }
     }catch(e){}
   },600);
+  // 排查用（也是给用户看的自助诊断）：控制台输入 __landingDebug() 可看当天任务与勾选数据
+  window.__landingDebug=function(){
+    try{ return {viewDs:viewDs, ids:(tasks||[]).map(function(t){return t.id;}), landing:(typeof D!=='undefined'?D.landing:null), ts:(typeof D!=='undefined'?D.landingTs:null)}; }catch(e){ return {err:e.message}; }
+  };
   window.renderLanding=render;
   window.applyLandingView=applyView;
   applyView(viewDs);
@@ -6072,5 +6304,6 @@ window.addEventListener('storage', function(e){
   if(e.key==='scsyd_gk_srs_v1'){ renderSrsStatus(); if(CLOUD.autoSync) queueCloudSave(); }
 });
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4e129460c6b08e0',t:'MTc5MjU5NTEzNA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4e9eddeef442a56',t:'MTc5MjY4NzA3Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4e129460c6b08e0',t:'MTc5MjU5NTEzNA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4e9eddeef442a56',t:'MTc5MjY4NzA3Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
+</body>
 </html>
