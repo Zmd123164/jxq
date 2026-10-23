@@ -229,7 +229,7 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
     <button class="tb" onclick="showMemoryCard()" style="display:inline-flex;align-items:center">🧠 记忆卡</button>
   </div>
   <div style="font-size:10px;margin-top:4px;opacity:.8;cursor:pointer;display:inline-block" id="sync-status" onclick="manualSync()" title="点击立即同步合并">⚪ 未配置</div>
-  <div id="app-version" style="font-size:10px;margin-top:3px;opacity:.8">✅ 落地执行单版 v2026-10-23k（刑法记忆卡 336 张·标题可搜 · 切换开荒不误标完成 · 开荒栏含民法/管理）</div>
+  <div id="app-version" style="font-size:10px;margin-top:3px;opacity:.8">✅ 落地执行单版 v2026-10-23l（行政法改成正式开荒可自由选择 · 刑法记忆卡 336 张 · 开荒栏含民法/管理）</div>
 </div>
 
 <div class="main">
@@ -4569,7 +4569,7 @@ function gzc_gunzip(src){
 }
 
 let _pulledOnce=false, _pulling=false; // 本次会话必须先拉取合并一次，才允许上传（防止新设备空数据覆盖云端）
-// ===== 同步总控（v2026-10-23k）=====
+// ===== 同步总控（v2026-10-23l）=====
 // 目标：网络慢/JSONBin 抽风时不再满屏红字，也不丢数据：
 //  · 同一时间只允许一个同步在跑，其余排队（避免互相打断/重复请求）
 //  · 失败 → 本地照常保存，标「待上传」，按 15s→30s→60s→120s→180s 自动退避重试
@@ -5962,9 +5962,9 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
     {key:'公文', min:90, title:'公文开荒完整版（90分钟：框架速览＋20题＋订正）',
      detail:'框架速览25分钟：文种用途10分钟/行文方向8分钟/格式要素7分钟，只翻高频表不听课；没学过的文种小节听≤20分钟；公文20题慢做约30分钟；订正15分钟把错题贴回文种/行文方向/格式三栏。',
      out:'产出：公文规则表速览版；公文对__/20'},
-    {key:'行政法', min:40, slot:'debt', title:'行政法开荒（只画骨架，40分钟）',
-     detail:'只画骨架不做题：处罚/许可/强制/复议/诉讼，每条写清「主体—程序—期限—救济」四格。画不完就停，没画完的接着画。',
-     out:'产出：行政法骨架图（半页也算）'},
+    {key:'行政法', min:90, title:'行政法开荒（骨架＋24题，90分钟）',
+     detail:'骨架50分钟：处罚/许可/强制/复议/诉讼，每条写清「主体—程序—期限—救济」四格，只抄高频不听课；行政法24题慢做约25分钟；订正15分钟把错题贴回对应四格。这一遍只求搭起框架，正确率先不管。',
+     out:'产出：行政法五块骨架图（主体—程序—期限—救济）+ 行政法对__/24'},
     {key:'宪法', min:70, title:'宪法开荒（骨架＋20题，70分钟）',
      detail:'先画三张骨架45分钟：①国家机构（人大/常委会/国务院/监委/法检的职权与任免链条）②公民基本权利与义务 ③宪法监督与修宪程序；再刷宪法20题25分钟，错题贴回对应骨架格。',
      out:'产出：宪法职权对照表（谁对谁负责、谁任免谁）+ 宪法对__/20'},
@@ -6007,12 +6007,11 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
       if((s.pioneerDoneDay||{})[d]) return;
       var k=plannedSet2Subject(d); if(k) out[k]=1;
     });
-    if(isDoneId('2026-10-22','xf_shunyan')) out['行政法']=1;
     return out;
   }
   function pioneerHead(){   // 队首（跳过走补债槽的短项）
     var done=pioneerDoneKeys();
-    for(var i=0;i<PIONEER_SEQ.length;i++){ var it=PIONEER_SEQ[i]; if(it.slot==='debt') continue; if(!done[it.key]) return it; }
+    for(var i=0;i<PIONEER_SEQ.length;i++){ var it=PIONEER_SEQ[i]; if(!done[it.key]) return it; }
     return null;
   }
   function pioneerDayKey(vds){ try{ return (store().pioneerDay||{})[vds]||''; }catch(e){ return ''; } }
@@ -6029,6 +6028,23 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
     }catch(e){}
     return '';
   }
+  // 一次性修复：行政法从没学过，清掉历史遗留的“行政法已完成”标记（含10-22那张顺延骨架卡）
+  function fixAdminLaw(){
+    try{
+      var s=store(); if(!s || s.adminLawReset1023) return;
+      var touched=false;
+      if(s.pioneerDone && s.pioneerDone['行政法']){ delete s.pioneerDone['行政法']; touched=true; }
+      Object.keys(s.pioneerDoneDay||{}).forEach(function(d){ if(s.pioneerDoneDay[d]==='行政法'){ delete s.pioneerDoneDay[d]; touched=true; } });
+      var L=(s.landing||{})['2026-10-22'];
+      if(L && L.set2){ L.set2=false; touched=true; }
+      if(L && L.xf_shunyan){ L.xf_shunyan=false; touched=true; }
+      if(s.landingDone && s.landingDone['2026-10-22']){ delete s.landingDone['2026-10-22'].xf_shunyan; touched=true; }
+      s.adminLawReset1023=true;
+      if(typeof saveLocal==='function') saveLocal();
+      if(typeof onDirty==='function') onDirty();
+    }catch(e){}
+  }
+
   // 一次性迁移：把历史上「勾了第二套但没记实做科目」的日子补上真实科目
   //  ① 优先用 pioneerDone 的时间戳反推是哪一天做的哪一科（老版本只在勾选时写这个）
   //  ② 队列出现之前的日子，按当天原定科目补
@@ -6233,12 +6249,7 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
         if(t.id==='correct2'){ t.title='开荒订正：把错题贴回框架'; t.detail='今天不开新课：错题必须贴回框架表对应位置；同考点错2次的写进明天晨读。正确率低没关系，关键是知道错在哪个格子。'; t.out='产出：框架表补完 + 明天晨读3个错点'; }
       });
     }
-    // 10-22：行政法开荒顺延到补债槽（只画骨架，不做题）
-    if(ds==='2026-10-22'){
-      var ri=-1; tasks.forEach(function(t,i){ if(t.id==='report') ri=i; });
-      var sh={id:'xf_shunyan',time:'补债槽',title:'顺延：行政法骨架（只画骨架，≤40分钟）',detail:'原定10-22的行政法开荒顺延到这里：先画处罚/许可/强制/复议/诉讼的主体-程序-期限骨架，不做题；画不完就停，没画完的明天接着画。',out:'产出：行政法骨架图（半页也算）'};
-      if(ri>=0) tasks.splice(ri,0,sh); else tasks.push(sh);
-    }
+    // 10-22 的「行政法骨架」补债卡已取消：行政法改为正式开荒项，和其他科目一起排队
     // 10-22 晚间调整（用户确认）：今晚只做选择题；其余未完成项顺延明天（仍保留欠账记录）
     if(ds==='2026-10-22'){
       dayInfo=['今晚收尾·只做选择题','21:15 刑法选择20题 · 21:35 黑十1套 · 21:50关账；综测/公文/套①/背卡顺延明天'];
@@ -6847,6 +6858,7 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
   window.renderLanding=render;
   window.applyLandingView=applyView;
   seedPioneer();
+  fixAdminLaw();
   migratePioneerDoneDay();
   applyView(viewDs);
   render();
@@ -6907,6 +6919,5 @@ window.addEventListener('storage', function(e){
   if(e.key==='scsyd_gk_srs_v1'){ renderSrsStatus(); if(CLOUD.autoSync) queueCloudSave(); }
 });
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4e129460c6b08e0',t:'MTc5MjU5NTEzNA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4e9eddeef442a56',t:'MTc5MjY4NzA3Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4efaf819b928075',t:'MTc5Mjc0NzQzMw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4e129460c6b08e0',t:'MTc5MjU5NTEzNA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4e9eddeef442a56',t:'MTc5MjY4NzA3Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4efbfe25abe33dc',t:'MTc5Mjc0ODEwNA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
