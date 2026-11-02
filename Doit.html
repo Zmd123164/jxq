@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Doit · 无损自动分片同步 | 2026-11-02-sync2</title>
+<title>Doit · 独立存储与无损分片 | 2026-11-02-sync3</title>
 <style>
 :root{
   --bg:#f0f6ff;--surface:#fff;--s2:#f7faff;--border:#d0e2ff;
@@ -192,7 +192,7 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
 @media(max-width:600px){.g2{grid-template-columns:1fr}}
 ::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-thumb{background:#93c5fd;border-radius:2px}
 </style>
-<meta name="doit-release" content="2026-11-02-sync2">
+<meta name="doit-release" content="2026-11-02-sync3">
 </head>
 <body>
 
@@ -229,7 +229,7 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
     <button class="tb" onclick="showMemoryCard()" style="display:inline-flex;align-items:center">🧠 记忆卡</button>
   </div>
   <div style="font-size:10px;margin-top:4px;opacity:.8;cursor:pointer;display:inline-block" id="sync-status" onclick="manualSync()" title="点击立即同步合并">⚪ 未配置</div>
-  <div id="app-version" style="font-size:10px;margin-top:3px;opacity:.8">✅ 落地执行单版 v2026-11-02-sync2（无损自动分片 · 政治内容pc2保留）</div>
+  <div id="app-version" style="font-size:10px;margin-top:3px;opacity:.8">✅ 落地执行单版 v2026-11-02-sync3（Doit独立存储 · 独立云端 · 内容pc2保留）</div>
 </div>
 
 <div class="main">
@@ -539,7 +539,7 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
 <!-- ======= CLOUD CONFIG ======= -->
 <div class="sec" id="sec-cfg">
   <div class="card">
-    <div class="ct">☁️ 云同步设置（JSONBin.io）</div><div class="alert alert-b" style="margin-top:12px;line-height:1.8"><strong>🧩 sync2：无损自动分片</strong><br>数据超出单条100KB时，点同步并确认后自动创建私有小记录；原Key、主Bin ID不变。先完整校验，再切换主目录，不裁剪学习内容。<strong>所有设备须更新sync2或更新版，旧版不能混用。</strong>本机立即保存；自动云同步最多合批约20秒，手动同步立即执行。服务商的总请求额度仍有限；不会承诺无限免费。</div>
+    <div class="ct">☁️ 云同步设置（JSONBin.io）</div><div class="alert alert-b" style="margin-top:12px;line-height:1.8;display:block"><strong>🔒 Doit独立存储与专用云端</strong><div id="doit-exclusive-state">现有历史先复制保留，以后Doit与index各存各的。index不改。</div><div>首次：本台点同步诊断创建专用私有云端；完整同步后复制连接码给另一台Doit。连接码不含密钥。</div><button onclick="doitCopyConnection()" style="margin-top:8px;padding:8px;border-radius:8px">复制Doit连接码</button><div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:8px"><input id="doit-connect-code" placeholder="另一台Doit连接码（DOIT3:…）" style="flex:1;min-width:180px;max-width:100%;font-size:16px;padding:8px;box-sizing:border-box"><button onclick="doitConnectCode()" style="padding:8px">连接并合并</button></div><small>不要把原共用Bin直接填回来。大数据自动无损分片；本机即时保存，自动云同步合批约20秒。</small></div>
     <div class="alert alert-b" style="flex-direction:column;gap:6px;line-height:1.9">
       <strong>📋 使用步骤：</strong>
       1. 访问 <a href="https://jsonbin.io" target="_blank" style="color:var(--p);font-weight:600">jsonbin.io</a> 注册免费账号<br>
@@ -557,7 +557,7 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
     <div style="margin-bottom:11px">
       <label style="font-size:11px;font-weight:600;color:var(--t2);display:block;margin-bottom:4px">Bin ID</label>
       <div style="display:flex;gap:7px">
-        <input id="cfg-bin-id" type="text" placeholder="填入已有 Bin ID，或点右侧自动创建" style="flex:1;padding:8px 11px;border:1.5px solid var(--border);border-radius:8px;font-size:12px;background:var(--s2);color:var(--t);outline:none;font-family:monospace"/>
+        <input id="cfg-bin-id" type="text" placeholder="Doit专用Bin ID；本台创建或粘贴DOIT3连接码" style="flex:1;min-width:0;padding:8px 11px;border:1.5px solid var(--border);border-radius:8px;font-size:12px;background:var(--s2);color:var(--t);outline:none;font-family:monospace"/>
         <button onclick="cloudCreateBin()" style="padding:8px 12px;border-radius:8px;border:1.5px solid var(--p);background:var(--pl);color:var(--p);font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap">🆕 自动创建</button>
       </div>
     </div>
@@ -720,8 +720,66 @@ function normalizeForIdMerge(o){
 
 
 // ==================== STORE ====================
-const KEY='gk2026v3';
-function ld(){try{const r=localStorage.getItem(KEY);if(r)return JSON.parse(r);}catch(e){}
+/* Doit-only scope. Never write the independent index program's storage/Bin.
+   Copy historical values once, without deleting or editing their sources.
+   Existing scsyd_* memory/session keys are already Doit-only and stay unchanged. */
+var _doitScopeError='',_doitScopeMarks=null,_doitPreparing=false;
+function doitScopeMarks(){if(_doitScopeMarks)return _doitScopeMarks;try{_doitScopeMarks=JSON.parse(localStorage.getItem('doit2026_scope_migrations_v1')||'{}');}catch(e){_doitScopeMarks={};}return _doitScopeMarks;}
+function doitMarkScope(key){var m=doitScopeMarks();m[key]=Date.now();localStorage.setItem('doit2026_scope_migrations_v1',JSON.stringify(m));}
+function doitReadStore(key,old){
+  var raw=null;try{raw=localStorage.getItem(key);if(raw!==null)return raw;if(doitScopeMarks()[key])return null;raw=localStorage.getItem(old);if(raw!==null){localStorage.setItem(key,raw);if(localStorage.getItem(key)!==raw)throw Error('副本校验失败');}doitMarkScope(key);return raw;}catch(e){_doitScopeError='Doit独立副本未能完整保存；原程序数据未改动，已暂停同步。请先导出备份，不要清除网站数据。';return raw;}
+}
+function doitLoadCloudCfg(){
+  try{var own=localStorage.getItem(CLOUD_KEY_STORE);if(own)return JSON.parse(own);}catch(e){_doitScopeError='Doit独立云配置无法读取；没有改动原配置。';}
+  var old={};try{if(!doitScopeMarks()[CLOUD_KEY_STORE])old=JSON.parse(localStorage.getItem('gk2026_cloud')||'{}');}catch(e){}
+  var cfg={apiKey:old.apiKey||'',binId:'',autoSync:!!old.autoSync,legacySourceBinId:old.binId||'',exclusiveScope:1,lastSyncTs:0};
+  try{localStorage.setItem(CLOUD_KEY_STORE,JSON.stringify(cfg));doitMarkScope(CLOUD_KEY_STORE);}catch(e){_doitScopeError='Doit独立云配置未能保存；原配置未改动，已暂停同步。';}return cfg;
+}
+function doitProtectRequest(url,options){
+  var method=String(options&&options.method||'GET').toUpperCase(),source=CLOUD.legacySourceBinId;
+  if(!source||method==='GET'||method==='HEAD'||method==='OPTIONS')return;
+  var u=new URL(url,location.href),id=u.pathname.split('/')[3];if(u.hostname==='api.jsonbin.io'&&id&&id.toLowerCase()===String(source).toLowerCase())throw splitError('已拦截对旧共用Bin的写入：Doit只能使用专用云端，index原记录不会被改写。','DOIT_FOREIGN_BIN');
+}
+async function doitImportLegacyCloud(){
+  var source=CLOUD.legacySourceBinId;if(!source||CLOUD.legacySourceCopiedAt)return;
+  var r=await fetchWithTimeout('https://api.jsonbin.io/v3/b/'+source+'/latest',{headers:{'X-Master-Key':CLOUD.apiKey}},15000);if(!r.ok)throw await syncHttpError(r,'只读复制旧云端',0);var j=await r.json();if(!Object.prototype.hasOwnProperty.call(j,'record'))throw splitError('旧云端读取不完整；未创建新云端，原数据未改动。');
+  var remote=await gzUnpack(j.record,source),guard=0;while(remote&&!remote.logs&&!remote.checks&&!remote.srs&&remote.record&&guard++<5)remote=await gzUnpack(remote.record,source);
+  localStorage.setItem('doit2026_legacy_cloud_copy_v1',JSON.stringify({source:source,at:Date.now(),record:j.record}));
+  if(remote&&(remote.logs||remote.checks||remote.srs)){
+    var imgs={};(D.wq||[]).forEach(function(q){if(q.imgData&&q.imgData!=='[img]')imgs[q.id]=q.imgData;});var merged=mergeData(D,remote);Object.keys(merged).forEach(function(k){Object.defineProperty(D,k,{value:merged[k],writable:true,enumerable:true,configurable:true});});dropLegacyDayKeys();syncSnapshot();if(D.wq)D.wq=D.wq.map(function(q){return Object.assign({},q,{imgData:imgs[q.id]||(q.imgData==='[img]'?null:q.imgData)||null});});localStorage.setItem(KEY,JSON.stringify(D));
+    if(remote.srs&&remote.srs.cards){var local=null;try{local=JSON.parse(localStorage.getItem(SRS_LS_KEY)||'null');}catch(e){}var m=mergeSrs(local,remote.srs);if(m){localStorage.setItem(SRS_LS_KEY,JSON.stringify(m));localStorage.setItem(SRS_LS_KEY+'_backup',JSON.stringify(m));try{document.getElementById('memory-frame').contentWindow.postMessage({type:'SRS_RELOAD'},'*');}catch(e){}}}
+  }
+  CLOUD.legacySourceCopiedAt=Date.now();saveCloudCfg(CLOUD);
+}
+async function doitPrepareCloud(silent){
+  if(_doitPreparing){_pendingSave=true;_markSyncPending(true);return false;}
+  try{
+    if(_doitScopeError)throw splitError(_doitScopeError,'DOIT_LOCAL_COPY');
+    if(CLOUD.binId){if(CLOUD.legacySourceBinId&&CLOUD.binId.toLowerCase()===CLOUD.legacySourceBinId.toLowerCase())throw splitError('这是原程序的共用Bin，Doit不会写入。请创建Doit专用云端或粘贴另一台的Doit连接码。','DOIT_FOREIGN_BIN');return true;}
+    if(!CLOUD.apiKey){if(!silent)showToast('请在Doit设置中填写自己的Master Key；不需要发给任何人。','orange');return false;}
+    if(!CLOUD.exclusiveCreationApproved){
+      if(silent){_pendingSave=true;_markSyncPending(true);setSyncStatus('pending');return false;}
+      if(!confirm('为Doit创建独立的私有云端？\n\nindex页面、本机记录、原配置和原Bin都不改。已有历史数据完整复制给Doit，以后各存各的；不会猜测删除旧记录。\n\n可复用现有Master Key。程序自动新建专用Bin，大数据自动保存为私有分片。另一台Doit只需连接一次新连接码（不含密钥），不要再各自创建。\n\n是否继续？'))return false;
+      CLOUD.exclusiveCreationApproved=true;saveCloudCfg(CLOUD);
+    }
+    _doitPreparing=true;setSyncStatus('saving');await doitImportLegacyCloud();
+    var saved=await splitCreate({_doitExclusive:1,kind:'doit-exclusive-initializing',at:Date.now()},'Doit dedicated private root');
+    CLOUD.binId=saved.id;CLOUD.exclusiveScope=1;CLOUD.lastSyncTs=0;CLOUD.splitApprovedBin=saved.id;delete CLOUD.splitActiveBin;_splitObserved=null;_pulledOnce=false;_lastPullOk=0;_pendingSave=true;_markSyncPending(true);saveCloudCfg(CLOUD);
+    var persisted=JSON.parse(localStorage.getItem(CLOUD_KEY_STORE)||'{}');if(persisted.binId!==saved.id)throw splitError('专用云端已分配，但本机配置未能保存。请复制页面的Doit连接码保留，原数据未删除。','DOIT_LOCAL_COPY');
+    var el=document.getElementById('cfg-bin-id');if(el)el.value=CLOUD.binId;doitRenderScope();return true;
+  }catch(e){_syncFail(e,'Doit独立连接');if(!silent)showToast('未完成独立连接；本机与原程序数据保留。'+syncSafeMessage(e.message),'orange');return false;}finally{_doitPreparing=false;}
+}
+function doitConnectionCode(){return /^[a-f0-9]{24}$/i.test(CLOUD.binId||'')&&CLOUD.binId!==CLOUD.legacySourceBinId?'DOIT3:'+CLOUD.binId:'';}
+async function doitCopyConnection(){var code=doitConnectionCode();if(!code){showToast('先在本台创建Doit专用云端，并等待完整同步成功。','orange');return;}try{await navigator.clipboard.writeText(code);showToast('已复制Doit连接码（不含密钥）');}catch(e){prompt('复制Doit连接码（不含密钥）；另一台仍使用自己的Master Key',code);}}
+async function doitConnectCode(){
+  var el=document.getElementById('doit-connect-code'),text=(el&&el.value||'').trim(),id=text.replace(/^DOIT3:/i,'');if(!/^[a-f0-9]{24}$/i.test(id)){showToast('请粘贴另一台Doit的连接码。','orange');return false;}if(CLOUD.legacySourceBinId&&id.toLowerCase()===CLOUD.legacySourceBinId.toLowerCase()){showToast('这是旧共用Bin，不能作为Doit独立云端。','orange');return false;}
+  if(!confirm('连接另一台Doit的专用云端并合并本机记录？不会修改index原配置或原Bin。'))return false;
+  CLOUD.binId=id.toLowerCase();CLOUD.exclusiveScope=1;CLOUD.lastSyncTs=0;CLOUD.splitApprovedBin=id;delete CLOUD.splitActiveBin;_splitObserved=null;_pulledOnce=false;_lastPullOk=0;saveCloudCfg(CLOUD);_clearSyncHold();document.getElementById('cfg-bin-id').value=id;doitRenderScope();return cloudLoad(false,true);
+}
+function doitRenderScope(){var el=document.getElementById('doit-exclusive-state');if(!el)return;el.textContent=_doitScopeError||('本机：Doit独立副本，原程序数据不改。云端：'+(CLOUD.binId?'已分配Doit专用Bin；是否完整上传以同步诊断为准。':'尚未创建。先在本台点“同步诊断”创建专用云端；另一台用连接码接入。'));}
+
+const KEY='doit2026_dashboard_v1';
+function ld(){try{const r=doitReadStore(KEY,'gk2026v3');if(r)return JSON.parse(r);}catch(e){}
   return{checks:{},drills:{},logs:[],notes:[],feedbacks:{},customTasks:{},pauseOffset:0,landing:{},landingTs:{},landingProg:{},landingDone:{},pioneerDone:{},pioneerDay:{},pioneerDoneDay:{},pioneerPref:'',pioneerSeeded:false,
     prog:{'小黑-理论':0,'小黑-刷题':0,'资料-基础':0,'资料-刷题':0,'逻辑':0,'数量-基础':0,'数量-刷题':0,'言语-基础':0,'言语-刷题':0,'综测-基础':0,'综测-刷题':0,'申论-小题':0,'申论-作文':0,'公基-系统':0,'公基-刷题':0}};}
 // ===== 同步快照：每次保存时对比上次同步的状态，自动记录「取消勾选」和「删除」 =====
@@ -749,6 +807,7 @@ function dropLegacyDayKeys(){
 }
 function sv(){
   _pendingSave=true;_markSyncPending(true);
+  if(_doitScopeError){setSyncStatus('pending');return;}
   stampDiff();
   try{localStorage.setItem(KEY,JSON.stringify(D));}catch(e){}
   // 只要配置了云同步就自动上传（不再依赖勾选框，带3秒防抖避免频繁请求）
@@ -3052,7 +3111,7 @@ function closeLock(){document.getElementById('lock').classList.remove('show');}
 
 // ==================== TIMER ====================
 // State persisted to localStorage so closing/refreshing browser restores the running timer
-const TKEY='gk2026_timer';
+const TKEY='doit2026_timer';doitReadStore(TKEY,'gk2026_timer');doitReadStore('doit2026_timer_stopped','gk2026_timer_stopped');
 const LKEY='gk2026_logrelay';
 let tInt=null,tOn=false,curSubj='',curMode='听课',sessStart='',activeSlotKey='';
 
@@ -3382,7 +3441,7 @@ function stopTimer(){
   const ftEl=document.getElementById('ft'); if(ftEl) ftEl.classList.remove('vis');
   activeSlotKey='';
   const setTxt=(id,v)=>{const n=document.getElementById(id); if(n) n.textContent=v;};
-  try{ localStorage.setItem('gk2026_timer_stopped', String(Date.now())); }catch(e){}
+  try{ localStorage.setItem('doit2026_timer_stopped', String(Date.now())); }catch(e){}
   if(elapsed<30){
     setTxt('t-disp','00:00:00'); setTxt('ft-disp','00:00:00');
     if(!isMiniPage()){renderTLog();renderSchedule();safeRun(window.renderLanding);}
@@ -3412,7 +3471,7 @@ function resetTimer(){
   const fd=document.getElementById('ft-disp'); if(fd) fd.textContent='00:00:00';
   const ft=document.getElementById('ft'); if(ft) ft.classList.remove('vis');
   const lb=document.getElementById('t-lbl'); if(lb) lb.textContent='选择科目后开始计时';
-  activeSlotKey=''; try{ localStorage.setItem('gk2026_timer_stopped', String(Date.now())); }catch(e){} if(!isMiniPage()){ renderSchedule(); safeRun(window.renderLanding); }
+  activeSlotKey=''; try{ localStorage.setItem('doit2026_timer_stopped', String(Date.now())); }catch(e){} if(!isMiniPage()){ renderSchedule(); safeRun(window.renderLanding); }
 }
 
 // ==================== 计时器时长修改 ====================
@@ -4046,7 +4105,7 @@ function handleWqImg(input){
 }
 
 // ==================== AI 配置（智谱AI，免费模型，国内直连，支持浏览器CORS） ====================
-const AI_KEY_STORE='gk2026_ai';
+const AI_KEY_STORE='doit2026_ai';doitReadStore(AI_KEY_STORE,'gk2026_ai');
 function getAiKey(){try{return localStorage.getItem(AI_KEY_STORE)||'';}catch(e){return '';}}
 function saveAiCfg(){
   const k=document.getElementById('cfg-ai-key').value.trim();
@@ -4346,11 +4405,8 @@ function downloadText(text,filename){
 // 用户在「设置」Tab 填入 API Key + Bin ID，数据自动上云
 // 跨设备：在另一台设备打开同一HTML，填入相同Key+BinID，点「从云端恢复」即可
 
-const CLOUD_KEY_STORE = 'gk2026_cloud';
-function loadCloudCfg(){
-  try{const r=localStorage.getItem(CLOUD_KEY_STORE);if(r)return JSON.parse(r);}catch(e){}
-  return {apiKey:'',binId:'',autoSync:false};
-}
+const CLOUD_KEY_STORE = 'doit2026_cloud_v1';
+function loadCloudCfg(){return doitLoadCloudCfg();}
 function saveCloudCfg(cfg){try{localStorage.setItem(CLOUD_KEY_STORE,JSON.stringify(cfg));}catch(e){}}
 let CLOUD=loadCloudCfg();
 
@@ -4633,6 +4689,7 @@ function stripImgs(data){
 
 
 async function fetchWithTimeout(url, options={}, timeoutMs=13000){
+  doitProtectRequest(url,options);
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
@@ -4934,14 +4991,15 @@ function splitChunks(bytes){
   if(start<bytes.length)out.push(bytes.subarray(start));return out;
 }
 function splitIndex(parts){var b=new Uint8Array(parts.length*48),v=new DataView(b.buffer);parts.forEach(function(p,j){var at=j*48;for(var i=0;i<12;i++)b[at+i]=parseInt(p[0].slice(i*2,i*2+2),16);for(i=0;i<32;i++)b[at+12+i]=parseInt(p[1].slice(i*2,i*2+2),16);v.setUint32(at+44,p[2]);});return splitB64(b);}
-function splitParts(head){
-  if(!head||head._doitSplit!==1||head.owner!==CLOUD.binId||!Number.isInteger(head.rawBytes)||head.rawBytes<1||head.rawBytes>SYNC_SPLIT_MAX_RAW||!/^[a-f0-9]{64}$/.test(head.sha256||''))throw splitError('分片目录版本、归属或总长度不符；未合并、未上传。');
+function splitParts(head,owner){
+  owner=owner||CLOUD.binId;
+  if(!head||head._doitSplit!==1||head.owner!==owner||!Number.isInteger(head.rawBytes)||head.rawBytes<1||head.rawBytes>SYNC_SPLIT_MAX_RAW||!/^[a-f0-9]{64}$/.test(head.sha256||''))throw splitError('分片目录版本、归属或总长度不符；未合并、未上传。');
   var b;try{b=splitUn64(head.index);}catch(e){throw splitError('分片目录编码损坏；未合并、未上传。');}if(!b.length||b.length%48||b.length>49152)throw splitError('分片目录长度不符；未合并、未上传。');var v=new DataView(b.buffer,b.byteOffset,b.byteLength),parts=[],sum=0;
   function hex(a,z){return Array.from(b.subarray(a,z),function(x){return x.toString(16).padStart(2,'0');}).join('');}
   for(var at=0;at<b.length;at+=48){var n=v.getUint32(at+44);if(n<1||n>65536)throw splitError('分片大小不符；未合并、未上传。');parts.push([hex(at,at+12),hex(at+12,at+44),n]);sum+=n;}if(sum!==head.rawBytes)throw splitError('分片总长度不符；未合并、未上传。');return parts;
 }
 function splitCatalog(){if(_splitCatalog)return _splitCatalog;try{_splitCatalog=JSON.parse(localStorage.getItem('doit_split_catalog_v1')||'{}');}catch(e){_splitCatalog={};}return _splitCatalog;}
-function splitRemember(hash,id,n){var c=splitCatalog(),key=CLOUD.binId+':'+hash;c[key]={id:id,n:n,at:Date.now()};var keys=Object.keys(c);if(keys.length>256){keys.sort(function(a,b){return (c[b].at||0)-(c[a].at||0);});keys.slice(256).forEach(function(k){delete c[k];});}try{localStorage.setItem('doit_split_catalog_v1',JSON.stringify(c));}catch(e){}}
+function splitRemember(hash,id,n,owner){var c=splitCatalog(),key=(owner||CLOUD.binId)+':'+hash;c[key]={id:id,n:n,at:Date.now()};var keys=Object.keys(c);if(keys.length>256){keys.sort(function(a,b){return (c[b].at||0)-(c[a].at||0);});keys.slice(256).forEach(function(k){delete c[k];});}try{localStorage.setItem('doit_split_catalog_v1',JSON.stringify(c));}catch(e){}}
 function splitCachePut(hash,bytes){if(_splitCache[hash])return;if(_splitCacheBytes+bytes.length>4194304){_splitCache=Object.create(null);_splitCacheBytes=0;}_splitCache[hash]=bytes;_splitCacheBytes+=bytes.length;}
 async function splitGet(id,phase){if(!/^[a-f0-9]{24}$/i.test(id))throw splitError('云端辅助记录编号无效；未继续。');var r=await fetchWithTimeout('https://api.jsonbin.io/v3/b/'+id+'/latest',{headers:{'X-Master-Key':CLOUD.apiKey}},15000);if(!r.ok)throw await syncHttpError(r,phase||'读取分片',0);var j=await r.json();if(!Object.prototype.hasOwnProperty.call(j,'record'))throw splitError('云端未返回完整分片；未合并。');return j.record;}
 async function splitCreate(record,label,limit){
@@ -4949,23 +5007,24 @@ async function splitCreate(record,label,limit){
   var r=await fetchWithTimeout('https://api.jsonbin.io/v3/b',{method:'POST',headers:{'Content-Type':'application/json','X-Master-Key':CLOUD.apiKey,'X-Bin-Private':'true','X-Bin-Name':label},body:body},20000);if(!r.ok)throw await syncHttpError(r,'创建私有分片',size);var j=await r.json(),id=j.metadata&&j.metadata.id;
   if(!/^[a-f0-9]{24}$/i.test(id||'')||j.metadata.private!==true||!Object.prototype.hasOwnProperty.call(j,'record')||splitCanon(j.record)!==splitCanon(record))throw splitError('未获得私有分片的完整保存确认；主目录尚未切换。');return{id:id,bytes:size};
 }
-async function splitRead(head){
-  var parts=splitParts(head),all=new Uint8Array(head.rawBytes),at=0;
-  for(var j=0;j<parts.length;j++){var p=parts[j],ref=CLOUD.binId+':'+p[0]+':'+p[1],raw=_splitVerified[ref]?_splitCache[p[1]]:null;
-    if(!raw){var rec=await splitGet(p[0]);if(!rec||rec._doitPart!==1||rec.owner!==CLOUD.binId||rec.sha256!==p[1]||rec.rawBytes!==p[2]||!['gzip','raw'].includes(rec.codec)||typeof rec.data!=='string'||rec.data.length>88000)throw splitError('分片归属或格式不符；未合并任何半份数据。');try{raw=splitUn64(rec.data);if(rec.codec==='gzip')raw=gzc_gunzip(raw);}catch(e){throw splitError('分片解压失败；未合并任何半份数据。');}if(raw.length!==p[2]||await splitHash(raw)!==p[1])throw splitError('分片SHA-256校验失败；未合并、未上传。');splitCachePut(p[1],raw);_splitVerified[ref]=true;}
-    if(raw.length!==p[2])throw splitError('分片缓存长度不符；未合并。');all.set(raw,at);at+=raw.length;splitRemember(p[1],p[0],p[2]);
+async function splitRead(head,owner){
+  owner=owner||CLOUD.binId;var parts=splitParts(head,owner),all=new Uint8Array(head.rawBytes),at=0;
+  for(var j=0;j<parts.length;j++){var p=parts[j],ref=owner+':'+p[0]+':'+p[1],raw=_splitVerified[ref]?_splitCache[p[1]]:null;
+    if(!raw){var rec=await splitGet(p[0]);if(!rec||rec._doitPart!==1||rec.owner!==owner||rec.sha256!==p[1]||rec.rawBytes!==p[2]||!['gzip','raw'].includes(rec.codec)||typeof rec.data!=='string'||rec.data.length>88000)throw splitError('分片归属或格式不符；未合并任何半份数据。');try{raw=splitUn64(rec.data);if(rec.codec==='gzip')raw=gzc_gunzip(raw);}catch(e){throw splitError('分片解压失败；未合并任何半份数据。');}if(raw.length!==p[2]||await splitHash(raw)!==p[1])throw splitError('分片SHA-256校验失败；未合并、未上传。');splitCachePut(p[1],raw);_splitVerified[ref]=true;}
+    if(raw.length!==p[2])throw splitError('分片缓存长度不符；未合并。');all.set(raw,at);at+=raw.length;splitRemember(p[1],p[0],p[2],owner);
   }
   if(await splitHash(all)!==head.sha256)throw splitError('完整数据SHA-256校验失败；没有采用半份数据。');var obj;try{obj=JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(all));}catch(e){throw splitError('完整分片不是有效JSON；未合并。');}
-  CLOUD.splitActiveBin=CLOUD.binId;saveCloudCfg(CLOUD);return obj;
+  if(owner===CLOUD.binId){CLOUD.splitActiveBin=CLOUD.binId;saveCloudCfg(CLOUD);}return obj;
 }
 async function syncReadRoot(record){
   var obj=await gzUnpack(record),guard=0;while(obj&&!obj.logs&&!obj.checks&&!obj.srs&&obj.record&&guard++<5)obj=await gzUnpack(obj.record);
+  if(!(record&&record._doitExclusive===1)&&!(obj&&obj._doitExclusive===1))throw splitError('这不是Doit独立云端，已暂停合并和上传，未改动原记录。请用本台创建的新Bin或另一台Doit连接码。','DOIT_FOREIGN_BIN');
   _splitObserved={owner:CLOUD.binId,record:JSON.parse(JSON.stringify(record)),fingerprint:await splitFingerprint(record)};return obj;
 }
 async function splitRawRoot(){var r=await fetchWithTimeout('https://api.jsonbin.io/v3/b/'+CLOUD.binId+'/latest',{headers:{'X-Master-Key':CLOUD.apiKey}},15000);if(!r.ok)throw await syncHttpError(r,'提交前读取主目录',0);var j=await r.json();if(!Object.prototype.hasOwnProperty.call(j,'record'))throw splitError('主记录读取不完整；未切换目录。');return j.record;}
 function splitApproved(silent,bytes){
   if(CLOUD.splitActiveBin===CLOUD.binId||CLOUD.splitApprovedBin===CLOUD.binId)return true;
-  if(!silent&&confirm('完整数据超过单条100KB，需要启用无损自动分片。\n\n现有Key和主Bin ID不变；程序会自动创建私有辅助记录，保留旧云端完整备份，不删除记录或学习内容。\n\n请确认手机、平板等所有设备都已更新到sync2或更新版本，不能再混用旧版。\n\n是否启用？')){CLOUD.splitApprovedBin=CLOUD.binId;saveCloudCfg(CLOUD);return true;}
+  if(!silent&&confirm('完整数据超过单条100KB，需要启用无损自动分片。\n\n使用Doit专用Bin和私有分片；index的页面、存储、原配置、原Bin都不改。学习内容不删除。\n\n请确认手机、平板等所有设备都已更新到sync3或更新版本，不能再混用旧版。\n\n是否启用？')){CLOUD.splitApprovedBin=CLOUD.binId;saveCloudCfg(CLOUD);return true;}
   throw splitError('本机容量预检：完整上传包 '+bytes+' 字节；需先把所有设备更新新版，再点同步并确认启用自动分片。尚未创建分片或发起PUT，全部数据仍在本机。','DOIT_SYNC_SPLIT_CONFIRM');
 }
 async function splitCommit(payload,silent){
@@ -4990,7 +5049,7 @@ async function splitCommit(payload,silent){
     else{var backup=await splitCreate(root,'Doit original before split',100000);legacy={id:backup.id,hash:base.fingerprint};try{localStorage.setItem(legacyKey,JSON.stringify(legacy));}catch(e){}totalBody+=backup.bytes;}
   }
   var previous=splitHead(root)?{index:root.index,sha256:root.sha256,rawBytes:root.rawBytes,at:root.at}:null;
-  var next={_doitSplit:1,kind:'doit-sync-directory',owner:CLOUD.binId,at:Date.now(),rawBytes:bytes.length,sha256:sha,index:splitIndex(parts),legacyBackup:legacy,previous:previous,notice:'Directory only, not study data. All devices require Doit sync2 or newer.',srs:{v:0,cards:[{id:'d2147483647',transportOnly:true}],meta:{deckVer:'doit-sync-directory-not-study-data',transportOnly:true}}};
+  var next={_doitSplit:1,_doitExclusive:1,kind:'doit-sync-directory',owner:CLOUD.binId,at:Date.now(),rawBytes:bytes.length,sha256:sha,index:splitIndex(parts),legacyBackup:legacy,previous:previous,notice:'Directory only, not study data. All devices require Doit sync3 or newer.',srs:{v:0,cards:[{id:'d2147483647',transportOnly:true}],meta:{deckVer:'doit-sync-directory-not-study-data',transportOnly:true}}};
   var body=JSON.stringify(next);if(new TextEncoder().encode(body).length>SYNC_SPLIT_PART_LIMIT&&splitHead(root)){var older=await splitCreate(root,'Doit previous complete directory');next.previous={id:older.id,hash:base.fingerprint};body=JSON.stringify(next);totalBody+=older.bytes;}
   var bodyBytes=new TextEncoder().encode(body).length;if(bodyBytes>SYNC_SPLIT_PART_LIMIT)throw splitError('分片目录超出安全预算；尚未切换，全部数据仍在本机。');
   _syncPackInfo=Object.assign({},info,{transport:'split-v1',rawBytes:bytes.length,bodyBytes:bodyBytes,parts:parts.length,createdParts:created,reusedParts:reused,maxPartBodyBytes:maxBody,totalWrittenBytes:totalBody+bodyBytes,safeBodyBytes:100000,marginBytes:100000-bodyBytes,allValuesKept:true,sent:false,rootConfirmed:false,legacyBackupSaved:!!legacy});
@@ -5049,8 +5108,8 @@ async function gzPack(obj){
   _syncPackInfo={rawBytes:bytes.length,gzipBytes:best.buf.length,bodyBytes:bodyBytes,codec:best.codec,layout:best.layout,originalBodyBytes:wire(plain.buf),safeBodyBytes:SYNC_SAFE_BODY_BYTES,marginBytes:SYNC_SAFE_BODY_BYTES-bodyBytes,builtinRecords:layout?layout.builtins:0,recordsRepositioned:best.layout==='builtin-source'?best.moved:0,allValuesKept:true,sent:false,ms:Date.now()-started};
   return result;
 }
-async function gzUnpack(rec){
-  if(splitHead(rec))return splitRead(rec);
+async function gzUnpack(rec,owner){
+  if(splitHead(rec))return splitRead(rec,owner);
   if(!rec||!rec._gz||!rec.d) return rec;
   const bin=Uint8Array.from(atob(rec.d),function(c){return c.charCodeAt(0);});
   let bytes;
@@ -5060,7 +5119,7 @@ async function gzUnpack(rec){
   } else {
     bytes=gzc_gunzip(bin);
   }
-  var data=JSON.parse(new TextDecoder().decode(bytes));return splitHead(data)?splitRead(data):data;
+  var data=JSON.parse(new TextDecoder().decode(bytes));return splitHead(data)?splitRead(data,owner):data;
 }
 
 /* HTTP status alone does not identify 403's cause. Keep the authoritative
@@ -5104,6 +5163,7 @@ async function cloudSave(silent=true,force=false){
   if(force&&_splitAutoTimer){clearTimeout(_splitAutoTimer);_splitAutoTimer=0;}
   if(!silent)_clearSyncHold();
   if(DOIT_ID_BLOCKED||(_syncHold&&silent)){_pendingSave=true;_markSyncPending(true);setSyncStatus('pending');return false;}
+  if(!await doitPrepareCloud(silent))return false;
   if(!CLOUD.apiKey||!CLOUD.binId)return false;
   if(_pageLeaving){_pendingSave=true;_markSyncPending(true);return false;}
   stampDiff();
@@ -5117,7 +5177,7 @@ async function cloudSave(silent=true,force=false){
     if(!force&&now-_lastSaveTs<2500){_pendingSave=true;deferred=true;setTimeout(function(){cloudSave(true,true);},2600);return false;}
     if(!_pullRecent(60000)){await pullMergeForSave();_syncReadOk();}
     _lastSaveTs=now;_pendingSave=false;_markSyncPending(true);
-    var payload=stripImgs(D);
+    var payload=stripImgs(D);payload._doitExclusive=1;
     try{var srsRaw=localStorage.getItem(SRS_LS_KEY);if(srsRaw)payload.srs=JSON.parse(srsRaw);}catch(e){}
     if(payload.srs)payload.srs=normalizeForIdMerge(payload.srs);
     setSyncStatus('saving');
@@ -5131,6 +5191,7 @@ async function cloudSave(silent=true,force=false){
       if(_syncPackInfo)_syncPackInfo.sent=true;
       var response=await fetchWithTimeout(`https://api.jsonbin.io/v3/b/${CLOUD.binId}`,{method:'PUT',headers:{'Content-Type':'application/json','X-Master-Key':CLOUD.apiKey,'X-Bin-Versioning':'false'},body:body},15000);
       if(!response.ok)throw await syncHttpError(response,'PUT',bodyBytes);
+      var acceptedRecord=JSON.parse(body);_splitObserved={owner:CLOUD.binId,record:acceptedRecord,fingerprint:await splitFingerprint(acceptedRecord)};
     }
     confirmed=true;needPush=false;CLOUD.lastSyncTs=Date.now();saveCloudCfg(CLOUD);_syncOk();
     setSyncStatus(_pendingSave?'pending':'ok');
@@ -5150,6 +5211,7 @@ async function cloudSave(silent=true,force=false){
 async function cloudLoad(silent,manual,seedResponse){
   var explicit=manual===true||!silent;if(explicit)_clearSyncHold();
   if(DOIT_ID_BLOCKED||(_syncHold&&!explicit)){_pendingSave=true;_markSyncPending(true);setSyncStatus('pending');return false;}
+  if(!await doitPrepareCloud(!explicit))return false;
   if(!CLOUD.apiKey||!CLOUD.binId){if(!silent)showToast('请先填写API Key和Bin ID','orange');return false;}
   if(_syncing||_pullBusy){_pendingSave=true;_markSyncPending(true);return false;}
   if(!_netOnline()){_pendingSave=true;_markSyncPending(true);setSyncStatus('offline');_scheduleSyncRetry();return false;}
@@ -5161,9 +5223,11 @@ async function cloudLoad(silent,manual,seedResponse){
 async function syncDiagnose(){
   var el=document.getElementById('diag-result');el.style.display='block';var lines=[];
   function log(s){lines.push(s);el.textContent=lines.join('\n');}
-  log('🩺 同步诊断 · 2026-11-02-sync2（无损自动分片检查）');
+  log('🩺 同步诊断 · 2026-11-02-sync3（无损自动分片检查）');
   log('1. 配置：Key '+(CLOUD.apiKey?'已填写（不显示）':'未填写')+'；Bin ID '+(CLOUD.binId?'已填写（不显示）':'未填写'));
   if(location.protocol==='about:'||location.href.startsWith('about:srcdoc')){log('当前是离线预览。请下载文件后在浏览器或原站点打开；本地数据不要清除。');return false;}
+  _clearSyncHold();if(!await doitPrepareCloud(false)){log('   尚未完成Doit独立连接。'+(_lastSyncErr||''));return false;}
+  log('   Doit独立配置；index原记录、原配置和原Bin不改。');
   if(!CLOUD.apiKey||!CLOUD.binId){log('配置不完整。请在本设备保存已有配置；不需要把密钥发给任何人。');return false;}
   if(_syncing||_pullBusy){log('已有同步正在进行；本次没有重复发起请求，请等结束后再诊断。');return false;}
   _syncPackInfo=null;_splitCache=Object.create(null);_splitVerified=Object.create(null);_splitCacheBytes=0;log('2. 读取云端（GET）…');
@@ -5184,7 +5248,7 @@ async function syncDiagnose(){
     log('   完整数据 '+si.rawBytes+'字节；分 '+(si.parts||'待定')+'片。每片完整JSON上限90000字节（含Base64和元信息），不是只算压缩流。');
     log('   本轮新建 '+(si.createdParts||0)+'片，复用 '+(si.reusedParts||0)+'片；本轮新建片最大 '+(si.maxPartBodyBytes||0)+'字节。');
     log('   '+(si.rootConfirmed?'✅ 完整分片和主目录已确认。':(si.sent?'主目录已发送，但尚未获得完整确认。':'主目录尚未切换；失败不会合并半份数据。'))+(si.noChange?'云端已有同份数据，无需重复写入。':''));
-    if(si.legacyBackupSaved)log('   首次切换前的原主记录已完整保留在私有备份中。原Key、主Bin ID不变；旧版不能读写此格式。');
+    if(si.legacyBackupSaved)log('   首次切换前的原主记录已完整保留在私有备份中。本专用Bin保留副本；index的原Bin未改动。');
   }else if(_syncPackInfo){
     log('   '+(_syncPackInfo.sent?'实际上传JSON：':'待上传JSON（未发送）：')+_syncPackInfo.bodyBytes+'字节；gzip '+_syncPackInfo.gzipBytes+'字节；原文 '+_syncPackInfo.rawBytes+'字节。');
     log('   '+_syncPackInfo.codec+'，标准gzip兼容旧解码器，未删减学习内容。');
@@ -5470,41 +5534,8 @@ async function _pullAll(silent,seedResponse){
 // 对外的「拉取合并」入口：占全局锁，跑完把合并结果传上去
 
 async function cloudCreateBin(){
-  // 直接读取输入框（用户可能还没点「保存配置」），并自动保存
-  const inputKey=document.getElementById('cfg-api-key').value.trim();
-  if(inputKey) CLOUD.apiKey=inputKey;
-  if(!CLOUD.apiKey){showToast('请先填写 API Key','orange');return;}
-  if(!/^\$2[aby]\$/.test(CLOUD.apiKey)){showToast('⚠️ Key 格式不对，请确认复制的是 X-Master-Key（$2a$10$ 或 $2b$10$ 开头）','orange');return;}
-  setSyncStatus('saving');
-  try{
-    const r=await fetchWithTimeout('https://api.jsonbin.io/v3/b',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','X-Master-Key':CLOUD.apiKey,'X-Bin-Name':'gongkao2026','X-Bin-Private':'true'},
-      body:JSON.stringify(await gzPack(stripImgs(D)))
-    });
-    if(!r.ok){
-      let msg='HTTP '+r.status;
-      try{const j=await r.json();msg=j.message||msg;}catch(e2){}
-      if(r.status===401) msg='API Key 无效（401）。请到 jsonbin.io → API KEYS 页面复制 MASTER KEY';
-      throw new Error(msg);
-    }
-    const json=await r.json();
-    const newId=json.metadata?.id||'';
-    CLOUD.binId=newId;
-    saveCloudCfg(CLOUD);
-    document.getElementById('cfg-bin-id').value=newId;
-    setSyncStatus('ok');
-    showToast('🎉 Bin 创建成功！ID 已自动填入并保存');
-  }catch(e){
-    setSyncStatus('err');
-    const hint=/Failed to fetch|NetworkError|fetch/i.test(e.message)
-      ? '网络请求被拦截：请用浏览器直接打开本文件（预览窗口禁止联网），且需在 https 或 file 环境'
-      : e.message;
-    showToast('❌ 创建失败：'+hint,'red');
-    alert('❌ Bin 创建失败\n\n原因：'+hint+'\n\n排查步骤：\n1. 必须把文件下载后用 Safari/Chrome 打开（App 内预览窗口无法联网）\n2. 确认复制的是 jsonbin.io → API KEYS 页面的 MASTER KEY\n3. 网络需能访问 api.jsonbin.io（部分网络环境需切换流量/Wi-Fi）');
-  }
+  const key=document.getElementById('cfg-api-key').value.trim();if(key)CLOUD.apiKey=key;saveCloudCfg(CLOUD);_clearSyncHold();if(await doitPrepareCloud(false))return cloudLoad(false,true);return false;
 }
-
 function setSyncStatus(s){
   if(s==='ok'&&(_syncHold||_pendingSave))s='pending';
   if(s==='ok'&&!CLOUD.lastSyncTs)s='configured';
@@ -5531,21 +5562,17 @@ function showToast(msg,color='#1d4ed8'){
 }
 
 function saveCfg(){
-  _clearSyncHold();
-  CLOUD.apiKey=document.getElementById('cfg-api-key').value.trim();
-  CLOUD.binId=document.getElementById('cfg-bin-id').value.trim();
-  CLOUD.autoSync=document.getElementById('cfg-auto-sync').checked;
-  saveCloudCfg(CLOUD);
-  showToast('✅ 配置已保存');
-  renderSrsStatus();
+  const key=document.getElementById('cfg-api-key').value.trim(),input=document.getElementById('cfg-bin-id').value.trim(),id=input.replace(/^DOIT3:/i,'');
+  if(id&&CLOUD.legacySourceBinId&&id.toLowerCase()===CLOUD.legacySourceBinId.toLowerCase()){showToast('这是index原共用Bin，Doit不会写入。请留空创建专用云端或粘贴另一台Doit连接码。','orange');return false;}
+  if(id&&id!==CLOUD.binId){_splitObserved=null;_pulledOnce=false;_lastPullOk=0;delete CLOUD.splitActiveBin;CLOUD.lastSyncTs=0;}
+  CLOUD.apiKey=key;CLOUD.binId=id;CLOUD.autoSync=document.getElementById('cfg-auto-sync').checked;CLOUD.exclusiveScope=1;saveCloudCfg(CLOUD);_clearSyncHold();doitRenderScope();showToast('Doit独立配置已保存；index配置不改');renderSrsStatus();return true;
 }
-
 function renderCloudCfg(){
   document.getElementById('cfg-api-key').value=CLOUD.apiKey||'';
   document.getElementById('cfg-bin-id').value=CLOUD.binId||'';
   document.getElementById('cfg-auto-sync').checked=CLOUD.autoSync||false;
   try{document.getElementById('cfg-ai-key').value=getAiKey();}catch(e){}
-  setSyncStatus(CLOUD.apiKey&&CLOUD.binId?'ok':'none'); renderSrsStatus();
+  setSyncStatus(CLOUD.apiKey&&CLOUD.binId?((_pendingSave||!CLOUD.lastSyncTs)?'pending':'ok'):'none');renderSrsStatus();doitRenderScope();
   // 显示上次成功同步时间，便于判断同步是否真的在工作
   const big=document.getElementById('sync-status-big');
   if(big&&CLOUD.lastSyncTs&&!_syncHold&&!_pendingSave){
@@ -6248,7 +6275,7 @@ function init(){
       safeRun(renderTLog); safeRun(()=>updateDayProgress(ds(curDate))); safeRun(renderSchedule); safeRun(window.renderLanding);
       return;
     }
-    if(e.key==='gk2026_timer_stopped' || (e.key===TKEY && !e.newValue)){
+    if(e.key==='doit2026_timer_stopped' || (e.key===TKEY && !e.newValue)){
       tOn=false; _wallStart=null; clearInterval(tInt);
       activeSlotKey='';
       disableFollowTimer();
@@ -6598,7 +6625,7 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
   var special={
     '2026-10-16':['B 补账日','刑法补题 + 综测欠账先清；套②可换错题复做套'],
     '2026-10-19':['R 重启日','15–18号归零，不补旧账；今天只恢复手感和秩序'],
-    '2026-10-20':['背卡日·今晚只背100张卡','其余全部块（数量资料/刑法/图推/综合套①/综测/政治）已整批滚到21号执行单；以后只上传 index.html 一个文件'],
+    '2026-10-20':['背卡日·今晚只背100张卡','其余全部块（数量资料/刑法/图推/综合套①/综测/政治）已整批滚到21号执行单；旧版入口说明已作废：Doit只更新Doit.html，index为独立程序'],
     '2026-10-21':['还账日·11:30起步压缩版','锚点不动：14:05综合套①、21:05黑十2套；11:30晨读热身→11:45背卡→13:10刑法，其余块顺延重排，21:50关账不熬夜'],
     '2026-10-18':['C 回炉日','错题复做套 + 作文三改'],
     '2026-10-22':['开荒日·公文','第二套换公文完整版90分钟；行政法开荒顺延到补债槽'],
@@ -7097,7 +7124,7 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
   }
   setInterval(syncLandingTimerState, 500);
   window.addEventListener('storage', function(e){
-    if(e.key === 'gk2026_timer' || e.key === 'gk2026_logrelay' || e.key === 'gk2026_timer_stopped' || e.key === 'gk2026v3'){
+    if(e.key === 'gk2026_timer' || e.key === 'gk2026_logrelay' || e.key === 'doit2026_timer_stopped' || e.key === 'gk2026v3'){
       setTimeout(render, 50);
       setTimeout(render, 300);
     }
@@ -7397,5 +7424,5 @@ window.addEventListener('storage',function(e){
   if(e.key==='scsyd_gk_srs_v1'){_pendingSave=true;_markSyncPending(true);renderSrsStatus();if(CLOUD.autoSync)queueCloudSave();}
 });
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4e129460c6b08e0',t:'MTc5MjU5NTEzNA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4e9eddeef442a56',t:'MTc5MjY4NzA3Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a5420d046a27cd7c',t:'MTc5MzYxMTA5NQ=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a5420d046a27cd7c',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4e129460c6b08e0',t:'MTc5MjU5NTEzNA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4e9eddeef442a56',t:'MTc5MjY4NzA3Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a543d765dc0ac402',t:'MTc5MzYyOTg3MQ=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a543d765dc0ac402',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
