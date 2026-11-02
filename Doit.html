@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Doit · 政治理论完整语境 | 2026-10-30-pc2</title>
+<title>Doit · 无损自动分片同步 | 2026-11-02-sync2</title>
 <style>
 :root{
   --bg:#f0f6ff;--surface:#fff;--s2:#f7faff;--border:#d0e2ff;
@@ -192,7 +192,7 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
 @media(max-width:600px){.g2{grid-template-columns:1fr}}
 ::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-thumb{background:#93c5fd;border-radius:2px}
 </style>
-<meta name="doit-release" content="2026-10-30-pc2">
+<meta name="doit-release" content="2026-11-02-sync2">
 </head>
 <body>
 
@@ -229,7 +229,7 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
     <button class="tb" onclick="showMemoryCard()" style="display:inline-flex;align-items:center">🧠 记忆卡</button>
   </div>
   <div style="font-size:10px;margin-top:4px;opacity:.8;cursor:pointer;display:inline-block" id="sync-status" onclick="manualSync()" title="点击立即同步合并">⚪ 未配置</div>
-  <div id="app-version" style="font-size:10px;margin-top:3px;opacity:.8">✅ 落地执行单版 v2026-10-30w2-pc2（同步保持 · 关联考点同卡挖空）</div>
+  <div id="app-version" style="font-size:10px;margin-top:3px;opacity:.8">✅ 落地执行单版 v2026-11-02-sync2（无损自动分片 · 政治内容pc2保留）</div>
 </div>
 
 <div class="main">
@@ -539,7 +539,7 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
 <!-- ======= CLOUD CONFIG ======= -->
 <div class="sec" id="sec-cfg">
   <div class="card">
-    <div class="ct">☁️ 云同步设置（JSONBin.io）</div>
+    <div class="ct">☁️ 云同步设置（JSONBin.io）</div><div class="alert alert-b" style="margin-top:12px;line-height:1.8"><strong>🧩 sync2：无损自动分片</strong><br>数据超出单条100KB时，点同步并确认后自动创建私有小记录；原Key、主Bin ID不变。先完整校验，再切换主目录，不裁剪学习内容。<strong>所有设备须更新sync2或更新版，旧版不能混用。</strong>本机立即保存；自动云同步最多合批约20秒，手动同步立即执行。服务商的总请求额度仍有限；不会承诺无限免费。</div>
     <div class="alert alert-b" style="flex-direction:column;gap:6px;line-height:1.9">
       <strong>📋 使用步骤：</strong>
       1. 访问 <a href="https://jsonbin.io" target="_blank" style="color:var(--p);font-weight:600">jsonbin.io</a> 注册免费账号<br>
@@ -4363,7 +4363,7 @@ function renderSrsStatus(){
   if(!m){ el.textContent='记忆卡进度：本机还没有记录（打开记忆卡收一次卡后自动生成）'; return; }
   const dt=new Date(m.savedAt||0);
   const kb=((localStorage.getItem(SRS_LS_KEY)||'').length/1024).toFixed(0);
-  el.textContent='记忆卡进度：'+(m.savedAt?((dt.getMonth()+1)+'/'+dt.getDate()+' '+String(dt.getHours()).padStart(2,'0')+':'+String(dt.getMinutes()).padStart(2,'0')):'--')+' 已保存 · 版本 rev '+(m.rev||0)+' · 约 '+kb+'KB（差分存储，不会超浏览器限额）';
+  el.textContent='记忆卡进度：'+(m.savedAt?((dt.getMonth()+1)+'/'+dt.getDate()+' '+String(dt.getHours()).padStart(2,'0')+':'+String(dt.getMinutes()).padStart(2,'0')):'--')+' 已保存 · 版本 rev '+(m.rev||0)+' · 约 '+kb+'KB（本机已保存；云端超单条预算时采用自动分片）';
 }
 /* A round is identified separately from card ids: an "again" card can occupy many slots. */
 function chooseStudySession(a,b,resetAt){
@@ -4908,6 +4908,102 @@ function syncBuiltinLayout(obj){
   if(!moved)return null;
   return {value:Object.assign(Object.create(null),obj,{srs:Object.assign(Object.create(null),obj.srs,{cards:ordered})}),builtins:items.length,moved:moved};
 }
+/* Doit split-v1. Private, immutable data parts; commit the small root LAST.
+   A part is at most 65536 raw bytes => even raw Base64 JSON stays <90000B.
+   Content-defined boundaries reuse unchanged parts. No DELETE, no data trimming.
+   Old full-cloud record is backed up before first root-format change.
+   JSONBin has no compare-and-swap: check/rebase conflicts, never claim a lock. */
+var SYNC_SPLIT_PART_LIMIT=90000,SYNC_SPLIT_MAX_RAW=33554432;
+var _splitObserved=null,_splitCache=Object.create(null),_splitCacheBytes=0,_splitCatalog=null,_splitVerified=Object.create(null),_splitAutoTimer=0;
+function splitError(text,code,retryable){var e=new Error(text);e.code=code||'DOIT_SYNC_SPLIT';e.httpStatus=0;e.retryable=!!retryable;return e;}
+function splitHead(o){return !!(o&&o.kind==='doit-sync-directory'&&o._doitSplit);}
+function splitB64(bytes){var s='';for(var i=0;i<bytes.length;i+=32768)s+=String.fromCharCode.apply(null,bytes.subarray(i,i+32768));return btoa(s);}
+function splitUn64(s){return Uint8Array.from(atob(s),function(c){return c.charCodeAt(0);});}
+function splitCanon(x){if(x===null||typeof x!=='object')return JSON.stringify(x);if(Array.isArray(x))return '['+x.map(splitCanon).join(',')+']';return '{'+Object.keys(x).sort().map(function(k){return JSON.stringify(k)+':'+splitCanon(x[k]);}).join(',')+'}';}
+function splitShaFallback(bytes){
+  var K=[1116352408,1899447441,3049323471,3921009573,961987163,1508970993,2453635748,2870763221,3624381080,310598401,607225278,1426881987,1925078388,2162078206,2614888103,3248222580,3835390401,4022224774,264347078,604807628,770255983,1249150122,1555081692,1996064986,2554220882,2821834349,2952996808,3210313671,3336571891,3584528711,113926993,338241895,666307205,773529912,1294757372,1396182291,1695183700,1986661051,2177026350,2456956037,2730485921,2820302411,3259730800,3345764771,3516065817,3600352804,4094571909,275423344,430227734,506948616,659060556,883997877,958139571,1322822218,1537002063,1747873779,1955562222,2024104815,2227730452,2361852424,2428436474,2756734187,3204031479,3329325298];
+  var H=[1779033703,3144134277,1013904242,2773480762,1359893119,2600822924,528734635,1541459225],n=bytes.length,b=new Uint8Array(Math.ceil((n+9)/64)*64);b.set(bytes);b[n]=128;var dv=new DataView(b.buffer);dv.setUint32(b.length-8,Math.floor(n/536870912));dv.setUint32(b.length-4,(n*8)>>>0);var w=new Int32Array(64);function r(x,k){return (x>>>k)|(x<<(32-k));}
+  for(var p=0;p<b.length;p+=64){for(var j=0;j<16;j++)w[j]=dv.getInt32(p+4*j);for(j=16;j<64;j++){var x=w[j-15],y=w[j-2];w[j]=(w[j-16]+(r(x,7)^r(x,18)^(x>>>3))+w[j-7]+(r(y,17)^r(y,19)^(y>>>10)))|0;}var a=H[0],c=H[1],d=H[2],e=H[3],f=H[4],g=H[5],h=H[6],k=H[7];for(j=0;j<64;j++){var t=(k+(r(f,6)^r(f,11)^r(f,25))+((f&g)^(~f&h))+K[j]+w[j])|0,u=((r(a,2)^r(a,13)^r(a,22))+((a&c)^(a&d)^(c&d)))|0;k=h;h=g;g=f;f=(e+t)|0;e=d;d=c;c=a;a=(t+u)|0;}var v=[a,c,d,e,f,g,h,k];for(j=0;j<8;j++)H[j]=(H[j]+v[j])|0;}
+  return H.map(function(x){return (x>>>0).toString(16).padStart(8,'0');}).join('');
+}
+async function splitHash(bytes){if(globalThis.crypto&&crypto.subtle){try{var b=new Uint8Array(await crypto.subtle.digest('SHA-256',bytes));return Array.from(b,function(v){return v.toString(16).padStart(2,'0');}).join('');}catch(e){}}return splitShaFallback(bytes);}
+async function splitFingerprint(o){return splitHash(new TextEncoder().encode(splitCanon(o)));}
+function splitChunks(bytes){
+  var gear=new Uint32Array(256),x=0x6d2b79f5;for(var j=0;j<256;j++){x^=x<<13;x^=x>>>17;x^=x<<5;gear[j]=x>>>0;}var out=[],start=0,h=0;
+  for(var i=0;i<bytes.length;i++){h=((h<<1)+gear[bytes[i]])>>>0;var n=i-start+1;if(n>=65536||(n>=32768&&(h&16383)===0)){out.push(bytes.subarray(start,i+1));start=i+1;h=0;}}
+  if(start<bytes.length)out.push(bytes.subarray(start));return out;
+}
+function splitIndex(parts){var b=new Uint8Array(parts.length*48),v=new DataView(b.buffer);parts.forEach(function(p,j){var at=j*48;for(var i=0;i<12;i++)b[at+i]=parseInt(p[0].slice(i*2,i*2+2),16);for(i=0;i<32;i++)b[at+12+i]=parseInt(p[1].slice(i*2,i*2+2),16);v.setUint32(at+44,p[2]);});return splitB64(b);}
+function splitParts(head){
+  if(!head||head._doitSplit!==1||head.owner!==CLOUD.binId||!Number.isInteger(head.rawBytes)||head.rawBytes<1||head.rawBytes>SYNC_SPLIT_MAX_RAW||!/^[a-f0-9]{64}$/.test(head.sha256||''))throw splitError('分片目录版本、归属或总长度不符；未合并、未上传。');
+  var b;try{b=splitUn64(head.index);}catch(e){throw splitError('分片目录编码损坏；未合并、未上传。');}if(!b.length||b.length%48||b.length>49152)throw splitError('分片目录长度不符；未合并、未上传。');var v=new DataView(b.buffer,b.byteOffset,b.byteLength),parts=[],sum=0;
+  function hex(a,z){return Array.from(b.subarray(a,z),function(x){return x.toString(16).padStart(2,'0');}).join('');}
+  for(var at=0;at<b.length;at+=48){var n=v.getUint32(at+44);if(n<1||n>65536)throw splitError('分片大小不符；未合并、未上传。');parts.push([hex(at,at+12),hex(at+12,at+44),n]);sum+=n;}if(sum!==head.rawBytes)throw splitError('分片总长度不符；未合并、未上传。');return parts;
+}
+function splitCatalog(){if(_splitCatalog)return _splitCatalog;try{_splitCatalog=JSON.parse(localStorage.getItem('doit_split_catalog_v1')||'{}');}catch(e){_splitCatalog={};}return _splitCatalog;}
+function splitRemember(hash,id,n){var c=splitCatalog(),key=CLOUD.binId+':'+hash;c[key]={id:id,n:n,at:Date.now()};var keys=Object.keys(c);if(keys.length>256){keys.sort(function(a,b){return (c[b].at||0)-(c[a].at||0);});keys.slice(256).forEach(function(k){delete c[k];});}try{localStorage.setItem('doit_split_catalog_v1',JSON.stringify(c));}catch(e){}}
+function splitCachePut(hash,bytes){if(_splitCache[hash])return;if(_splitCacheBytes+bytes.length>4194304){_splitCache=Object.create(null);_splitCacheBytes=0;}_splitCache[hash]=bytes;_splitCacheBytes+=bytes.length;}
+async function splitGet(id,phase){if(!/^[a-f0-9]{24}$/i.test(id))throw splitError('云端辅助记录编号无效；未继续。');var r=await fetchWithTimeout('https://api.jsonbin.io/v3/b/'+id+'/latest',{headers:{'X-Master-Key':CLOUD.apiKey}},15000);if(!r.ok)throw await syncHttpError(r,phase||'读取分片',0);var j=await r.json();if(!Object.prototype.hasOwnProperty.call(j,'record'))throw splitError('云端未返回完整分片；未合并。');return j.record;}
+async function splitCreate(record,label,limit){
+  if(_pageLeaving)throw splitError('页面正在退出；分片尚未提交，数据仍在本机。',null,true);var body=JSON.stringify(record),size=new TextEncoder().encode(body).length;if(size>(limit||SYNC_SPLIT_PART_LIMIT))throw splitError('辅助记录仍超过安全预算；未创建、未切换目录。');
+  var r=await fetchWithTimeout('https://api.jsonbin.io/v3/b',{method:'POST',headers:{'Content-Type':'application/json','X-Master-Key':CLOUD.apiKey,'X-Bin-Private':'true','X-Bin-Name':label},body:body},20000);if(!r.ok)throw await syncHttpError(r,'创建私有分片',size);var j=await r.json(),id=j.metadata&&j.metadata.id;
+  if(!/^[a-f0-9]{24}$/i.test(id||'')||j.metadata.private!==true||!Object.prototype.hasOwnProperty.call(j,'record')||splitCanon(j.record)!==splitCanon(record))throw splitError('未获得私有分片的完整保存确认；主目录尚未切换。');return{id:id,bytes:size};
+}
+async function splitRead(head){
+  var parts=splitParts(head),all=new Uint8Array(head.rawBytes),at=0;
+  for(var j=0;j<parts.length;j++){var p=parts[j],ref=CLOUD.binId+':'+p[0]+':'+p[1],raw=_splitVerified[ref]?_splitCache[p[1]]:null;
+    if(!raw){var rec=await splitGet(p[0]);if(!rec||rec._doitPart!==1||rec.owner!==CLOUD.binId||rec.sha256!==p[1]||rec.rawBytes!==p[2]||!['gzip','raw'].includes(rec.codec)||typeof rec.data!=='string'||rec.data.length>88000)throw splitError('分片归属或格式不符；未合并任何半份数据。');try{raw=splitUn64(rec.data);if(rec.codec==='gzip')raw=gzc_gunzip(raw);}catch(e){throw splitError('分片解压失败；未合并任何半份数据。');}if(raw.length!==p[2]||await splitHash(raw)!==p[1])throw splitError('分片SHA-256校验失败；未合并、未上传。');splitCachePut(p[1],raw);_splitVerified[ref]=true;}
+    if(raw.length!==p[2])throw splitError('分片缓存长度不符；未合并。');all.set(raw,at);at+=raw.length;splitRemember(p[1],p[0],p[2]);
+  }
+  if(await splitHash(all)!==head.sha256)throw splitError('完整数据SHA-256校验失败；没有采用半份数据。');var obj;try{obj=JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(all));}catch(e){throw splitError('完整分片不是有效JSON；未合并。');}
+  CLOUD.splitActiveBin=CLOUD.binId;saveCloudCfg(CLOUD);return obj;
+}
+async function syncReadRoot(record){
+  var obj=await gzUnpack(record),guard=0;while(obj&&!obj.logs&&!obj.checks&&!obj.srs&&obj.record&&guard++<5)obj=await gzUnpack(obj.record);
+  _splitObserved={owner:CLOUD.binId,record:JSON.parse(JSON.stringify(record)),fingerprint:await splitFingerprint(record)};return obj;
+}
+async function splitRawRoot(){var r=await fetchWithTimeout('https://api.jsonbin.io/v3/b/'+CLOUD.binId+'/latest',{headers:{'X-Master-Key':CLOUD.apiKey}},15000);if(!r.ok)throw await syncHttpError(r,'提交前读取主目录',0);var j=await r.json();if(!Object.prototype.hasOwnProperty.call(j,'record'))throw splitError('主记录读取不完整；未切换目录。');return j.record;}
+function splitApproved(silent,bytes){
+  if(CLOUD.splitActiveBin===CLOUD.binId||CLOUD.splitApprovedBin===CLOUD.binId)return true;
+  if(!silent&&confirm('完整数据超过单条100KB，需要启用无损自动分片。\n\n现有Key和主Bin ID不变；程序会自动创建私有辅助记录，保留旧云端完整备份，不删除记录或学习内容。\n\n请确认手机、平板等所有设备都已更新到sync2或更新版本，不能再混用旧版。\n\n是否启用？')){CLOUD.splitApprovedBin=CLOUD.binId;saveCloudCfg(CLOUD);return true;}
+  throw splitError('本机容量预检：完整上传包 '+bytes+' 字节；需先把所有设备更新新版，再点同步并确认启用自动分片。尚未创建分片或发起PUT，全部数据仍在本机。','DOIT_SYNC_SPLIT_CONFIRM');
+}
+async function splitCommit(payload,silent){
+  var info=_syncPackInfo||{};splitApproved(silent,info.bodyBytes||0);
+  if(!_splitObserved||_splitObserved.owner!==CLOUD.binId){await pullMergeForSave();throw splitError('已读取并合并最新云端；本次暂缓提交，稍后重试。','DOIT_SYNC_REBASE',true);}
+  var base=_splitObserved,root=base.record;
+  var bytes=new TextEncoder().encode(JSON.stringify(payload));if(bytes.length>SYNC_SPLIT_MAX_RAW)throw splitError('完整数据超过当前32MiB分片保护上限；未裁剪、未切换目录。');var sha=await splitHash(bytes),pieces=splitChunks(bytes),parts=[],created=0,reused=0,maxBody=0,totalBody=0;
+  if(!pieces.length||pieces.length>1024)throw splitError('分片数量超出保护上限；全部内容仍在本机。');
+  var fresh;
+  if(splitHead(root)&&root.sha256===sha&&root.rawBytes===bytes.length){fresh=await splitRawRoot();if(await splitFingerprint(fresh)!==base.fingerprint){await pullMergeForSave();throw splitError('另一设备更新了云端，已合并，暂缓确认。','DOIT_SYNC_REBASE',true);}_syncPackInfo=Object.assign({},info,{transport:'split-v1',rawBytes:bytes.length,parts:pieces.length,noChange:true,rootConfirmed:true,sent:false,bodyBytes:new TextEncoder().encode(JSON.stringify(root)).length});return true;}
+  _syncPackInfo=Object.assign({},info,{transport:'split-v1',rawBytes:bytes.length,parts:pieces.length,createdParts:0,reusedParts:0,maxPartBodyBytes:0,sent:false,rootConfirmed:false});
+  for(var j=0;j<pieces.length;j++){
+    var raw=pieces[j],h=await splitHash(raw),cached=splitCatalog()[CLOUD.binId+':'+h],id;
+    if(cached&&cached.n===raw.length&&/^[a-f0-9]{24}$/i.test(cached.id)){id=cached.id;reused++;}
+    else{var gz=typeof fflate!=='undefined'?fflate.gzipSync(raw,{level:6,mtime:0}):gzc_gzip(raw),compressed=gz.length<raw.length,rec={_doitPart:1,owner:CLOUD.binId,sha256:h,rawBytes:raw.length,codec:compressed?'gzip':'raw',data:splitB64(compressed?gz:raw)},saved=await splitCreate(rec,'Doit data '+h.slice(0,12));id=saved.id;_splitVerified[CLOUD.binId+':'+id+':'+h]=true;created++;maxBody=Math.max(maxBody,saved.bytes);totalBody+=saved.bytes;splitRemember(h,id,raw.length);}
+    parts.push([id,h,raw.length]);splitCachePut(h,raw);Object.assign(_syncPackInfo,{createdParts:created,reusedParts:reused,maxPartBodyBytes:maxBody});
+  }
+  var legacy=splitHead(root)?root.legacyBackup:null;
+  if(!splitHead(root)){
+    var legacyKey='doit_split_legacy_'+CLOUD.binId,prior;try{prior=JSON.parse(localStorage.getItem(legacyKey)||'null');}catch(e){}
+    if(prior&&prior.hash===base.fingerprint&&/^[a-f0-9]{24}$/i.test(prior.id))legacy=prior;
+    else{var backup=await splitCreate(root,'Doit original before split',100000);legacy={id:backup.id,hash:base.fingerprint};try{localStorage.setItem(legacyKey,JSON.stringify(legacy));}catch(e){}totalBody+=backup.bytes;}
+  }
+  var previous=splitHead(root)?{index:root.index,sha256:root.sha256,rawBytes:root.rawBytes,at:root.at}:null;
+  var next={_doitSplit:1,kind:'doit-sync-directory',owner:CLOUD.binId,at:Date.now(),rawBytes:bytes.length,sha256:sha,index:splitIndex(parts),legacyBackup:legacy,previous:previous,notice:'Directory only, not study data. All devices require Doit sync2 or newer.',srs:{v:0,cards:[{id:'d2147483647',transportOnly:true}],meta:{deckVer:'doit-sync-directory-not-study-data',transportOnly:true}}};
+  var body=JSON.stringify(next);if(new TextEncoder().encode(body).length>SYNC_SPLIT_PART_LIMIT&&splitHead(root)){var older=await splitCreate(root,'Doit previous complete directory');next.previous={id:older.id,hash:base.fingerprint};body=JSON.stringify(next);totalBody+=older.bytes;}
+  var bodyBytes=new TextEncoder().encode(body).length;if(bodyBytes>SYNC_SPLIT_PART_LIMIT)throw splitError('分片目录超出安全预算；尚未切换，全部数据仍在本机。');
+  _syncPackInfo=Object.assign({},info,{transport:'split-v1',rawBytes:bytes.length,bodyBytes:bodyBytes,parts:parts.length,createdParts:created,reusedParts:reused,maxPartBodyBytes:maxBody,totalWrittenBytes:totalBody+bodyBytes,safeBodyBytes:100000,marginBytes:100000-bodyBytes,allValuesKept:true,sent:false,rootConfirmed:false,legacyBackupSaved:!!legacy});
+  // Restore all bytes from server-confirmed immutable parts. Cold catalog IDs
+  // must be fetched/verified; fresh POST echoes were already checked exactly.
+  var staged=await splitRead(next);if(JSON.stringify(staged)!==JSON.stringify(payload))throw splitError('分片还原与原数据不一致；主目录尚未切换。');
+  fresh=await splitRawRoot();if(await splitFingerprint(fresh)!==base.fingerprint){await pullMergeForSave();throw splitError('提交前发现另一设备更新，已重新合并；主目录未覆盖，将重试。','DOIT_SYNC_REBASE',true);}
+  if(_pageLeaving)throw splitError('页面正在退出；分片尚未提交，数据仍在本机。',null,true);
+  _syncPackInfo.sent=true;var r=await fetchWithTimeout('https://api.jsonbin.io/v3/b/'+CLOUD.binId,{method:'PUT',headers:{'Content-Type':'application/json','X-Master-Key':CLOUD.apiKey,'X-Bin-Versioning':'false'},body:body},15000);if(!r.ok)throw await syncHttpError(r,'提交分片主目录',bodyBytes);
+  var verified=await splitRawRoot();if(await splitFingerprint(verified)!==await splitFingerprint(next)){await pullMergeForSave();throw splitError('提交后云端又有新改动，已保留并重新合并；尚未确认本轮全部同步。','DOIT_SYNC_REBASE',true);}
+  _splitObserved={owner:CLOUD.binId,record:next,fingerprint:await splitFingerprint(next)};CLOUD.splitActiveBin=CLOUD.binId;saveCloudCfg(CLOUD);_syncPackInfo.rootConfirmed=true;return true;
+}
+
 async function gzPack(obj){
   var text=JSON.stringify(obj),bytes=new TextEncoder().encode(text),started=Date.now();_syncPackWarning='';
   function fast(raw){
@@ -4954,6 +5050,7 @@ async function gzPack(obj){
   return result;
 }
 async function gzUnpack(rec){
+  if(splitHead(rec))return splitRead(rec);
   if(!rec||!rec._gz||!rec.d) return rec;
   const bin=Uint8Array.from(atob(rec.d),function(c){return c.charCodeAt(0);});
   let bytes;
@@ -4963,7 +5060,7 @@ async function gzUnpack(rec){
   } else {
     bytes=gzc_gunzip(bin);
   }
-  return JSON.parse(new TextDecoder().decode(bytes));
+  var data=JSON.parse(new TextDecoder().decode(bytes));return splitHead(data)?splitRead(data):data;
 }
 
 /* HTTP status alone does not identify 403's cause. Keep the authoritative
@@ -5004,6 +5101,7 @@ function _syncFail(e,label){
   setSyncStatus('pending');_scheduleSyncRetry();
 }
 async function cloudSave(silent=true,force=false){
+  if(force&&_splitAutoTimer){clearTimeout(_splitAutoTimer);_splitAutoTimer=0;}
   if(!silent)_clearSyncHold();
   if(DOIT_ID_BLOCKED||(_syncHold&&silent)){_pendingSave=true;_markSyncPending(true);setSyncStatus('pending');return false;}
   if(!CLOUD.apiKey||!CLOUD.binId)return false;
@@ -5015,6 +5113,7 @@ async function cloudSave(silent=true,force=false){
   try{
     if(!_pulledOnce){var okPull=await _pullAll(true);if(!okPull||!_pulledOnce){failed=true;return false;}}
     var now=Date.now();
+    if(!force&&CLOUD.splitActiveBin===CLOUD.binId&&now-_lastSaveTs<20000){_pendingSave=true;deferred=true;setSyncStatus('pending');if(!_splitAutoTimer)_splitAutoTimer=setTimeout(function(){_splitAutoTimer=0;cloudSave(true,true);},20050-(now-_lastSaveTs));return false;}
     if(!force&&now-_lastSaveTs<2500){_pendingSave=true;deferred=true;setTimeout(function(){cloudSave(true,true);},2600);return false;}
     if(!_pullRecent(60000)){await pullMergeForSave();_syncReadOk();}
     _lastSaveTs=now;_pendingSave=false;_markSyncPending(true);
@@ -5022,18 +5121,20 @@ async function cloudSave(silent=true,force=false){
     try{var srsRaw=localStorage.getItem(SRS_LS_KEY);if(srsRaw)payload.srs=JSON.parse(srsRaw);}catch(e){}
     if(payload.srs)payload.srs=normalizeForIdMerge(payload.srs);
     setSyncStatus('saving');
-    var body=JSON.stringify(await gzPack(payload)),bodyBytes=new TextEncoder().encode(body).length;
+    var useSplit=CLOUD.splitActiveBin===CLOUD.binId||(_splitObserved&&_splitObserved.owner===CLOUD.binId&&splitHead(_splitObserved.record));
+    var body='',bodyBytes=0;
+    if(!useSplit){body=JSON.stringify(await gzPack(payload));bodyBytes=new TextEncoder().encode(body).length;useSplit=bodyBytes>SYNC_SAFE_BODY_BYTES;}
+    else _syncPackInfo={transport:'split-v1',rawBytes:new TextEncoder().encode(JSON.stringify(payload)).length,sent:false,rootConfirmed:false};
     if(_pageLeaving)return false;
-    if(bodyBytes>SYNC_SAFE_BODY_BYTES){
-      var sizeError=new Error('本机容量预检：完整上传包 '+bodyBytes+' 字节，超过 '+SYNC_SAFE_BODY_BYTES+' 字节安全预算；没有发起PUT，全部数据仍完整保存在本机。');
-      sizeError.code='DOIT_SYNC_RECORD_SIZE';sizeError.httpStatus=0;sizeError.bodyBytes=bodyBytes;sizeError.retryable=false;throw sizeError;
+    if(useSplit){await splitCommit(payload,silent);}
+    else{
+      if(_syncPackInfo)_syncPackInfo.sent=true;
+      var response=await fetchWithTimeout(`https://api.jsonbin.io/v3/b/${CLOUD.binId}`,{method:'PUT',headers:{'Content-Type':'application/json','X-Master-Key':CLOUD.apiKey,'X-Bin-Versioning':'false'},body:body},15000);
+      if(!response.ok)throw await syncHttpError(response,'PUT',bodyBytes);
     }
-    if(_syncPackInfo)_syncPackInfo.sent=true;
-    var response=await fetchWithTimeout(`https://api.jsonbin.io/v3/b/${CLOUD.binId}`,{method:'PUT',headers:{'Content-Type':'application/json','X-Master-Key':CLOUD.apiKey,'X-Bin-Versioning':'false'},body:body},15000);
-    if(!response.ok)throw await syncHttpError(response,'PUT',bodyBytes);
     confirmed=true;needPush=false;CLOUD.lastSyncTs=Date.now();saveCloudCfg(CLOUD);_syncOk();
     setSyncStatus(_pendingSave?'pending':'ok');
-    if(!silent)showToast('☁️ 服务器已确认本次上传成功');return true;
+    if(!silent)showToast(useSplit?'☁️ 已确认云端包含完整分片数据':'☁️ 服务器已确认本次上传成功');return true;
   }catch(e){
     if(e&&e.code==='DOIT_ID_REVIEW'){holdSrsIdentityCloud(e);return false;}
     failed=true;_syncFail(e,'上传');
@@ -5042,7 +5143,7 @@ async function cloudSave(silent=true,force=false){
   }finally{
     _syncing=false;
     if(deferred){_pendingSave=true;_markSyncPending(true);}
-    else if(confirmed&&_pendingSave){_markSyncPending(true);setTimeout(function(){cloudSave(true,true);},1200);}
+    else if(confirmed&&_pendingSave){_markSyncPending(true);setTimeout(function(){cloudSave(true,CLOUD.splitActiveBin!==CLOUD.binId);},1200);}
     else if(needPush||failed){_pendingSave=true;_markSyncPending(true);if(!_syncHold&&!DOIT_ID_BLOCKED)_scheduleSyncRetry();}
   }
 }
@@ -5055,22 +5156,22 @@ async function cloudLoad(silent,manual,seedResponse){
   var merged=false;_syncing=true;setSyncStatus('loading');
   try{merged=await _pullAll(silent,seedResponse);}finally{_syncing=false;}
   if(!merged)return false;
-  return await cloudSave(true,true);
+  return await cloudSave(!explicit,true);
 }
 async function syncDiagnose(){
   var el=document.getElementById('diag-result');el.style.display='block';var lines=[];
   function log(s){lines.push(s);el.textContent=lines.join('\n');}
-  log('🩺 同步诊断 · 2026-10-30w2-sync1（完整包容量检查）');
+  log('🩺 同步诊断 · 2026-11-02-sync2（无损自动分片检查）');
   log('1. 配置：Key '+(CLOUD.apiKey?'已填写（不显示）':'未填写')+'；Bin ID '+(CLOUD.binId?'已填写（不显示）':'未填写'));
   if(location.protocol==='about:'||location.href.startsWith('about:srcdoc')){log('当前是离线预览。请下载文件后在浏览器或原站点打开；本地数据不要清除。');return false;}
   if(!CLOUD.apiKey||!CLOUD.binId){log('配置不完整。请在本设备保存已有配置；不需要把密钥发给任何人。');return false;}
   if(_syncing||_pullBusy){log('已有同步正在进行；本次没有重复发起请求，请等结束后再诊断。');return false;}
-  _syncPackInfo=null;log('2. 读取云端（GET）…');
+  _syncPackInfo=null;_splitCache=Object.create(null);_splitVerified=Object.create(null);_splitCacheBytes=0;log('2. 读取云端（GET）…');
   var response;
   try{
     response=await fetchWithTimeout(`https://api.jsonbin.io/v3/b/${CLOUD.binId}/latest`,{headers:{'X-Master-Key':CLOUD.apiKey}});
     if(!response.ok)throw await syncHttpError(response,'GET',0);
-    var json=await response.clone().json(),remote=await gzUnpack(json.record),guard=0;
+    var json=await response.clone().json(),remote=await syncReadRoot(json.record),guard=0;
     while(remote&&!remote.logs&&remote.record&&guard++<5)remote=remote.record;
     log('   GET成功，只代表可读取，不代表可更新。');
     function summary(o){return '记录'+(o.logs||[]).length+'条 / '+((o.logs||[]).reduce(function(n,l){return n+(+l.duration||0);},0)/60).toFixed(1)+'小时 / 打卡'+Object.values(o.checks||{}).filter(Boolean).length+'项';}
@@ -5078,14 +5179,20 @@ async function syncDiagnose(){
   }catch(e){_syncFail(e,'诊断读取');log('   ❌ '+syncSafeMessage(e&&e.message||'网络错误'));log('本地记录不受影响；没有执行上传。');return false;}
   log('3. 合并到本机，再上传（PUT）…');
   var ok=await cloudLoad(true,true,response);
-  if(_syncPackInfo){
+  if(_syncPackInfo&&_syncPackInfo.transport==='split-v1'){
+    var si=_syncPackInfo;
+    log('   完整数据 '+si.rawBytes+'字节；分 '+(si.parts||'待定')+'片。每片完整JSON上限90000字节（含Base64和元信息），不是只算压缩流。');
+    log('   本轮新建 '+(si.createdParts||0)+'片，复用 '+(si.reusedParts||0)+'片；本轮新建片最大 '+(si.maxPartBodyBytes||0)+'字节。');
+    log('   '+(si.rootConfirmed?'✅ 完整分片和主目录已确认。':(si.sent?'主目录已发送，但尚未获得完整确认。':'主目录尚未切换；失败不会合并半份数据。'))+(si.noChange?'云端已有同份数据，无需重复写入。':''));
+    if(si.legacyBackupSaved)log('   首次切换前的原主记录已完整保留在私有备份中。原Key、主Bin ID不变；旧版不能读写此格式。');
+  }else if(_syncPackInfo){
     log('   '+(_syncPackInfo.sent?'实际上传JSON：':'待上传JSON（未发送）：')+_syncPackInfo.bodyBytes+'字节；gzip '+_syncPackInfo.gzipBytes+'字节；原文 '+_syncPackInfo.rawBytes+'字节。');
     log('   '+_syncPackInfo.codec+'，标准gzip兼容旧解码器，未删减学习内容。');
     if(_syncPackInfo.layout==='builtin-source')log('   同一份数据：原布局 '+_syncPackInfo.originalBodyBytes+'字节 → 内置ID归组 '+_syncPackInfo.bodyBytes+'字节。所有记录和字段保留；卡片库、私卡和学习队列顺序不变。');
     log('   完整JSON安全预算 '+_syncPackInfo.safeBodyBytes+'字节；'+(_syncPackInfo.marginBytes>=0?'余量 '+_syncPackInfo.marginBytes:'超出 '+(-_syncPackInfo.marginBytes))+'字节。');
   }
   if(_syncPackWarning)log('   '+_syncPackWarning);
-  if(ok)log('   ✅ 服务器已确认本次PUT成功。'+(_pendingSave?'另有新改动待补传。':''));
+  if(ok)log((_syncPackInfo&&_syncPackInfo.transport==='split-v1'?'   ✅ 已确认云端含本轮完整数据。':'   ✅ 服务器已确认本次PUT成功。')+(_pendingSave?'另有新改动待补传。':''));
   else {log('   ❌ 没有获得上传成功确认。'+(_lastSyncErr?' '+_lastSyncErr:''));log(_syncHold?((_syncHold.status===0&&/本机容量预检/.test(_lastSyncErr))?'本次在本机容量预检停止，没有发起PUT；全部内容仍保留，没有裁剪笔记、会话或存档。不是新的HTTP错误，也不会循环重试。':'已停止对这个非瞬时HTTP错误的循环重试；本地仍标记待同步。处理服务端原因后可点「立即上传」手动重试。'):'本地仍保留待同步；网络恢复后自动补传。');}
   if(!ok&&/403/.test(_lastSyncErr))log('403可能涉及记录容量、权限或请求额度；以以上服务端message为准，不能仅凭403判定原因。');
   return ok;
@@ -5097,14 +5204,14 @@ async function pullMergeForSave(){
   const g=await fetchWithTimeout(`https://api.jsonbin.io/v3/b/${CLOUD.binId}/latest`,{headers:{'X-Master-Key':CLOUD.apiKey}});
   if(!g.ok) throw await syncHttpError(g,'GET',0);
   const j=await g.json();
-  let remote=await gzUnpack(j.record);
+  let remote=await syncReadRoot(j.record);
   let guard=0;
   while(remote&&!remote.logs&&remote.record&&guard<5){remote=remote.record;guard++;}
   if(!remote||(!remote.logs&&!remote.checks&&!remote.srs)) return;   // 云端为空：直接上传本机
   const localWqImgs={};
   (D.wq||[]).forEach(q=>{if(q.imgData&&q.imgData!=='[img]') localWqImgs[q.id]=q.imgData;});
   const merged=mergeData(D,remote);
-  Object.keys(merged).forEach(k=>{D[k]=merged[k];}); dropLegacyDayKeys(); syncSnapshot();
+  Object.keys(merged).forEach(k=>{Object.defineProperty(D,k,{value:merged[k],writable:true,enumerable:true,configurable:true});}); dropLegacyDayKeys(); syncSnapshot();
   if(D.wq) D.wq=D.wq.map(q=>({...q,imgData:localWqImgs[q.id]||(q.imgData==='[img]'?null:q.imgData)||null}));
   try{localStorage.setItem(KEY,JSON.stringify(D));}catch(e){}
   if(remote.srs&&remote.srs.cards){
@@ -5314,7 +5421,7 @@ async function _pullAll(silent,seedResponse){
     });
     if(!r.ok) throw await syncHttpError(r,'GET',0);
     const json=await r.json();
-    let remote=await gzUnpack(json.record);
+    let remote=await syncReadRoot(json.record);
     // 兼容旧版双重包裹的数据：{record:{record:{logs:...}}}，逐层解开
     let guard=0;
     while(remote&&!remote.logs&&remote.record&&guard<5){remote=remote.record;guard++;}
@@ -5325,7 +5432,7 @@ async function _pullAll(silent,seedResponse){
     // ⭐ 双向合并（不再整体覆盖），合并结果回传云端，两边数据都不丢
     _pulledOnce=true;
     const merged=mergeData(D,remote);
-    Object.keys(merged).forEach(k=>{D[k]=merged[k];}); dropLegacyDayKeys(); syncSnapshot();
+    Object.keys(merged).forEach(k=>{Object.defineProperty(D,k,{value:merged[k],writable:true,enumerable:true,configurable:true});}); dropLegacyDayKeys(); syncSnapshot();
     if(D.wq) D.wq=D.wq.map(q=>({...q,imgData:localWqImgs[q.id]||(q.imgData==='[img]'?null:q.imgData)||null}));
     try{localStorage.setItem(KEY,JSON.stringify(D));}catch(e){}
     if(remote.srs && remote.srs.cards){
@@ -7290,5 +7397,5 @@ window.addEventListener('storage',function(e){
   if(e.key==='scsyd_gk_srs_v1'){_pendingSave=true;_markSyncPending(true);renderSrsStatus();if(CLOUD.autoSync)queueCloudSave();}
 });
 </script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4e129460c6b08e0',t:'MTc5MjU5NTEzNA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4e9eddeef442a56',t:'MTc5MjY4NzA3Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a52f6b474c9988f5',t:'MTc5MzQxNTcyNw=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a52f6b474c9988f5',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4e129460c6b08e0',t:'MTc5MjU5NTEzNA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4e9eddeef442a56',t:'MTc5MjY4NzA3Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a5420d046a27cd7c',t:'MTc5MzYxMTA5NQ=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a5420d046a27cd7c',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
