@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Doit · 小批复习 | 2026-11-04-chaoge-r3</title>
+<title>Doit · 小批复习 | 2026-11-04-chaoge-r4</title>
 <style>
 :root{
   --bg:#f0f6ff;--surface:#fff;--s2:#f7faff;--border:#d0e2ff;
@@ -192,7 +192,7 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
 @media(max-width:600px){.g2{grid-template-columns:1fr}}
 ::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-thumb{background:#93c5fd;border-radius:2px}
 </style>
-<meta name="doit-release" content="2026-11-04-chaoge-r3">
+<meta name="doit-release" content="2026-11-04-chaoge-r4">
 </head>
 <body>
 
@@ -229,7 +229,7 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
     <button class="tb" onclick="showMemoryCard()" style="display:inline-flex;align-items:center">🧠 记忆卡</button>
   </div>
   <div style="font-size:10px;margin-top:4px;opacity:.8;cursor:pointer;display:inline-block" id="sync-status" onclick="manualSync()" title="点击立即同步合并">⚪ 未配置</div>
-  <div id="app-version" style="font-size:10px;margin-top:3px;opacity:.8">✅ 落地执行单版 v2026-11-04-chaoge-r3（每批30张 · 原队列保留 · 独立同步沿用）</div>
+  <div id="app-version" style="font-size:10px;margin-top:3px;opacity:.8">✅ 落地执行单版 v2026-11-04-chaoge-r4（8h冲70分特训 · 自选每轮张数 · 独立同步沿用）</div>
 </div>
 
 <div class="main">
@@ -2790,7 +2790,7 @@ const PROG_PATTERNS=[
   {re:/数量关系·基础/,key:'数量-基础'},
   {re:/刘义恒/,key:'图推-刘义恒'},
 
-  {re:/金标尺综测·基础/,key:'综测-基础'},
+  {re:/无非综测·刘流|刘流综测|金标尺综测·基础/,key:'综测-基础'},
   {re:/金标尺综测·刷题/,key:'综测-刷题'},
   {re:/白鹭申论·小题课/,key:'申论-小题'},
   {re:/白鹭申论·作文课/,key:'申论-作文',offset:-50},
@@ -5597,7 +5597,7 @@ const COURSES=[
 
   {key:'言语-基础',label:'言语理解·基础',total:12,color:'#10b981'},
   {key:'言语-刷题',label:'言语理解·刷题',total:10,color:'#34d399'},
-  {key:'综测-基础',label:'金标尺综测·基础',total:32,color:'#2563eb'},
+  {key:'综测-基础',label:'无非综测·刘流（13节）',total:13,color:'#2563eb'},
   {key:'综测-刷题',label:'金标尺综测·刷题',total:7,color:'#60a5fa'},
   {key:'申论-小题',label:'白鹭申论·小题课',total:50,color:'#a855f7'},
   {key:'申论-作文',label:'白鹭申论·作文课',total:10,color:'#c084fc'},
@@ -6374,6 +6374,7 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
       var cut=addDays(today,-3);
       Object.keys(s2.landingDone).forEach(function(d){ if(d<cut) delete s2.landingDone[d]; });
     }catch(e){}
+    if(checked && typeof autoProg==='function'){ try{ autoProg((t.setTitle||t.title||'')+' '+(t.setDetail||t.detail||'')); }catch(e){} }
     CACHE_VER++;
     saveLocal(); saveCloud();
     try{
@@ -6575,7 +6576,8 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
   //   超过 60 分钟的不进补债槽，单独列出，同样保留进度。
   // C 不滚：关账、超哥晨读。
   var GEN_START='2026-10-22';
-  var GEN_RESET={'2026-10-19':1,'2026-10-20':1,'2026-10-21':1};
+  var GEN_RESET={'2026-10-19':1,'2026-10-20':1,'2026-10-21':1,'2026-11-04':1};
+  try{ if(typeof D!=='undefined'&&D){ D.prog=D.prog||{}; if(!(D.prog['综测-基础']>0)) D.prog['综测-基础']=1; } }catch(e){}
   var GEN_MAX=3, GEN_BUDGET=60, GEN_MAX_AGE=3;
   var KIND_NONE={report:1,chaoge:1};
   var KIND_DRILL={cards:1,tutui:1,zhengzhi:1,numdata:1,xingfa:1};
@@ -6619,7 +6621,7 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
     var hasY=Object.keys(ydone).length>0;
     var debtZ=(hasY && !ydone.zongce) || vds==='2026-10-16';
     var debtX=(hasY && !ydone.xingfa && !ydone.set2) || vds==='2026-10-16';
-    if(vds==='2026-10-19'){ debtZ=false; debtX=false; }
+    if(vds==='2026-10-19' || vds>='2026-11-04'){ debtZ=false; debtX=false; }
     return {now:parse(vds), debtZ:debtZ, debtX:debtX, wk:['周日','周一','周二','周三','周四','周五','周六'][parse(vds).getDay()]};
   }
   var special={
@@ -6751,6 +6753,114 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
         else tasks.push(n);
       });
     }
+
+    // ==================== 🎯 11天冲总分70（140分）8h/天特训课表（2026-11-04 至 2026-11-15）====================
+    if(ds>='2026-11-04' && ds<='2026-11-15'){
+      debtZ=false; debtX=false;
+      var zcPlan={
+        '2026-11-04':{
+          phase:['阶段一·综测破冰 D1/6（8.0h）','刘流第2-3节 ＋ 公基1卷精复盘 ＋ 公文常识一锅端'],
+          zcTitle:'无非综测·刘流 第2-3节（180分钟：倍速精听＋例题暂停手写）',
+          zcDetail:'1.75–2倍速精学第2-3节（归纳概括/科技实务阅读与采分词提炼）：每到例题必须先暂停自己圈高频词、写分条答案（卡300字），再听刘流老师拆采分逻辑，最后在方格纸上订正成标准版。绝不只听不动笔！',
+          zcOut:'产出：第2-3节笔记 ＋ 课上概括例题方格纸定稿',
+          gjTitle:'公基抢分专项①：公文常识与格式一锅端（70分钟）',
+          gjDetail:'一鱼两吃（通杀公基单选判断＋综测第二题应用文）：① 35分钟过完15种法定公文适用场景、行文方向（上行请示报告/平行函/下行批复通知通报）及发文字号、签发人格式；② 35分钟打开记忆卡选「公文」单科刷100张。',
+          gjOut:'产出：15文种易混表过清 ＋ 记忆卡「公文」100张'
+        },
+        '2026-11-05':{
+          phase:['阶段一·综测破冰 D2/6（8.0h）','刘流第4-5节 ＋ 公基1卷精复盘 ＋ 行政法高频突击'],
+          zcTitle:'无非综测·刘流 第4-5节（180分钟：对策与综合分析＋暂停手写）',
+          zcDetail:'1.75–2倍速精学第4-5节（提出对策＋综合分析/词句理解/判断简析）：老师读题先暂停，自己列「表态—分析—对策」骨架并手写（卡400字），再对照刘流老师拆解补齐漏掉的材料采分词。',
+          zcOut:'产出：第4-5节题型骨架 ＋ 2道例题方格纸定稿',
+          gjTitle:'公基抢分专项②：行政法核心高频卡突击（70分钟）',
+          gjDetail:'不听长课！直接打开记忆卡选「行政法」单科（设每轮100张），重点锁死行政处罚、行政许可、行政强制、行政复议机关与行政诉讼被告/管辖高频挖空，配20道行政法真题检验。',
+          gjOut:'产出：记忆卡「行政法」100张 ＋ 复议诉讼对比清零'
+        },
+        '2026-11-06':{
+          phase:['阶段一·综测破冰 D3/6（8.0h）','刘流第6-7节 ＋ 公基1卷精复盘 ＋ 民法核心突击'],
+          zcTitle:'无非综测·刘流 第6-7节（180分钟：应用文/公文写作上＋格式默写）',
+          zcDetail:'1.75–2倍速精学第6-7节（应用文写作核心：倡议书、宣传稿、公开信、讲话稿等）：当场把「标题＋称谓＋开头背景＋主体分条＋呼吁结尾＋落款日期」外皮格式默写在纸上，并完整手写课上应用文例题。',
+          zcOut:'产出：应用文五类外皮格式纸 ＋ 课上公文题手写定稿',
+          gjTitle:'公基抢分专项③：民法典高频考点突击（70分钟）',
+          gjDetail:'打开记忆卡选「民法」单科刷100张：重点抓民事行为能力年龄线、无权代理与表见代理、善意取得、合同违约、夫妻共同财产与法定继承顺位、侵权责任归责原则。',
+          gjOut:'产出：记忆卡「民法」100张 ＋ 年龄/继承顺位零失误'
+        },
+        '2026-11-07':{
+          phase:['阶段一·综测破冰 D4/6（8.0h）','刘流第8-9节 ＋ 公基1卷精复盘 ＋ 刑法核心突击'],
+          zcTitle:'无非综测·刘流 第8-9节（180分钟：汇报/方案类应用文＋小题强化）',
+          zcDetail:'1.75–2倍速精学第8-9节（汇报材料、工作方案、短评等＋小题综合带练）：对照无非《综测公文写作格式大全》把所有必考文种格式浓缩成1页A4速查纸，手写完成课上主讲例题。',
+          zcOut:'产出：1页A4应用文格式速查表 ＋ 课上例题手写定稿',
+          gjTitle:'公基抢分专项④：刑法总则与高频罪名突击（70分钟）',
+          gjDetail:'打开记忆卡选「刑法」单科刷100张：重点抓刑事责任年龄（12/14/16周岁）、正当防卫与紧急避险、犯罪未遂与中止、共同犯罪、主刑附加刑及贪污受贿挪用公款区分。',
+          gjOut:'产出：记忆卡「刑法」100张 ＋ 刑责年龄/贪贿罪名清零'
+        },
+        '2026-11-08':{
+          phase:['阶段一·综测破冰 D5/6（8.0h）','刘流第10-11节（50分大文章骨架）＋ 宪法经管突击'],
+          zcTitle:'无非综测·刘流 第10-11节（180分钟：50分议论文立意与五段三分结构）',
+          zcDetail:'重点攻坚占半壁江山的50分大题！1.75–2倍速精学第10-11节：学会从材料提取中心论点＋3个分论点，当场定型自己的「标题公式＋120字排比/释义开头模板＋段首总括句式＋升华结尾模板」，手写2篇真题完整提纲与开头结尾。',
+          zcOut:'产出：专属大文章五段三分模板 ＋ 2篇开头结尾手写稿',
+          gjTitle:'公基抢分专项⑤：宪法国家机构 ＋ 宏观经济与管理（70分钟）',
+          gjDetail:'打开记忆卡刷「宪法」（40张：人大/常委会/国务院/监委职权与任免）＋「经济」「管理」（60张：财政政策vs货币政策、通胀通缩、汇率影响、公共管理四职能）。',
+          gjOut:'产出：宪法任免表 ＋ 财政货币政策方向零混淆'
+        },
+        '2026-11-09':{
+          phase:['阶段一·刘流13节收官 D6/6（8.0h）','刘流第12-13节结课＋首篇大文章全写 ＋ 四川省情专场'],
+          zcTitle:'无非综测·刘流 第12-13节结课！（180分钟：论证充实＋限时写完首篇1000字大文章）',
+          zcDetail:'前90分钟倍速听完第12-13节（全课收官！）；后60分钟严格卡时在方格纸上独立写完第1篇850–1000字完整议论文；最后30分钟对照刘流标准自查中心论点、分论点回扣与卷面字数。',
+          zcOut:'产出：刘流13节全通✔ ＋ 第1篇完整大文章方格纸成稿',
+          gjTitle:'公基抢分专项⑥：四川省情省况 ＋ 四川本地时政专场（70分钟）',
+          gjDetail:'四川统考必考本土特色！集中过一遍2026四川省政府工作报告核心指标、成渝地区双城经济圈战略定位、四川地理之最与历史名人（记忆卡搜“四川”/“成渝”＋手头四川省情讲义速刷）。',
+          gjOut:'产出：四川省情与省政府工作报告高频考点清单'
+        }
+      };
+
+      if(zcPlan[ds]){
+        var zp=zcPlan[ds];
+        dayInfo=zp.phase;
+        tasks=[
+          {id:'cards',time:'08:00',title:'晨间记忆卡：超哥政治理论＋2026时政（45分钟）',detail:'打开记忆卡选「超哥·政治理论」或「时政」单科（设每轮50或100张）连背35分钟＋翻10分钟「超哥晨读清单」连线表。政治时政是最后11天回报率第一的纯送分盘！',out:'记录：背诵__张 / 晨读1节'},
+          {id:'set1',time:'09:00',title:'公基全真套卷×1（90分钟·严格卡考场时间）',detail:'完全对齐11/15上午09:00-10:30生物钟！只做1套高质量公基真题/模拟卷（100题）。铁律：多选题只选100%确定的项（少选有分、错选0分！）；蒙对题标“?”。',out:'记录：总分__（目标稳步破70）/ 多选拿分__'},
+          {id:'correct1',time:'10:45',title:'公基套卷抓大放小订正（60分钟）',detail:'只精订「政治、时政、法律、公文、经济管理」错题与“?”题（重复错的挑≤10条记入错题/转卡）；科技、古诗词、偏门历史地理看一眼答案10秒翻篇，绝不深挖耗时间！',out:'产出：主干模块错因清零（偏题果断放过）'},
+          {id:'zongce',time:'14:00',title:zp.zcTitle,detail:zp.zcDetail,out:zp.zcOut},
+          {id:'numdata',time:'17:15',title:'职测保手感微练（35分钟封顶·零听课！）',detail:'立刻停掉所有数量和图推网课！只练：资料分析1篇（12min，稳拿满分）＋图推10题（10min，40秒没思路跳）＋数量简单方程/工程/利润5题（13min）。保住公基卷里10来道职测基本盘即可。',out:'记录：资料__/5 · 图推__/10 · 数量__/5'},
+          {id:'gj_focus',time:'19:30',title:zp.gjTitle,detail:zp.gjDetail,out:zp.gjOut},
+          {id:'report',time:'20:45',title:'20分钟收尾复盘＆准时关账（满8.0h收工）',detail:'瞄一眼今天综测整理的格式/采分词与上午公基3个最痛错点，不熬夜透支第二天精力。',out:'记录：今日公基__分 / 刘流综测进度__/13节'}
+        ];
+      } else if(ds>='2026-11-10' && ds<='2026-11-13'){
+        var mockPaper={
+          '2026-11-10':'2024年11月（24下）四川省属统考《综测》真题全套',
+          '2026-11-11':'2025年4月（25上）四川省属统考《综测》真题全套',
+          '2026-11-12':'2025年11月（25下）四川省属统考《综测》真题全套',
+          '2026-11-13':'2026年4月（26上）四川省属统考《综测》真题全套'
+        }[ds];
+        var dIdx={'2026-11-10':1,'2026-11-11':2,'2026-11-12':3,'2026-11-13':4}[ds];
+        dayInfo=['阶段二·全真连考实战 D'+dIdx+'/4（8.0h）','上午1:1复刻考场（公基90m＋综测真题120m手写）＋下午精改提分'];
+        tasks=[
+          {id:'cards',time:'08:00',title:'考前热身背卡：时政＋政治理论到期卡（40分钟）',detail:'清「时政」与「超哥·政治理论」到期卡及错题卡，唤醒考场做题状态。',out:'记录：背诵__张'},
+          {id:'set1',time:'09:00',title:'公基全真模考卷（90分钟·含涂卡计时）',detail:'严格09:00–10:30全真作答：单选判断快准稳，数量难题直接蒙跳，多选死守“宁少勿错”铁律，目标稳定72+！',out:'记录：公基总分__ / 多选得分__'},
+          {id:'zongce',time:'10:40',title:'综测真题全真手写（120分钟）：'+mockPaper,detail:'必须用方格答题纸全套手写，绝不列提纲代替！严格卡死时间分配：第1题（20分·300字）25分钟 → 第2题（30分·400字）35分钟 → 第3题（50分·850-1000字）60分钟。字迹清晰、段首亮总括词、绝不空题！',out:'产出：1500+字完整方格纸答卷（用时__分钟）'},
+          {id:'correct1',time:'14:30',title:'上午公基套卷复盘＋三大法/时政查漏（60分钟）',detail:'快速复盘上午公基错题，涉及法律/政治/公文盲区的立刻回翻记忆卡对应词条锁死。',out:'产出：公基错题当日清零'},
+          {id:'rewrite',time:'15:45',title:'综测真题对标精改（90分钟·对标无非答案与刘流采分法）',detail:'对照无非真题解析逐题算分：① 第1、2题用红笔圈出漏抄的材料高频词，重写最弱那1道小题的浓缩答案；② 检查应用文外皮格式是否零失误；③ 检查大文章中心论点与分论点是否紧扣材料，背熟2个同主题民生/基层治理金句。',out:'记录：综测估分__（目标68+）/ 红笔改写完成'},
+          {id:'numdata',time:'19:00',title:'职测保手感微练（35分钟：资料1篇＋图推10题＋数量5题）',detail:'保持计算与图形敏感度即可，超时题果断跳过。',out:'记录：资料__/5 · 图推__/10 · 数量__/5'},
+          {id:'zhengzhi',time:'19:45',title:'政治理论专项20题＋记忆卡薄弱单科补刷（45分钟）',detail:'做1套20题政治/时政专项（12分钟）＋剩余时间补刷记忆卡里错得最多的单科（法律或时政）。',out:'记录：专项对__/20 ＋ 记忆卡巩固'}
+        ];
+      } else if(ds==='2026-11-14'){
+        dayInfo=['阶段三·考前收官日（5.0h轻量保温）','背死综测格式与作文模板 ＋ 公基错题与高频卡回看 ＋ 早睡养神'];
+        tasks=[
+          {id:'cards',time:'09:00',title:'公基终极保温：近10天错题本 ＋ 记忆卡高频必背（90分钟）',detail:'不做任何偏难新卷保护心态！只看近10天套卷标记的政治、2026时政、三大法、四川省情错题，快速过一遍「超哥晨读清单」连线总表与「时政」重点卡。',out:'完成标准：高频必考数字与连线胸有成竹'},
+          {id:'zongce',time:'14:00',title:'综测终极抢分包：默写全部应用文格式 ＋ 大文章五段三分模板（90分钟）',detail:'在白纸上闭卷默写一遍：① 倡议书/宣传稿/讲话稿/汇报/方案/公开信的标题、称谓、落款格式；② 自己的大文章标题公式、120字开头框架、三个分论点衔接词、结尾升华段；③ 翻看前4天手写真题卷的红笔采分复盘。',out:'完成标准：格式零盲区，模板烂熟于心'},
+          {id:'gj_focus',time:'16:00',title:'15种法定公文速览 ＋ 考场时间策略预演（60分钟）',detail:'最后扫一遍公文文种适用表（请示vs报告 vs 函 vs 批复）；脑内预演明天考场节奏：公基多选宁少勿贪，综测10:30开考先审三题字数、T3留足60分钟写满900字。',out:'完成标准：策略清晰，心态平稳'},
+          {id:'report',time:'20:00',title:'装袋检查＆22:00前熄灯睡觉',detail:'透明文具袋装好：准考证（打2份）、身份证、2B铅笔（削好2支）+橡皮、0.5mm黑色签字笔（备3支好写的）+机械手表。今晚早睡就是最高效的提分！',out:'祝明天稳稳拿下140+（总分70+）！'}
+        ];
+      } else if(ds==='2026-11-15'){
+        dayInfo=['🎯 决战日 · 四川事业编统考','公基稳72+ · 综测稳68+ · 总分稳破70！'];
+        tasks=[
+          {id:'set1',time:'09:00–10:30',title:'《公共基础知识》实战（90分钟·100题）',detail:'考场口诀：① 单选判断抓题干关键词果断选；② 数量难题20秒没思路先蒙后跳，绝不卡壳；③ 多选题只涂100%确定的选项（哪怕只选2个也稳拿分，不确定绝不多涂！）；④ 留10分钟稳稳涂卡检查错位。',out:'稳住节奏，该拿的分一分不丢！'},
+          {id:'zongce',time:'10:30–12:30',title:'《综合能力测试》实战（120分钟·3道大题）',detail:'考场口诀：① 先花3分钟看清三道题题型、文种格式与字数红线；② 第1题（25min）、第2题（35min）死死紧扣材料抄高频实词、分条前置总括词，应用文格式齐全；③ 第3题留足60分钟，中心论点亮在标题、开头和段首，字迹工整写满要求字数！',out:'笔下生风，140+稳稳拿下！'}
+        ];
+      }
+    }
+
     tasks.forEach(function(t){
       t.origDay=vds; t.origId=t.id;
       t.rawTitle=t.title; t.rawDetail=t.detail; t.rawOut=t.out||'';
@@ -6862,9 +6972,9 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
         t.setNote=noteOf(rp.root,t.origId);
       });
     }
-    // 🧱 开荒队列：今天和以后，第二套那一格做「队首」，不按日历跳科目
+    // 🧱 开荒队列：11-04 起进入最后11天冲70分特训课表，不再用旧开荒队列覆盖
     try{
-      if(vds>=GEN_START){
+      if(vds>=GEN_START && !(vds>='2026-11-04' && vds<='2026-11-15')){
         var doneSet=pioneerDoneKeys();
         var todayK=fmt(new Date());
         var pk=pioneerPickOf(vds);
@@ -7012,6 +7122,20 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
     // 🧱 开荒队列横幅：一眼看到还欠哪几科、今天做哪科
     function pioBanner(){
       try{
+        if(viewDs>='2026-11-04' && viewDs<='2026-11-15'){
+          var zcDone=1; try{ zcDone=Math.min(13, Math.max(1, (D&&D.prog&&D.prog['综测-基础'])||1)); }catch(e){}
+          var leftDays=Math.max(0, diff(viewDs, EXAM));
+          return '<div class="landing-pioneer" style="margin-top:8px;padding:10px 12px;border-radius:9px;background:linear-gradient(135deg,#eff6ff,#f0fdf4);border:1px solid #93c5fd;color:#1e3a8a;font-size:12px;line-height:1.75">'
+            +'<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px">'
+            +'<b>🎯 11天冲总分70（72+68=140）8h特训看板</b>'
+            +'<span style="background:#dbeafe;color:#1d4ed8;font-weight:800;padding:2px 8px;border-radius:999px;font-size:11px">无非刘流综测：已学 '+zcDone+'/13 节 · 距笔试 '+leftDays+' 天</span>'
+            +'</div>'
+            +'<div style="margin-top:4px;color:#334155;font-size:11.5px">'
+            +'✅ <b>11/4–11/9（6天）</b>：下午3h啃完刘流第2–13节（带暂停手写）＋ 上午公基1卷精订 ＋ 晚间公基核心板块一科一清<br>'
+            +'✅ <b>11/10–11/13（4天）</b>：上午全真连考（公基90m＋四川综测真题120m方格纸手写）＋ 下午红笔对标精改<br>'
+            +'⚠️ <b>三大纪律</b>：停掉数资/图推网课（每天仅35m保手感）· 公基冷门常识错题10秒翻篇 · 多选题只选100%确定项'
+            +'</div></div>';
+        }
         if(viewDs<fmt(new Date())) return '';
         var done=pioneerDoneKeys(), head=pioneerHead();
         if(!head){
@@ -7425,5 +7549,5 @@ window.addEventListener('storage',function(e){
 });
 </script>
 <script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4e129460c6b08e0',t:'MTc5MjU5NTEzNA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4e9eddeef442a56',t:'MTc5MjY4NzA3Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a54439eaeb58e438',t:'MTc5MzYzMzkwNg=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a54439eaeb58e438',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a551b731a944f983',t:'MTc5Mzc3NTM1Mg=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a551b731a944f983',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a551d8da6fa738ce',t:'MTc5Mzc3NjczMQ=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a551d8da6fa738ce',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
