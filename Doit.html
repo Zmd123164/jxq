@@ -6830,6 +6830,34 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
           {id:'gj_focus',time:'19:30',title:zp.gjTitle,detail:zp.gjDetail,out:zp.gjOut},
           {id:'report',time:'20:45',title:'20分钟收尾复盘＆准时关账（满8.0h收工）',detail:'瞄一眼今天综测整理的格式/采分词与上午公基3个最痛错点，不熬夜透支第二天精力。',out:'记录：今日公基__分 / 刘流综测进度__/13节'}
         ];
+        // ===== 11/4 欠账止损补账（2026-11-05 · 方案A）=====
+        // 11/4 完成2项(晨间背卡/公基套卷)，欠5项。按A处理：
+        //   补 2 项：刘流第2-3节(压缩90min，不补则第4-5节听不懂) + 套卷订正(压缩30min)
+        //   砍 3 项：公文常识一锅端70min / 职测保手感微练35min / 20:45复盘20min(并入今晚收尾)
+        if(ds==='2026-11-05'){
+          var debtTasks=[
+            {id:'debt_liuliu23',time:'11:55',title:'【补11/4】刘流第2-3节（压缩90分钟：2倍速·只在例题处暂停·不抄笔记）',
+             detail:'11/4 欠的课必须先补，否则今天第4-5节听不懂。做法：2倍速听，只在「归纳概括／科技实务阅读」例题处暂停，自己圈高频词写分条答案，再听老师拆采分逻辑。不抄大段笔记，方格纸只留1页例题定稿。90分钟到点即停，剩余段落晚上通勤再听。',
+             out:'产出：第2-3节 1页例题方格纸定稿（笔记不抄）'},
+            {id:'debt_correct',time:'21:05',title:'【补11/4】套卷抓大放小订正（压缩30分钟：只订政治/法律/公文）',
+             detail:'11/4 订正欠账的压缩版：只翻政治、时政、法律、公文四块错题与"?"题，每条10秒判「会了/不会」。不会的挑5条写进错题本，其余果断放过。科技、古诗词、偏门历史地理一律不看。30分钟必须收工。',
+             out:'产出：主干错因5条（不做全卷订正）'}
+          ];
+          // 插到 20:45 复盘之前，保持时间顺序
+          // 按时间插入（11:55 补课 → 上午订正之后；21:05 补订正 → 复盘之前）
+          var _ins=function(tk){
+            var m=/^(\d{1,2}):(\d{2})$/.exec(tk.time); if(!m) { tasks.push(tk); return; }
+            var tv=(+m[1])*60+(+m[2]); var at=-1;
+            for(var _i=0;_i<tasks.length;_i++){
+              var mm=/^(\d{1,2}):(\d{2})$/.exec(tasks[_i].time||'');
+              if(!mm) continue;
+              if(((+mm[1])*60+(+mm[2]))>tv){ at=_i; break; }
+            }
+            if(at<0) tasks.push(tk); else tasks.splice(at,0,tk);
+          };
+          _ins(debtTasks[0]); _ins(debtTasks[1]);
+          dayInfo=['阶段一·综测破冰 D2/6（8.0h）＋ 11/4欠账止损','补刘流第2-3节(90m)＋正课4-5节＋补订正(30m)＋行政法突击；已砍：公文一锅端/职测微练/复盘'];
+        }
       } else if(ds>='2026-11-10' && ds<='2026-11-13'){
         var mockPaper={
           '2026-11-10':'2024年11月（24下）四川省属统考《综测》真题全套',
@@ -7553,6 +7581,5 @@ window.addEventListener('storage',function(e){
 });
 </script>
 <script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4e129460c6b08e0',t:'MTc5MjU5NTEzNA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a4e9eddeef442a56',t:'MTc5MjY4NzA3Mw=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a54439eaeb58e438',t:'MTc5MzYzMzkwNg=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a54439eaeb58e438',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a553e7556968f6c0',t:'MTc5Mzc5ODI5NQ=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a553e7556968f6c0',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
 </body>
 </html>
