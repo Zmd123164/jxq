@@ -212,7 +212,7 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
   <div class="hdr-top">
     <h1>公考备考 2026 <span>四川省考 & 事业编</span></h1>
     <div class="pills">
-      <div class="pill">📝 原计划11/15 · <span class="d" id="d1">--</span>天</div>
+      <div class="pill">📝 确认考试12/20 · <span class="d" id="d1">--</span>天</div>
       <div class="pill">📋 省考·2027上 接统考</div>
     </div>
   </div>
@@ -390,8 +390,8 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
 <div class="sec" id="sec-plan">
   <div class="debt" id="debt-banner" style="display:none"></div>
   <div class="card">
-    <div class="ct">🗺 备考总规划 · 10/20现行版（笔试11/15 · 高剂量冲刺）</div>
-    <div class="alert" style="background:#eff6ff;border-color:#93c5fd;color:#1e3a8a">📌 现行口径：10/19重启、15–18归零不补账；母版剂量=客观题两套＋综测1套＋全订正，只换第二套；10/21–25开荒（公文/行政法/经济/时政/综测）。<strong>8–9月旧计划（周板块制、三天模块、11/1考试日、省考12/6）已全部归档，不再显示、不再参与排课。</strong></div>
+    <div class="ct">🗺 备考总规划 · 12/20确认版（按实际时间执行）</div>
+    <div class="alert" style="background:#eff6ff;border-color:#93c5fd;color:#1e3a8a">📌 考试日期已确认：12/20。旧任务不再补账。排课按已提供的模考分项、管理零基础和综测课程进度安排；学习日三整块，周日休息/缓冲。</div>
     <div id="plan-gap" style="margin-bottom:13px"></div>
   </div>
 </div>
@@ -1217,7 +1217,7 @@ function idxToDate(idx){
 let curDate=new Date();
 
 function updateCountdowns(){
-  document.getElementById('d1').textContent=dBetween(new Date(2026,10,15));
+  document.getElementById('d1').textContent=dBetween(new Date(2026,11,20));
   const _d2el=document.getElementById('d2'); if(_d2el) _d2el.textContent='·';
 }
 
@@ -1575,6 +1575,7 @@ const CYCLE_MODS={
 function cycDateDiff(a,b){return Math.round((toDate(b)-toDate(a))/86400000);}
 function ctask(text,tag,min,unit){return t(text,tag,min||0,unit||'题');}
 function cycleFor(dk){
+  if(inNewPlan(dk))return null; // 11/6起由12/20确认版接管，不再显示旧三天循环
   if((dk<CYCLE_ANCHOR||dk>CYCLE_END)&&!CYCLE_SPECIAL[dk])return null;
   if(D.opt&&D.opt.gk&&(dk==='2026-11-28'||dk==='2026-11-29')){
     return {type:'exam',dk,icon:'🇨🇳',name:dk==='2026-11-28'?'国考行测':'国考申论',tag:'fx',plan:{
@@ -1935,7 +1936,7 @@ function suanStreak(){
   return s;
 }
 // 每日最低学习目标：9/28-11/30 三天模块循环，模块日8h / 大周天6.5h / 考试日2h；旧阶段保留兜底
-function dayTargetH(){const _dk0=ds(new Date());
+function dayTargetH(dateKey){const _dk0=dateKey||ds(new Date());
   // ⏭ 顺延日：目标跟着降（三件套1.5h / 整天0h / 单时段按2.6h每段抵扣），避免"顺延了还被8h锁死"
   const _sk=skipEntryFor(_dk0);
   const _cyT=cycleFor(_dk0);
@@ -1948,11 +1949,17 @@ function dayTargetH(){const _dk0=ds(new Date());
     const _base=_cyBase||(_blkT?(_blkT.type==='block'?7.5:6.5):8);
     return Math.max(1.5,_base-2.6*((_sk.slots||[]).length));
   }
+  // 12/20确认版：学习日底线7.5h；周日缓冲；考前两天轻量。
+  if(_dk0>='2026-11-06'&&_dk0<='2026-12-20'){
+    if(_dk0==='2026-12-20')return 0;
+    if(_dk0==='2026-12-18')return 1.5;
+    if(_dk0==='2026-12-19')return 1;
+    return new Date(_dk0+'T12:00:00').getDay()===0?0:7.5;
+  }
   if(_cyT)return _cyBase; // 🔁 模块日8h / 大周天6.5h / 考试日2h
   if(_blkT)return _blkT.type==='block'?7.5:_blkT.type==='mock'?6.5:0; // 🧱 旧板块日7.5h / 模考日6.5h / 休息日0h
   if(_dk0>='2026-09-10'&&_dk0<='2026-10-31')return 7.5;  // 旧减负版专项刷题期兜底
-  if(_dk0==='2026-11-01'||_dk0==='2026-12-06'||_gkDay(_dk0))return 2; // 考试日
-  if(_dk0==='2026-12-05')return 1;                              // 轻量日（早睡）
+  if(_dk0==='2026-11-01'||_gkDay(_dk0))return 2; // 历史考试日
   if(_dk0>='2026-11-02'&&_dk0<='2026-11-27')return 5.5;         // 西实模拟练习阶段（模考周）
   return 5;}                                                    // 最后一周 11/28-12/4
 
@@ -2713,12 +2720,45 @@ function getApplyShenLun(idx){
   return t('申论大作文（50min）：限时写完 + 逐段对照批改','sl',0);
 }
 
+// 当前12/20执行期：刘流综测13节单独计数；不要和旧版32节综测条目混为一门课。
+const ROLLING_COURSE_KEY='rollingFocus20261106';
+function rollingLessonState(){
+  var p=(typeof D!=='undefined'&&D)?D[ROLLING_COURSE_KEY]:null;
+  var lessons=p&&p.lessons?p.lessons:{'1':{done:true}};
+  var done=0,next=0;
+  for(var i=1;i<=13;i++){
+    if(lessons[String(i)]&&lessons[String(i)].done)done++;
+    else if(!next)next=i;
+  }
+  // 旧数据没有本课专属记录时，按已确认的实际进度：第1节已听。
+  if(!p||!p.lessons){done=Math.max(1,done);next=done>=13?0:done+1;}
+  return {done:done,next:next,total:13};
+}
+function rollingLessonCount(){return rollingLessonState().done;}
+function rollingLessonNext(){return rollingLessonState().next;}
+
 // ==================== SIDE PANEL ====================
 function renderSidePanel(date){
   const idx=dayIdx(date);
   const sp=document.getElementById('sp-content');
   if(!sp) return;
-  const _cySp=cycleFor(ds(date));
+  const _dkeySp=ds(date);
+  if(_dkeySp>='2026-11-06'&&_dkeySp<='2026-12-20'){
+    var _zcNow=rollingLessonState();
+    var _zcNext=_zcNow.next?'下一节：第'+_zcNow.next+'节':'13节已完成';
+    sp.innerHTML=`
+      <div class="alert" style="margin-bottom:9px;background:#eff6ff;border-color:#93c5fd;color:#1e3a8a"><b>🎯 当前目标：12/20确认考试</b><br>本轮按四川事业单位公共基础／综合能力相关内容排；具体题型、时长以你那场公告和准考证为准。</div>
+      <div class="sp-item sp-on"><b>⚖️ 法律模考：16/24</b> · 这是总分项，不足以判断民法、刑法、行政法哪块最弱；11/6先按法别拆题，之后分别学和记录。</div>
+      <div class="sp-item sp-on"><b>📄 公文：5/9</b> · 从原错题/猜题定位用途、行文关系、格式，不预设错在哪种文种。</div>
+      <div class="sp-item sp-on"><b>📚 政治理论：20/28</b> · 理论和时政都不牢；周三主攻，周四做间隔回忆。</div>
+      <div class="sp-item sp-off"><b>📖 刘流综测：${_zcNow.done}/13（你已确认听完第1节）</b> · ${_zcNext}；周二/周五推进，每次只按实际完成标记，例题先自己写。</div>
+      <div class="sp-item sp-off"><b>⚖️ 法律顺序：</b>民法典 → 刑法 → 行政法分专题推进；另补宪法及大纲列明的其他法律。公基周测按民／刑／行政／宪法及其他法分开统计。</div>
+      <div class="sp-item"><b>🧭 旧32节口径：</b>页面仍保留“综测基础0/32”旧记录；本轮按你确认的刘流13节、已完成1节从第2节继续。0/32不改写、不拿来推断本轮课程进度；白鹭申论小题/作文属申论课程，不代替综测课次。</div>
+      <div class="sp-item"><b>📝 周测不设解锁门槛：</b>每周六直接做公基整卷／代表卷；言语、判断、数量、资料若在卷中出现，随卷记录，不再等资料或言语课程全学完才开卷。</div>
+      <div style="font-size:10px;color:var(--t3);line-height:1.6;margin-top:7px">周日休息／缓冲；管理只在11/16做一次职能专题，之后不再循环开课，仅订正当卷实际错题。</div>`;
+    return;
+  }
+  const _cySp=cycleFor(_dkeySp);
   if(_cySp){ sp.innerHTML=cycleSideHTML(date,_cySp); return; }
   const P=D.prog||{};
   const n=k=>P[k]||0;
@@ -2934,30 +2974,39 @@ function renderScoreGuess(){
 
 // ==================== RENDER SCHEDULE ====================
 const NEW_PHASES=[
- {s:'2026-10-15',e:'2026-10-21',name:'上剂量·打穿题型',icon:'💪',desc:'综合套①+②+综测1套+全订正；10/19重启：15–18归零不补账；10/20刑法歼灭（第二套=刑法专项100题）；10/21公文开荒起；政治理论即日启动：黑十专项卷每天1套（20题10–12分钟）+错题四桶'},
- {s:'2026-10-22',e:'2026-10-31',name:'弱点歼灭',icon:'🎯',desc:'开荒续：10/22行政法、10/23经济、10/24时政、10/25综测；10/26起第二套按触发换弱科专项100题（每周≤2天）；综合套①与综测不砍；政治每天1套不断'},
- {s:'2026-11-01',e:'2026-11-07',name:'全真节奏',icon:'⏱',desc:'按真实考试时段走套卷；11/7 M模考日：公基+综测全真连考，只订正统计'},
- {s:'2026-11-08',e:'2026-11-12',name:'高频回炉',icon:'🔥',desc:'套②=错题复做套；综测以改写和晨读为主；政治错题按四桶回炉；错题转卡收尾'},
- {s:'2026-11-13',e:'2026-11-15',name:'收官',icon:'🏁',desc:'11/13全真模考、11/14轻量收官（只看错题本+晨读）、11/15笔试日'},
- {s:'2026-11-16',e:'2027-06-30',name:'2027上半年·无缝接',icon:'🔗',desc:'考完即接：记忆卡SRS继续排复习；公基转省考行测+申论启动，剂量回落到可持续档'}
+ {s:'2026-10-15',e:'2026-10-21',name:'上剂量·历史计划',icon:'📚',desc:'保留历史记录；未完成的旧任务不要求追补。'},
+ {s:'2026-10-22',e:'2026-10-31',name:'弱点歼灭·历史计划',icon:'🎯',desc:'保留历史记录；未完成的旧任务不要求追补。'},
+ {s:'2026-11-01',e:'2026-11-05',name:'原计划记录（历史）',icon:'🗂',desc:'旧日期照常留在历史记录，不把旧任务滚入新执行单。'},
+ {s:'2026-11-06',e:'2026-11-19',name:'主干补漏·建立基础',icon:'🧭',desc:'法律先拆分16/24诊断，再把民法、刑法、行政法分开系统学，并补宪法/其他法；公文按5/9错题定位；政治/时政周三主攻；刘流综测13节按1/13真实进度、周二/周五推进并手写；管理职能只在11/16做一次。'},
+ {s:'2026-11-20',e:'2026-12-06',name:'专题巩固·错题闭环',icon:'🔧',desc:'民法、刑法、行政法轮换强化并做法律分项小测；公文、政治/时政按真实错题复测；综测课程与手写按实进度推进；每周六公基卷按法律法别统计，周日缓冲；管理不再开新课。'},
+ {s:'2026-12-07',e:'2026-12-17',name:'12/20考前整合',icon:'🔥',desc:'法律只按周测真实弱法别补漏，覆盖民法、刑法、行政法及宪法/其他法；综测课程按实进度收束并保持手写；不再铺冷门新专题，管理只订正当卷错题。'},
+ {s:'2026-12-18',e:'2026-12-19',name:'轻量收官',icon:'🌙',desc:'只回看整理过的重点、检查考试用品并保证睡眠，不补欠账、不刷新卷。'},
+ {s:'2026-12-20',e:'2026-12-20',name:'确认考试日',icon:'🏁',desc:'按准考证参加考试；当天不排学习任务。'},
+ {s:'2026-12-21',e:'2027-06-30',name:'考后·2027上半年',icon:'🔗',desc:'考试后再按真实目标恢复记忆卡和长期备考，剂量回到可持续水平。'}
 ];
 function newPlanPhaseFor(dkey){ for(const p of NEW_PHASES){ if(dkey>=p.s&&dkey<=p.e) return p; } return null; }
-function inNewPlan(dkey){ return dkey>='2026-10-19'&&dkey<='2026-11-15'; }
+function inNewPlan(dkey){ return dkey>='2026-11-06'&&dkey<='2026-12-20'; }
 function renderNewPlanDay(d,dkey){
   const p=newPlanPhaseFor(dkey)||NEW_PHASES[0];
-  const left=Math.max(0,Math.round((new Date(2026,10,15)-d)/86400000));
+  const left=Math.max(0,Math.round((new Date(2026,11,20)-d)/86400000));
   const el=document.getElementById('cur-meta');
-  if(el) el.textContent=`原计划距11/15 ${left} 天 · 实际考试日期以通知为准 · ${p.icon} ${p.name}`;
+  if(el) el.textContent=`距12/20考试 ${left} 天 · ${p.icon} ${p.name}`;
   const target=document.getElementById('target-h');
-  if(target && dkey>='2026-11-06' && dkey<='2026-11-15') target.textContent='参考 '+dayTargetH()+'h（不锁日历）';
+  if(target){
+    if(dkey==='2026-12-20') target.textContent='考试日';
+    else if(dkey>='2026-12-18') target.textContent='轻量收官';
+    else if(d.getDay()===0) target.textContent='休息／缓冲日（无必做任务）';
+    else target.textContent='7.5h底线（三块参考约8.2h）';
+  }
   const c=document.getElementById('slots-container');
   if(c){ c.style.display='block';
     c.innerHTML=`<div style="background:#eff6ff;border:1.5px solid #2563eb;border-radius:12px;padding:12px 14px;font-size:12.5px;line-height:1.8;color:#1e3a8a">
       <strong>${p.icon} ${p.name}（${p.s.slice(5).replace('-','/')}–${p.e.slice(5).replace('-','/')}）</strong><br>${p.desc}<br>
-      <span style="color:#1d4ed8;font-weight:700">👉 本日的逐条任务、勾选和计时＝本页上方「落地执行单」（跟随日历日期、按天隔离不串）；9月旧课表槽位在10/19–11/15期间停用。</span>
+      <span style="color:#1d4ed8;font-weight:700">👉 具体执行看上方「落地执行单」：上午、下午、晚间各一张整块卡（约2.9h＋3.0h＋2.3h）；不拆成小任务，旧欠账不自动堆到今天。</span>
     </div>`;
   }
 }
+
 function newPlanOverviewHTML(){
   const today=ds(new Date());
   let cards='';
@@ -2968,15 +3017,15 @@ function newPlanOverviewHTML(){
       <div class="v" style="font-size:.95rem"><strong>${p.icon} ${p.name}</strong></div>
       <div class="n" style="font-weight:400">${p.desc}</div></div>`;
   });
-  return `<div style="font-size:1.02rem;font-weight:800;color:#1e3a8a;margin-bottom:8px">🗺 现行总规划（10/19重启 · 笔试2026-11-15 · 高剂量32天）</div>
-  <div style="font-size:.86rem;line-height:1.8;margin-bottom:10px;padding:8px 10px;background:#fefce8;border-radius:7px;color:#713f12"><b>母版剂量（任何一天不破）：</b>客观题两套＋综测1套＋全部订正；只允许在日型内替换第二套。A标准日=综合套①+②；B歼灭日=综合套①+弱科专项100题；C回炉日=新鲜套+错题复做套；M模考、T收官。</div>
+  return `<div style="font-size:1.02rem;font-weight:800;color:#1e3a8a;margin-bottom:8px">🗺 现行总规划（考试日期确认：2026-12-20 · 单主线整块执行）</div>
+  <div style="font-size:.86rem;line-height:1.8;margin-bottom:10px;padding:8px 10px;background:#fefce8;border-radius:7px;color:#713f12"><b>按四川大纲和你的真实进度排：</b>法律16/24先拆法别，再分别学民法、刑法、行政法，补宪法及其他法；一场2025省属卷复盘中法律为21/100，说明权重高，但各场分布会变，不按单一专题循环。公文5/9从错题定位；政治20/28且理论/时政不牢→周三主线；刘流综测你已确认听完1/13，周二/周五各推进下一节并手写；旧32节记录不改写、不作为本轮课次门槛；白鹭申论课不代替综测课次。管理只在11/16做一次职能专题。周六公基代表卷按法律法别统计，周日休息。</div>
   <div class="debt-grid">${cards}</div>`;
 }
 function renderSchedule(){
   const d=curDate;
   const dkey=ds(d);
   const targetText=document.getElementById('target-h');
-  if(targetText && dkey>='2026-11-06') targetText.textContent='参考 '+dayTargetH()+'h（不锁日历）';
+  if(targetText && dkey>='2026-11-06') targetText.textContent='参考 '+dayTargetH(dkey)+'h（不锁日历）';
   const wd=['日','一','二','三','四','五','六'][d.getDay()];
   document.getElementById('cur-date').textContent=`${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日 星期${wd}`;
   const idx=dayIdx(d);
@@ -3191,12 +3240,18 @@ function updateDayProgress(dkey){
 
   const todayMin=D.logs.filter(l=>l.date===dkey).reduce((s,l)=>s+l.duration,0);
   const h=todayMin/60;
-  const _th=dayTargetH();
+  const _th=dayTargetH(dkey);
   const _thEl=document.getElementById('target-h');
-  if(_thEl) _thEl.textContent=(dkey>='2026-11-06')?('参考 '+_th+'h（不锁日历）'):('目标 '+_th+'h（底线）');
+  if(_thEl){
+    if(dkey==='2026-12-20') _thEl.textContent='考试日';
+    else if(dkey>='2026-12-18'&&dkey<='2026-12-19') _thEl.textContent='轻量收官';
+    else if(dkey>='2026-11-06'&&dkey<='2026-12-20'&&new Date(dkey+'T12:00:00').getDay()===0) _thEl.textContent='休息／缓冲日（无必做任务）';
+    else _thEl.textContent=(dkey>='2026-11-06')?'7.5h底线（三块参考约8.2h）':('目标 '+_th+'h（底线）');
+  }
 
   document.getElementById('cur-h').textContent=h.toFixed(1);
-  document.getElementById('h-bar').style.width=Math.min(100,h/_th*100)+'%';
+  const _hpct=_th>0?Math.min(100,h/_th*100):(h>0?100:0);
+  document.getElementById('h-bar').style.width=_hpct+'%';
 }
 
 function addCustomTask(){
@@ -6237,7 +6292,7 @@ const COURSES=[
 
   {key:'言语-基础',label:'言语理解·基础',total:12,color:'#10b981'},
   {key:'言语-刷题',label:'言语理解·刷题',total:10,color:'#34d399'},
-  {key:'综测-基础',label:'无非综测·刘流（13节）',total:13,color:'#2563eb'},
+  {key:'综测-刘流13',label:'刘流综测课（13节）',total:13,color:'#2563eb'},
   {key:'综测-刷题',label:'金标尺综测·刷题',total:7,color:'#60a5fa'},
   {key:'申论-小题',label:'白鹭申论·小题课',total:50,color:'#a855f7'},
   {key:'申论-作文',label:'白鹭申论·作文课',total:10,color:'#c084fc'},
@@ -6273,7 +6328,7 @@ function renderStats(){
 
 function renderProgBars(){
   document.getElementById('prog-bars').innerHTML=COURSES.map(c=>{
-    const done=D.prog[c.key]||0;const pct=Math.min(100,Math.round(done/c.total*100));
+    const done=c.key==='综测-刘流13'?rollingLessonCount():(D.prog[c.key]||0);const pct=Math.min(100,Math.round(done/c.total*100));
     return`<div class="pb-item">
       <div class="pb-hdr">
         <div class="pb-name">${c.label}</div>
@@ -6288,17 +6343,25 @@ function renderProgBars(){
 }
 function updateProg(key,val){
   const c=COURSES.find(x=>x.key===key);
-  D.prog[key]=Math.min(c.total,Math.max(0,parseInt(val)||0));
+  const next=Math.min(c.total,Math.max(0,parseInt(val)||0));
+  if(key==='综测-刘流13'){
+    D[ROLLING_COURSE_KEY]=D[ROLLING_COURSE_KEY]||{version:1,lessons:{'1':{done:true,ts:0}},topics:{},lessonNotes:{},topicNotes:{}};
+    var rp=D[ROLLING_COURSE_KEY];rp.lessons=rp.lessons||{};
+    for(var i=1;i<=13;i++)rp.lessons[String(i)]={done:i<=next,ts:Date.now()};
+    D.prog=D.prog||{};D.prog[key]=next;
+  }else{
+    D.prog[key]=next;
+  }
   // 记录修正时间戳：云同步合并时以最新修正为准（否则取大值会把往下改的修正吞掉）
   D.progTs=D.progTs||{};D.progTs[key]=Date.now();
   // 手动修正进度 = 权威操作：同步更新今天的课表快照，今天的课表立即按新进度显示
   const today=ds(new Date());
-  if(D.dayStart&&D.dayStart[today]) D.dayStart[today][key]=D.prog[key];
+  if(D.dayStart&&D.dayStart[today]) D.dayStart[today][key]=next;
   sv();
   try{renderProgBars();}catch(e){}
   try{renderPie();}catch(e){}
   try{renderSchedule();}catch(e){}
-  showToast(`✏️ ${c.label} 进度已修正为 第${D.prog[key]}节，课表已同步`);
+  showToast(`✏️ ${c.label} 进度已修正为 第${next}节，课表已同步`);
 }
 
 const PC={'资料':'#6366f1','逻辑':'#06b6d4','数量':'#0ea5e9','言语':'#10b981','综测':'#2563eb','公基':'#f59e0b','申论':'#8b5cf6','复盘':'#94a3b8'};
@@ -7502,7 +7565,7 @@ cfBoot();
 try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
 </script><script>
 (function(){
-  var EXAM='2026-11-15', KEY='landing_tasks_v1016';   // KEY 只用于把旧版本的本地勾选迁移进来
+  var EXAM='2026-12-20', KEY='landing_tasks_v1016';   // KEY 只用于把旧版本的本地勾选迁移进来
   function pad(n){return (n<10?'0':'')+n;}
   function fmt(d){return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());}
   function parse(s){var a=s.split('-');return new Date(+a[0],+a[1]-1,+a[2]);}
@@ -7547,7 +7610,9 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
     // 第1节完成来自用户明确确认；时间戳为0，使任何手动修正都优先于默认值。
     // 只在完全没有新字段时创建；不会把金标尺课程或旧日期勾选推断成刘流进度。
     if(!s[ROLL_KEY] || typeof s[ROLL_KEY]!=='object'){
-      s[ROLL_KEY]={version:1,lessons:{'1':{done:true,ts:0}},topics:{},lessonNotes:{},topicNotes:{}};
+      var seeded=Math.max(1,Number((s.prog||{})['综测-刘流13'])||0), lessons={};
+      for(var j=1;j<=Math.min(13,seeded);j++)lessons[String(j)]={done:true,ts:0};
+      s[ROLL_KEY]={version:1,lessons:lessons,topics:{},lessonNotes:{},topicNotes:{}};
     }
     var p=s[ROLL_KEY];
     ['lessons','topics','lessonNotes','topicNotes'].forEach(function(k){if(!p[k]||typeof p[k]!=='object')p[k]={};});
@@ -7580,9 +7645,15 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
     n=Number(n);if(!Number.isInteger(n)||n<1||n>13)return;
     var p=rollData(), key=String(n), prev=p.lessons[key];
     p.lessons[key]={done:!!done,ts:rollStamp(prev)};
+    var count=0;for(var i=1;i<=13;i++)if((p.lessons[String(i)]||{}).done)count++;
+    D.prog=D.prog||{};D.prog['综测-刘流13']=count;
+    D.progTs=D.progTs||{};D.progTs['综测-刘流13']=Date.now();
     rollSave();
     try{showToast(done?'已记录第'+n+'节学完；接下来按实际进度继续。':'已撤销第'+n+'节的完成标记。');}catch(e){}
     render();
+    // 13节课程的手动勾选是实际进度：同步刷新统计进度条和当前侧栏，避免页面暂时显示旧数。
+    try{if(typeof renderProgBars==='function')renderProgBars();}catch(e){}
+    try{if(typeof renderSidePanel==='function'&&typeof curDate!=='undefined')renderSidePanel(curDate);}catch(e){}
   };
   window.rollingSetTopic=function(key,done){
     var it=ROLL_TOPICS.find(function(x){return x.key===key;});if(!it)return;
@@ -7622,7 +7693,7 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
     var running=false;
     try{running=typeof tOn!=='undefined'&&tOn&&typeof activeSlotKey!=='undefined'&&activeSlotKey==='landing_'+fmt(new Date())+'_liuliu_session';}catch(e){}
     var nowKey=fmt(new Date());
-    var timer=(nowKey>='2026-11-06'&&nowKey<='2026-11-14')?rollButton(running?'⏹ 结束课程计时':'▶ 开始课程计时',"rollingStartTimer('liuliu_session')"):(nowKey>'2026-11-15'?rollButton('▶ 打开计时器','openTimerTab()'):'');
+    var timer=(nowKey>='2026-11-06'&&nowKey<='2026-12-19')?rollButton(running?'⏹ 结束课程计时':'▶ 开始课程计时',"rollingStartTimer('liuliu_session')"):(nowKey>'2026-12-20'?rollButton('▶ 打开计时器','openTimerTab()'):'');
     var dateNote=viewDs<fmt(new Date())?'你正在查看历史日期：下面是那天的原计划或记录，不代表课程已完成。此卡始终显示当前真实进度。':(viewDs>fmt(new Date())?'你正在预览其他日期：此卡显示当前进度，不会因为翻页而跳课。':'按实际完成推进，没看完今天就留在这一节。');
     var lessonLine=next?'<b style="font-size:15px;color:#1d4ed8">接着看第 '+next+' 节</b>':'<b style="font-size:15px;color:#15803d">13节均已标记完成</b>';
     var lessonBody=next?(
@@ -7643,7 +7714,7 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
       +'<details '+(rollDetailOpen.lessons?'open':'')+' ontoggle="rollingDetails(\'lessons\',this.open)" style="margin-top:8px"><summary style="cursor:pointer;font-weight:700">查看 / 纠正每节进度</summary><div style="font-size:12px;color:#334155;margin-top:4px">只勾实际看完的章节；可取消或补勾。第1节根据你的确认预先勾选。'+lessonChecks+'</div></details></div>'
       +'<div style="margin-top:8px;padding:10px;border-radius:9px;background:#fff;border:1px solid #dbeafe"><b style="font-size:14px;color:#1d4ed8">公基抢分：'+(topic?'先做「'+esc(topic.name)+'」':'本轮已完成')+'</b> <span data-roll-count="topics" style="color:#64748b;font-size:11px">已确认 '+td+'/6 项</span>'+topicBody
       +'<details '+(rollDetailOpen.topics?'open':'')+' ontoggle="rollingDetails(\'topics\',this.open)" style="margin-top:8px"><summary style="cursor:pointer;font-weight:700">查看 / 纠正专项进度</summary><div style="font-size:12px;color:#334155;margin-top:4px">按公文 → 行政法 → 民法等顺序接续；如果做过可自行补勾。'+topicChecks+'</div></details></div>'
-      +'<div style="margin-top:7px;color:#475569;font-size:11px">11/4、11/5其他任务仍保留在原日期，未勾不等于已做；不必一次把两天任务全堆上。网页的11/15是原计划日期，实际考试以通知为准。</div>'
+      +'<div style="margin-top:7px;color:#475569;font-size:11px">11/4、11/5等旧计划只保留历史，不要求补齐。考试日期现已确认12/20；新执行单从当前日期开始，不把旧欠账自动叠加。</div>'
       +'</div>';
   }
   function rollHasLegacy(vds,id){
@@ -8324,6 +8395,279 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
   }
   var GEN_BUDGET=60;
 
+  // 计划切换起点写入每日落地数据的隐藏标记（经现有云同步合并），
+  // 这样新课表在以后查看历史日期时仍能显示；旧日期和旧打卡不被重写。
+  function dec20PlanStartDate(){
+    var s=store(); if(!s||!s.landing)return '';
+    var dates=Object.keys(s.landing).filter(function(d){return /^\d{4}-\d{2}-\d{2}$/.test(d)&&s.landing[d]&&s.landing[d].__dec20_plan_v1===true;}).sort();
+    return dates.length?dates[0]:'';
+  }
+  function dec20MarkPlanStart(today){
+    var s=store(); if(!s)return;
+    if(dec20PlanStartDate())return;
+    s.landing[today]=s.landing[today]||{};
+    s.landingTs[today]=s.landingTs[today]||{};
+    s.landing[today].__dec20_plan_v1=true;
+    s.landingTs[today].__dec20_plan_v1=Date.now();
+    saveLocal();
+  }
+  function dec20Task(vds,id,time,title,detail,out){
+    var oid='dec20_'+id;
+    return {id:oid,origDay:vds,origId:oid,time:time,title:title,detail:detail,out:out||'',
+            rawTitle:title,rawDetail:detail,rawOut:out||'',
+            rollHint:'这是一个完整学习块；课程节数请只在上方进度卡按真实进度更新。'};
+  }
+  function dec20DailyPlan(vds){
+    var dow=parse(vds).getDay();
+    var week=Math.floor((parse(vds).getTime()-parse('2026-11-06').getTime())/604800000);
+    // 2026-11-12：用户指定当天三块全部学政治理论与时政，按此保留。
+    if(vds==='2026-11-12') return {
+      dayInfo:['今日主线 · 政治理论＋时政','今天三块都围绕政治理论和时政：上午梳理理论，下午学时政，晚间混合练习订正。'],
+      tasks:[
+        dec20Task(vds,'am','上午整块（约2.9h）','政治理论专题学习＋框架整理','从现有政治理论课程或资料里选一章最不牢的内容；先闭卷回忆，再补齐核心概念、理论逻辑和易混表述，最后做配套题并核对。','记录：专题__ / 框架要点__ / 易混表述__'),
+        dec20Task(vds,'pm','下午整块（约3.0h）','时政专题梳理＋题目练习','用现有时政资料或记忆卡梳理重点会议、政策文件和时间线；完成一组时政题，逐题订正，写清正确表述和对应考点。','记录：专题__ / 题目__ / 需再记的考点__'),
+        dec20Task(vds,'ev','晚间整块（约2.3h）','政治理论＋时政混合练习与复盘','把今天学的两部分合起来做限时练习；错题分清是概念没懂、表述记混还是时间线不清，闭卷复述后再核对。只围绕今天的政治理论和时政，不加法律、公文任务。','记录：正确率__ / 最该重看的3点__')
+      ]
+    };
+    if(vds==='2026-12-20') return {dayInfo:['🎯 确认考试日 · 12/20','按准考证执行；今天不排课程、刷题或旧欠账。'],tasks:[dec20Task(vds,'exam','按准考证','12/20 笔试（考试日）','按准考证时间和要求参加考试；考后休息，不安排补课。','状态：考试日') ]};
+    if(vds==='2026-12-18') return {dayInfo:['12/20考前整合','只回看已整理内容，不再扩大范围。'],tasks:[dec20Task(vds,'final_review','整块轻复习','最后一轮高频错点与综测框架（约90分钟）','只看重复错题、法律三法对照、公文格式和综测答题框架；不刷新卷、不补课、不增加新卡。','确认：法律易错规则__ / 公文格式__ / 综测框架__') ]};
+    if(vds==='2026-12-19') return {dayInfo:['考前轻量日','整理考试用品，保证睡眠；旧任务不顺延。'],tasks:[dec20Task(vds,'pre_exam','轻量','考前准备与早睡（不超过60分钟）','只检查准考证、证件和文具；如需复习只翻一页已整理清单，不做新题，按时休息。','状态：用品已检查 / 睡眠优先') ]};
+    if(dow===0) return {dayInfo:['恢复/缓冲日','无必做学习任务；休息，不把旧任务带到明天。可在每周反馈页花约15分钟如实记录，不计入学习时长。'],tasks:[]};
+
+    var legalDays={
+      '2026-11-06':{
+        focus:'法律分项诊断＋综测课接续',
+        amTitle:'法律分项诊断：先拆民法、刑法、行政法',
+        amDetail:'优先拿回你法律16/24那套，逐题标民法典、刑法、行政法、宪法/其他法，并标“确定/猜对”。若原卷没法分项，就做24道诊断题（民法8、刑法6、行政法6、宪法及其他4）；这是为了定位，不是预测考题比例。不能仅凭总分认定某一法最弱。',
+        amOut:'记录：民法__ / 刑法__ / 行政法__ / 宪法及其他__；猜对__',
+        pmTitle:'综测课程下一节＋例题手写',
+        pmDetail:'按上方刘流综测进度卡的实际下一节继续（目前已确认听完1/13，从下一节开始；每周约两节，不按日历跳课）。例题先暂停独立写，再听讲解补采分点；若没听完，记下停点下次接着看。',
+        pmOut:'记录：实际课次__ / 停在__ / 例题尝试__',
+        evTitle:'法律诊断订正＋综测答案改写',
+        evDetail:'把上午的错题和猜对题按民、刑、行政、宪法及其他分类；只写实际暴露出的规则缺口。再把综测例题按材料关键词、层次和表达订正一遍；今天不额外开新法律章节。',
+        evOut:'记录：各法待补点__ / 综测改写完成__'
+      },
+      '2026-11-09':{
+        focus:'民法典第一轮：总则、物权、合同',
+        amTitle:'民法典Ⅰ：总则＋物权',
+        amDetail:'用现有资料建立民法总则和物权框架：民事主体与行为能力、法律行为效力、代理、物权变动、所有权/用益物权/担保物权。把规则写成“主体—条件—法律后果”，不抄整段讲义。',
+        amOut:'记录：总则易混点__ / 物权规则__',
+        pmTitle:'民法典Ⅱ：合同规则与案例',
+        pmDetail:'梳理合同订立、效力、履行、违约责任及常见合同；用案例判断当事人、义务、违约后果。遇到争议选项回到规则，不靠生活直觉。',
+        pmOut:'记录：合同题__ / 仍混淆规则__',
+        evTitle:'民法专项练习＋错因回填',
+        evDetail:'做20—30道民法题，覆盖总则、物权、合同；“错题”和“蒙对题”分别标记。逐题写明对应规则，再重做错误题。若原16/24已指出明确弱项，优先把题量放到那一块。',
+        evOut:'记录：对__/题 / 猜对__ / 复做仍错__'
+      },
+      '2026-11-13':{
+        focus:'刑法第一轮＋综测课接续',
+        amTitle:'刑法Ⅰ：总则框架',
+        amDetail:'按考试大纲梳理刑法基本原则与适用范围、犯罪构成、故意/过失、正当防卫/紧急避险、预备/未遂/中止、共同犯罪、单位犯罪和刑罚。每类配一两个小案例，特别分清成立条件与法律后果。',
+        amOut:'记录：刑法总则框架__ / 易混对照__',
+        pmTitle:'综测课程下一节＋随课例题',
+        pmDetail:'只推进进度卡所示的下一节（本轮目标约每周两节；未完成不跳到后续节）。例题先独立列要点，再对照讲解补全；课程内容与当天法律专题分开记账。',
+        pmOut:'记录：实际课次__ / 例题漏点__',
+        evTitle:'刑法总则题组＋订正',
+        evDetail:'做20—25道刑法总则题，覆盖犯罪构成、犯罪形态、共同犯罪和刑罚；判断每个选项错在要件、主体还是结果。错误与猜对题回到对应规则重做。',
+        evOut:'记录：对__/题 / 仍不稳规则__'
+      },
+      '2026-11-16':{
+        focus:'行政法专题＋唯一一次管理职能课',
+        amTitle:'行政法Ⅰ：行政主体与行政行为',
+        amDetail:'依次梳理行政主体、行政行为基本原则，再分清行政许可、行政处罚、行政强制的性质、设定、实施主体和程序。用“谁作出—依据什么—走什么程序—产生什么效力”做对照。',
+        amOut:'记录：许可/处罚/强制区别__',
+        pmTitle:'行政救济：复议与诉讼',
+        pmDetail:'画出行政复议、行政诉讼的救济路径；结合现有资料整理申请/受案范围、管辖、被告、期限、举证责任等易混项，再做同类题并订正。',
+        pmOut:'记录：复议与诉讼对照__ / 同类题__',
+        evTitle:'管理职能专题（只做这一次）',
+        evDetail:'管理只安排这一次：计划、组织、人事、领导、控制。用现有管理卡/讲义梳理五项职能关系，做相关题（最多40题，猜题标出）并订正，最后做一张职能对照卡。以后不再开新管理专题；周测只订正当卷实际错题。',
+        evOut:'记录：五项职能对照卡__ / 相关题对__ / 猜题__'
+      },
+      '2026-11-20':{
+        focus:'民法典第二轮＋综测课接续',
+        amTitle:'民法典Ⅲ：人格权、婚姻家庭、继承',
+        amDetail:'依大纲补齐人格权、婚姻家庭与继承：权利边界、常见侵害、法定/遗嘱继承顺序与效力等；结合法条/讲义处理案例，标明“事实—权利义务—结论”。',
+        amOut:'记录：人格权__ / 婚姻继承易混点__',
+        pmTitle:'综测课程下一节＋例题手写',
+        pmDetail:'按实际进度卡接着学下一节，最多一节；例题暂停后先写，再听讲解核对。课程还没完成就记停点，不把欠课叠加到后一天。',
+        pmOut:'记录：实际课次__ / 例题尝试__ / 停在__',
+        evTitle:'民法典Ⅳ：侵权责任与多主体案例',
+        evDetail:'重点练侵权责任、归责原则、监护/用人/产品/交通等常见责任关系及多主体责任划分；做20—25道题，错题回到责任主体与构成条件订正。',
+        evOut:'记录：侵权题__ / 责任主体易错点__'
+      },
+      '2026-11-23':{
+        focus:'刑法第二轮：分则常见罪名与辨析',
+        amTitle:'刑法Ⅱ：分则高频罪名',
+        amDetail:'按大纲分组学习常见罪名：危害公共安全、侵犯人身/财产、妨害社会管理秩序、贪污贿赂与渎职等。重点比较盗窃/诈骗/抢夺/抢劫、贪污/受贿/挪用公款等易混点；不把冷门罪名当主线。',
+        amOut:'记录：易混罪名对照__',
+        pmTitle:'刑法案例题组＋规则核对',
+        pmDetail:'用案例题判断犯罪构成、罪名边界、共同犯罪与刑罚后果；题后必须指出决定结论的事实，避免只背罪名关键词。',
+        pmOut:'记录：案例题__ / 罪名区分__',
+        evTitle:'刑法错题与猜题复做',
+        evDetail:'复做近两周刑法错题、猜对题；按构成要件、罪名辨析、犯罪形态、刑罚归因。若刑法分项已稳定，把剩余时间给最近周测中真实失分最多的法律单元。',
+        evOut:'记录：复做对__ / 仍错__ / 下一步__'
+      },
+      '2026-11-27':{
+        focus:'行政法第二轮＋综测课接续',
+        amTitle:'行政法Ⅱ：程序与期限',
+        amDetail:'把许可、处罚、强制的程序节点并列整理，重点核对实施主体、告知/听证、决定与送达、执行等差异；对照现有法律资料逐项补漏，不凭记忆臆造期限。',
+        amOut:'记录：程序对照表__ / 不确定条文__',
+        pmTitle:'综测课程下一节＋材料题手写',
+        pmDetail:'按进度卡实际下一节继续；例题先独立完成，再听讲解。课程结束后写一道对应的综测小题，标材料采分词、层次和表达漏点。',
+        pmOut:'记录：实际课次__ / 手写题型__ / 漏点__',
+        evTitle:'行政复议／诉讼案例练习',
+        evDetail:'做行政救济案例题，区分复议与诉讼的受案范围、被告、管辖、举证与程序；猜对也要复述依据。错误多的规则加入行政法对照卡。',
+        evOut:'记录：救济题__ / 还混淆的规则__'
+      },
+      '2026-11-30':{
+        focus:'法律三大法混合校准',
+        amTitle:'法律限时小测：民法／刑法／行政法分栏',
+        amDetail:'完成一组24道法律题并限时；按题目真实考点拆成民法、刑法、行政法、宪法/其他法，标确定/猜题。若题库可选，优先用四川近年题，不把任意题库比例当预测。',
+        amOut:'记录：民__ / 刑__ / 行政__ / 宪法及其他__',
+        pmTitle:'法律小测逐题订正',
+        pmDetail:'统计每法的确定会正确率与猜题率；解释错因是概念、条件、主体/程序还是读题。只整理重复错和高频规则，不重抄整份解析。',
+        pmOut:'记录：最弱法别__ / 重复错考点__',
+        evTitle:'最低分法别回炉',
+        evDetail:'按下午真实统计选最低分法别，闭卷说规则后重做错题；若各法差不多，就民法、刑法、行政法各复做6—8题。宪法及其他法律用短表补齐。',
+        evOut:'记录：复做__ / 仍错__ / 下一周目标__'
+      },
+      '2026-12-04':{
+        focus:'法律真题节奏＋综测课接续',
+        amTitle:'法律代表题限时：24题混合',
+        amDetail:'用四川代表题练判断、单选和多选的法律部分；按考试节奏限时，所有不确定题标记。题后将民、刑、行政、宪法/其他分项统计，检验11月分项弱点是否改善。',
+        amOut:'记录：法律对__/24 / 猜对__ / 超时__',
+        pmTitle:'综测课程下一节＋随课题手写',
+        pmDetail:'推进进度卡的下一节，最多一节；例题暂停独立写后再核对。没完成时记录停点；不为了赶课放弃完整作答和订正。',
+        pmOut:'记录：实际课次__ / 例题完成__',
+        evTitle:'法律错题闭环',
+        evDetail:'订正本周法律题，回刷重复错点；整理一页“三法区别＋宪法/其他法清单”，按主体、构成条件、程序/后果分栏。管理只处理周测真实错题，不另开课。',
+        evOut:'记录：一页对照卡__ / 重复错清零__'
+      },
+      '2026-12-07':{
+        focus:'宪法与其他法律＋真实弱项',
+        amTitle:'宪法与其他法律：按大纲补齐',
+        amDetail:'复习宪法总纲、公民权利义务、国家机构；再用现有资料覆盖监察法、公职人员政务处分法、社会保险法、劳动争议调解仲裁法、事业单位人事管理条例。小法抓适用对象、主体、基本制度，不扩到无关法条。',
+        amOut:'记录：宪法机构易混点__ / 其他法__',
+        pmTitle:'近两次周测最低法律模块回炉',
+        pmDetail:'只按近两次周测的分项数据选实际失分最多的模块；先闭卷列规则，再做15—20道相同考点题。若仍没有分项数据，就民、刑、行政各做一组小题，不预设弱项。',
+        pmOut:'记录：实测最低模块__ / 复做对__',
+        evTitle:'法律框架闭卷复述',
+        evDetail:'合上资料复述民法、刑法、行政法各自的关键结构，再核对宪法和其他法律清单；只补今天确实卡住的规则。',
+        evOut:'记录：能复述__ / 仍卡__'
+      },
+      '2026-12-11':{
+        focus:'法律综合小测＋综测课接续',
+        amTitle:'法律综合小测：分项看稳定度',
+        amDetail:'做20—24道法律题，民法、刑法、行政法分开计分并标猜题；宪法及其他法单独列出，不把它们合并成常识分。优先选四川真题或同口径题。',
+        amOut:'记录：民__ / 刑__ / 行政__ / 宪法及其他__',
+        pmTitle:'综测课程下一节＋完整写一道题',
+        pmDetail:'照进度卡推进下一节，课程例题先独立作答；再从真题完成一道完整综测题，按题目要求控制结构、材料词和字数。',
+        pmOut:'记录：实际课次__ / 手写题型__ / 采分漏点__',
+        evTitle:'法律错题精准订正',
+        evDetail:'只订正今天错题和猜对题，并复做上次同类错题；稳定掌握的章节不再重刷。',
+        evOut:'记录：重复错__ / 已稳定模块__'
+      },
+      '2026-12-14':{
+        focus:'法律考前整合：只补真实失分点',
+        amTitle:'法律最弱单元：最后一次系统回看',
+        amDetail:'依据最近三次分项记录选一个最弱单元；闭卷列框架、对照资料补差，再做少量同类题。若没有明确最低项，按民法/刑法/行政法各回看一页规则，不开新章节。',
+        amOut:'记录：最后补强单元__ / 规则__',
+        pmTitle:'法律混合题＋错题复做',
+        pmDetail:'完成一组20—24道混合题，题后只回看错题和猜题；用“确定会正确率”判断是否稳定，不用总正确率掩盖蒙对。',
+        pmOut:'记录：确定会正确率__ / 仍不稳__',
+        evTitle:'法律一页卡闭卷回忆',
+        evDetail:'用一页纸回忆民法、刑法、行政法和宪法/其他法最易混规则；核对后收束，不再扩展冷门内容。',
+        evOut:'记录：法律最后一页卡__'
+      }
+    };
+    var law=legalDays[vds];
+    if(law) return {
+      dayInfo:['12/20备考 · '+law.focus,'法律按四川大纲分成民法、刑法、行政法等具体单元；学习日仍按上午、下午、晚间三整块执行。'],
+      tasks:[
+        dec20Task(vds,'am','上午整块（约2.9h）',law.amTitle,law.amDetail,law.amOut),
+        dec20Task(vds,'pm','下午整块（约3.0h）',law.pmTitle,law.pmDetail,law.pmOut),
+        dec20Task(vds,'ev','晚间整块（约2.3h）',law.evTitle,law.evDetail,law.evOut)
+      ]
+    };
+
+    // 其余学习日：按个性化薄弱项；课程进度只跟实际完成，不按日期自动跳节。
+    var focus,amTitle,amDetail,amOut,pmTitle,pmDetail,pmOut,evTitle,evDetail,evOut;
+    if(dow===1){
+      focus='法律分项补漏';
+      amTitle='法律专题：按最近分项记录选一个模块';
+      amDetail='从最近公基卷中民法、刑法、行政法、宪法/其他法的实际失分选一项；如仍没分项数据，先做每法小题再决定。按四川大纲核对规则，不把法律泛化成一节“概论”。';
+      amOut='记录：实测模块__ / 规则框架__';
+      pmTitle='同一法律模块：案例题＋订正';
+      pmDetail='围绕上午选出的一个具体单元做同类题，错题和猜对题都回到规则订正；不重复已稳定章节。';
+      pmOut='记录：同类题__ / 仍不稳规则__';
+      evTitle='政治理论／时政间隔回顾';
+      evDetail='闭卷回忆本周政治理论或时政要点，再做一组对应题；管理不另开复测专题，若周测有管理错题只留到当卷订正。';
+      evOut='记录：主题__ / 易混表述__';
+    }else if(dow===2){
+      focus='综测课程＋手写';
+      amTitle='综测课程下一节（按真实进度）';
+      amDetail='按上方刘流综测进度卡的下一节继续；本轮计划周二、周五各推进一节，当前实际进度已确认1/13。例题先暂停独立写；若本节没完成就记停点，不跳课、不把整节算完成。';
+      amOut='记录：实际课次__ / 停在__';
+      pmTitle='综测真题手写＋对标改稿';
+      pmDetail='完整手写一道小题、材料分析、应用文或其他近期真题题型；对照采分点标漏点，再重写最弱部分。综测题型按本场真题练，不把白鹭申论课次当成综测课次。';
+      pmOut='记录：题型__ / 漏点__ / 改写完成__';
+      evTitle=(week%2===0?'政治理论':'时政')+'间隔复习';
+      evDetail='遮住资料回忆上次学的政治理论或时政要点，再做少量对应题；猜对也写出正确表述。';
+      evOut='记录：主题__ / 复做题__ / 易混表述__';
+    }else if(dow===3){
+      focus='政治理论＋时政';
+      amTitle='政治理论专题：理解框架再做题';
+      amDetail='从现有课程/资料选一个最不牢的理论主题，复述核心观点与逻辑，再做配套题；错项写出正确表述，猜对也标记。';
+      amOut='记录：理论主题__ / 关键表述__ / 题目__';
+      pmTitle='时政专题：资料梳理＋题目核验';
+      pmDetail='从现有时政资料或记忆卡选一个专题，整理重要会议、政策文件或时间线，再做一组题核验；不为追新闻另开大量新材料。';
+      pmOut='记录：时政专题__ / 对__题 / 猜对__题';
+      evTitle='政治理论＋时政混合练习';
+      evDetail='限时混合练习后，区分概念不清、文件/时间线混淆和猜题；回到材料核对，再闭卷复述。';
+      evOut='记录：正确率__ / 最该重看的3点__';
+    }else if(dow===4){
+      focus='公文专题＋政治/时政复习';
+      amTitle='公文专题：从5/9错题和猜题定位';
+      amDetail='逐题归到用途/适用情形、行文方向、格式之一；若旧题没有标注，就先做一组诊断题，今天只攻真实失分最多的一组，不预设错的是哪种文种。';
+      amOut='记录：文种组__ / 错因类别__ / 规则__';
+      pmTitle='公文同类题练习＋格式订正';
+      pmDetail='只练上午定位的同一类；每题说明为什么选、错项错在哪里，并默写或改正相关格式。熟题不重复刷量。';
+      pmOut='记录：同类题__ / 仍混淆的规则__';
+      evTitle='政治理论／时政间隔复习';
+      evDetail='遮住资料复述本周政治理论要点和时政时间线，再核对少量错题/猜题。管理不另开复测专题。';
+      evOut='记录：记不牢的表述__ / 时政易混点__';
+    }else if(dow===5){
+      focus='综测课程＋真实错题回收';
+      amTitle='综测课程下一节（按进度卡）';
+      amDetail='只看进度卡所示下一节；先自己写例题，再听讲解核对。课程没学完就记录停点，不把未完成课次标完成。';
+      amOut='记录：实际课次__ / 例题题型__';
+      pmTitle='综测完整作答＋精改';
+      pmDetail='从四川综测真题选一道最需要练的题完整手写，按采分点改稿；若当周已完成两节课，仍以手写和改稿巩固，不追加第三节。';
+      pmOut='记录：题型__ / 完整作答__ / 最重要漏点__';
+      evTitle='法律错题间隔复做';
+      evDetail='只复做公基卷里实际做错或猜对的法律题，按民法、刑法、行政法、宪法/其他分类；不再安排泛泛“法律二轮”，也不新增章节。';
+      evOut='记录：法别__ / 复做对__ / 仍错__';
+    }else{
+      focus='公基限时周测';
+      amTitle='公基代表卷限时周测';
+      amDetail='每周完成一套四川公基代表卷；参考近年省属卷的100题、90分钟节奏。若12/20具体公告规定不同，考前按公告和准考证校正。猜题标记，统计总分，并把法律按民法、刑法、行政法、宪法/其他法分开计。';
+      amOut='记录：总分__ / 民__ / 刑__ / 行政__ / 宪法及其他__';
+      pmTitle='周测错题按模块订正';
+      pmDetail='逐题订正错题与猜题；政治/时政、公文、法律、经济管理及职测小题分栏统计。管理只订正本卷实际错题，不另开循环专题。';
+      pmOut='记录：法律分项__ / 公文__ / 政治时政__ / 其他__';
+      evTitle='本周错因排序＋下周优先项';
+      evDetail='列出下周最需要补的3项，法律必须细到民、刑、行政等具体法别；课程按实际下一节接续，综测回看一道手写答案。周日休息，不把旧任务顺延。';
+      evOut='记录：优先项1__ / 2__ / 3__ / 综测漏点__';
+    }
+    return {
+      dayInfo:['12/20备考 · '+focus,'按你给出的模考与课程真实进度安排；学习日三整块，普通日约8.2小时、7.5小时为底线；周日休息／缓冲。'],
+      tasks:[
+        dec20Task(vds,'am','上午整块（约2.9h）',amTitle,amDetail,amOut),
+        dec20Task(vds,'pm','下午整块（约3.0h）',pmTitle,pmDetail,pmOut),
+        dec20Task(vds,'ev','晚间整块（约2.3h）',evTitle,evDetail,evOut)
+      ]
+    };
+  }
   function buildFor(vds){
     var base=baseOf(vds);
     var outDayInfo=base.dayInfo;
@@ -8438,6 +8782,19 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
       });
     }catch(e){}
 
+    // 12/20确认版：只覆盖当前/未来日期；历史任务、打卡、计时和周反馈原样保留。
+    // 使用上午/下午/晚间整块，每块一张打卡；旧任务不自动补债，避免计划继续滚雪球。
+    var _d20Today=fmt(new Date());
+    if(vds===_d20Today) dec20MarkPlanStart(_d20Today);
+    var _d20Start=dec20PlanStartDate();
+    var _d20Active=(vds>='2026-11-06' && vds<='2026-12-20' &&
+                    ((_d20Start && vds>=_d20Start) || vds>=_d20Today));
+    if(_d20Active){
+      var _d20=dec20DailyPlan(vds);
+      list=_d20.tasks;
+      outDayInfo=_d20.dayInfo;
+      queue=[]; dropped=[]; used=0;
+    }
     return {
       tasks:list,
       dayInfo:outDayInfo, wk:base.wk, debtZ:base.debtZ, debtX:base.debtX,
@@ -8515,6 +8872,7 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
     function pioBanner(){
       try{
         var rollPrefix=viewDs>='2026-11-04'?rollPanel():'';
+        if(viewDs>=fmt(new Date())&&viewDs<='2026-12-20') return ''; // 新计划不显示旧欠账队列
         if(viewDs>='2026-11-04' && viewDs<='2026-11-15') return rollPrefix;
         if(viewDs<fmt(new Date())) return rollPrefix;
         var done=pioneerDoneKeys(), head=pioneerHead();
@@ -8603,7 +8961,7 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
     var rowsDivider='<div style="display:flex;align-items:center;gap:8px;margin:14px 2px 2px"><div style="flex:1;height:1px;background:#d1fae5"></div><div style="font-size:10px;color:#059669;font-weight:800;white-space:nowrap">✅ 已完成 '+doneTasks.length+' 项</div><div style="flex:1;height:1px;background:#d1fae5"></div></div>';
     var rows=rowsPending+(doneTasks.length?rowsDivider+rowsDone:'');
     host.innerHTML='<div style="background:var(--surface);border:1.5px solid #2563eb;border-radius:var(--rad);box-shadow:var(--sh);padding:12px 14px;margin-bottom:13px">'
-      +'<div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:center"><div style="font-size:15px;font-weight:800">'+(viewDs===fmt(new Date())?'📌 今日落地执行单':'📌 这一天的执行单')+'</div><div style="font-size:12px;color:var(--t2)">'+viewDs+' '+wk+' · '+esc(dayInfo[0])+' · 原计划距11/15 '+Math.max(0,diff(viewDs,EXAM))+'天</div></div>'
+      +'<div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:center"><div style="font-size:15px;font-weight:800">'+(viewDs===fmt(new Date())?'📌 今日落地执行单':'📌 这一天的执行单')+'</div><div style="font-size:12px;color:var(--t2)">'+viewDs+' '+wk+' · '+esc(dayInfo[0])+' · 距12/20考试 '+Math.max(0,diff(viewDs,EXAM))+'天</div></div>'
       +'<div style="font-size:12px;color:var(--t2);margin-top:4px">已完成 <b style="color:var(--p)">'+finished+'/'+total+'</b></div>'
       +pioBanner()
       +rows
@@ -8643,7 +9001,7 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
   // ==================== 周反馈自动汇总（v2026-10-23）====================
   // 执行单里勾了什么，这里直接算出来，不用手填
   function dayReport(d){
-    var tasks=((d>='2026-11-06'&&d<='2026-11-14')?buildFor(d).tasks:fullList(d)).filter(function(t){ return !t.doneDebt; });
+    var tasks=((d>='2026-11-06'&&d<='2026-12-20')?buildFor(d).tasks:fullList(d)).filter(function(t){ return !t.doneDebt; });
     var done=[], openProg=[], openDrill=[], deferred=[];
     tasks.forEach(function(t){
       var raw=(t.rawTitle||t.title||'');
