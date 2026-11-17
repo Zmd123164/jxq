@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Doit · 自选科目与民法重点版 | 2026-11-17 r2</title>
+<title>Doit · 每日记忆卡1小时 | 2026-11-17 r3</title>
 <style>
 :root{
   --bg:#f0f6ff;--surface:#fff;--s2:#f7faff;--border:#d0e2ff;
@@ -206,8 +206,11 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
 /* r2: optional subjects, isolated from required tasks */
 .exec17-custom-panel{margin-top:16px;padding:12px;border:1px solid #bbd5ff;border-radius:11px;background:#f7faff;font-size:12px;line-height:1.7;overflow-wrap:anywhere}.exec17-custom-panel-head{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}.exec17-custom-panel-head b{font-size:13px;color:#1e3a8a}.exec17-custom-panel-head small{font-size:10px;color:#64748b;font-weight:400;margin-left:5px}.exec17-custom-panel-head button{padding:8px 10px;border:0;border-radius:8px;background:#2563eb;color:#fff;font-size:11px;font-weight:700;cursor:pointer}.exec17-custom-panel-head button:disabled{background:#e2e8f0;color:#64748b;cursor:not-allowed}.exec17-custom-item-actions{display:flex;justify-content:flex-end;gap:6px;margin-top:4px}.exec17-custom-item-actions button,.exec17-custom-trash button{border:1px solid #cbd5e1;border-radius:6px;color:#475569;background:#fff;font-size:10px;padding:4px 7px;cursor:pointer}.exec17-custom-trash{margin-top:10px;font-size:11px;color:#64748b}.exec17-custom-trash>div{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:7px 0;border-bottom:1px solid #e2e8f0}.exec17-custom-modal{position:fixed;inset:0;z-index:12000;background:rgba(15,23,42,.5);padding:18px 12px;display:flex;justify-content:center;align-items:center;overflow-y:auto}.exec17-custom-form{width:100%;max-width:480px;max-height:calc(100dvh - 36px);overflow-y:auto;border-radius:15px;background:#fff;padding:18px;box-shadow:0 20px 65px #0f172a44;color:#1e293b;font-size:13px}.exec17-custom-form-head{display:flex;justify-content:space-between;gap:10px;align-items:center}.exec17-custom-form-head h3{font-size:17px;margin:0}.exec17-custom-form-head button{border:0;border-radius:6px;background:#f1f5f9;font-size:24px;line-height:1;padding:5px 9px;cursor:pointer}.exec17-custom-form label{display:block;margin:13px 0 5px;font-size:12px;font-weight:700}.exec17-custom-form input:not([type=hidden]),.exec17-custom-form select,.exec17-custom-form textarea{width:100%;min-width:0;font-size:16px;font-family:inherit;border:1px solid #cbd5e1;background:#fff;border-radius:8px;padding:10px;color:#1e293b;box-sizing:border-box}.exec17-custom-form input:focus,.exec17-custom-form select:focus,.exec17-custom-form textarea:focus{outline:2px solid #bfdbfe;outline-offset:1px}.exec17-custom-fields{display:grid;grid-template-columns:1fr 1fr;gap:10px}.exec17-custom-form-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:17px}.exec17-custom-form-actions button{border:1px solid #cbd5e1;border-radius:8px;padding:9px 13px;background:#f8fafc;color:#475569;font-size:13px;font-weight:700;cursor:pointer}.exec17-custom-form-actions button.primary{background:#2563eb;border-color:#2563eb;color:#fff}
 
+
+/* r3: daily memory-hour progress and entry point; same storage/timer infrastructure. */
+.exec17-memory-inline{margin:8px 0 4px;padding:9px;border:1px solid #c4b5fd;background:#faf7ff;border-radius:8px;color:#5b21b6;line-height:1.6;text-decoration:none!important;white-space:normal}.exec17-memory-total{display:flex;flex-direction:column;gap:2px}.exec17-memory-total b{font-size:11px}.exec17-memory-total small{font-size:10px;color:#7c639d}.exec17-memory-track{height:5px;margin:6px 0 8px;background:#e9ddfc;border-radius:9px;overflow:hidden}.exec17-memory-track i{display:block;height:100%;background:#8b5cf6;border-radius:9px}.exec17-memory-inline button{border:1px solid #c4b5fd;border-radius:7px;padding:6px 9px;background:#ede9fe;color:#5b21b6;font-size:11px;font-weight:700;cursor:pointer}.exec17-memory-inline>small{display:block;margin-top:5px;line-height:1.6}.exec17-memory-inline button:focus-visible{outline:2px solid #8b5cf6;outline-offset:2px}
 </style>
-<meta name="doit-release" content="2026-11-17-execution-r2-civil-focus">
+<meta name="doit-release" content="2026-11-17-execution-r3-daily-memory-60">
 </head>
 <body>
 
@@ -244,7 +247,7 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
     <button class="tb" onclick="showMemoryCard()" style="display:inline-flex;align-items:center">🧠 记忆卡</button>
   </div>
   <div style="font-size:10px;margin-top:4px;opacity:.8;cursor:pointer;display:inline-block" id="sync-status" onclick="manualSync()" title="点击立即同步合并">⚪ 未配置</div>
-  <div id="app-version" style="font-size:10px;margin-top:3px;opacity:.8">✅ 自选科目与民法重点版 v2026-11-17 r2（完成后可自选加练 · 民法分层标重点 · 原进度保留）</div>
+  <div id="app-version" style="font-size:10px;margin-top:3px;opacity:.8">✅ Doit v2026-11-17 r3（每日记忆卡另加1小时 · 自选科目与民法重点版保留）</div>
 </div>
 
 <div class="main">
@@ -273,7 +276,7 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
       <!-- progress -->
       <div style="background:var(--surface);border-radius:var(--rad);box-shadow:var(--sh);border:1px solid var(--border);padding:12px 14px;margin-bottom:13px">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;flex-wrap:wrap;gap:4px">
-          <span style="font-size:12px;color:var(--t2)">已学 <span id="cur-h" style="color:var(--p);font-weight:700">0.0</span>h / <span id="target-h">4h起步（稳定后再加量）</span></span>
+          <span style="font-size:12px;color:var(--t2)">已学 <span id="cur-h" style="color:var(--p);font-weight:700">0.0</span>h / <span id="target-h">5h起步（含记忆卡1h）</span></span>
           <span style="font-size:12px;color:var(--g);font-weight:700" id="cur-task-pct">任务 0%</span>
         </div>
         <div class="pbar-outer"><div class="pbar-fill" id="h-bar" style="width:0%;background:linear-gradient(90deg,#10b981,#059669)"></div></div>
@@ -406,7 +409,7 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
   <div class="debt" id="debt-banner" style="display:none"></div>
   <div class="card">
     <div class="ct">🗺 备考总规划 · 11/17双科执行校准</div>
-    <div class="alert" style="background:#eff6ff;border-color:#93c5fd;color:#1e3a8a">📌 沿用原文件12/20考试目标，以本场公告及准考证为准。本次公基50.6、综测以往50多；默认4h有效学习，稳定3个学习日后主动选择5.5h。综测独立进度从已确认的1/13继续；旧项只存档，不挤掉当前训练。</div>
+    <div class="alert" style="background:#eff6ff;border-color:#93c5fd;color:#1e3a8a">📌 沿用原文件12/20考试目标，以本场公告及准考证为准。本次公基50.6、综测以往50多；默认5h有效学习（含每天另加记忆卡1h），稳定3个学习日后主动选择6.5h。综测独立进度从已确认的1/13继续；旧项只存档，不挤掉当前训练。</div>
     <div id="plan-gap" style="margin-bottom:13px"></div>
   </div>
 </div>
@@ -1979,11 +1982,16 @@ function exec17Dose(d){
   Object.keys(p).forEach(function(k){var m=/^(\d{4}-\d{2}-\d{2})\|exec17_(?:regular_)?mode$/.exec(k);if(!m||m[1]<EXEC17_START||m[1]>d||m[1]<best)return;var v=String((p[k]||{}).note||'');if(v==='base'||v==='grow'){best=m[1];dose=v;}});
   return dose;
 }
+function exec17MemoryActive(d){return exec17Applies(d)&&d<'2026-12-20';}
 function exec17CoreIds(d){
-  if(!exec17Applies(d)||d==='2026-12-20'||exec17DayOfWeek(d)===0)return [];
-  if(d==='2026-12-18')return ['exec17_final'];
-  if(d==='2026-12-19')return ['exec17_prepare'];
-  return exec17Dose(d)==='rescue'?['exec17_rescue_gj','exec17_rescue_zc','exec17_rescue_note']:['exec17_gj','exec17_zc','exec17_review'];
+  if(!exec17MemoryActive(d))return [];
+  if(d==='2026-12-18')return ['exec17_final','exec17_memory'];
+  if(d==='2026-12-19')return ['exec17_prepare','exec17_memory'];
+  if(exec17DayOfWeek(d)===0)return ['exec17_memory'];
+  return exec17Dose(d)==='rescue'?['exec17_rescue_gj','exec17_rescue_zc','exec17_rescue_note','exec17_memory']:['exec17_gj','exec17_zc','exec17_review','exec17_memory'];
+}
+function exec17MemoryMinutes(d){
+  return ((typeof D!=='undefined'&&D&&D.logs)||[]).filter(function(l){return l.date===d&&(String(l.taskKey||'')==='landing_'+d+'_exec17_memory'||(!l.taskKey&&l.subject==='记忆卡'&&l.mode==='背诵'));}).reduce(function(n,l){return n+(Number(l.duration)||0);},0);
 }
 function exec17Minutes(d){return ((typeof D!=='undefined'&&D&&D.logs)||[]).filter(function(l){return l.date===d;}).reduce(function(s,l){return s+(Number(l.duration)||0);},0);}
 function exec17OptionalMinutes(d){return ((D&&D.logs)||[]).filter(function(l){return l.date===d&&String(l.taskKey||'').indexOf('landing_'+d+'_exec17_custom_')===0;}).reduce(function(n,l){return n+(Number(l.duration)||0);},0);}
@@ -1991,23 +1999,24 @@ function exec17RequiredMinutes(d){return Math.max(0,exec17Minutes(d)-exec17Optio
 function exec17Qualified(d){
   if(!exec17StudyDay(d)||exec17Dose(d)==='rescue')return false;
   var m=((D.landing||{})[d])||{};
-  return ['exec17_gj','exec17_zc','exec17_review'].every(function(k){return !!m[k];})&&exec17RequiredMinutes(d)>=240;
+  return ['exec17_gj','exec17_zc','exec17_review','exec17_memory'].every(function(k){return !!m[k];})&&exec17RequiredMinutes(d)>=300&&exec17MemoryMinutes(d)>=60;
 }
 function exec17PreviousDays(d,n){var out=[],x=d;for(var i=0;i<45&&out.length<n;i++){x=exec17DateAdd(x,-1);if(x<EXEC17_START)break;if(exec17StudyDay(x))out.push(x);}return out;}
 function exec17QualifiedStreak(d){var days=exec17PreviousDays(d,3),n=0;for(var i=0;i<days.length;i++){if(!exec17Qualified(days[i]))break;n++;}return n;}
 function exec17Target(d){
-  if(d==='2026-12-20'||d==='2026-12-19'||exec17DayOfWeek(d)===0)return 0;
-  if(d==='2026-12-18')return 1.5;
-  return exec17Dose(d)==='rescue'?1:exec17Dose(d)==='grow'?5.5:4;
+  if(d==='2026-12-20')return 0;
+  if(d==='2026-12-18')return 2.5;
+  if(d==='2026-12-19'||exec17DayOfWeek(d)===0)return 1;
+  return exec17Dose(d)==='rescue'?2:exec17Dose(d)==='grow'?6.5:5;
 }
 function exec17GoalLabel(d){
-  if(d==='2026-12-20')return '考试日 · 按准考证执行';
-  if(d==='2026-12-19')return '用品准备 · 不设学习时长';
-  if(d==='2026-12-18')return '轻复习参考1.5h';
-  if(exec17DayOfWeek(d)===0)return '休息／缓冲日 · 无必做任务';
-  var mode=exec17Dose(d);return mode==='rescue'?'1h应急 · 不计连续达标':mode==='grow'?'5.5h加量 · 核心仍为4h':'4h起步 · 稳定后再加量';
+  if(d==='2026-12-20')return '考试日 · 不加记忆卡任务';
+  if(d==='2026-12-19')return '用品准备＋记忆卡1h';
+  if(d==='2026-12-18')return '2.5h轻量 · 含记忆卡1h';
+  if(exec17DayOfWeek(d)===0)return '周日轻量 · 仅记忆卡1h';
+  var mode=exec17Dose(d);return mode==='rescue'?'2h应急 · 含记忆卡1h':mode==='grow'?'6.5h加量 · 含记忆卡1h':'5h起步 · 含记忆卡1h';
 }
-function exec17FeedbackContext(){return '【11/17执行校准】本次公基50.6分，答对51/100；法律9/24、政治15/27、常识7/14、公文7/9、数量0/5。综测以往50多分，刘流13节仅确认已听第1节；每节原长2—3小时，实际课次以独立进度卡为准。学生可用时间充足，主要障碍是手机与拖延，不是每天只有2—3小时空闲。默认4h有效学习（公基90min＋综测120min＋短复习30min），稳定完成3个学习日后主动选择5.5h；不要自动按日期加量，不再要求7.5h底线。两科并行，综测听课、独立手写、改稿同步；周六公基周测、第二周起综测限时训练与复盘不可被旧欠课挤掉。周日休息。旧项仅作档案，普通日可主动借用一个错点替换30min短复习，不自动结清原任务。原计划完成后可添加自选科目加练；自选计时与完成单独记录，不计原计划分母、不提高原目标、不自动顺延或替代原计划达标。考试目标沿用用户文件12/20，具体时长、题型、计分以本场公告与准考证为准。';}
+function exec17FeedbackContext(){return '【11/17执行校准＋每日记忆卡】本次公基50.6分，答对51/100；法律9/24、政治15/27、常识7/14、公文7/9、数量0/5。综测以往50多分，刘流13节仅确认已听第1节；每节原长2—3小时，实际课次以独立进度卡为准。学生可用时间充足，主要障碍是手机与拖延。用户明确选择每日固定另加记忆卡背诵60分钟，周日、应急日、考前减量日均保留，12/20考试当天不加。普通日5h（原公基90min＋综测120min＋短复习30min不减，另加记忆卡60min）；稳定3个学习日后可主动选6.5h；应急日2h；周日仅记忆卡1h；12/18原轻回看1.5h另加记忆卡1h共2.5h；12/19用品准备外加记忆卡1h。记忆卡可拆30＋30分钟，以主动回忆、到期和错题卡为主，不要求清空或盲开新卡，不同任务不得重复计时。四项完成、原计划至少5h计时且其中记忆卡至少60min，才作为新规则下的连续达标日；应急、周日和考前减量不计完整达标。不要按日期自动加量，不重写历史记录。两科并行，综测听课、独立手写、改稿同步；周测和第二周起综测限时训练与复盘替换原块，不再叠加。旧项只作档案，普通日可借一个错点替换30min短复习，不自动结清原任务。原计划（包括记忆卡60min）全部打卡后可添加自选加练；自选独立统计，不提高原目标，不滚成次日欠账，不替代原计划达标。记忆卡评分、SRS与课程进度仍分别保存；考试日期、题型和时长以本场公告及准考证为准。';}
 
 function dayTargetH(dateKey){const _dk0=dateKey||ds(new Date());
   if(exec17Applies(_dk0))return exec17Target(_dk0);
@@ -2823,7 +2832,7 @@ function renderSidePanel(date){
     <div class="sp-item"><b>本次公基：</b>50.6分，51/100；法律9/24、政治15/27、常识7/14优先补漏。</div>
     <div class="sp-item"><b>公文：</b>7/9，压缩长课、保留错题与猜对题复测；资料4/5仅作暂时保温。</div>
     <div class="sp-item"><b>综测：</b>以往50多；当前刘流${st.done}/13，${st.next?'真实下一节为第'+st.next+'节':'已标记听完，转独立作答和精改'}。每节原长2—3h，长课拆开，听课/手写/改稿同步，每周约3节只是参考。</div>
-    <div class="sp-item"><b>每周：</b>周六公基代表卷；第二周起周五综测整套、周六精改；周日休息。整套训练替换课程块，不叠加。</div>
+    <div class="sp-item"><b>每周：</b>周六公基代表卷；第二周起周五综测整套、周六精改；每天另背记忆卡1h，周日只保留这1h。整套训练替换课程块，不叠加。</div>
     <div class="sp-item"><b>手机：</b>离手或手动限制娱乐应用；网页不锁手机。晚开始不作废，直接接着第一块做。</div>
     <div class="sp-item"><b>旧项：</b>只存档，不顶掉当前主线；可在普通日自选一个错点替换30min短复习，不自动结清原任务。原32节与其他申论进度保留，不当作刘流13节进度。</div>`;return;
   }
@@ -3060,10 +3069,10 @@ function renderScoreGuess(){
 // ==================== RENDER SCHEDULE ====================
 const NEW_PHASES=[
  {s:'2026-10-15',e:'2026-11-16',name:'历史方案与记录',icon:'🗂',desc:'保留旧计划、打卡、计时和备注；历史日期经过不代表完成。11/17起按本次模考与执行情况校准，不将旧任务自动挤进当前三块。'},
- {s:'2026-11-17',e:'2026-11-19',name:'启动校准 · 先落实4小时',icon:'🌱',desc:'公基90分钟＋综测120分钟＋短复习30分钟。手机先离手；长课拆开，课例先独立写再听讲。日期只是建议阶段，三天过去不会自动视为达标或加量。'},
- {s:'2026-11-20',e:'2026-12-13',name:'两科并行 · 稳定后自选加量',icon:'🔧',desc:'默认继续4h；此前连续3个学习日完成三核心块且实学记录达到4h后，再主动选择5.5h（公基、综测各加45分钟）。综测每周约3节仅为参考，按真实进度接续；周六公基整卷，第二周起穿插综测限时整套与精改，替换而非叠加任务。周日休息。'},
+ {s:'2026-11-17',e:'2026-11-19',name:'启动校准 · 三块4h＋记忆卡1h',icon:'🌱',desc:'公基90分钟＋综测120分钟＋短复习30分钟不减，再独立背诵记忆卡60分钟，共5h。手机先离手；长课拆开，课例先独立写再听讲。日期只是建议阶段，三天过去不会自动视为达标或加量。'},
+ {s:'2026-11-20',e:'2026-12-13',name:'两科并行 · 稳定后自选加量',icon:'🔧',desc:'默认5h（含记忆卡1h）；此前连续3个学习日完成四项必做、实学记录达5h且记忆卡至少60min后，再主动选6.5h（公基、综测各加45分钟）。综测每周约3节仅为参考，按真实进度接续；周六公基整卷，第二周起穿插综测限时整套与精改，替换而非叠加任务。周日其余主线休息，仅背记忆卡1h。'},
  {s:'2026-12-14',e:'2026-12-17',name:'考前整合 · 新题复测与完整作答',icon:'🎯',desc:'两科以限时作答、错点复测和精改为主；综测按本场题型检查能否独立完成，不为听完13节盲目赶课。法律按最近分项失分补漏，不写死刑法优先；常识经管短补，公文保温。'},
- {s:'2026-12-18',e:'2026-12-19',name:'轻量收官',icon:'🌙',desc:'12/18约90分钟回看高频错点、少量已标记卡片和综测框架；12/19检查用品、交通与睡眠，不设学习时长。未完成记录不删除，也不强行补课。'},
+ {s:'2026-12-18',e:'2026-12-19',name:'轻量收官',icon:'🌙',desc:'12/18原90分钟轻回看另加记忆卡60分钟，共2.5h；12/19用品、交通与睡眠检查之外，保留记忆卡1h。考前只背已学内容，不开新卡、不熬夜。未完成记录不删除、不强行补课。'},
  {s:'2026-12-20',e:'2026-12-20',name:'目标考试日',icon:'🏁',desc:'沿用文件中已设置的12/20目标；实际考试日期、科目、题型和时长以你那场公告及准考证为准。当天不排课程、刷题或补债。'},
  {s:'2026-12-21',e:'2027-06-30',name:'考后 · 按新目标再安排',icon:'🔗',desc:'考后休息，再依据实际目标恢复长期备考；不自动执行本轮遗留清单。'}
 ];
@@ -3085,13 +3094,13 @@ function newPlanOverviewHTML(){
  const rows=EXEC17_MOCK.parts.map(x=>`<tr><td>${x.name}</td><td>${x.c}/${x.n}</td><td>${(x.c/x.n*100).toFixed(1)}%</td><td>${x.n-x.c}</td><td>${x.advice}</td></tr>`).join('');
  return `<div class="exec17-overview"><h3 style="font-size:17px;color:#1e3a8a;margin-bottom:8px">11/17校准：两科并行，先完成，再加量</h3>
  <div class="exec17-callout"><b>本次依据：</b>公基50.6分，答对51题、答错49题，用时64分43秒；综测以往50多分。刘流13节目前仅确认听完第1节，每节原长2—3小时。可用时间充足，主要障碍是手机与拖延，不是每天只有两三小时空闲。<br><b>目标日期：</b>沿用原文件12/20，具体以本场公告和准考证为准，不用旧计划日期代替官方通知。</div>
- <div class="exec17-stat-grid"><div><b>4h</b><span>默认起步 · 有效学习</span></div><div><b>5.5h</b><span>稳定3个学习日后自选</span></div><div><b>1h</b><span>状态差时应急 · 不计连续达标</span></div></div>
+ <div class="exec17-stat-grid"><div><b>5h</b><span>默认起步 · 含记忆卡1h</span></div><div><b>6.5h</b><span>稳定3个学习日后自选</span></div><div><b>2h</b><span>应急 · 含记忆卡1h</span></div></div>
  <h4 style="margin:14px 0 7px">本次模考分项（以题数分析，不等于每题一分）</h4><div style="overflow-x:auto"><table class="exec17-table"><thead><tr><th>模块</th><th>答对/总题</th><th>正确率</th><th>错题</th><th>安排依据</th></tr></thead><tbody>${rows}</tbody></table></div>
  <div style="font-size:11px;color:#64748b;margin-top:6px">法律与政治合计错27题，占全部错题约55%；一套模拟卷不等于正式考试固定权重。分数、答对题数和用时按APP原值保留，不强行按一题一分换算。小样本高正确率不视为稳定强项。</div>
- <h4 style="margin:15px 0 6px">每天三块，不再要求7.5小时底线</h4>
- <ol style="padding-left:20px;font-size:12px;line-height:1.9"><li><b>公基90分钟：</b>法律与政治主攻；先题后补对应知识，再订正。首日先把15道法律错题分法别，不预设刑法最弱。</li><li><b>综测120分钟：</b>从真实下一节继续；先尝试例题，再听讲，最后改写漏点。视频2—3小时可拆两次，计时完成不等于整节已听完。</li><li><b>短复习30分钟：</b>常识省情、经管、公文易混点与卡片按日轮换；只复习到期/错题卡，不要求清空。周测、综测整套日优先留给复盘。</li></ol>
- <div class="exec17-callout" style="margin-top:10px"><b>加量规则：</b>先稳定完成三核心块及4h实学记录，连续3个学习日后主动选5.5h；增加公基45分钟和综测45分钟，不自动升级。每周约3节是参考，不按日期跳课或自动标记完成。<br><b>手机规则：</b>学习前物理隔离手机；需用本机看课则手动开勿扰、限制娱乐应用；短休息不刷短视频，娱乐集中到固定窗口。本网页只提醒，不会锁手机或识别真实使用。<br><b>旧项规则：</b>只保留档案，绝不顶掉当前主线、周测或精改。普通日可自选一个错点，替换当天30分钟短复习，不额外加时；不自动结清原任务。</div>
- <div class="exec17-callout" style="margin-top:10px"><b>新增自选科目：</b>当天原计划全部打卡后，在执行单底部点“＋添加自选科目”。可选择或输入科目、内容、时长和学习方式，支持计时、备注、打卡、编辑及移除恢复。自选不改原目标，不计原计划分母，不滚入明天欠账；自选时长不替代原计划的连续达标核验。</div><h4 style="margin:15px 0 6px">每周节奏</h4><div style="font-size:12px;line-height:1.9">周一/三：法律实测弱项；周二/四：政治理论/时政；周五：法律政治混合。周六：公基代表卷限时90分钟并分次订正。第二周起周五综测限时整套、周六精改，替换课程块；实际时长按本场规定调整，不额外叠加。周日无必做学习，未完成不形成整天补债。公文压缩为短复测；数量只补少数基础题型，资料与判断少量保温。若经管反复错，可补15—30分钟，不永久禁止补课。</div>
+ <h4 style="margin:15px 0 6px">每天四项：原三块不减，另加记忆卡1小时</h4>
+ <ol style="padding-left:20px;font-size:12px;line-height:1.9"><li><b>公基90分钟：</b>法律与政治主攻；先题后补对应知识，再订正。首日先把15道法律错题分法别，不预设刑法最弱。</li><li><b>综测120分钟：</b>从真实下一节继续；先尝试例题，再听讲，最后改写漏点。视频2—3小时可拆两次，计时完成不等于整节已听完。</li><li><b>短复习30分钟：</b>常识省情、经管、公文易混点与卡片按日轮换；只复习到期/错题卡，不要求清空。周测、综测整套日优先留给复盘。</li><li><b>记忆卡60分钟（另加）：</b>可拆30＋30分钟，优先到期、错题与实际薄弱专题；先回忆再翻面评分，不规定必须背多少张、不要求清空。周日、应急日和考前减量日都保留，12/20考试当天不加；不与其他学习块重复计时，未完成不自动翻倍补债。</li></ol>
+ <div class="exec17-callout" style="margin-top:10px"><b>加量规则：</b>先稳定完成四项必做及5h实学记录（含记忆卡至少60min），连续3个学习日后主动选6.5h；增加公基45分钟和综测45分钟，不自动升级。每周约3节是参考，不按日期跳课或自动标记完成。<br><b>手机规则：</b>学习前物理隔离手机；需用本机看课则手动开勿扰、限制娱乐应用；短休息不刷短视频，娱乐集中到固定窗口。本网页只提醒，不会锁手机或识别真实使用。<br><b>旧项规则：</b>只保留档案，绝不顶掉当前主线、周测或精改。普通日可自选一个错点，替换当天30分钟短复习，不额外加时；不自动结清原任务。</div>
+ <div class="exec17-callout" style="margin-top:10px"><b>新增自选科目：</b>当天原计划全部打卡后，在执行单底部点“＋添加自选科目”。可选择或输入科目、内容、时长和学习方式，支持计时、备注、打卡、编辑及移除恢复。自选不改原目标，不计原计划分母，不滚入明天欠账；自选时长不替代原计划的连续达标核验。</div><h4 style="margin:15px 0 6px">每周节奏</h4><div style="font-size:12px;line-height:1.9">周一/三：法律实测弱项；周二/四：政治理论/时政；周五：法律政治混合。周六：公基代表卷限时90分钟并分次订正。第二周起周五综测限时整套、周六精改，替换课程块；实际时长按本场规定调整，不额外叠加。周日仅固定记忆卡1h，其余主线休息；未完成不形成整天补债。公文压缩为短复测；数量只补少数基础题型，资料与判断少量保温。若经管反复错，可补15—30分钟，不永久禁止补课。</div>
  <h4 style="margin:15px 0 8px">阶段建议（不是自动完成表）</h4><div class="debt-grid">${cards}</div>
  <div style="margin-top:12px;font-size:11px;color:#64748b">本次改动从11/17生效；原存储键、历史打卡、日志、错题、笔记、刘流13节独立进度及内嵌记忆卡保留。更换文件或打开地址可能改变浏览器存储环境，请先在旧版导出备份；若新版未显示原记录，使用原同步配置或导入备份，不要清除网站数据。</div></div>`;
 }
@@ -3320,7 +3329,8 @@ function updateDayProgress(dkey){
   const _th=dayTargetH(dkey);
   const _thEl=document.getElementById('target-h');
   if(_thEl){
-    if(dkey==='2026-12-20') _thEl.textContent='考试日';
+    if(exec17Applies(dkey)) _thEl.textContent=exec17GoalLabel(dkey);
+    else if(dkey==='2026-12-20') _thEl.textContent='考试日';
     else if(dkey>='2026-12-18'&&dkey<='2026-12-19') _thEl.textContent='轻量收官';
     else if(dkey>='2026-11-06'&&dkey<='2026-12-20'&&new Date(dkey+'T12:00:00').getDay()===0) _thEl.textContent='休息／缓冲日（无必做任务）';
     else _thEl.textContent=exec17Applies(dkey)?exec17GoalLabel(dkey):(dkey>='2026-11-06'?'历史参考 '+_th+'h':('目标 '+_th+'h（底线）'));
@@ -4075,6 +4085,7 @@ const SUBJ_DEFAULT=[
   {v:'小黑-理论',label:'🎓 小黑政治·理论课（已完4/4）'},{v:'小黑-刷题',label:'🔴 超格政治·系统课'},
   {v:'公基-系统',label:'📚 公基·系统课（马克）'},{v:'公基-刷题',label:'📝 公基·刷题课'},
   {v:'申论-小题',label:'⭐ 白鹭申论·小题课'},{v:'申论-作文',label:'⭐ 白鹭申论·作文课'},{v:'申论',label:'✍️ 申论写作/作业'},
+  {v:'记忆卡',label:'🧠 记忆卡背诵'},
   {v:'复盘',label:'🔄 错题复盘'},
 ];
 function getSubjs(){
@@ -7893,6 +7904,8 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
           showToast('已取消「'+t.pioneerKey+'开荒」，它会回到队列前面','orange');
         }else if(t.carry){
           showToast(checked?'✅ 已续做并记回原日期；其余未完成项仍按顺序保留。':'已取消续做标记，这项会重新回到待续队列。',checked?'#059669':'orange');
+        }else if(t.exec17DailyMemory){
+          showToast(checked?'已记录今日记忆卡背诵完成；卡片掌握程度仍按真实情况评分。':'已取消今日记忆卡完成标记，原计时与备注保留。');
         }else if(t.rollHint && !t.rollLegacy){
           showToast(checked?'已记录这个学习时段；章节或专项进度请在上方进度卡单独标记。':'已取消这个时段的标记。');
         }else{
@@ -8591,21 +8604,49 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
     return '<section class="exec17-custom-panel" id="exec17-custom-panel"><div class="exec17-custom-panel-head"><b>自选加练 <small>已完成 '+n+'/'+active.length+'</small></b><button type="button" id="exec17-add-custom" onclick="exec17OpenCustom()" '+(g.ok?'':'disabled')+'>＋ 添加自选科目</button></div><div class="exec17-small" id="exec17-custom-gate">'+esc(g.message)+'</div><div class="exec17-small">可选择或输入科目，设置内容、时长和学习方式；支持计时、备注、勾选及移除恢复。不计原计划分母，不自动提高目标，也不生成补债。</div>'+cards+trash+'</section>';
   }
 
+  // 每日固定记忆卡：用户选择周日、应急日和考前减量日也保留；考试日除外。
+  function exec17DailyMemoryTask(vds){
+    var t=exec17Task(vds,'exec17_memory',60,'记忆卡背诵：每天1小时（可拆30＋30分钟）',
+      '每天单独背诵60分钟，可拆成30＋30分钟或多段累计；周日、应急日和考前减量日同样保留，12/20考试当天不安排。\n先点本任务的“计时”，再点“打开记忆卡”；休息和离开时结束计时，回来可继续累计。正计时不会到60分钟自动停止。\n先处理到期卡、错题卡和实际薄弱专题：先闭卷回忆，再翻面核对，按真实掌握程度评分。民法可用重点分层版；不规定必须背多少张，不要求清空卡库，不为凑时长盲开大量新卡。\n这1小时另加，不挤占公基90分钟、综测120分钟和短复习30分钟；同一段学习不重复计时。\n做满后记下科目、实际分钟、复习与遗忘情况，再自行勾选完成。计时不会自动打卡或修改记忆卡评分、卡号、SRS间隔和课程进度。\n没完成仍保留原日记录；明天仍是1小时，不自动翻倍补债。考前只复习已学内容，不开新卡、不熬夜。',
+      '记录：科目__ / 实背__分钟 / 复习__张 / 仍易忘__','记忆卡','背诵');
+    t.exec17DailyMemory=true;
+    t.rollHint='每天固定60分钟 · 独立计时、可分段累计；不与其他学习块重复计时。';
+    t.rawDetail=t.detail;return t;
+  }
   function exec17BaseDayPlan(vds,forcedDose){
+    var p=exec17WithoutDailyMemoryPlan(vds,forcedDose);
+    if(exec17MemoryActive(vds)){
+      var list=(p.tasks||[]).slice(),at=list.findIndex(function(t){return t.id==='exec17_gj_plus';});
+      if(at<0)at=list.length;
+      list.splice(at,0,exec17DailyMemoryTask(vds));p.tasks=list;
+    }
+    return p;
+  }
+  window.exec17OpenMemory=function(ev){
+    if(ev){ev.preventDefault();ev.stopPropagation();}
+    if(typeof showMemoryCard==='function')showMemoryCard();
+  };
+  function exec17MemoryInline(t){
+    if(!t.exec17DailyMemory)return '';
+    var n=exec17MemoryMinutes(viewDs),left=Math.max(0,60-n);
+    return '<div class="exec17-memory-inline" onclick="event.stopPropagation()"><div class="exec17-memory-total"><b>本日已记录 '+esc(n)+'/60 分钟</b><small>'+(left?'还差 '+esc(left)+' 分钟，可分次累计':'时长已达到；是否完成请按实际勾选')+'</small></div><div class="exec17-memory-track"><i style="width:'+Math.min(100,n/60*100)+'%"></i></div><button type="button" onclick="exec17OpenMemory(event)" title="仅打开记忆卡；请先单独开始计时，休息时结束">🧠 打开记忆卡</button><small class="exec17-small">先计时再背诵；正计时需手动结束。评分进度独立保存。</small></div>';
+  }
+
+  function exec17WithoutDailyMemoryPlan(vds,forcedDose){
     var dow=parse(vds).getDay(),dose=forcedDose||exec17Dose(vds),stage=vds>='2026-12-14',list=[];
     if(vds==='2026-12-20')return {dayInfo:['目标考试日','按本场准考证执行，今天不排课程、刷题或补债。'],tasks:[],protectedReview:true};
-    if(vds==='2026-12-19')return {dayInfo:['考前用品与睡眠','不设学习时长；旧项只保留记录，不在今天补课。'],protectedReview:true,tasks:[exec17Task(vds,'exec17_prepare',0,'检查证件、文具、交通与睡眠','只检查准考证、身份证、文具、考点路线和出发时间。\n不做新题，不追赶课程；按时休息。','确认：用品__ / 路线__ / 睡眠__','复盘','复盘')]};
-    if(vds==='2026-12-18')return {dayInfo:['轻量收官','约90分钟回看已整理内容，未完成项不清除、不强塞。'],protectedReview:true,tasks:[exec17Task(vds,'exec17_final',90,'高频错点＋综测框架轻回看','只回看已经标记的高频错点，不扩大范围。\n15分钟到期/错题卡主动回忆＋30分钟法律政治易混规则＋45分钟综测采分点、应用文格式和写作框架回看。\n不刷新卷，不补完旧课，也不要求清空卡片。','记录：最易错规则__ / 综测提醒__','复盘','复盘')]};
-    if(dow===0)return {dayInfo:['休息／缓冲日','今天无必做学习。可花约15分钟记录本周情况，但不要求补课；应急模式和旧欠项都不会自动占用周日。'],tasks:[],protectedReview:true};
-    if(dose==='rescue')return {dayInfo:['1h应急 · 不计连续达标','仅当天使用；下一学习日恢复原来的4h或5.5h设置。不把整天欠账叠到明天。'],protectedReview:true,tasks:[
+    if(vds==='2026-12-19')return {dayInfo:['用品准备＋记忆卡1h','保留证件、交通与睡眠检查，另背已学记忆卡60分钟；不补旧课，不熬夜。'],protectedReview:true,tasks:[exec17Task(vds,'exec17_prepare',0,'检查证件、文具、交通与睡眠','本项只检查准考证、身份证、文具、考点路线和出发时间。\n另有独立记忆卡60分钟任务，只回忆已学内容；不做新题、不追赶课程，按时休息。','确认：用品__ / 路线__ / 睡眠__','复盘','复盘')]};
+    if(vds==='2026-12-18')return {dayInfo:['2.5h轻量收官','原90分钟轻回看保留，另加记忆卡60分钟；只回看已整理内容，不追补旧课。'],protectedReview:true,tasks:[exec17Task(vds,'exec17_final',90,'高频错点＋综测框架轻回看','只回看已经标记的高频错点，不扩大范围。\n15分钟到期/错题卡主动回忆＋30分钟法律政治易混规则＋45分钟综测采分点、应用文格式和写作框架回看。\n不刷新卷，不补完旧课，也不要求清空卡片。','记录：最易错规则__ / 综测提醒__','复盘','复盘')]};
+    if(dow===0)return {dayInfo:['周日轻量 · 记忆卡1h','按你的选择，仅固定背诵记忆卡60分钟；其余公基、综测主线休息，不用旧欠项挤占。每周反馈可另花约15分钟如实记录，不计入背诵时长。'],tasks:[],protectedReview:true};
+    if(dose==='rescue')return {dayInfo:['2h应急 · 含记忆卡1h','原25分钟公基＋25分钟综测＋10分钟收尾保留，另加记忆卡60分钟。仅当天应急，下一学习日恢复5h或6.5h；不计完整达标，不叠加旧欠账。'],protectedReview:true,tasks:[
       exec17Task(vds,'exec17_rescue_gj',25,'公基：只处理一个实际错点','选一个法律或政治的高价值错点。\n先闭卷说规则，再做少量同类题并核对；不要求补完整章。25分钟到点记下停点。','记录：考点__ / 题目__ / 仍卡__','公基-刷题','刷题'),
       exec17Task(vds,'exec17_rescue_zc',25,'综测：独立写一个课例片段并核对','从实际下一节或最近例题里选一个明确片段。\n独立写出要点、应用文主体或一个论证段，再对照讲解标漏点；这不等于整套手写或整节已听完。','记录：课例片段__ / 漏点__','综测-真题','手写'),
-      exec17Task(vds,'exec17_rescue_note',10,'收尾：写清下一步，结束当天','记下课程停点和下次第一步，把纸笔放好。\n不重新排满明天，不用应急记录替代4小时核心完成。','记录：下次从__开始','复盘','复盘') ]};
+      exec17Task(vds,'exec17_rescue_note',10,'收尾：写清下一步，结束当天','记下课程停点和下次第一步，把纸笔放好。\n不重新排满明天，不用应急记录替代5小时四项必做完成。','记录：下次从__开始','复盘','复盘') ]};
 
     var gjTitle,gjDetail,gjOut='记录：专题__ / 对__/题 / 猜对__ / 复做仍错__';
     if(vds==='2026-11-17'){
       gjTitle='法律分项诊断：先拆这次15道错题';
-      gjDetail='先定位具体法别，不预设刑法最弱。\n15分钟：把这次法律24题标成民法、刑法、行政法、宪法/其他，并标确定、猜对、错题。\n30分钟：从实际失分最集中的一个小考点补规则；原卷不可用时，先做8—12道分项诊断题。\n35分钟：做同考点新题、订正，解释选项为什么错。\n10分钟：闭卷说出3条规则，记录未解决的题号。记忆卡只复习对应错点，计入这90分钟。';
+      gjDetail='先定位具体法别，不预设刑法最弱。\n15分钟：把这次法律24题标成民法、刑法、行政法、宪法/其他，并标确定、猜对、错题。\n30分钟：从实际失分最集中的一个小考点补规则；原卷不可用时，先做8—12道分项诊断题。\n35分钟：做同考点新题、订正，解释选项为什么错。\n10分钟：闭卷说出3条规则，记录未解决的题号。本块如需核对卡片只作针对性查证，计入这90分钟；另有独立60分钟记忆卡背诵，两块不能重复计时。';
       gjOut='记录：民错__ / 刑错__ / 行政错__ / 其他错__；首补考点__';
     }else if(vds==='2026-11-18'){
       gjTitle='政治错题拆分：理论／时政／表述混淆';
@@ -8666,8 +8707,8 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
       list.push(exec17Task(vds,'exec17_gj_plus',45,'加量①：公基新题复测／错点短补',small+'\n这是稳定后自选的加量，不挤掉三核心块；到点结束，不把未做完的整块叠到明天。','记录：考点__ / 新题对__ / 重复错__','公基-刷题','刷题'));
       list.push(exec17Task(vds,'exec17_zc_plus',45,'加量②：综测独立作答与精改','用45分钟独立写一道对应小题或完整关键部分，并对照漏点改写。\n如有整套训练遗留，优先精改；长课未完且影响当前题型时，可补必要片段，但不能整块只播放视频。','记录：独写__ / 改写漏点__','综测-真题','手写'));
     }
-    return {dayInfo:[dose==='grow'?'5.5h加量 · 两科并行':'4h起步 · 三核心块',
-      '有效时长不含休息；先做公基90分钟、综测120分钟、短复习30分钟。周日休息；旧欠项不自动顶替当前任务。'],tasks:list,protectedReview:protectedReview};
+    return {dayInfo:[dose==='grow'?'6.5h加量 · 含记忆卡1h':'5h起步 · 四项必做',
+      '有效时长不含休息；公基90分钟、综测120分钟、短复习30分钟保持，再独立背诵记忆卡60分钟。周日仅记忆卡1小时；旧欠项不顶替当前任务。'],tasks:list,protectedReview:protectedReview};
   }
   // 旧项档案只读取原记录，不自动勾选、不清除、不占用今天的任务卡。
   function exec17Archive(vds,plan){
@@ -8698,11 +8739,11 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
     if(['base','grow','rescue'].indexOf(mode)<0)return;
     var today=fmt(new Date());if(viewDs!==today||!exec17StudyDay(today)){showToast('只在当天学习日切换强度；历史记录不重排。','orange');return;}
     if(typeof tOn!=='undefined'&&tOn){showToast('请先结束当前计时，再切换强度。','orange');return;}
-    if(mode==='grow'&&exec17QualifiedStreak(today)<3&&!confirm('尚未核验此前连续3个学习日均完成三核心块且计时达到4小时。建议先保留4h；如果你在线下已经稳定做到，并确认不会挤掉休息，可主动选择5.5h。仍要切换吗？'))return;
-    if(mode==='rescue'&&!confirm('应急仅安排25分钟公基＋25分钟综测＋10分钟收尾，且不计连续达标。已有记录不删除；下一学习日恢复原设置。今天确定使用吗？'))return;
+    if(mode==='grow'&&exec17QualifiedStreak(today)<3&&!confirm('尚未核验此前连续3个学习日均完成四项必做、原计划计时达到5小时且记忆卡至少60分钟。建议先保留5h；如果线下已经稳定做到，并确认不会挤掉休息，可主动选择6.5h。仍要切换吗？'))return;
+    if(mode==='rescue'&&!confirm('应急保留25分钟公基＋25分钟综测＋10分钟收尾，并按你的选择另背记忆卡60分钟，共2小时，不计完整连续达标。已有记录不删除；下一学习日恢复原设置。今天确定使用吗？'))return;
     if(mode!=='rescue')setNote(today,'exec17_regular_mode',mode);
     setNote(today,'exec17_mode',mode);CACHE_VER++;render();try{renderSchedule();updateDayProgress(today);}catch(e){}
-    showToast(mode==='grow'?'已主动选择5.5h；新增两科各45分钟。':mode==='rescue'?'今天使用1h应急；不累计整天补债。':'已选择4h起步；不按日期自动加量。');
+    showToast(mode==='grow'?'已主动选择6.5h（含记忆卡1h）；两科各加45分钟。':mode==='rescue'?'今天2h应急（含记忆卡1h）；不累计整天补债。':'已选择5h起步（含记忆卡1h）；不自动加量。');
   };
   window.exec17Phone=function(checked){var today=fmt(new Date());if(viewDs!==today)return;var s=store();s.landing[today]=s.landing[today]||{};s.landingTs[today]=s.landingTs[today]||{};s.landing[today].exec17_phone=!!checked;s.landingTs[today].exec17_phone=Date.now();saveLocal();saveCloud();};
   window.exec17OpenDate=function(d){if(!/^\d{4}-\d{2}-\d{2}$/.test(d))return;curDate=parse(d);renderSchedule();applyView(d);render();window.scrollTo(0,0);};
@@ -8721,15 +8762,15 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
     var disabled=!current||!study?' disabled':'',phone=!!lm.exec17_phone,storageWarning='';
     try{localStorage.getItem('doit2026_dashboard_v1');}catch(e){storageWarning='<div style="margin:8px 0;padding:9px;border:1px solid #fcd34d;border-radius:8px;background:#fffbeb;color:#92400e;font-size:11px"><b>当前是受限预览／存储不可用。</b>此处打卡可能无法保存。请下载后在原浏览器或原站点打开；若记录未显示，先从旧版导出备份再导入，不要清除旧数据。</div>';}
     var status=dose==='rescue'?'应急不计连续达标':n+'/'+core.length+'个核心块 · 原计划计时'+(exec17RequiredMinutes(viewDs)/60).toFixed(1)+'h'+(exec17OptionalMinutes(viewDs)>0?' · 自选额外'+(exec17OptionalMinutes(viewDs)/60).toFixed(1)+'h':'');
-    var buttons=study?'<div class="exec17-dose-grid">'+[['base','4h 起步'],['grow','5.5h 稳定后加量'],['rescue','1h 当天应急']].map(function(x){return '<button type="button" class="exec17-dose '+(dose===x[0]?'is-on':'')+'" onclick="exec17SetDose(\''+x[0]+'\')"'+disabled+'>'+x[1]+'</button>';}).join('')+'</div>':'';
+    var buttons=study?'<div class="exec17-dose-grid">'+[['base','5h 起步'],['grow','6.5h 稳定后加量'],['rescue','2h 当天应急']].map(function(x){return '<button type="button" class="exec17-dose '+(dose===x[0]?'is-on':'')+'" onclick="exec17SetDose(\''+x[0]+'\')"'+disabled+'>'+x[1]+'</button>';}).join('')+'</div>':'';
     var phoneBox=current&&study?'<label class="exec17-phone"><input type="checkbox" '+(phone?'checked':'')+' onchange="exec17Phone(this.checked)"><span><b>开始前：手机已离手，或已开勿扰并限制娱乐应用</b><br><small>本网页只提醒，不会锁手机；休息先结束计时，短休息不刷短视频。</small></span></label>':'';
-    var grow=dose==='grow'?'<div class="exec17-small">加量块：'+['exec17_gj_plus','exec17_zc_plus'].filter(function(k){return !!lm[k];}).length+'/2；三核心仍优先，不用加量补旧整天欠账。</div>':'';
+    var grow=dose==='grow'?'<div class="exec17-small">加量块：'+['exec17_gj_plus','exec17_zc_plus'].filter(function(k){return !!lm[k];}).length+'/2；四项必做仍优先，不用加量补旧整天欠账。</div>':'';
     return storageWarning+'<div class="exec17-panel"><div class="exec17-kicker">11/17 双科执行校准 · '+esc(exec17GoalLabel(viewDs))+'</div>'
       +'<div class="exec17-scoreline"><b>公基50.6</b>（51/100） · <b>综测50多</b> · 两科并行</div>'
       +'<div class="exec17-small">法律9/24、政治15/27优先补；常识7/14有固定短补；公文7/9压缩长课。小样本不判定稳定强项。</div>'
       +buttons+'<div class="exec17-small">'+esc(status)+'</div>'+grow
-      +(study?'<div class="exec17-small">此前连续学习日核验：'+exec17QualifiedStreak(viewDs)+'/3（每日至少三核心完成＋4h计时；离开时须如实暂停）。只勾选不等于有效学习，日期过去不会自动升级。</div>':'')
-      +phoneBox+'<details class="exec17-guide"><summary>执行规则与最新成绩依据</summary><div>先完成4h，再主动加到5.5h；这是目标，不是锁定下一天的门槛。迟开始不作废，直接从第一块开始。娱乐留到固定窗口，休息不刷短视频。周日无必做；旧项只存档，普通日可借一个错点替换30分钟短复习。<br>分项、阶段与每周节奏见「总规划」。考试沿用12/20目标，具体以本场公告和准考证为准。</div></details></div>';
+      +(study?'<div class="exec17-small">此前连续学习日核验：'+exec17QualifiedStreak(viewDs)+'/3（四项完成＋5h计时，其中记忆卡≥60min；离开时如实暂停）。只勾选不等于有效学习，日期过去不会自动升级。</div>':'')
+      +phoneBox+'<details class="exec17-guide"><summary>执行规则与最新成绩依据</summary><div>先完成5h，再主动加到6.5h；两者都含每天固定记忆卡1h，这是目标，不是锁定下一天的门槛。迟开始不作废，直接接着做。周日仅记忆卡1h，应急共2h，考前减量日也保留1h背诵，12/20考试日不加。娱乐留到固定窗口；旧项只存档，普通日可借一个错点替换30分钟短复习。<br>分项、阶段与每周节奏见「总规划」。考试沿用12/20目标，具体以本场公告和准考证为准。</div></details></div>';
   }
   function exec17CoursePanel(){
     var p=rollData(),next=rollNextLesson(p),done=0;for(var n=1;n<=13;n++)if((p.lessons[String(n)]||{}).done)done++;
@@ -8750,7 +8791,7 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
     }).join('');
     return '<details id="exec17-archive" class="exec17-archive" '+(exec17ArchiveOpen?'open':'')+' ontoggle="exec17ToggleArchive(this.open)"><summary>旧项档案 · '+carryQueue.length+'条未完成（不占用今日任务）</summary><div class="exec17-small">记录保留，不自动结清、不自动顺延成整天欠账。仅普通日可主动选一条中的一个错点，替换30分钟短复习；周测和综测精改不可替换。借用后不会把原整块冒充完成。没有原打卡、备注或计时证据的日期不批量生成欠项；历史考试与用品事项不作学习补债。</div><div style="max-height:350px;overflow:auto">'+rows+'</div></details>';
   }
-  window.__exec17Inspect=function(d){var p=exec17DayPlan(d||viewDs),a=exec17Archive(d||viewDs,p);return {date:d||viewDs,dose:exec17Dose(d||viewDs),target:exec17Target(d||viewDs),qualified:exec17QualifiedStreak(d||viewDs),protectedReview:p.protectedReview,tasks:p.tasks.map(function(t){return {id:t.id,title:t.title,minutes:t.exec17Minutes,subject:t.exec17Subject,optional:!!t.exec17Optional,detail:t.detail};}),archive:a.carryQueue.map(function(t){return {date:t.origDay,id:t.origId,title:t.title};}),lessonState:rollingLessonState()};};
+  window.__exec17Inspect=function(d){var p=exec17DayPlan(d||viewDs),a=exec17Archive(d||viewDs,p);return {date:d||viewDs,dose:exec17Dose(d||viewDs),target:exec17Target(d||viewDs),qualified:exec17QualifiedStreak(d||viewDs),protectedReview:p.protectedReview,tasks:p.tasks.map(function(t){return {id:t.id,title:t.title,minutes:t.exec17Minutes,subject:t.exec17Subject,optional:!!t.exec17Optional,dailyMemory:!!t.exec17DailyMemory,detail:t.detail};}),archive:a.carryQueue.map(function(t){return {date:t.origDay,id:t.origId,title:t.title};}),lessonState:rollingLessonState()};};
 
   function dec20DailyPlan(vds){return exec17Applies(vds)?exec17DayPlan(vds):dec20LegacyDailyPlan(vds);}
   function dec20LegacyDailyPlan(vds){
@@ -9348,6 +9389,8 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
         window.exec17Phone(true);
       }
     }
+    if(t.exec17DailyMemory&&typeof getSubjs==='function'){var subjects=getSubjs();if(!subjects.some(function(x){return x.v==='记忆卡';})){subjects.push({v:'记忆卡',label:'🧠 记忆卡背诵'});D.subjs=subjects;saveLocal();try{renderSubjs();}catch(e){}}}
+    if(t.exec17DailyMemory){try{var mb=Array.from(document.querySelectorAll('#mode-wrap .mb')).find(function(b){return (b.textContent||'').indexOf('背诵')>=0;});if(mb)setMode('背诵',mb);}catch(e){}}
     var key='landing_'+viewDs+'_'+id;
     var text=t.time+' '+(t.setTitle||t.title)+' '+(t.setDetail||t.detail);
     try{ _ckTaskText[key]=text;_ckTaskSubject[key]=t.exec17Subject||'';_ckTaskMode[key]=t.exec17Mode||''; }catch(e){}
@@ -9448,7 +9491,7 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
       try{ running=(typeof tOn!=='undefined' && tOn && typeof activeSlotKey!=='undefined' && activeSlotKey===key); }catch(e){}
       var durBadge='';
       try{
-        var mins=(typeof taskMinutes==='function')?taskMinutes(key):0;
+        var mins=t.exec17DailyMemory?exec17MemoryMinutes(viewDs):((typeof taskMinutes==='function')?taskMinutes(key):0);
         if(running){ durBadge='<span style="flex:0 0 auto;font-size:11px;font-weight:800;color:#dc2626;background:#fef2f2;border:1px solid #fecaca;border-radius:999px;padding:4px 8px">⏱ '+fmtDur((typeof elapsedSec==='function')?elapsedSec():0)+'</span>'; }
         else if(mins>0){ durBadge='<span style="flex:0 0 auto;font-size:11px;font-weight:800;color:#15803d;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:999px;padding:4px 8px">已计 '+mins+'min</span>'; }
       }catch(e){ if(running){ try{durBadge='<span style="flex:0 0 auto;font-size:11px;font-weight:800;color:#dc2626;background:#fef2f2;border:1px solid #fecaca;border-radius:999px;padding:4px 8px">⏱ '+fmtDur(elapsedSec())+'</span>';}catch(_e){} } }
@@ -9477,7 +9520,7 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
       return '<div class="landing-task" data-task-id="'+esc(t.id)+'" onclick="toggleLandingTimer(\''+t.id+'\',event)" style="display:flex;gap:9px;align-items:flex-start;padding:9px 10px;border:1px solid var(--border);border-radius:10px;margin-top:7px;background:var(--s2);cursor:pointer;'+hot+'">'
         +'<input type="checkbox" data-landing="'+t.id+'" '+checked+' onclick="event.stopPropagation()" onchange="toggleLandingCheck(\''+t.id+'\',this.checked)" style="width:19px;height:19px;margin-top:2px;flex:0 0 auto">'
         +'<span style="flex:1;min-width:0;'+style+'"><b style="font-size:12px">'+esc(t.time)+' · '+esc(title)+'</b>'+badge
-        +rowHint+detailRow+noteRow
+        +rowHint+detailRow+exec17MemoryInline(t)+noteRow
         +'</span>'
         +'<div style="flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-end;gap:5px;min-width:64px">'+durBadge+timerBtn+'</div></div>';
     }
@@ -9485,7 +9528,7 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
 
     function renderDoneTask(t){
       var title=(t.setTitle||t.title||'');
-      var pmin=(t.repeat?t.setMins:(t.gen?t.mins:minsOf(viewDs,t.doneHistory?t.origId:t.id)));
+      var pmin=t.exec17DailyMemory?exec17MemoryMinutes(viewDs):(t.repeat?t.setMins:(t.gen?t.mins:minsOf(viewDs,t.doneHistory?t.origId:t.id)));
       var pnote=(t.repeat?t.setNote:(t.gen?t.note:noteOf(viewDs,t.doneHistory?t.origId:t.id)));
       var meta=[];
       if(pmin) meta.push('已计 '+pmin+'min');
@@ -9494,7 +9537,7 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
         +'<input type="checkbox" data-landing="'+t.id+'" checked onclick="event.stopPropagation()" onchange="toggleLandingCheck(\''+t.id+'\',this.checked)" style="width:19px;height:19px;margin-top:2px;flex:0 0 auto">'
         +'<span style="flex:1;min-width:0;opacity:.62"><b style="font-size:12px;text-decoration:line-through">'+esc(t.time)+' · '+esc(title)+'</b>'
         +(t.doneHistory?'<span style="font-size:10px;font-weight:800;color:#15803d;background:#dcfce7;border:1px solid #86efac;border-radius:999px;padding:1px 7px;margin-left:6px;white-space:nowrap">✅ 原计划已完成</span>':(t.doneDebt?'<span style="font-size:10px;font-weight:800;color:#15803d;background:#dcfce7;border:1px solid #86efac;border-radius:999px;padding:1px 7px;margin-left:6px;white-space:nowrap">✅ 今日结清</span>':''))
-        +(meta.length?('<div style="font-size:10px;color:#166534;margin-top:3px">'+esc(meta.join(' · '))+'</div>'):'')
+        +(meta.length?('<div style="font-size:10px;color:#166534;margin-top:3px">'+esc(meta.join(' · '))+'</div>'):'')+exec17MemoryInline(t)
         +'</span></div>';
     }
     var rowsDone=doneTasks.map(renderDoneTask).join('');
@@ -9589,7 +9632,7 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
         notes.push({id:p[1],name:String(name).replace(/^【明天再做】/,''),note:n});
       });
     }catch(e){}
-    return {date:d,done:done,openProg:openProg,openDrill:openDrill,deferred:deferred,total:tasks.length-deferred.length,mins:mins,notes:notes,optionalDone:optionalDone,optionalOpen:optionalOpen,optionalMins:exec17Applies(d)?exec17OptionalMinutes(d):0,future:(d>fmt(new Date()))};
+    return {date:d,done:done,openProg:openProg,openDrill:openDrill,deferred:deferred,total:tasks.length-deferred.length,mins:mins,notes:notes,optionalDone:optionalDone,optionalOpen:optionalOpen,optionalMins:exec17Applies(d)?exec17OptionalMinutes(d):0,memoryMins:exec17MemoryMinutes(d),memoryTarget:exec17MemoryActive(d)?60:0,future:(d>fmt(new Date()))};
   }
   function curWeekNo(){ try{ return Math.max(1,Math.ceil(dayIdx(new Date())/7)||1); }catch(e){ return 1; } }
   // 第 N 周 = 课表第 (N-1)*7+1 ~ N*7 天（跟「统计/总规划」里的第几周一致）
@@ -9629,6 +9672,7 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
       var head=x.date.slice(5)+' '+WD[new Date(x.date+'T00:00:00').getDay()]+'：完成 '+x.done.length+'/'+x.total+(x.mins?(' · '+x.mins+'min'):'');
       L.push(head);
       if(x.done.length) L.push('  ✅ '+brief(x.done,10));
+      if(x.memoryTarget)L.push('  🧠 记忆卡 '+x.memoryMins+'/'+x.memoryTarget+'min（独立背诵；未自动替代打卡）');
       if(x.optionalDone&&x.optionalDone.length)L.push('  ➕ 自选已完成：'+brief(x.optionalDone,10));
       if(x.optionalOpen&&x.optionalOpen.length)L.push('  ➕ 自选未完成（不滚欠账）：'+brief(x.optionalOpen,6));
       if(x.optionalMins)L.push('  ⏱ 其中自选加练 '+x.optionalMins+'min（不替代原计划）');
@@ -9856,5 +9900,5 @@ window.addEventListener('storage',function(e){
 });
 </script>
 
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a5bd59827a00ebe2',t:'MTc5NDkwMzk3Nw=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a5bd59827a00ebe2',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a5bdaf3d19a2945e',t:'MTc5NDkwNzQ4OA=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a5bdaf3d19a2945e',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
