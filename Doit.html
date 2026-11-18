@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Doit · 70分目标训练课表 | 2026-11-17 r7</title>
+<title>Doit · 数资20题与安全导入 | 2026-11-17 r9</title>
 <style>
 :root{
   --bg:#f0f6ff;--surface:#fff;--s2:#f7faff;--border:#d0e2ff;
@@ -215,8 +215,21 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
 
 /* r7 training curriculum */
 .train70-quant-control{margin-top:10px;padding:10px;border:1px solid #c7d2fe;border-radius:9px;background:#f5f7ff}.train70-quant-control label{display:block;font-size:12px;margin-bottom:6px}.train70-quant-control select{display:block;width:100%;max-width:100%;min-width:0;font-size:12px;padding:8px 5px;border:1px solid #cbd5e1;border-radius:7px;background:#fff;color:#1e3a8a;margin-bottom:6px}.train70-time-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.train70-time-grid>div{padding:10px;border:1px solid #dbeafe;background:#f8fbff;border-radius:9px}.train70-time-grid b{display:block;font-size:12px;color:#1e40af}.train70-time-grid span{display:block;font-size:11px;line-height:1.7;margin-top:4px;color:#475569}.train70-week{min-width:680px}#train70-daily-panel{overflow-wrap:anywhere}@media(max-width:420px){.train70-time-grid{grid-template-columns:1fr}}
+
+/* r8: operational content only; no hidden explanation panels. */
+.clear8-control{margin:8px 0!important;padding:10px!important}.clear8-control-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap;font-size:12px}.clear8-control-head>span{font-size:11px;color:#64748b}.clear8-control .exec17-dose-grid{margin:8px 0 0}.clear8-control .exec17-dose{padding:7px 4px;font-size:12px}.clear8-phone{display:flex;align-items:center;gap:6px;margin-top:9px;font-size:12px;color:#475569}.clear8-phone input{width:16px;height:16px}
+.clear8-control .train70-quant-control{display:flex;align-items:center;gap:7px;margin-top:8px;padding:0;border:0;background:none}.clear8-control .train70-quant-control label{flex:0 0 auto;margin:0;font-size:11px;color:#64748b}.clear8-control .train70-quant-control select{margin:0;padding:5px 6px;min-width:0;flex:1;border-radius:6px}
+.clear8-task{display:block!important;margin-top:9px!important;padding:11px!important;border:1px solid #d6e4f7;border-radius:10px;background:#f8fbff;overflow-wrap:anywhere;cursor:default!important}.clear8-task-head{display:flex;align-items:flex-start;gap:8px}.clear8-task-head>input{width:19px;height:19px;flex:0 0 auto;margin-top:2px;accent-color:#2563eb}.clear8-task-title{flex:1;min-width:0;line-height:1.5}.clear8-task-title b{display:block;font-size:14px;color:#17375b;font-weight:750}.clear8-task-title>small{display:block;font-size:11px;color:#64748b;margin-top:1px}.clear8-task-actions{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex:0 0 auto}.clear8-timer{white-space:nowrap;padding:5px 8px;border:1px solid #93b9fa;border-radius:7px;background:#fff;color:#1d4ed8;font-size:12px;font-weight:700;cursor:pointer;min-height:30px}.clear8-timer.is-running{border-color:#fca5a5;color:#b91c1c;background:#fef2f2}.clear8-running{font-size:11px;color:#b91c1c;font-variant-numeric:tabular-nums}.clear8-logged{font-size:10px;color:#15803d}.clear8-task-body{margin:7px 0 0 27px}.clear8-lines{display:grid;gap:4px;font-size:12px;line-height:1.65;color:#334155}.clear8-lines>div{display:grid;grid-template-columns:27px minmax(0,1fr);gap:5px}.clear8-lines dt{color:#6b7d93;font-size:11px;white-space:nowrap}.clear8-lines dd{margin:0;min-width:0}.clear8-result{display:flex;align-items:center;gap:6px;margin-top:7px;padding-top:4px;border-top:1px dashed #cbdcf4}.clear8-result>span{font-size:11px;color:#2563eb;flex:0 0 auto}.clear8-result input{width:100%;min-width:0;border:0;background:transparent;outline:none;padding:3px 0;color:#1d4ed8;font-family:inherit;font-size:16px}.clear8-result input::placeholder{color:#879ab2;font-weight:400}
+.clear8-task .exec17-memory-inline{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:7px 0 0;padding:7px;background:#faf7ff}.clear8-task .exec17-memory-total{flex:1;min-width:90px}.clear8-task .exec17-memory-track{flex-basis:100%;margin:0;height:4px;order:3}.clear8-task .exec17-memory-inline button{margin:0}
+.clear8-course{margin-top:12px;font-size:12px}.clear8-course-head{display:flex;justify-content:space-between;gap:8px;color:#475569}.clear8-course-head b{font-size:12px;color:#334155}.clear8-course .exec17-guide{margin-top:7px}.clear8-course .exec17-guide summary{font-size:11px}.clear8-course button{font-size:11px}.clear8-course .exec17-small{font-size:11px}
+.clear8-plan-goal{display:flex;justify-content:space-between;gap:6px;align-items:baseline;flex-wrap:wrap}.clear8-plan-goal b{font-size:16px;color:#1e3a8a}.clear8-plan-goal small{font-size:11px;color:#64748b}.clear8-budget{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:12px 0}.clear8-budget>span{padding:7px;border:1px solid #dce7f6;background:#f8fbff;border-radius:7px;font-size:11px;color:#64748b}.clear8-budget b{display:block;font-size:14px;color:#334155;margin-top:2px}.clear8-week-head{display:flex;justify-content:space-between;align-items:center;gap:7px;margin:14px 0 6px}.clear8-week-head b{font-size:13px}.clear8-week-head select{width:auto;max-width:65%;padding:5px 7px;border:1px solid #cbd5e1;border-radius:7px;background:#fff;color:#334155}.clear8-day{display:grid;grid-template-columns:47px minmax(0,1fr);gap:9px;padding:9px 0;border-bottom:1px solid #e5edf7}.clear8-day time{font-size:12px;color:#2563eb;font-weight:700;white-space:nowrap}.clear8-day time small{display:block;font-size:10px;color:#8493a9;font-weight:400;margin-top:3px}.clear8-day>div{display:grid;gap:4px;min-width:0}.clear8-day b{font-size:12px;color:#1e293b;font-weight:650;line-height:1.5}.clear8-day span{font-size:11px;color:#64748b;line-height:1.55}.clear8-plan-check{display:grid;grid-template-columns:auto minmax(0,1fr);gap:7px 9px;margin-top:13px;padding:10px;background:#eff6ff;border-radius:8px;font-size:11px;line-height:1.7;color:#475569}.clear8-plan-check>b{color:#2563eb;white-space:nowrap}.clear8-stages{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:12px}.clear8-stages>span{font-size:11px;line-height:1.65;padding:7px;background:#f8fafc;border-radius:6px;color:#64748b}.clear8-stages b{display:block;font-size:11px;color:#475569}
+@media(min-width:700px){.clear8-budget{grid-template-columns:repeat(6,minmax(0,1fr))}.clear8-task-title b{font-size:14px}.clear8-task-body{margin-left:27px}.clear8-stages{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:420px){.clear8-task{padding:10px!important}.clear8-task-head{gap:7px}.clear8-task-title b{font-size:13px}.clear8-task-body{margin-left:0}.clear8-lines{font-size:12px}.clear8-control-head{font-size:11px}.clear8-task .exec17-memory-inline{gap:5px}}
+
+
+.train9-standard{display:flex;gap:6px;flex-direction:column;margin:10px 0;padding:10px 12px;border:1px solid #bfdbfe;background:#eff6ff;border-radius:9px;font-size:12px;color:#1e3a8a}.train9-standard small{color:#475569}#cf-recovery[hidden]{display:none}
 </style>
-<meta name="doit-release" content="2026-11-17-execution-r7-training70">
+<meta name="doit-release" content="2026-11-17-execution-r9-paired20-safe-import">
 </head>
 <body>
 
@@ -253,7 +266,7 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
     <button class="tb" onclick="showMemoryCard()" style="display:inline-flex;align-items:center">🧠 记忆卡</button>
   </div>
   <div style="font-size:10px;margin-top:4px;opacity:.8;cursor:pointer;display:inline-block" id="sync-status" onclick="manualSync()" title="点击立即同步合并">⚪ 未配置</div>
-  <div id="app-version" style="font-size:10px;margin-top:3px;opacity:.8">✅ Doit v2026-11-17 r7（70分目标训练表 · 数量资料判断固定必做 · 首周与阶段安排）</div>
+  <div id="app-version" style="font-size:10px;margin-top:3px;opacity:.8">✅ Doit r9 · 每日数资20题 · 安全导入</div>
 </div>
 
 <div class="main">
@@ -414,8 +427,7 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
 <div class="sec" id="sec-plan">
   <div class="debt" id="debt-banner" style="display:none"></div>
   <div class="card">
-    <div class="ct">🗺 备考总规划 · 11/17双科执行校准</div>
-    <div class="alert" style="background:#eff6ff;border-color:#93c5fd;color:#1e3a8a">🎯 12/20四川事业单位，目标笔试折算70。新表11/18起：知识60＋数量25＋资料20＋判断15＋综测120＋独立记忆卡60＝5h；数量资料判断均为必做。正式权重待核实，不默认各50%。首周和阶段见总规划；旧卷不重复复盘。</div>
+    <div class="ct">🗓 训练总表</div>
     <div id="plan-gap" style="margin-bottom:13px"></div>
   </div>
 </div>
@@ -734,6 +746,11 @@ CREATE TABLE IF NOT EXISTS doit_sync_backup (
     <div style="margin-top:12px;padding:10px 12px;background:var(--s2);border:1px solid var(--border);border-radius:9px">
       <div id="cf-status" style="font-size:13px;font-weight:700">⚪ Cloudflare 同步尚未启用</div>
       <div id="cf-detail" style="font-size:11px;line-height:1.6;color:var(--t2);white-space:pre-wrap;margin-top:4px"></div>
+      <div id="cf-recovery" hidden style="margin-top:10px;padding:10px;border:1px solid #fbbf24;border-radius:8px;background:#fffbeb;color:#92400e">
+        <b style="font-size:12px">本机保存/页面冲突处理</b>
+        <div style="display:flex;gap:7px;flex-wrap:wrap;margin:7px 0"><button type="button" onclick="r9DownloadSafety()" style="padding:8px">① 导出本机保护备份</button><button type="button" id="cf-recover-button" onclick="cfRecoverLocal()" style="padding:8px">② 备份并合并本机冲突</button></div>
+        <small style="line-height:1.6">先保存备份并关闭其他Doit页面（包括旧版）。只合并本页与本机记录，核验后解除暂停；不会清空或直接覆盖云端。</small>
+      </div>
       <div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:8px">
         <button type="button" id="cf-auto-button" onclick="cfToggleAuto()" style="padding:6px 10px;border-radius:8px">暂停自动同步</button>
         <button type="button" data-cf-active onclick="cfDownloadPrevious('dashboard')" style="padding:6px 10px;border-radius:8px">下载云端上一版仪表盘</button>
@@ -981,9 +998,12 @@ export default {
     <div style="display:flex;gap:8px;flex-wrap:wrap">
       <button onclick="exportLocalData()" style="padding:8px 14px;border-radius:7px;border:1.5px solid var(--border);background:var(--s2);color:var(--t2);font-size:12px;cursor:pointer">⬇️ 导出 JSON</button>
       <button onclick="document.getElementById('import-file').click()" style="padding:8px 14px;border-radius:7px;border:1.5px solid var(--border);background:var(--s2);color:var(--t2);font-size:12px;cursor:pointer">⬆️ 导入 JSON</button>
-      <input type="file" id="import-file" accept=".json" onchange="importLocalData(this)" style="display:none"/>
+      <input type="file" id="import-file" accept=".json,application/json" onchange="importLocalData(this)" style="display:none"/>
+      <button type="button" onclick="r9DownloadSafety()" style="padding:8px 12px;border-radius:7px">导出本机保护备份</button>
       <button onclick="clearAllData()" style="padding:8px 14px;border-radius:7px;border:1.5px solid #fecaca;background:#fef2f2;color:#dc2626;font-size:12px;cursor:pointer">🗑 清空本地</button>
     </div>
+    <div id="local-import-status" role="status" aria-live="polite" style="font-size:12px;line-height:1.7;white-space:pre-wrap;margin-top:10px"></div>
+    <small style="display:block;margin-top:6px;color:var(--t3);line-height:1.6">导入前会生成保护备份；本机保存与云端确认分开显示。普通仪表盘JSON不含独立记忆卡进度，记忆卡备份在“记忆卡 → 设置”恢复。</small>
   </div>
 </div>
 
@@ -1176,24 +1196,26 @@ function dropLegacyDayKeys(){
 }
 function sv(){
   if(cfIsActive()){
-    if(_doitScopeError){_cfHold=true;_cfError='独立存储异常，请先导出备份。';cfPaint();return;}
+    if(_doitScopeError){_cfHold=true;_cfError='独立存储异常，请先导出备份。';cfPaint();return false;}
     try{cfAssertStable();}
     catch(e){
-      if(_cfMultiTabConflict){_cfError='本页面的修改未能写入本机。请勿关闭或刷新，先导出本页仪表盘备份，再分别备份另一页面；关闭多余页面后核对。';cfPaint();showToast('本页修改未保存，请先分别导出备份','orange');}
+      if(_cfMultiTabConflict){_cfError='本页修改尚未写入本机。请先导出保护备份、关闭其他Doit页面，再点“备份并合并本机冲突”。';cfPaint();showToast('本页修改未保存，请先备份并合并本机冲突','orange');}
       else{cfMarkStorageFailure();showToast('本机保存未确认：不要关闭页面，先导出备份','orange');}
-      return;
+      return false;
     }
     stampDiff();
     try{const text=JSON.stringify(D);localStorage.setItem(KEY,text);if(localStorage.getItem(KEY)!==text)throw Error('verify');_cfObservedDashboard=text;}
-    catch(e){cfMarkStorageFailure();showToast('本机保存未确认：不要关闭页面，先导出备份','orange');return;}
-    cfMarkDirty();return;
+    catch(e){cfMarkStorageFailure();showToast('本机保存未确认：不要关闭页面，先导出备份','orange');return false;}
+    return cfMarkDirty();
   }
-  _pendingSave=true;_markSyncPending(true);
-  if(_doitScopeError){setSyncStatus('pending');return;}
+  if(_doitScopeError){_pendingSave=true;_markSyncPending(true);setSyncStatus('pending');return false;}
   stampDiff();
-  try{localStorage.setItem(KEY,JSON.stringify(D));}catch(e){}
-  // 只要配置了云同步就自动上传（不再依赖勾选框，带3秒防抖避免频繁请求）
-  if(CLOUD.apiKey&&CLOUD.binId) queueCloudSave();
+  try{
+    const text=JSON.stringify(D);localStorage.setItem(KEY,text);if(localStorage.getItem(KEY)!==text)throw Error('verify');_cfObservedDashboard=text;
+    localStorage.setItem('doit_sync_pending_v1','1');if(localStorage.getItem('doit_sync_pending_v1')!=='1')throw Error('pending');
+  }catch(e){_pendingSave=true;setSyncStatus('pending');showToast('本机保存未确认，请先导出备份','orange');return false;}
+  _pendingSave=true;
+  if(CLOUD.apiKey&&CLOUD.binId)queueCloudSave();return true;
 }
 let D=ld();
 syncSnapshot();
@@ -1824,7 +1846,7 @@ function makeupRows(){
   ];
 }
 function priorityHTML(){
-  if(exec17Applies(ds(new Date())))return '<div class="exec17-callout"><b>当前按70分目标训练表执行。</b>数量、资料、判断均已固定排入；正式两科权重待核实，不沿用旧版各50%的假设。详见总规划。</div>';
+  if(exec17Applies(ds(new Date())))return '';
   const P=D.prog||{},n=k=>P[k]||0;
   const d1=dBetween(E1), d2=dBetween(E2);
   const gj=n('公基-系统'),zc=n('综测-基础'),sl=n('申论-小题'),lj=n('逻辑'),yz=n('言语-刷题'),zl=n('资料-刷题');
@@ -1983,7 +2005,7 @@ function exec17DateAdd(d,n){var x=new Date(d+'T12:00:00');x.setDate(x.getDate()+
 const EXEC17_EVENING_DATE='2026-11-17';
 function exec17EveningDay(d){return d===EXEC17_EVENING_DATE;}
 function exec17PublicId(d){return d==='2026-11-18'?'exec17_gj_transfer':'exec17_gj';}
-function exec17RetiredDiagnostic(d,id){return ((d==='2026-11-17'||d==='2026-11-18')&&id==='exec17_gj')||exec17RetiredReview(d,id);}
+function exec17RetiredDiagnostic(d,id){return ((d==='2026-11-17'||d==='2026-11-18')&&id==='exec17_gj')||exec17RetiredReview(d,id)||(typeof TRAIN9_RETIRED!=='undefined'&&train9Retired(d,id));}
 function exec17EveningZcNeeded(d){var m=((typeof D!=='undefined'&&D&&D.landing)||{})[d]||{};return !m.exec17_zc;}
 function exec17EveningTaskMinutes(d,id){return ((typeof D!=='undefined'&&D&&D.logs)||[]).filter(function(l){return l.date===d&&l.taskKey==='landing_'+d+'_'+id;}).reduce(function(n,l){return n+(Number(l.duration)||0);},0);}
 function exec17EveningLogged(d){return (exec17EveningZcNeeded(d)?exec17EveningTaskMinutes(d,'exec17_evening_zc'):0)+Math.min(60,exec17MemoryMinutes(d))+exec17EveningTaskMinutes(d,'exec17_evening_close');}
@@ -2009,13 +2031,13 @@ function exec17NonMemoryMinutes(d){return Math.max(0,exec17RequiredMinutes(d)-ex
 const TRAIN70_START='2026-11-18';
 const TRAIN70_GOAL={exam:'四川事业单位',date:'2026-12-20',target:70,metric:'笔试折算成绩',weights:null,officialRulesVerified:false};
 const TRAIN70_QUANT_TOPICS={
- percent_base:{name:'百分数基数：到底是谁的百分之几',how:'先用100元、人数等具体量看懂“谁的百分之几”，特别区分涨价前、涨价后、最后现价。看1个完整示范后，做2—4道没做过的新变式；每道先圈基数，再列式。还认错基数就停在这一点，不跳去工程或行程。'},
- percent_reverse:{name:'涨降与倒推：已知结果找起点',how:'在已经分清基数的前提下，用价格变化图标出起点、中间价、终点。先讲透1个示范，再独立做2—4道新变式；写清题目给的是原价还是现价，不靠背1.2、0.8硬套。'},
- ratio_counts:{name:'比例转人数：先算实际数量再合并',how:'先把每一组百分数变成实际人数或数量，再求合计量与总数的比。用1个完整示范带2—4道新变式，不直接平均不同规模组的百分数。'},
- work:{name:'工程基础：总量、每天完成多少、合作',how:'先用具体工作量或把总量设为1理解每天效率；再做3—5道新的单人、合作与分段基础题。已经能独立说明依据的简单题跳过，不铺偏难工程题。'},
- travel:{name:'行程基础：画起点、时间线和距离差',how:'先统一分钟与小时，画清谁先出发、领先多少、每小时缩短多少距离。先示范再做2—4道新的相遇或追及题，不把知道公式当成能独立代入。'},
- profit:{name:'利润与基础应用：条件转等量关系',how:'只选本场范围内的基础利润、折扣或比例应用，先说清每个数的含义，再做3—5道新题。难题不恋战，学会可稳定列式的基础题。'},
- mixed:{name:'已学基础混合：有限时的新题迁移',how:'只混合已经理解的题型，做一小组未做过的新题并记录每题用时、确定/猜测与跳过。若反复卡住同一概念，手动回到对应训练点，不为追题量硬刷。'}
+ percent_base:{name:'百分数基数',how:'看1个完整示范，再独立做3道新变式并核对。',goal:'找准“谁的百分之几”，再列式。',test:'逐题圈基数、写算式；记对__/3。'},
+ percent_reverse:{name:'涨降与倒推',how:'画出价格变化，看1例，再独立做3道新题。',goal:'分清原价、中间价与现价。',test:'写出每步基数与倒推式；记对__/3。'},
+ ratio_counts:{name:'比例转人数',how:'看1例，再做3道不同组别的合并比例新题。',goal:'先算各组实际人数，再求总比例。',test:'逐题写出总人数与达标人数；记对__/3。'},
+ work:{name:'工程：总量与效率',how:'看1例，再做3道单人或合作工程新题。',goal:'分清总量、效率和工作时间。',test:'独立列出效率式；记对__/3。'},
+ travel:{name:'行程：相遇与追及',how:'画时间线，看1例，再独立做3道新题。',goal:'分清时间差、距离差与速度差。',test:'画图并统一时间单位；记对__/3。'},
+ profit:{name:'利润与折扣',how:'看1例，再独立做3道利润或折扣新题。',goal:'找准成本、售价与利润率基数。',test:'写清每个量的含义；记对__/3。'},
+ mixed:{name:'已学题型混合',how:'独立完成已学题型的新题3道并核对。',goal:'读题后自主选择方法并列式。',test:'记录每题用时与依据；记对__/3。'}
 };
 function train70Active(d){return typeof d==='string'&&d>=TRAIN70_START&&d<='2026-12-20';}
 function train70QuantKey(d){
@@ -2023,37 +2045,78 @@ function train70QuantKey(d){
  Object.keys(p).forEach(function(k){var m=/^(\d{4}-\d{2}-\d{2})\|train70_quant_focus$/.exec(k);if(!m||m[1]<TRAIN70_START||m[1]>d||m[1]<best)return;var v=String((p[k]||{}).note||'');if(TRAIN70_QUANT_TOPICS[v]){best=m[1];out=v;}});
  return out;
 }
+// r9: one mixed 20-question number/data set daily. No independent verbal block.
+const TRAIN9_PAIR_ID='train9_pair';
+const TRAIN9_RETIRED=['train70_quant','train70_data','train70_rescue_quant','train70_rescue_data'];
+function train9Retired(d,id){return train70Active(d)&&TRAIN9_RETIRED.indexOf(id)>=0;}
+function train9PairGoal(d){return d<='2026-11-24'?12:d<='2026-12-08'?14:16;}
+function train9PairLimit(d){return d<='2026-11-24'?40:35;}
+function train9PairSpec(d){return {total:20,quantity:10,data:10,firstPassTarget:train9PairGoal(d),trainingLimit:train9PairLimit(d),inWeeklyPaper:exec17DayOfWeek(d)===6&&d<'2026-12-18'&&exec17Dose(d)!=='rescue'};}
 function train70CoreIds(d){
- if(d>='2026-12-18'||exec17DayOfWeek(d)===0)return null;
- if(exec17Dose(d)==='rescue')return ['train70_rescue_knowledge','train70_rescue_quant','train70_rescue_data','train70_rescue_reason','train70_rescue_zc','exec17_memory'];
+ if(d==='2026-12-20')return [];
+ if(d==='2026-12-19')return [TRAIN9_PAIR_ID,'exec17_prepare','exec17_memory'];
+ if(d==='2026-12-18')return [TRAIN9_PAIR_ID,'exec17_final','exec17_memory'];
+ if(exec17DayOfWeek(d)===0)return [TRAIN9_PAIR_ID,'exec17_memory'];
+ if(exec17Dose(d)==='rescue')return ['train70_rescue_knowledge',TRAIN9_PAIR_ID,'train70_rescue_reason','train70_rescue_zc','exec17_memory'];
  if(exec17DayOfWeek(d)===6)return [exec17PublicId(d),'exec17_zc','exec17_memory'];
- return [exec17PublicId(d),'train70_quant','train70_data','train70_reason','exec17_zc','exec17_memory'];
+ return [exec17PublicId(d),TRAIN9_PAIR_ID,'train70_reason','exec17_zc','exec17_memory'];
 }
-function train70Counts(d){
- var ids=exec17CoreIds(d),m=((D&&D.landing)||{})[d]||{};return {done:ids.filter(function(k){return !!m[k];}).length,total:ids.length};
-}
-const TRAIN70_WEEK=[
- ['2026-11-18','法律／政治新题接续；法律用民事行为与代理等高频点做新题检验','读题找数、单位与部分/整体','图形：数量与位置规律','综测从真实未学停点接课；不强写没有题干的题'],
- ['2026-11-19','政治理论概念辨析＋对应时政新题','百分数与实际数量，直接比重','定义判断：逐项对条件','综测在120分钟内完成本课一个新例题的独立尝试与核对'],
- ['2026-11-20','常识／经济／管理／公文混合新题，各类少量覆盖','表格直接查找、比较与单位换算','类比推理：先说关系再选','综测继续未学片段；记录停点与本周新学内容'],
- ['2026-11-21','公基未做过的新卷周测：替换知识＋数量＋资料＋判断，共120分钟','并入本次新卷，不另加专项','并入本次新卷，不另加专项','综测继续实际新课；本次新卷核对只在原学习块内处理'],
- ['2026-11-22','周日休息：公基、综测主线均不排','不排新题','不排新题','仅独立记忆卡60分钟；不补整天欠账'],
- ['2026-11-23','法律新题：刑法基础概念、行为阶段与责任条件','现期量、基期量与增长量的文字含义','图形：样式与属性规律','综测接实际停点，不按日期假定已经学完哪一节'],
- ['2026-11-24','政治新题：理论关键词与易混表述','增长率与增长量的区分，少量新题','条件推理：把条件写清再判断','综测在120分钟内尝试一个没做过的新例题；记录独写情况']
+function train70Counts(d){var ids=exec17CoreIds(d),m=((D&&D.landing)||{})[d]||{};return {done:ids.filter(function(k){return !!m[k];}).length,total:ids.length};}
+const CLEAR8_CURRICULUM=[
+ ['2026-11-18','法律','民事法律行为与代理','区分行为效力，认清代理权限。','判断','图形：数量与位置','先找稳定规律，再验证选项。'],
+ ['2026-11-19','政治','党的创新理论：核心概念','分清核心概念及其对应表述。','判断','定义：条件对照','逐项核对定义中的必要条件。'],
+ ['2026-11-20','公文','文种选择与行文规则','按行文关系选对文种。','判断','类比：语义与逻辑关系','用同一关系标准检验全部选项。'],
+ ['2026-11-23','法律','正当防卫与紧急避险','根据起因、对象和限度作判断。','判断','图形：样式与属性','区分样式变化与图形属性。'],
+ ['2026-11-24','政治','唯物论：物质与意识','区分物质决定作用与意识能动作用。','判断','条件：必要条件','找准必要条件，判断推理方向。'],
+ ['2026-11-25','法律','行政处罚与行政强制','区分处罚、强制措施与强制执行。','判断','类比：关系辨析','说清词项关系，再对照选项。'],
+ ['2026-11-26','政治','辩证法：矛盾与联系','按题意辨别矛盾与联系的原理。','判断','论证：结论与理由','找准论点、论据及其连接。'],
+ ['2026-11-27','经济','财政政策与货币政策','分清政策工具与作用方向。','判断','定义：多条件筛选','不遗漏限制条件，不添加题外条件。'],
+ ['2026-11-30','法律','劳动合同解除与经济补偿','根据解除情形判断补偿条件。','判断','图形：对称与曲直','依据可验证的属性排除选项。'],
+ ['2026-12-01','政治','认识论：实践与认识','区分认识来源、动力和检验标准。','判断','定义：多条件筛选','不遗漏限制条件，不添加题外条件。'],
+ ['2026-12-02','法律','宪法：基本权利与国家机构','区分基本权利及国家机关职权。','判断','类比：对应与包含','区分对应关系与种属、组成关系。'],
+ ['2026-12-03','政治','时政：近一年重要会议','对应会议、部署及关键词。','判断','条件：充分条件','正确翻译条件并验证推理。'],
+ ['2026-12-04','管理','管理职能与决策','区分计划、组织、领导和控制。','判断','论证：加强与削弱','判断选项对论点的实际作用。'],
+ ['2026-12-07','法律','合同效力与违约责任','按合同情形判断效力与责任。','判断','论证：加强','选出最能补足论证的选项。'],
+ ['2026-12-08','政治','政治经济学：商品与价值','分清价值、使用价值与价格。','判断','论证：削弱','找出最直接动摇论证的选项。'],
+ ['2026-12-09','法律','侵权责任构成','从行为、损害和因果关系判断责任。','判断','图形：限时新题','独立找规律，记录卡题用时。'],
+ ['2026-12-10','政治','党的创新理论：易混表述','根据关键词排除概念错配。','判断','条件：限时新题','先翻译条件再推理。'],
+ ['2026-12-11','常识','科技与文化常识','分清高频概念、人物与成果对应。','判断','定义：限时新题','按必要条件逐项排除。'],
+ ['2026-12-14','法律','行政复议与行政诉讼','区分受案范围、程序及救济路径。','判断','定义：限时新题','按必要条件逐项排除。'],
+ ['2026-12-15','政治','时政：国家重大战略','对应战略目标、任务和关键词。','判断','类比：限时新题','用同一关系标准检验全部选项。'],
+ ['2026-12-16','法律','事业单位人事管理','分清聘用、考核、处分及解除条件。','判断','论证：限时新题','找准结论，判断选项作用。'],
+ ['2026-12-17','政治','理论综合新题','独立辨别理论概念和表述错误。','判断','图形：综合新题','用可验证规律排除干扰。']
 ];
-function train70Knowledge(d){
- var row=TRAIN70_WEEK.find(function(x){return x[0]===d;});if(row)return row[1];
- var dow=exec17DayOfWeek(d);
- if(d>='2026-12-09')return '法律／政治为主的公基混合新题，兼顾常识经管公文；依据最近新卷结果定向替换';
- return dow===1?'法律新题：刑法基础与条件辨析':dow===3?'法律新题：民法／行政法的易混条件':dow===2||dow===4?'政治理论／时政新题：概念与表述辨析':'常识／经济／管理／公文混合新题：按本场范围轮换';
+function clear8Theme(d){
+ var r=CLEAR8_CURRICULUM.find(function(x){return x[0]===d;})||CLEAR8_CURRICULUM.slice().reverse().find(function(x){return x[0]<d;})||CLEAR8_CURRICULUM[0];
+ return {subject:r[1],topic:r[2],goal:r[3],abilitySubject:r[4],ability:r[5],abilityGoal:r[6],data:'数资混合20题',dataGoal:'先独立作答，再按错型补练。'};
 }
-function train70AbilityTheme(d,kind){
- var row=TRAIN70_WEEK.find(function(x){return x[0]===d;});if(row)return row[kind==='data'?2:3];
- var i=exec17DayOfWeek(d);
- return kind==='data'?(['','比重与直接读数','增长量与增长率','基期量与单位换算','平均数与倍数','一组未做过的资料综合材料'][i]||'资料小组训练'):(['','图形数量与位置','定义判断逐项对条件','类比关系与属性','条件推理与必要翻译','论证基础：结论、理由与选项作用'][i]||'判断小组训练');
+function train70Knowledge(d){var x=clear8Theme(d);return x.subject+'｜'+x.topic;}
+function train70AbilityTheme(d,kind){return kind==='data'?'数资混合20题':clear8Theme(d).ability;}
+function clear8ZcLabel(d){
+ var dow=exec17DayOfWeek(d);if(dow===0)return '主线休息';if(dow===5&&d>='2026-11-27')return '新卷限时作答';if(dow===6&&d>='2026-11-28')return '核对本周新卷';
+ var complete=false;try{complete=rollingLessonNext()===0;}catch(e){}
+ if(complete||d>='2026-12-14'||(d>='2026-12-09'&&(dow===2||dow===4)))return (['','归纳概括','提出对策','应用文写作','综合分析','归纳概括','应用文写作'][dow]||'归纳概括')+'新题';
+ return '实际停点续课';
 }
-function train70PhaseLabel(d){return d<='2026-11-24'?'首周：概念落地与固定训练':d<='2026-12-08'?'第二阶段：新题迁移与周测反馈':'第三阶段：限时整合与稳定性检验';}
-function train70FeedbackContext(){return '【用户当前要的是重新设计Doit课表，不要在交付课表前继续强行问逐题口算。】【已确认目标】四川事业单位，2026/12/20，笔试折算成绩70分；具体招考、两科满分/权重和正式限时尚未核实。权重=null，不得自行假设各50%，不拆公基80+综测60之类目标，不生成虚构折算分，不承诺保过。当前训练时间两科各120分钟只是起始训练配额，不是分值权重。】【普通日5h的明确变化】原公基知识90分钟改60分钟，固定新增数量25+资料20+判断15，共公基训练120；综测120，另加记忆卡60，共300分钟。不是把已删除的旧错题复测30分钟换名补回。数量、资料、判断均为必做，不依赖加量或自选。稳定3个学习日后才可主动加到6.5h，两科各45分钟；不自动加量。】【先验依据】公基50.6分，51/100；法律9/24、政治15/27、常识7/14、经济3/6、管理4/6、公文7/9、数量0/5、资料4/5、判断1/2。题数不直接等于分值，一套小样本不能宣称稳定强弱。最新4道基础新题反馈：工程一道答对；百分数基数/倒推尚不理解；合并比例无概念；追及知道公式但不能代入，未报告用时，不能据此预测分数。数量从基数开始，看示范后做少量新变式；训练点由本人根据新题掌握情况手动切换，不按日期或打卡自动升级。】【知识轮换】周一/三法律、周二/四政治理论时政、周五常识经管公文混合；首周具体主题以总规划逐日表为准。这次旧卷和旧错题已复盘，绝不重分类、重抄或重做原卷。每块只处理本次新题的新问题；必要规则补充包含在块内。】【综测】真实基线刘流1/13，每节原长2—3小时，按独立进度卡的实际停点续学；120可拆60+60，课堂新例题尝试/核对包含其中，不固定给旧题35分钟手写/25分钟改稿。每周二/四在当前新课中安排新例题独写；没有题干不能先写。打卡/日期不代表课次完成。周五从11/27起综测新卷替换120分钟，次日只核对本周新卷尚未处理的部分；已处理完则接新课。】【每周与收官】周六公基新卷及必要本卷核对替换知识和三个能力块，共120分钟学习预算，不叠加专项；正式限时待公告核对，不能把学习预算当考试时限。周日仅记忆卡60分钟；应急知识15+数量10+资料10+判断5+综测20+记忆卡60=120分钟，不计完整达标，明日恢复原设置。12/18轻回看90+记忆卡60；12/19用品检查+记忆卡60；12/20不排学习。11/17此前晚间休息许可不追债。】【记录与反馈】每项新题记来源、独立作答数/正确数、实际用时、卡点；综测记新例题独写、材料依据漏点、格式和时间。不硬凑题量/时长，不把猜对当稳定掌握，不用四道题评定整体能力。首周主题是初始假设，每周按新卷分项正确数、猜题、用时和独立作答改下一周；不是每周固定加量。至少两份不同且规则接近本场的新卷，在权重核实后按正式口径检验折算70的稳定性；模考不保证正式结果。】【记录保护】旧卷复盘已取消，只保留原打卡/笔记/计时，不变成今日或次日欠账。数量资料判断是新ID，不借旧完成记录；已有知识/综测/记忆卡同日真实完成保留，不要求重做。自选独立统计，完成当日所有计划后才开放，不替代必做、不顺延。记忆卡每天独立60分钟，周日/应急/减量保留、考试日排除，可按课程/来源选卡，不先清旧民法，不重置SRS。不同任务禁止重复计时。用户时间并非受限，主要是手机和拖延，先做短启动、物理隔离娱乐，不把迟开始当整天作废。';}
+const TRAIN70_WEEK=Array.from({length:7},function(_,i){var d=exec17DateAdd(TRAIN70_START,i),dow=exec17DayOfWeek(d),x=clear8Theme(d);return [d,dow===6?'公基新卷周测（含数资20题）':dow===0?'主线休息':train70Knowledge(d),'数资20题',dow===0||dow===6?'不另排判断':x.ability,dow===0?'数资60＋记忆卡60分钟':clear8ZcLabel(d)];});
+function train70PhaseLabel(d){return d<='2026-11-24'?'数资12/20标尺':d<='2026-12-08'?'数资14/20标尺':'数资16/20标尺';}
+const CLEAR8_WEEKS=[['11/18—11/24','2026-11-18','2026-11-24'],['11/25—12/01','2026-11-25','2026-12-01'],['12/02—12/08','2026-12-02','2026-12-08'],['12/09—12/15','2026-12-09','2026-12-15'],['12/16—12/20','2026-12-16','2026-12-20']];
+function clear8WeekHTML(i){
+ var w=CLEAR8_WEEKS[Number(i)]||CLEAR8_WEEKS[0],rows='';
+ for(var d=w[1];d<=w[2];d=exec17DateAdd(d,1)){
+  var dow=exec17DayOfWeek(d),date=d.slice(5).replace('-','/'),day=['日','一','二','三','四','五','六'][dow],x=clear8Theme(d),body='';
+  if(d==='2026-12-20')body='<b>考试</b><span>按准考证到场</span>';
+  else if(d==='2026-12-19')body='<b>数资20题 · 用品检查</b><span>熟悉题型，不加难题 · 记忆卡60分钟</span>';
+  else if(d==='2026-12-18')body='<b>数资20题 · 规则与格式轻回看60分钟</b><span>记忆卡60分钟</span>';
+  else if(dow===0)body='<b>数资20题60分钟</b><span>其余主线休息 · 记忆卡60分钟</span>';
+  else if(dow===6)body='<b>公基新卷周测135分钟（含数资20题）</b><span>综测：'+clear8ZcLabel(d)+'120分钟 · 记忆卡60分钟</span>';
+  else body='<b>'+x.subject+'｜'+x.topic+'</b><span>数资20题 · 判断：'+x.ability+'</span><span>综测：'+clear8ZcLabel(d)+'</span>';
+  rows+='<div class="clear8-day"><time>'+date+'<small>周'+day+'</small></time><div>'+body+'</div></div>';
+ }
+ return rows;
+}
+window.clear8ShowWeek=function(i){var el=document.getElementById('clear8-week-grid');if(el)el.innerHTML=clear8WeekHTML(i);};
+function train70FeedbackContext(){return '【目标】四川事业单位，2026/12/20，笔试折算70；本场计分公告未匹配，weights=null，不假定50/50或保证分数。以不同限时新卷、原始得分、分项正确数和用时检验。【r9】撤掉独立言语任务，不恢复前置对话测验。每天一套数资20题，默认数量10＋资料10，先独立完成并记首轮结果，再核对错/空/猜题；只针对本套暴露的1—2个错型补对应课段与每型2道新题。不是先看示范再做3题，不是重复做已复盘旧卷。训练标尺11/18—24向12/20、11/25—12/08向14/20、12/09—17向16/20推进；训练计时40/35分钟不冒充正式考试时限。目标没达到如实记，不伪造掌握，不另设掌握打卡。【课表】普通日指定知识专题60＋数资60＋判断15＋综测120＋独立记忆卡60＝315分钟。周六公基新卷135替换前三项，其中含数资20题，不另加一套；卷内不够10数量＋10资料时用未做同类题补齐，核对仍在本块。周日数资60＋记忆卡60，其他主线休息。应急知识15＋数资60＋判断5＋综测20＋记忆卡60＝160，只影响当天，不计完整日达标。主动加量在普通日上两科各45，共405，不自动升级。12/18数资60＋规则与格式轻回看60＋记忆卡60；12/19数资60＋记忆卡60＋用品检查，不开新难题；12/20考试不加练。【课程】知识按CLEAR8_CURRICULUM指定单一科目专题，11/18法律民事法律行为与代理。刘流实际基线1/13，每节原长2—3h，从真实课次停点接续，120可分段；有新例题先尝试再听，没有题干不凭空强写。11/27起周五新卷替换课程，周六只核对本周新卷尚未处理部分；已处理完接新课，不重复旧复盘。12/9起周二周四增加指定材料新题，12/14起以新题作答为主。任务勾选不自动完成整节课。【保留】任务/目标/检验、现有一个勾选和结果输入；不添加解释折叠或掌握数据库。已复盘法律政治公文旧卷不排、不借时、不变欠账。旧数量/资料任务历史完整保留，不据旧3题/5题完成推断新20题完成。记忆卡每天另60分钟，课程/今日新增卡可直接选，保留全部ID、SRS、会话与个人编辑。自选不改必做目标、不滚欠账。用户时间不限，主要困难是手机与拖延。';}
 
 function exec17CoreIds(d){
   if(!exec17MemoryActive(d))return [];
@@ -2073,24 +2136,29 @@ function exec17RequiredMinutes(d){return Math.max(0,exec17Minutes(d)-exec17Optio
 function exec17Qualified(d){
   if(!exec17StudyDay(d)||exec17Dose(d)==='rescue')return false;
   var m=((D.landing||{})[d])||{};
-  return exec17CoreIds(d).every(function(k){return !!m[k];})&&exec17RequiredMinutes(d)>=300&&exec17MemoryMinutes(d)>=60&&exec17NonMemoryMinutes(d)>=240;
+  return exec17CoreIds(d).every(function(k){return !!m[k];})&&exec17RequiredMinutes(d)>=(train70Active(d)?315:300)&&exec17MemoryMinutes(d)>=60&&exec17NonMemoryMinutes(d)>=(train70Active(d)?255:240);
 }
 function exec17PreviousDays(d,n){var out=[],x=d;for(var i=0;i<45&&out.length<n;i++){x=exec17DateAdd(x,-1);if(x<EXEC17_START)break;if(exec17StudyDay(x))out.push(x);}return out;}
 function exec17QualifiedStreak(d){var days=exec17PreviousDays(d,3),n=0;for(var i=0;i<days.length;i++){if(!exec17Qualified(days[i]))break;n++;}return n;}
 function exec17Target(d){
   if(exec17EveningDay(d))return (exec17EveningZcNeeded(d)?105:65)/60;
   if(d==='2026-12-20')return 0;
+  if(train70Active(d)){
+    if(d==='2026-12-18')return 3;
+    if(d==='2026-12-19'||exec17DayOfWeek(d)===0)return 2;
+    return (exec17Dose(d)==='rescue'?160:exec17Dose(d)==='grow'?405:315)/60;
+  }
   if(d==='2026-12-18')return 2.5;
   if(d==='2026-12-19'||exec17DayOfWeek(d)===0)return 1;
   return exec17Dose(d)==='rescue'?2:exec17Dose(d)==='grow'?6.5:5;
 }
 function exec17GoalLabel(d){
   if(exec17EveningDay(d))return exec17EveningZcNeeded(d)?'今晚参考≤1h45 · 已完成不重复':'今晚参考≤1h05 · 综测主块已完成';
-  if(d==='2026-12-20')return '考试日 · 不加记忆卡任务';
-  if(d==='2026-12-19')return '用品准备＋记忆卡1h';
-  if(d==='2026-12-18')return '2.5h轻量 · 含记忆卡1h';
-  if(exec17DayOfWeek(d)===0)return '周日轻量 · 仅记忆卡1h';
-  var mode=exec17Dose(d);return mode==='rescue'?'2h应急 · 各模块缩量':mode==='grow'?'6.5h主动加量 · 含记忆卡1h':exec17DayOfWeek(d)===6?'5h周测日 · 三个整块':'5h固定训练 · 六项必做';
+  if(d==='2026-12-20')return '考试日 · 不加练';
+  if(d==='2026-12-19')return '数资20题＋记忆卡1h＋用品检查';
+  if(d==='2026-12-18')return '3h轻量 · 数资20题保留';
+  if(exec17DayOfWeek(d)===0)return '周日2h · 数资20题＋记忆卡1h';
+  var mode=exec17Dose(d);return mode==='rescue'?'2h40应急 · 数资20题保留':mode==='grow'?'6h45主动加量 · 含记忆卡1h':exec17DayOfWeek(d)===6?'5h15周测 · 卷内含数资20题':'5h15固定训练 · 五项必做';
 }
 function exec17FeedbackContext(){return train70FeedbackContext();}
 
@@ -2902,16 +2970,7 @@ function renderSidePanel(date){
   const sp=document.getElementById('sp-content');
   if(!sp) return;
   const _dkeySp=ds(date);
-  if(exec17Applies(_dkeySp)){
-    const st=rollingLessonState();
-    sp.innerHTML=`<div class="exec17-callout"><b>已复盘后执行版</b><br>${exec17GoalLabel(_dkeySp)}；两科并行，具体题型与时长以本场公告为准。</div>
-    <div class="sp-item"><b>本次公基：</b>50.6分，51/100；法律9/24、政治15/27的旧卷已复盘，接下来做新题验证；常识7/14短补。</div>
-    <div class="sp-item"><b>公文：</b>7/9，旧卷已复盘，不再安排旧错题或猜对题复做；有需要时在公基块内用新题检验。资料4/5不直接当作稳定强项。</div>
-    <div class="sp-item"><b>综测：</b>以往50多；当前刘流${st.done}/13，${st.next?'真实下一节为第'+st.next+'节':'已标记听完，转独立作答和精改'}。每节原长2—3h，长课拆开，听课/手写/改稿同步，每周约3节只是参考。</div>
-    <div class="sp-item"><b>每周：</b>周六公基代表卷；第二周起周五综测整套、周六精改；每天另背记忆卡1h，周日只保留这1h。整套训练替换课程块，不叠加。</div>
-    <div class="sp-item"><b>手机：</b>离手或手动限制娱乐应用；网页不锁手机。晚开始不作废，直接接着第一块做。</div>
-    <div class="sp-item"><b>旧项：</b>只存档，不顶掉当前主线；可在普通日自选一个错点替换30min短复习，不自动结清原任务。原32节与其他申论进度保留，不当作刘流13节进度。</div>`;return;
-  }
+  if(exec17Applies(_dkeySp)){const st=rollingLessonState();sp.innerHTML='<div class="sp-item">刘流课程：'+st.done+'/13</div>';return;}
   if(_dkeySp>='2026-11-06'&&_dkeySp<='2026-12-20'){
     var _zcNow=rollingLessonState();
     var _zcNext=_zcNow.next?'下一节：第'+_zcNow.next+'节':'13节已完成';
@@ -3114,7 +3173,7 @@ function renderPlanGap(){
 function renderScoreGuess(){
   const el=document.getElementById('score-guess');
   if(!el) return;
-  if(exec17Applies(ds(new Date()))){el.innerHTML='<div class="exec17-callout"><b>目标是笔试折算70，不作保分承诺。</b>公基50.6、综测以往50多为起点。权重与正式规则尚未核实，不假设各50%、不生成折算分；用不同新卷的真实得分、分项用时与独立作答检验稳定性。</div>';return;}
+  if(exec17Applies(ds(new Date()))){el.innerHTML='';return;}
   if(cycleFor(ds(new Date()))){
     el.innerHTML=`<div style="border:1.5px solid #93c5fd;border-radius:10px;overflow:hidden">
     <div style="background:linear-gradient(90deg,#eff6ff,#dbeafe);padding:9px 13px;font-weight:800;font-size:13px;color:#1e3a8a">🎯 当前评分口径：先看真实确定会率，不用表面正确率骗自己</div>
@@ -3162,28 +3221,21 @@ function renderNewPlanDay(d,dkey){
  const target=document.getElementById('target-h');
  if(target)target.textContent=exec17Applies(dkey)?exec17GoalLabel(dkey):'历史方案参考（不影响当前目标）';
  const c=document.getElementById('slots-container');
+ if(c&&train70Active(dkey)){c.innerHTML='';c.style.display='none';try{updateDayProgress(dkey);}catch(e){}return;}
  if(c){c.style.display='block';c.innerHTML=`<div style="background:#eff6ff;border:1px solid #93c5fd;border-radius:12px;padding:12px 14px;font-size:12px;line-height:1.8;color:#1e3a8a"><strong>${p.icon} ${p.name}</strong><br>${p.desc}<br><span style="font-weight:700">${exec17Applies(dkey)?'具体做什么、做到哪算完成，见上方执行卡。时间均为有效学习，不含休息；晚开始也从第一块接着做，不重排全天。':'这里是历史日期；旧打卡、课次、卡片与计时不因本次更新被重置。'}</span></div>`;}
  try{updateDayProgress(dkey);}catch(e){}
 }
 function newPlanOverviewHTML(){
- const today=ds(new Date());let phases='';NEW_PHASES.forEach(p=>{phases+=`<div class="debt-cell" style="${today>=p.s&&today<=p.e?'border-color:#2563eb;background:#eff6ff':''}"><div class="n">${p.s.slice(5)} — ${p.e.slice(5)}${today>p.e?' · 历史，不代表完成':''}</div><div class="v" style="font-size:.95rem"><strong>${p.icon} ${p.name}</strong></div><div class="n" style="font-weight:400">${p.desc}</div></div>`;});
- const rows=EXEC17_MOCK.parts.map(x=>`<tr><td>${x.name}</td><td>${x.c}/${x.n}</td><td>${x.n-x.c}</td><td>${x.advice}</td></tr>`).join('');
- const week=TRAIN70_WEEK.map(x=>`<tr><td style="white-space:nowrap">${x[0].slice(5)}</td><td>${x[1]}</td><td>${x[2]}</td><td>${x[3]}</td><td>${x[4]}</td></tr>`).join('');
- return `<div class="exec17-overview" id="train70-overview"><h3 style="font-size:18px;color:#1e3a8a;margin-bottom:8px">70分目标训练课表 · 先交付安排，再按结果带练</h3>
- <div class="exec17-callout"><b>已确认：</b>四川事业单位，2026年12月20日，目标为<b>笔试折算70分</b>，不是擅自要求两科各70。<br><b>待核实：</b>具体招考公告、正式科目/满分、两科权重和考试限时。当前不假设各占50%，不生成折算分，不把两科各120分钟的训练配额当成分值权重。公告之后补，不耽误先训练；本表是基于现有信息的起始方案，不是已经核实官方考纲的最终配比。</div>
- <div class="exec17-stat-grid"><div><b>5h</b><span>普通训练日 · 六项必做</span></div><div><b>1h</b><span>周日 · 只背记忆卡</span></div><div><b>2h</b><span>临时应急 · 各模块缩量</span></div></div>
- <h4 style="margin:15px 0 7px">普通日怎么排：先保证覆盖，不靠自选补漏洞</h4>
- <div class="train70-time-grid"><div><b>公基知识 60分钟</b><span>法律／政治重点，常识经管公文轮换；新题＋本组问题核对</span></div><div><b>数量 25分钟</b><span>从基数和比例概念开始：完整示范→少量新变式，未懂不跳级</span></div><div><b>资料 20分钟</b><span>固定短材料训练，记录准确数与用时，不凭4/5当稳定强项</span></div><div><b>判断 15分钟</b><span>图形、定义、类比、条件与论证轮换，写清依据</span></div><div><b>综测 120分钟</b><span>真实未学停点＋课内新例题尝试，可拆60＋60，不重改旧稿</span></div><div><b>记忆卡 60分钟</b><span>每天独立另加，可拆30＋30；按今天课程、来源或到期卡选</span></div></div>
- <p class="exec17-small" style="margin-top:8px"><b>与上版差别：</b>不是给已删除的旧复盘换名。知识90→60分钟，固定新增数量25＋资料20＋判断15，公基合计120；综测120＋独立记忆卡60，共300分钟。题量和配额是首周起点，之后看真实结果调整，不宣称这几个数字是最优处方。</p>
- <h4 style="margin:15px 0 7px">建议执行顺序（有效学习，不含休息）</h4><div class="exec17-callout">第一段：知识60 → 休息10 → 数量25 → 休息5 → 资料20 → 休息5 → 判断15。<br>第二段：综测60 → 休息10—15 → 综测60；新例题作答包含其中。<br>第三段：记忆卡30＋30，中间休息。开始时间按实际顺移，不因错过某个钟点整天作废；不能把休息、手机娱乐或同一段学习重复计时。晚开始可主动选当天应急，不靠熬夜补两天。</div>
- <h4 style="margin:15px 0 7px">首周逐日安排：11/18—11/24</h4><p class="exec17-small">周一至周五另有固定数量25分钟，训练点从“百分数基数”起，由实际掌握手动切换，不按这张日期表自动进入工程或行程。常规综测120、记忆卡60照常；表中只写各日变化。11/21为公基整卷替换，11/22只记忆卡。</p>
- <div style="overflow-x:auto"><table class="exec17-table train70-week"><thead><tr><th>日期</th><th>公基知识60／周测</th><th>资料20</th><th>判断15</th><th>综测120／例外</th></tr></thead><tbody>${week}</tbody></table></div>
- <h4 style="margin:15px 0 7px">数量不是每天换一套公式</h4><div style="font-size:12px;line-height:1.9">路线：<b>百分数基数 → 涨降倒推 → 比例转实际数量 → 工程基础 → 行程时间线 → 利润基础 → 已学混合新题</b>。工程一道答对只作为起点，不重复讲已会部分；其他概念未懂先示范，再做2—4道新的变式。每天执行单上方可选择“数量实际训练点”，不会因为日期、打卡或做过一题自动升级，也不会把未懂概念滚成双倍任务。</div>
- <h4 style="margin:15px 0 7px">怎样检验有没有向70分接近</h4><ol style="padding-left:20px;font-size:12px;line-height:1.95"><li><b>每次训练留证据：</b>各项备注记新题来源、独立作答数/正确数、实际用时、猜题和卡点。只写“做完”或只打卡不当成能力提升。</li><li><b>每周用新卷检验：</b>周六公基新卷替换知识＋数量＋资料＋判断的120分钟；11/27起周五综测新卷替换课程120，次日只核对这份新卷尚未处理部分。学习预算不冒充官方考试时限，规则核实后校准。</li><li><b>按结果调，不一律加时：</b>下一周仍卡概念就保留示范；准确但慢才缩限时；持续独立正确的基础内容减少，空出的同一学习块给新缺口。数量/资料/判断不再被放回可选区。页面只保留记录和手动训练点，不会仅凭打卡自动判定掌握；训练结果发到聊天后再据此调整。</li><li><b>70分看正式口径：</b>待权重与规则核实后，用至少两份不同、尽量贴近本场范围的限时新卷看折算70的稳定性。四道基础题、听完课程、某一次高分都不能保证正式成绩或录取。</li></ol>
- <h4 style="margin:15px 0 7px">为什么这样安排：现有证据，不把题数当分值</h4><p class="exec17-small">公基50.6，51/100，用时64分43秒；综测仅知以往50多。法律和政治本卷合计错27题，值得重点投入，但不是其他模块可以不练。数量0/5及这次基础新题反馈支持先练概念；资料5题、判断2题样本有限。旧卷已经复盘，不再要求分类、复做或重抄。</p>
- <div style="overflow-x:auto"><table class="exec17-table"><thead><tr><th>模块</th><th>答对/题数</th><th>错题</th><th>当前处理</th></tr></thead><tbody>${rows}</tbody></table></div>
- <h4 style="margin:15px 0 7px">至考试的阶段安排</h4><div class="debt-grid">${phases}</div>
- <details class="exec17-guide" style="margin-top:12px"><summary>强度、历史记录与自选规则</summary><div>先按5h普通训练日做稳。连续3个学习日完成当日必做、非记忆卡≥240分钟且记忆卡≥60分钟后，才主动选择6.5h；两科各追加45分钟，不自动升级，不是提分保证。周六必做为3个整块，普通工作日为6项。应急2h不计完整达标，次日恢复之前设置；周日只记忆卡60分钟。12/18轻回看90＋记忆卡60，12/19用品检查＋记忆卡60，12/20不排学习。<br>所有新题核对在原块内，不另加旧错题30分钟。11/17原休息许可不追债。旧打卡、计时、笔记、课程进度与SRS均保留，已完成的同日知识/综测/记忆卡不强迫重做；新增三个能力任务有独立ID，不能借旧勾选冒充完成。自选科目须当日计划全完成后添加，不替代必做、不计原计划分母，也不滚次日欠账。课程只按整节实际听完单独标记；记忆卡可直接按课程、来源、今天新增或导入批次选择，无须先清旧民法。<br>更换文件前备份，原站点内替换即可；不要清浏览器数据。记忆卡完整备份在“记忆卡→设置”，仪表盘备份只含课表数据。</div></details></div>`;
+ var today=ds(new Date()),i=CLEAR8_WEEKS.findIndex(function(w){return today>=w[1]&&today<=w[2];});if(i<0)i=0;
+ var options=CLEAR8_WEEKS.map(function(w,j){return '<option value="'+j+'" '+(i===j?'selected':'')+'>'+w[0]+'</option>';}).join('');
+ return '<div class="exec17-overview clear8-overview" id="train70-overview">'
+  +'<div class="clear8-plan-goal"><b>12/20 · 笔试折算70</b><small>本场计分规则待公告匹配</small></div>'
+  +'<div class="clear8-budget"><span>指定专题<b>60分钟</b></span><span>数资20题<b>60分钟</b></span><span>判断<b>15分钟</b></span><span>综测<b>120分钟</b></span><span>记忆卡<b>另60分钟</b></span></div>'
+  +'<div class="train9-standard"><b>数资阶段标尺</b><span>11/24：12/20 → 12/08：14/20 → 12/17：16/20</span><small>均记首轮结果；先做整组，再补错型。</small></div>'
+  +'<div class="clear8-week-head"><b>逐日安排</b><select id="clear8-week-pick" aria-label="选择课表周" onchange="clear8ShowWeek(this.value)">'+options+'</select></div>'
+  +'<div id="clear8-week-grid">'+clear8WeekHTML(i)+'</div>'
+  +'<div class="clear8-plan-check"><b>每日</b><span>数资20题＝数量10＋资料10；周日、应急、考前两天保留。</span><b>周测</b><span>周六20题并入公基新卷，不另加套题；11/27起周五综测新卷、次日核对，替换课程。</span><b>70分检验</b><span>按正式规则，用两份不同限时新卷的真实成绩核验；未达就调整失分点。</span></div>'
+  +'</div>';
 }
 
 function renderSchedule(){
@@ -4156,13 +4208,12 @@ function setMode(m,btn){curMode=m;document.querySelectorAll('.mb').forEach(b=>{b
 
 // ==================== 学习科目管理（可增删，跨设备同步） ====================
 const SUBJ_DEFAULT=[
-  {v:'速算',label:'⚡ 资料速算'},
+  {v:'数资-套题',label:'🔢 数资20题'},{v:'速算',label:'⚡ 资料速算'},
   {v:'资料-基础',label:'📊 资料分析·基础课'},{v:'资料-刷题',label:'📊 资料分析·刷题'},
     {v:'逻辑',label:'🔍 逻辑推理'},
   {v:'图推-刘义恒',label:'🔷 刘义恒图推'},
 
   {v:'数量-基础',label:'🔢 数量关系·基础'},{v:'数量-刷题',label:'🔢 数量关系·刷题'},
-  {v:'言语-基础',label:'💬 言语理解·基础'},{v:'言语-刷题',label:'💬 言语理解·刷题'},
   {v:'综测-基础',label:'📖 综测·基础班'},{v:'综测-刷题',label:'✏️ 综测·刷题班'},{v:'综测-真题',label:'✍️ 综测·真题手写'},
   {v:'小黑-理论',label:'🎓 小黑政治·理论课（已完4/4）'},{v:'小黑-刷题',label:'🔴 超格政治·系统课'},
   {v:'公基-系统',label:'📚 公基·系统课（马克）'},{v:'公基-刷题',label:'📝 公基·刷题课'},
@@ -4202,7 +4253,7 @@ function delSubj(){
   sv();renderSubjs();
   showToast('🗑 已删除科目');
 }
-function sL(v){const m={'资料-基础':'资料基础','资料-刷题':'资料刷题','逻辑':'逻辑推理','图推-刘义恒':'刘义恒图推',
+function sL(v){const m={'数资-套题':'数资20题','资料-基础':'资料基础','资料-刷题':'资料刷题','逻辑':'逻辑推理','图推-刘义恒':'刘义恒图推',
 '数量-基础':'数量基础','数量-刷题':'数量刷题','言语-基础':'言语基础','言语-刷题':'言语刷题','综测-基础':'综测基础','综测-刷题':'综测刷题','综测-真题':'综测真题','小黑-理论':'小黑理论','小黑-刷题':'超格政治','公基-系统':'公基系统(马克)','公基-刷题':'公基刷题','申论-小题':'白鹭申论小题','申论-作文':'白鹭申论作文','申论':'申论','复盘':'错题复盘'};return m[v]||v;}
 // 学习记录唯一键 + 删除（带墓碑机制：删除会同步，不会被合并复活）
 const logK=l=>`${l.date}|${l.start}|${l.end}|${l.subject}|${l.duration}`;
@@ -5051,9 +5102,8 @@ function exportAllWq(){
 }
 
 function downloadText(text,filename){
-  const a=document.createElement('a');
-  a.href='data:text/plain;charset=utf-8,'+encodeURIComponent(text);
-  a.download=filename;a.click();
+  const a=document.createElement('a'),url=URL.createObjectURL(new Blob([text],{type:/\.json$/i.test(filename)?'application/json;charset=utf-8':'text/plain;charset=utf-8'}));
+  a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);
 }
 
 // ==================== CLOUD SYNC (JSONBin.io) ====================
@@ -7148,24 +7198,253 @@ function exportLocalData(){
   const json=JSON.stringify(D,null,2);
   downloadText(json,`gongkao_backup_${ds(new Date())}.json`);
 }
-function importLocalData(input){
-  const file=input.files[0];if(!file) return;
-  const reader=new FileReader();
-  reader.onload=e=>{
-    try{
-      const imported=JSON.parse(e.target.result);
-      // 合并模式：导入数据与本机数据取并集，不覆盖本机已有记录
-      const merged=mergeData(D,imported);
-      Object.keys(merged).forEach(k=>{D[k]=merged[k];});
-      sv();
-      if(CLOUD.apiKey&&CLOUD.binId) queueCloudSave(); // 合并结果同步上云
-      showToast('✅ 已导入并合并；如已配置云同步，页面会尝试同步。');
-      renderSchedule();renderTLog();updateDayProgress(ds(curDate));safeRun(window.renderLanding);
-    }catch(err){showToast('❌ 导入失败：文件格式错误','red');}
-    input.value='';
-  };
-  reader.readAsText(file);
+/* r9 local restore: detached merge, checked writes, and separate local/cloud receipts. */
+var _r9Import={phase:'idle',parsed:false,localSaved:false,seq:0,configId:'',message:''};
+var _r9ImportBusy=false,_r9SafetyGuard=null,_r9PageChannel=null,_r9Probe=null;
+var _r9PageId=String(Date.now())+'-'+Math.random().toString(36).slice(2);
+const R9_SAFETY_FORMAT='doit-local-rescue-v1';
+const R9_IMPORT_MAX=64*1024*1024;
+function r9ImportMessage(message,phase){
+  _r9Import.message=message;if(phase)_r9Import.phase=phase;r9PaintImport();
 }
+function r9PaintImport(){
+  const el=document.getElementById('local-import-status');if(!el)return;
+  if(_r9Import.localSaved&&_r9Import.phase!=='confirmed'){
+    let tail='未配置云同步。';
+    if(cfIsActive()){
+      if(_cfMultiTabConflict||_cfStoreBlocked)tail='同步已暂停，请使用云同步区的本机冲突处理入口。';
+      else if(_cfHold)tail='尚未获服务器确认：'+(_cfError||'请查看同步原因。');
+      else if(!_netOnline())tail='当前离线，联网后再同步。';
+      else if(!_cfCfg.auto)tail='自动同步已暂停，请点“立即同步并等待确认”。';
+      else tail=(_cfBusy?'正在同步；':'已排队；')+'尚未获服务器确认。'+(_cfError?' '+_cfError:'');
+    }else if(CLOUD.apiKey&&CLOUD.binId)tail='旧 JSONBin 待同步，以云同步状态为准。';
+    el.textContent='✅ JSON已解析 · 本机已保存并回读核验。'+tail;
+  }else if(_r9Import.phase==='confirmed'){
+    _r9Import.message='☁️ 本次导入已获服务器确认（云端版本 '+_r9Import.confirmedRevision+'）。'+(_cfDirty?'后续修改仍待同步。':'');el.textContent=_r9Import.message;
+  }else el.textContent=_r9Import.message;
+  el.style.color=_r9Import.phase==='failed'||_r9Import.phase==='blocked'?'#b91c1c':_r9Import.phase==='confirmed'?'#15803d':'#92400e';
+}
+function r9ImportConfirmed(captured,revision){
+  if(!_r9Import.localSaved||_r9Import.phase==='confirmed'||!captured||captured.seq<_r9Import.seq||_r9Import.configId!==cfConfigId(_cfCfg))return;
+  _r9Import.phase='confirmed';_r9Import.confirmedRevision=revision;
+  _r9Import.message='☁️ 本次导入已获服务器确认（云端版本 '+revision+'）。'+(_cfDirty?'后续修改仍待同步。':'');r9PaintImport();
+}
+function r9Fail(message,code){const e=new Error(message);e.r9Code=code||'validation';return e;}
+function r9Tree(root){
+  const stack=[root];let count=0;
+  while(stack.length){const x=stack.pop();if(!x||typeof x!=='object')continue;
+    if(++count>1000000)throw r9Fail('JSON结构过大，未导入。');
+    for(const k of Object.keys(x)){if(k==='__proto__'||k==='prototype'||k==='constructor')throw r9Fail('JSON含不安全字段，未导入。');if(x[k]&&typeof x[k]==='object')stack.push(x[k]);}
+  }
+}
+function r9Dashboard(value){
+  r9Tree(value);
+  if(!cfPlain(value)||(!Object.prototype.hasOwnProperty.call(value,'logs')&&!Object.prototype.hasOwnProperty.call(value,'checks')&&!Object.prototype.hasOwnProperty.call(value,'landing')))throw r9Fail('不是Doit仪表盘备份；没有导入或修改本机记录。');
+  const d=cfClone(value);if(d.logs===undefined)d.logs=[];if(d.checks===undefined)d.checks={};
+  cfValidateEnvelope({format:CF_SYNC_FORMAT,dashboard:d,srs:null,session:null});
+  ['logs','notes','wq','corrections','skips','skipLog','noteTypes','subjs'].forEach(k=>{if(d[k]&&d[k].some(x=>!cfPlain(x)))throw r9Fail('备份中的'+k+'记录不完整，未导入。');});
+  ['landing','landingTs','landingProg','feedbacks','customTasks','prog','progTs','checkTs','drills','tomb','dayStart','courseOv'].forEach(k=>{if(d[k]!==undefined&&!cfPlain(d[k]))throw r9Fail('备份中的'+k+'字段异常，未导入。');});
+  Object.values(d.landing||{}).forEach(v=>{if(!cfPlain(v))throw r9Fail('任务勾选格式异常，未导入。');});
+  Object.values(d.landingTs||{}).forEach(v=>{if(!cfPlain(v))throw r9Fail('任务时间戳格式异常，未导入。');});
+  Object.values(d.landingProg||{}).forEach(v=>{if(!cfPlain(v)||(v.note!==undefined&&typeof v.note!=='string'))throw r9Fail('任务结果格式异常，未导入。');});
+  Object.values(d.customTasks||{}).forEach(v=>{if(!Array.isArray(v)||v.some(x=>!cfPlain(x)))throw r9Fail('自定义任务格式异常，未导入。');});
+  ['wq','notes','corrections'].forEach(k=>{if(d.tomb&&d.tomb[k]!==undefined&&!Array.isArray(d.tomb[k]))throw r9Fail('删除记录格式异常，未导入。');});
+  if(d.rollingFocus20261106!==undefined){
+    const r=d.rollingFocus20261106;if(!cfPlain(r))throw r9Fail('刘流课程记录格式异常，未导入。');
+    ['lessons','topics','lessonNotes','topicNotes'].forEach(k=>{if(r[k]!==undefined&&!cfPlain(r[k]))throw r9Fail('课程停点格式异常，未导入。');});
+  }
+  return d;
+}
+function r9Srs(value){
+  if(value===null||value===undefined)return null;r9Tree(value);
+  cfValidateEnvelope({format:CF_SYNC_FORMAT,dashboard:{logs:[],checks:{}},srs:value,session:null});return cfClone(value);
+}
+function r9Session(value){
+  if(value===null||value===undefined)return null;r9Tree(value);
+  cfValidateEnvelope({format:CF_SYNC_FORMAT,dashboard:{logs:[],checks:{}},srs:null,session:value});return cfClone(value);
+}
+function r9ParseRaw(raw,label){if(raw===null||raw===undefined||raw==='')return null;try{return JSON.parse(raw);}catch(e){throw r9Fail(label+'不是完整JSON；没有覆盖原存档。');}}
+function r9Incoming(value){
+  r9Tree(value);
+  if(cfPlain(value)&&(value.app==='scsyd-memory-card'||(Array.isArray(value.cards)&&!value.logs&&!value.dashboard)))throw r9Fail('这是记忆卡备份，请到“记忆卡 → 设置 → 恢复”导入；仪表盘没有改动。');
+  let x=value;for(let i=0;i<5&&cfPlain(x)&&!x.logs&&!x.checks&&!x.landing&&!x.dashboard&&x.record;i++)x=x.record;
+  const list=[];
+  function add(d,s,q){
+    const dashboard=r9Dashboard(d);let cards=r9Srs(s),session=r9Session(q);
+    if(dashboard.srs){cards=cards?cfMergeSrs(cards,r9Srs(dashboard.srs)):r9Srs(dashboard.srs);}
+    if(cards)session=chooseStudySession(cards.session,session,(cards.meta&&cards.meta.resetAt)||0);
+    list.push({format:CF_SYNC_FORMAT,dashboard:dashboard,srs:cards||null,session:session||null});
+  }
+  if(cfPlain(x)&&x.format===R9_SAFETY_FORMAT){
+    add(x.dashboard,r9ParseRaw(x.srsRaw,'记忆卡主档'),r9ParseRaw(x.sessionRaw,'记忆卡会话'));
+    const stored=r9ParseRaw(x.storedDashboardRaw,'保护备份中的本机仪表盘');if(stored)add(stored,null,null);
+    // Backups are retained in the file, but are not blindly replayed over an explicit reset.
+  }else if(cfPlain(x)&&x.format===CF_SYNC_FORMAT){cfValidateEnvelope(x);add(x.dashboard,x.srs,x.session);}
+  else if(cfPlain(x)&&x.format!==undefined)throw r9Fail('不是支持的Doit备份格式；未导入。');
+  else add(x,null,null);
+  return list;
+}
+function r9ReadGuard(){
+  const keys=[KEY,CF_SYNC_CFG_KEY,CF_SYNC_DIRTY_KEY,'doit_sync_pending_v1',SRS_LS_KEY,SRS_LS_KEY+'_backup','scsyd_session_v1','scsyd_session_v1_backup'];
+  const slots={};keys.forEach(k=>{slots[k]=localStorage.getItem(k);});return {model:JSON.stringify(D),slots:slots};
+}
+function r9SameGuard(g){try{return !!g&&g.model===JSON.stringify(D)&&Object.keys(g.slots).every(k=>localStorage.getItem(k)===g.slots[k]);}catch(e){return false;}}
+function r9SafetyObject(g){return {format:R9_SAFETY_FORMAT,exportedAt:new Date().toISOString(),dashboard:JSON.parse(g.model),storedDashboardRaw:g.slots[KEY],srsRaw:g.slots[SRS_LS_KEY],srsBackupRaw:g.slots[SRS_LS_KEY+'_backup'],sessionRaw:g.slots['scsyd_session_v1'],sessionBackupRaw:g.slots['scsyd_session_v1_backup']};}
+function r9DownloadSafety(){
+  try{const g=r9ReadGuard();downloadText(JSON.stringify(r9SafetyObject(g),null,2),'Doit-本机保护备份-'+ds(new Date())+'-'+Date.now()+'.json');_r9SafetyGuard=g;showToast('已生成保护备份，请保留下载文件；不含同步密钥');return true;}
+  catch(e){showToast('保护备份未能生成；请勿刷新或清空，请先使用原导出按钮备份','orange');return false;}
+}
+function r9EnsureSafety(g){
+  if(_r9SafetyGuard&&r9SameGuard(_r9SafetyGuard))return;
+  downloadText(JSON.stringify(r9SafetyObject(g),null,2),'Doit-导入合并前保护备份-'+ds(new Date())+'-'+Date.now()+'.json');_r9SafetyGuard=g;
+}
+function r9StartPageProbe(){
+  if(_r9PageChannel||typeof BroadcastChannel!=='function'||(typeof isMiniPage==='function'&&isMiniPage()))return;
+  try{_r9PageChannel=new BroadcastChannel('doit-local-pages-v1');_r9PageChannel.onmessage=e=>{
+    const x=e.data;if(!x||x.id===_r9PageId||_pageLeaving)return;
+    if(x.type==='probe')_r9PageChannel.postMessage({type:'reply',id:_r9PageId,to:x.id,nonce:x.nonce});
+    if(x.type==='reply'&&x.to===_r9PageId&&_r9Probe&&x.nonce===_r9Probe.nonce)_r9Probe.found=true;
+  };}catch(e){_r9PageChannel=null;}
+}
+async function r9OtherPageOpen(){
+  r9StartPageProbe();if(!_r9PageChannel)return false;
+  const probe={nonce:Math.random().toString(36).slice(2),found:false};_r9Probe=probe;
+  _r9PageChannel.postMessage({type:'probe',id:_r9PageId,nonce:probe.nonce});await new Promise(resolve=>setTimeout(resolve,350));
+  if(_r9Probe===probe)_r9Probe=null;return probe.found;
+}
+function r9AssertReady(recovery){
+  if(_cfBusy||_syncing||_pullBusy||_doitPreparing||_doitPollRunning||_cfLegacyInFlight)throw r9Fail('同步正在进行，请等结束后再导入或合并。','blocked');
+  if(_pageLeaving)throw r9Fail('页面正在离开，未开始导入。','blocked');
+  if(DOIT_ID_BLOCKED||_doitScopeError)throw r9Fail('编号或独立存储需要核对；先备份，不要清空数据。','blocked');
+  if(cfEditorActive()||cfMemoryVisible())throw r9Fail('请先保存正在编辑的内容，并返回仪表盘后操作。','blocked');
+  if(cfIsActive()){
+    if(_cfCfg.invalid)throw r9Fail('Cloudflare配置无法读取，请先备份并完成只读测试。','blocked');
+    if(!recovery){
+      if(_cfMultiTabConflict||_cfStoreBlocked)throw r9Fail('导入未执行：请先使用“备份并合并本机冲突”，再重新选择JSON。','blocked');
+      try{cfAssertStable();}catch(e){throw r9Fail('本页与本机存档不一致；请先备份并合并本机冲突，再重新导入。','blocked');}
+    }
+  }
+}
+function r9LocalEnvelope(g){
+  const d=r9Dashboard(JSON.parse(g.model));let s=r9Srs(r9ParseRaw(g.slots[SRS_LS_KEY],'本机记忆卡')),q=r9Session(r9ParseRaw(g.slots['scsyd_session_v1'],'本机记忆卡会话'));
+  // An old dashboard may contain its only surviving SRS copy. Validate and restore it,
+  // rather than leave it stranded in D while cfCapture refuses the missing main store.
+  if(d.srs)s=s?cfMergeSrs(s,r9Srs(d.srs)):r9Srs(d.srs);
+  q=chooseStudySession(s&&s.session,q,(s&&s.meta&&s.meta.resetAt)||0);
+  return {format:CF_SYNC_FORMAT,dashboard:d,srs:s||null,session:q||null};
+}
+function r9StampUnsaved(d){
+  if(!_syncSnap)return d;const now=Date.now(),old=_syncSnap.checks||{},cur=d.checks||{};d.checkTs=d.checkTs||{};
+  new Set([...Object.keys(old),...Object.keys(cur)]).forEach(k=>{if(!!old[k]!==!!cur[k])d.checkTs[k]=Math.max(now,(Number(d.checkTs[k])||0)+1);});
+  d.tomb=d.tomb||{};
+  [['wq','wq'],['notes','notes'],['corrections','corr']].forEach(([key,snap])=>{const have=new Set((d[key]||[]).map(x=>key==='notes'?(x.id||x.ts):x.id)),dead=new Set(d.tomb[key]||[]);(_syncSnap[snap]||[]).forEach(id=>{if(!have.has(id))dead.add(id);});d.tomb[key]=[...dead];});return d;
+}
+function r9WriteChecked(writes,g){
+  if(!r9SameGuard(g))throw r9Fail('合并期间本机或本页又有修改；本次未写入，请先分别备份并关闭其他页面。','conflict');
+  const expected=Object.assign({},g.slots),owned=[];let uncertain=false;
+  try{
+    for(const [key,value] of writes){
+      if(g.model!==JSON.stringify(D)||!Object.keys(expected).every(k=>localStorage.getItem(k)===expected[k]))throw r9Fail('写入期间检测到其他修改；已停止，不覆盖其他页面。','conflict');
+      const before=expected[key]===undefined?localStorage.getItem(key):expected[key];
+      if(value===null)localStorage.removeItem(key);else localStorage.setItem(key,value);
+      owned.push({key,before,after:value});expected[key]=value;
+      if(localStorage.getItem(key)!==value)throw r9Fail('本机写入回读不一致；已停止，请保留保护备份。','conflict');
+    }
+    if(g.model!==JSON.stringify(D)||!Object.keys(expected).every(k=>localStorage.getItem(k)===expected[k]))throw r9Fail('本机存档在写入后又有修改；未继续同步。','conflict');
+    return expected;
+  }catch(e){
+    // Roll back only slots still containing our value. Never undo a real concurrent writer.
+    for(let i=owned.length-1;i>=0;i--){const w=owned[i];try{
+      if(localStorage.getItem(w.key)!==w.after){uncertain=true;continue;}
+      if(w.before===null)localStorage.removeItem(w.key);else localStorage.setItem(w.key,w.before);
+      if(localStorage.getItem(w.key)!==w.before)uncertain=true;
+    }catch(ignore){uncertain=true;}}
+    if(cfIsActive()){_cfStoreBlocked=true;if(e&&e.r9Code==='conflict')_cfMultiTabConflict=true;_cfError=uncertain?'本机写入和回退未能全部确认；已停止，请勿刷新，保留保护备份。':'本机未能完成写入；本页原数据保留，请保留保护备份并检查存储空间。';cfPaint();}
+    const error=r9Fail(uncertain?'写入结果需核对；本页原数据和保护备份保留，没有开始上传。':'本机保存失败，已回退本次写入；原记录保留，没有开始上传。','write');error.r9Uncertain=uncertain;throw error;
+  }
+}
+function r9CommitEnvelope(merged,g,nextCfg){
+  cfValidateEnvelope(merged);
+  const beforeS=r9Srs(r9ParseRaw(g.slots[SRS_LS_KEY],'本机记忆卡')),beforeQ=r9Session(r9ParseRaw(g.slots['scsyd_session_v1'],'本机会话'));
+  const sChanged=splitCanon(cfComparableSrs(beforeS))!==splitCanon(cfComparableSrs(merged.srs)),qChanged=splitCanon(beforeQ)!==splitCanon(merged.session);
+  const api=typeof memoryApi==='function'?memoryApi():null;
+  if((sChanged||qChanged)&&api&&api.ready&&typeof api.reload!=='function')throw r9Fail('记忆卡页面需先备份并刷新，才能安全恢复；本次没有写入。','blocked');
+  if(cfEditorActive()||cfMemoryVisible())throw r9Fail('正在输入或学习记忆卡；本次未写入，请结束编辑后重试。','blocked');
+  const d=cfClone(merged.dashboard),photos=new Map();(D.wq||[]).forEach(x=>{if(x.id&&x.imgData&&x.imgData!=='[img]')photos.set(x.id,x.imgData);});
+  if(d.wq)d.wq=d.wq.map(x=>Object.assign({},x,{imgData:photos.get(x.id)||(x.imgData==='[img]'?null:x.imgData)||null}));
+  let s=merged.srs?cfClone(merged.srs):null;if(sChanged&&s){s.meta=s.meta||{};s.meta.savedAt=Math.max(Date.now(),Number(s.meta.savedAt)||0)+1;}
+  const writes=[];
+  if(sChanged&&s){const raw=JSON.stringify(s);writes.push([SRS_LS_KEY,raw],[SRS_LS_KEY+'_backup',raw]);}
+  if(qChanged&&merged.session){const raw=JSON.stringify(merged.session);writes.push(['scsyd_session_v1',raw],['scsyd_session_v1_backup',raw]);}
+  const oldHold=_cfHold,oldError=_cfError;
+  const text=JSON.stringify(d);writes.push([KEY,text]);
+  if(nextCfg)writes.push([CF_SYNC_CFG_KEY,JSON.stringify(nextCfg)]);
+  writes.push([cfIsActive()?CF_SYNC_DIRTY_KEY:'doit_sync_pending_v1','1']);
+  const expected=r9WriteChecked(writes,g);
+  Object.keys(D).forEach(k=>{if(!Object.prototype.hasOwnProperty.call(d,k))delete D[k];});
+  Object.keys(d).forEach(k=>Object.defineProperty(D,k,{value:d[k],writable:true,enumerable:true,configurable:true}));syncSnapshot();
+  _cfObservedDashboard=text;if(nextCfg){_cfCfg=nextCfg;_cfObservedCfg=expected[CF_SYNC_CFG_KEY];}
+  if(cfIsActive()){
+    _cfMultiTabConflict=false;_cfStoreBlocked=false;_cfHold=nextCfg?false:oldHold;_cfDirty=true;_cfChangeSeq++;_cfView='pending';_cfError=nextCfg?'':oldError;_cfFailures=0;
+  }else{_pendingSave=true;_markSyncPending(true);}
+  let reloadError=false;
+  if((sChanged||qChanged)&&api&&api.ready){try{api.reload();}catch(e){reloadError=true;if(cfIsActive())cfMarkStorageFailure();}}
+  safeRun(renderSrsStatus);safeRun(renderSchedule);safeRun(renderTLog);safeRun(()=>updateDayProgress(ds(curDate)));safeRun(window.renderLanding);safeRun(renderSubjs);
+  if(cfIsActive())cfPaint();else setSyncStatus(CLOUD.apiKey&&CLOUD.binId?(_netOnline()?'pending':'offline'):'none');
+  return {seq:_cfChangeSeq,reloadError:reloadError};
+}
+async function importLocalData(input){
+  const file=input.files&&input.files[0];if(!file)return false;
+  if(_r9ImportBusy){showToast('正在处理上一份文件，请稍候','orange');return false;}
+  _r9ImportBusy=true;_r9Import={phase:'reading',parsed:false,localSaved:false,seq:0,configId:'',message:'正在读取JSON；尚未修改本机。'};r9PaintImport();
+  try{
+    if(file.size>R9_IMPORT_MAX)throw r9Fail('备份超过64MB安全读取上限；没有截断或修改数据。');
+    let text;try{text=await new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(String(r.result));r.onerror=()=>reject(r9Fail('文件读取失败，请重新选择；原记录未改。'));r.readAsText(file);});}catch(e){throw e;}
+    let object;try{object=JSON.parse(text.replace(/^\uFEFF/,''));}catch(e){throw r9Fail('JSON语法不完整；原记录未改，也没有上传。');}
+    const incoming=r9Incoming(object);_r9Import.parsed=true;r9ImportMessage('JSON已解析并校验；正在检查本机，尚未写入。','validated');
+    r9AssertReady(false);
+    if(await r9OtherPageOpen())throw r9Fail('检测到另一Doit页面，请先分别备份并关闭其他页面，再导入。','blocked');
+    r9AssertReady(false);const g=r9ReadGuard();let merged=r9LocalEnvelope(g);
+    for(const remote of incoming)merged=cfMergeEnvelope(merged,remote);
+    r9EnsureSafety(g);const receipt=r9CommitEnvelope(merged,g);
+    _r9Import.localSaved=true;_r9Import.seq=receipt.seq;_r9Import.configId=cfConfigId(_cfCfg);_r9Import.phase='saved';r9PaintImport();
+    if(receipt.reloadError){showToast('仪表盘已保存；记忆卡刷新未确认，请先备份，不要关闭页面','orange');return true;}
+    showToast('本机导入已保存并核验；云端以服务器确认为准');
+    if(cfIsActive()){if(_cfCfg.auto)cfQueue(800);}else if(CLOUD.apiKey&&CLOUD.binId)queueCloudSave();
+    return true;
+  }catch(e){
+    const message=(e&&e.message)||'导入未完成；原记录保留。';r9ImportMessage('⚠️ '+message,e&&e.r9Code==='blocked'?'blocked':'failed');showToast(message,'orange');return false;
+  }finally{input.value='';_r9ImportBusy=false;}
+}
+function r9RecoveryCfg(raw){
+  const v=r9ParseRaw(raw,'本机同步配置');
+  if(!cfPlain(v)||v.enabled!==true||v.invalid||cfConfigId(v)!==cfConfigId(_cfCfg))throw r9Fail('另一页面改变了同步地址或连接状态；为防连错云端，未合并。请分别备份后核对连接，不要发送密钥。','blocked');
+  const next=Object.assign({},v),memRev=Number(_cfCfg.lastRev)||0,storedRev=Number(v.lastRev)||0;
+  if(memRev===storedRev&&memRev>0&&_cfCfg.lastSha&&v.lastSha&&_cfCfg.lastSha!==v.lastSha)throw r9Fail('同一云端版本的校验信息不一致；已停止，请保留备份。','blocked');
+  if(memRev>storedRev){next.lastRev=memRev;next.lastSha=_cfCfg.lastSha;next.lastSyncTs=_cfCfg.lastSyncTs;}
+  if((Number(next.lastRev)||0)>0)next.allowCreate=false;return next;
+}
+async function cfRecoverLocal(){
+  if(!cfIsActive()){showToast('本入口仅处理已启用Cloudflare的本机冲突','orange');return false;}
+  if(_r9ImportBusy){showToast('正在处理导入，请等完成','orange');return false;}_r9ImportBusy=true;
+  try{
+    r9AssertReady(true);
+    if(typeof tOn!=='undefined'&&tOn)throw r9Fail('请先结束计时并备份，再合并本机冲突。','blocked');
+    if(await r9OtherPageOpen())throw r9Fail('仍检测到另一Doit页面；请先分别备份、关闭其他页面后再试。没有写入或上传。','blocked');
+    r9AssertReady(true);const g=r9ReadGuard(),cfg=r9RecoveryCfg(g.slots[CF_SYNC_CFG_KEY]);
+    r9EnsureSafety(g);
+    if(!confirm('请先保存刚生成的保护备份，并确认其他Doit页面（含旧版）都已关闭。\n\n将合并“本页尚未保存的数据”和“本机最新存档”，回读核验后再解除暂停。不会清空数据，不会直接覆盖云端。确认继续？'))return false;
+    if(!r9SameGuard(g))throw r9Fail('确认期间又有修改；未合并。请重新备份并关闭其他页面后再试。','blocked');
+    let merged=r9LocalEnvelope(g);merged.dashboard=r9StampUnsaved(merged.dashboard);
+    const stored=r9ParseRaw(g.slots[KEY],'本机仪表盘');
+    if(stored){const d=r9Dashboard(stored),s=d.srs?r9Srs(d.srs):null;merged=cfMergeEnvelope(merged,{format:CF_SYNC_FORMAT,dashboard:d,srs:s,session:s&&s.session||null});}
+    r9CommitEnvelope(merged,g,cfg);_cfObservedCfg=localStorage.getItem(CF_SYNC_CFG_KEY);
+    cfPaint();showToast('本页与本机记录已安全合并并核验；现在可重新导入或立即同步');
+    if(_cfCfg.auto)cfQueue(1200);return true;
+  }catch(e){showToast((e&&e.message)||'未能完成本机合并，请保留备份','orange');cfPaint();return false;}
+  finally{_r9ImportBusy=false;}
+}
+
 function clearAllData(){
   if(!confirm('确认清空所有本地数据？此操作不可恢复！')) return;
   try{localStorage.removeItem(KEY);}catch(e){}
@@ -7341,15 +7620,15 @@ function cfConfigId(c){return c?String(c.url||'')+'\n'+String(c.token||''):'';}
 function cfClone(o){return o==null?o:JSON.parse(JSON.stringify(o));}
 function cfError(message,hold){const e=new Error(message);e.cfHold=hold!==false;return e;}
 function cfWriteCfg(cfg){
-  const text=JSON.stringify(cfg);localStorage.setItem(CF_SYNC_CFG_KEY,text);
-  if(localStorage.getItem(CF_SYNC_CFG_KEY)!==text)throw cfError('本机无法保存同步配置；未开始同步。');
-  _cfObservedCfg=text;
+  const text=JSON.stringify(cfg);
+  try{localStorage.setItem(CF_SYNC_CFG_KEY,text);if(localStorage.getItem(CF_SYNC_CFG_KEY)!==text)throw Error('verify');_cfObservedCfg=text;}
+  catch(e){_cfStoreBlocked=true;throw cfError('本机同步配置未能保存或核验；请先导出保护备份。');}
 }
 function cfSaveCfg(){cfWriteCfg(_cfCfg);}
 function cfAssertStable(){
   if(!cfIsActive())return;
   if(_cfMultiTabConflict||localStorage.getItem(CF_SYNC_CFG_KEY)!==_cfObservedCfg||localStorage.getItem(KEY)!==_cfObservedDashboard){
-    _cfMultiTabConflict=true;_cfError='另一页面修改了本机数据或同步配置。请先分别备份，关闭多余页面后再刷新。';cfSetDirty(true);throw cfError(_cfError);
+    _cfMultiTabConflict=true;_cfError='本页与本机存档或同步配置不一致。请先导出保护备份、关闭其他Doit页面，再点“备份并合并本机冲突”。';cfSetDirty(true);throw cfError(_cfError);
   }
 }
 function cfSetDirty(value){
@@ -7365,7 +7644,7 @@ function cfPaint(){
   let text='⚪ Cloudflare 同步尚未启用',color='#94a3b8';
   if(active){
     if(_cfStoreBlocked){text='⚠️ 本机保存异常，已停止同步';color='#dc2626';}
-    else if(_cfMultiTabConflict){text='⏸️ 另一页面也在修改，请先备份';color='#dc2626';}
+    else if(_cfMultiTabConflict){text='⏸️ 本页与本机存档不一致，请先合并';color='#dc2626';}
     else if(_cfHold){text='⏸️ Cloudflare 同步已暂停，请查看原因';color='#b45309';}
     else if(!_netOnline()){text='📴 离线（本机待同步）';color='#b45309';}
     else if(_cfView==='saving'){text='⏳ 正在上传到 Cloudflare…';color='#d97706';}
@@ -7379,6 +7658,8 @@ function cfPaint(){
     let last='';if(active&&_cfCfg.lastSyncTs){const d=new Date(_cfCfg.lastSyncTs);last='上次确认：'+(d.getMonth()+1)+'月'+d.getDate()+'日 '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')+'；云端版本 '+(_cfCfg.lastRev||0)+'。';}
     detail.textContent=(_cfError?_cfError+'\n':'')+last;
   }
+  const recovery=document.getElementById('cf-recovery');if(recovery)recovery.hidden=!(active&&(_cfStoreBlocked||_cfMultiTabConflict));
+  if(typeof r9PaintImport==='function')r9PaintImport();
   const b=document.getElementById('cf-auto-button');if(b){b.textContent=active&&_cfCfg.auto?'暂停自动同步':'开启自动同步';b.disabled=!active||!!(_cfCfg&&_cfCfg.invalid);}
   document.querySelectorAll('#cf-sync-card [data-cf-active]').forEach(el=>{el.disabled=!active;});
   const old=document.getElementById('legacy-jsonbin-card');if(old)old.querySelectorAll('button,input').forEach(function(el){el.disabled=active;});
@@ -7614,7 +7895,7 @@ function cfQueue(delay){
   _cfTimer=setTimeout(()=>{_cfTimer=0;_cfDirtyAt=0;cfSync(false);},wait);
 }
 function cfMarkDirty(){
-  if(!cfIsActive())return;_cfChangeSeq++;cfSetDirty(true);_cfView='pending';cfPaint();cfQueue();
+  if(!cfIsActive())return false;_cfChangeSeq++;const saved=cfSetDirty(true);_cfView='pending';cfPaint();if(saved)cfQueue();return saved;
 }
 function cfMarkStorageFailure(){if(!cfIsActive())return;_cfStoreBlocked=true;cfSetDirty(true);_cfError='本机写入未确认。请勿关闭页面，先分别导出仪表盘和记忆卡备份。';cfPaint();}
 function cfRetryLater(){if(!cfIsActive()||!_cfCfg.auto||_cfHold||_cfStoreBlocked||_cfMultiTabConflict)return;_cfFailures=Math.min(5,_cfFailures+1);cfQueue(Math.min(900000,60000*Math.pow(2,_cfFailures-1)));}
@@ -7622,7 +7903,7 @@ async function cfSync(manual){
   if(!cfIsActive()){if(manual)showToast('请先只读测试并启用 Cloudflare 同步','orange');return false;}
   if(_cfCfg.invalid){_cfHold=true;_cfError='本机 Cloudflare 配置无法读取。请先备份，再重新填写并只读测试。';cfPaint();return false;}
   if(_cfBusy){if(manual)showToast('同步正在进行，请等待确认','orange');return false;}
-  if(_cfMultiTabConflict||_cfStoreBlocked){cfPaint();if(manual)showToast('请先按页面提示备份并处理本机保存问题','orange');return false;}
+  if(_cfMultiTabConflict||_cfStoreBlocked){cfPaint();if(manual)showToast('请先导出保护备份，再点“备份并合并本机冲突”','orange');return false;}
   if(DOIT_ID_BLOCKED||_doitScopeError){_cfHold=true;_cfError='本机编号或独立存储需要核对；已暂停，请先下载备份。';cfPaint();return false;}
   if(_pageLeaving)return false;
   if(manual){_cfHold=false;_cfError='';clearTimeout(_cfTimer);_cfTimer=0;}
@@ -7648,7 +7929,7 @@ async function cfSync(manual){
         if(cfEquivalent(captured.envelope,remote.envelope)){
           _cfCfg.lastRev=remote.revision;_cfCfg.lastSha=remote.sha256;_cfCfg.lastSyncTs=Date.now();_cfCfg.allowCreate=false;cfSaveCfg();
           if(!cfSetDirty(false))throw cfError('本机同步状态未能保存；请先导出备份。');
-          _cfView='ok';_cfError='';_cfFailures=0;success=true;if(manual)showToast('☁️ 进度和文字已确认；错题图片仅保存在本机');return true;
+          _cfView='ok';_cfError='';_cfFailures=0;success=true;r9ImportConfirmed(captured,remote.revision);if(manual)showToast('☁️ 进度和文字已确认；错题图片仅保存在本机');return true;
         }
       }
       const packet=await cfPack(captured.envelope);
@@ -7663,9 +7944,9 @@ async function cfSync(manual){
       _cfCfg.lastRev=ack.revision;_cfCfg.lastSha=packet.sha256;_cfCfg.lastSyncTs=Date.now();_cfCfg.allowCreate=false;cfSaveCfg();
       if(cfSameGuard(captured.guard)){
         if(!cfSetDirty(false))throw cfError('本机同步状态未能保存；请先导出备份。');
-        _cfView='ok';_cfError='';_cfFailures=0;success=true;if(manual)showToast('☁️ 服务器已确认本次同步');return true;
+        _cfView='ok';_cfError='';_cfFailures=0;success=true;r9ImportConfirmed(captured,ack.revision);if(manual)showToast('☁️ 服务器已确认本次同步');return true;
       }
-      cfSetDirty(true);_cfView='pending';_cfError='服务器已确认上一批；期间有新修改，仍待同步。';cfQueue(2500);if(manual)showToast('上一批已确认；新修改仍待同步','orange');return false;
+      cfSetDirty(true);_cfView='pending';_cfError='服务器已确认上一批；期间有新修改，仍待同步。';r9ImportConfirmed(captured,ack.revision);cfQueue(2500);if(manual)showToast('上一批已确认；新修改仍待同步','orange');return false;
     }
     throw cfError('两台设备同时修改，已重新读取多次仍有冲突；本机保留，请稍后重试。',false);
   }catch(e){
@@ -7735,14 +8016,19 @@ async function cfDownloadPrevious(kind){
   }catch(e){showToast('无法读取上一版：'+((e&&e.message)||'网络错误'),'orange');return false;}finally{_cfBusy=false;cfPaint();}
 }
 function cfBoot(){
-  cfRenderInputs();if(cfIsActive()){cancelQueuedCloudSave();clearTimeout(_retryTimer);_retryTimer=0;clearTimeout(_splitAutoTimer);_splitAutoTimer=0;cfPaint();if(_cfCfg.auto)setTimeout(()=>cfSync(false),1800);}
+  r9StartPageProbe();cfRenderInputs();if(cfIsActive()){cancelQueuedCloudSave();clearTimeout(_retryTimer);_retryTimer=0;clearTimeout(_splitAutoTimer);_splitAutoTimer=0;cfPaint();if(_cfCfg.auto)setTimeout(()=>cfSync(false),1800);}
   window.addEventListener('online',()=>{if(cfIsActive()&&_cfCfg.auto){if(_cfDirty)cfQueue(1000);else cfPoll(true);}});
   document.addEventListener('visibilitychange',()=>{if(!document.hidden&&cfIsActive()&&_cfCfg.auto){if(_cfDirty)cfQueue(1500);else cfPoll(true);}});
   document.addEventListener('focusout',()=>setTimeout(()=>{if(cfIsActive()){cfRenderData();if(_cfDirty&&!_cfHold&&_cfCfg.auto&&!_cfTimer)cfQueue(3000);}},100));
   window.addEventListener('storage',e=>{
     if(!cfIsActive())return;
-    if(e.key===CF_SYNC_CFG_KEY&&e.newValue!==JSON.stringify(_cfCfg)){_cfMultiTabConflict=true;_cfError='另一页面修改了同步配置。请先备份并关闭多余页面，再刷新。';cfPaint();}
-    if(e.key===KEY&&e.newValue!==JSON.stringify(D)){_cfMultiTabConflict=true;cfSetDirty(true);_cfError='另一页面修改了仪表盘。本页面可能也有未保存内容；请先分别备份，关闭多余页面后再刷新。';cfPaint();}
+    if(e.key!==null&&e.key!==CF_SYNC_CFG_KEY&&e.key!==KEY)return;
+    try{
+      // A queued storage event may describe an older value. Check the live store,
+      // never mark a conflict solely from e.newValue, and never clear a real hold here.
+      if(localStorage.getItem(CF_SYNC_CFG_KEY)===_cfObservedCfg&&localStorage.getItem(KEY)===_cfObservedDashboard)return;
+      _cfMultiTabConflict=true;cfSetDirty(true);_cfError='检测到本机存档或配置发生变化；已暂停，防止覆盖。请先分别备份、关闭其他Doit页面，再合并本机冲突。';cfPaint();
+    }catch(err){cfMarkStorageFailure();}
   });
 }
 
@@ -7990,7 +8276,7 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
       var cut=addDays(today,-3);
       Object.keys(s2.landingDone).forEach(function(d){ if(d<cut) delete s2.landingDone[d]; });
     }catch(e){}
-    if(checked && !t.rollHint && !t.rollLegacy && typeof autoProg==='function'){ try{ autoProg((t.setTitle||t.title||'')+' '+(t.setDetail||t.detail||'')); }catch(e){} }
+    if(checked && !t.clear8 && !t.rollHint && !t.rollLegacy && typeof autoProg==='function'){ try{ autoProg((t.setTitle||t.title||'')+' '+(t.setDetail||t.detail||'')); }catch(e){} }
     CACHE_VER++;
     saveLocal(); saveCloud();
     try{
@@ -8002,6 +8288,8 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
           showToast('已取消「'+t.pioneerKey+'开荒」，它会回到队列前面','orange');
         }else if(t.carry){
           showToast(checked?'✅ 已续做并记回原日期；其余未完成项仍按顺序保留。':'已取消续做标记，这项会重新回到待续队列。',checked?'#059669':'orange');
+        }else if(t.clear8){
+          showToast(checked?'已完成':'已取消完成');
         }else if(t.exec17DailyMemory){
           showToast(checked?'已记录今日记忆卡背诵完成；卡片掌握程度仍按真实情况评分。':'已取消今日记忆卡完成标记，原计时与备注保留。');
         }else if(t.rollHint && !t.rollLegacy){
@@ -8638,6 +8926,8 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
     var sub=/综测/.test(label)?'综测-真题':/资料/.test(label)?'资料-刷题':/数量/.test(label)?'数量-刷题':/判断/.test(label)?'逻辑':/法律|民法|刑法|行政法|宪法|政治|时政|常识|经济|管理|公文|国情|省情/.test(label)?'公基-刷题':label;
     var t=exec17Task(d,r.id,mins,'自选｜'+label+' · '+String(r.title).slice(0,80),'学习方式：'+mode+'；本次参考'+mins+'分钟。\n'+(r.goal?'完成标准：'+String(r.goal).slice(0,500):'完成标准：完成自己选定的一个小任务，写下实际产出与停点。')+'\n自愿加练，不改变当天原计划、目标时长或连续达标条件。计时、备注和勾选分别保存；未完成不自动转为明天欠项。整节课次仍需单独标记，休息与睡眠优先。','记录：实际产出__ / 对题或停点__',sub,mode);
     t.exec17Optional=true;t.customUid=r.uid;t.customSubject=label;
+    if(train70Active(d)){t.clear8=true;t.action=String(r.title);t.goal=String(r.goal||'完成本次指定训练。');t.test='记录本次结果或停点。';t.detail='任务：'+t.action+'\n目标：'+t.goal+'\n检验：'+t.test;}
+
     t.rollHint='额外加练 · 不计原计划分母，不自动顺延。';
     t.rawDetail=t.detail;return t;
   }
@@ -8699,11 +8989,15 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
     var current=viewDs===fmt(new Date()),g=exec17CustomGate(viewDs),all=exec17CustomRecords(viewDs,true),active=all.filter(function(r){return !r.removed;}),removed=all.filter(function(r){return !!r.removed;}),ts=tasks.filter(function(t){return t.exec17Optional&&!t.doneDebt;}),n=ts.filter(isDone).length;
     var cards=ts.map(function(t){var card=isDone(t)?renderDone(t):renderPending(t);return '<div class="exec17-custom-item">'+card+(current?'<div class="exec17-custom-item-actions"><button type="button" onclick="exec17OpenCustom('+esc(JSON.stringify(t.id))+')">编辑</button><button type="button" onclick="exec17RemoveCustom('+esc(JSON.stringify(t.id))+')">移除（保留记录）</button></div>':'')+'</div>';}).join('');
     var trash=removed.length?'<details class="exec17-custom-trash"><summary>已移除自选（'+removed.length+'）</summary>'+removed.map(function(r){return '<div>'+esc(r.subject+' · '+r.title)+(current?'<button type="button" onclick="exec17RestoreCustom('+esc(JSON.stringify(r.id))+')">恢复</button>':'')+'</div>';}).join('')+'</details>':'';
-    return '<section class="exec17-custom-panel" id="exec17-custom-panel"><div class="exec17-custom-panel-head"><b>自选加练 <small>已完成 '+n+'/'+active.length+'</small></b><button type="button" id="exec17-add-custom" onclick="exec17OpenCustom()" '+(g.ok?'':'disabled')+'>＋ 添加自选科目</button></div><div class="exec17-small" id="exec17-custom-gate">'+esc(g.message)+'</div><div class="exec17-small">可选择或输入科目，设置内容、时长和学习方式；支持计时、备注、勾选及移除恢复。不计原计划分母，不自动提高目标，也不生成补债。</div>'+cards+trash+'</section>';
+    return '<section class="exec17-custom-panel" id="exec17-custom-panel"><div class="exec17-custom-panel-head"><b>自选加练 <small>已完成 '+n+'/'+active.length+'</small></b><button type="button" id="exec17-add-custom" onclick="exec17OpenCustom()" '+(g.ok?'':'disabled')+'>＋ 添加自选科目</button></div><div class="exec17-small" id="exec17-custom-gate">'+esc(g.message)+'</div>'+cards+trash+'</section>';
   }
 
   // 每日固定记忆卡：用户选择周日、应急日和考前减量日也保留；考试日除外。
   function exec17DailyMemoryTask(vds){
+    if(train70Active(vds)){
+      var t=clear8Task(vds,'exec17_memory',60,'记忆卡｜背诵','选定今天课程卡或到期卡，闭卷回忆后翻面核对。','能复述选定卡片的核心要点。','累计背诵60分钟，记录仍易忘项。','科目__ · 分钟__ · 易忘项__','记忆卡','背诵');
+      t.exec17DailyMemory=true;return t;
+    }
     var t=exec17Task(vds,'exec17_memory',60,'记忆卡背诵：每天1小时（可拆30＋30分钟）',
       '每天单独背诵60分钟，可拆成30＋30分钟或多段累计；周日、应急日和考前减量日同样保留，12/20考试当天不安排。\n先点本任务的“计时”，再点“打开记忆卡”；休息和离开时结束计时，回来可继续累计。正计时不会到60分钟自动停止。\n可直接按今天课程、来源或导入批次选卡，也可处理到期卡和实际薄弱专题；不用先清完旧民法。先闭卷回忆，再翻面核对，按真实掌握程度评分。民法可用重点分层版；不规定必须背多少张，不要求清空卡库，不为凑时长盲开大量新卡。\n这1小时仍独立另加，不挤占知识、数量、资料、判断和综测训练；已删除的旧卷复盘不补回，同一段学习不重复计时。\n做满后记下科目、实际分钟、复习与遗忘情况，再自行勾选完成。计时不会自动打卡或修改记忆卡评分、卡号、SRS间隔和课程进度。\n没完成仍保留原日记录；明天仍是1小时，不自动翻倍补债。考前只复习已学内容，不开新卡、不熬夜。',
       '记录：科目__ / 实背__分钟 / 复习__张 / 仍易忘__','记忆卡','背诵');
@@ -8744,6 +9038,7 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
     if(typeof showMemoryCard==='function')showMemoryCard();
   };
   function exec17MemoryInline(t){
+    if(t.clear8&&t.exec17DailyMemory){var n=exec17MemoryMinutes(viewDs);return '<div class="exec17-memory-inline" onclick="event.stopPropagation()"><div class="exec17-memory-total"><b>'+esc(n)+'/60 分钟</b></div><div class="exec17-memory-track"><i style="width:'+Math.min(100,n/60*100)+'%"></i></div><button type="button" onclick="exec17OpenMemory(event)">打开记忆卡</button></div>';}
     if(!t.exec17DailyMemory)return '';
     var n=exec17MemoryMinutes(viewDs),left=Math.max(0,60-n);
     return '<div class="exec17-memory-inline" onclick="event.stopPropagation()"><div class="exec17-memory-total"><b>本日已记录 '+esc(n)+'/60 分钟</b><small>'+(left?'还差 '+esc(left)+' 分钟，可分次累计':'时长已达到；是否完成请按实际勾选')+'</small></div><div class="exec17-memory-track"><i style="width:'+Math.min(100,n/60*100)+'%"></i></div><button type="button" onclick="exec17OpenMemory(event)" title="仅打开记忆卡；请先单独开始计时，休息时结束">🧠 打开记忆卡</button><small class="exec17-small">先计时再背诵；正计时需手动结束。评分进度独立保存。</small></div>';
@@ -8810,58 +9105,67 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
       '公基新题90分钟＋综测新课／本次新作答120分钟＋独立记忆卡60分钟。已删除固定30分钟旧错题复测，不换任务凑5小时。新题新卷的核对仅在原学习块内完成；已经复盘的旧卷不再安排。'],tasks:list,protectedReview:fullZc||afterFull||dow===6};
   }
 
+  function clear8Task(d,id,mins,title,action,goal,test,out,subject,mode){
+    var detail='任务：'+action+'\n目标：'+goal+'\n检验：'+test;
+    var t=exec17Task(d,id,mins,title,detail,out,subject,mode);
+    t.clear8=true;t.action=action;t.goal=goal;t.test=test;t.rollHint='';
+    return t;
+  }
+  function clear8Course(d,mins,id){
+    var dow=exec17DayOfWeek(d),p=rollData(),next=rollNextLesson(p),stop=next?rollNote(p,'lessonNotes',next):'';
+    if(id==='exec17_zc_plus')return clear8Task(d,id,mins,'综测加练｜当前新例题','接当前停点；有新例题就独写后核对，没有题干则续学。','把当前方法用于新例题。','记录本次漏点或准确停点。','例题__ · 漏点或停点__',next?'综测-刘流13':'综测-真题',next?'听课':'手写');
+    if(mins===20)return clear8Task(d,id,mins,next?'综测｜刘流第'+next+'节·续学':'综测｜归纳概括小题',next?'从实际未学停点续课20分钟。':'独立完成1道新小题并核对。','说清本段1个方法。','闭卷复述；有新例题先尝试再核对。','第__节 · 停点__ · 本段方法__',next?'综测-刘流13':'综测-真题',next?'听课':'手写');
+    var full=dow===5&&d>='2026-11-27',correction=dow===6&&d>='2026-11-28';
+    if(full)return clear8Task(d,id,mins,'综测｜新卷限时作答','未做新卷1套，按卷面时限独立作答。','在所选卷时限内完成各题。','逐题记用时、未完成处；次日核对。','卷名__ · 每题用时__ · 未完成__','综测-真题','手写');
+    if(correction)return clear8Task(d,id,mins,'综测｜核对本周新卷','核对本周新卷尚未订正处；已经订正完就接新课。','补齐本次作答的漏点、结构与格式。','改写1个仍有问题的部分；已处理完不重写。','未解决题号__ · 本次改好__ · 或课程停点__','综测-真题','手写');
+    if(!next||d>='2026-12-14'||(d>='2026-12-09'&&(dow===2||dow===4))){
+      var topic=['','归纳概括','提出对策','应用文写作','综合分析','归纳概括','应用文写作'][dow]||'归纳概括';
+      return clear8Task(d,id,mins,'综测｜'+topic+'新题','未做材料题1道：独立手写，再对照解析订正。','按题目要求组织要点与结构。','圈出材料依据；核查漏点、字数与格式。','题源__ · 用时__ · 漏点__','综测-真题','手写');
+    }
+    var at=stop?String(stop).slice(0,45):'实际未学停点';
+    return clear8Task(d,id,mins,'综测｜刘流第'+next+'节·续学','从'+at+'续学；新例题先写后听。','能说明本段方法，并用于本课例题。','对照例题标漏点；没有题干时，闭卷复述1个方法。','第__节 · 停点__ · 例题漏点__','综测-刘流13','听课');
+  }
+  function train9PairTask(d){
+    var taper=d>='2026-12-18',limit=train9PairLimit(d);
+    var action='未做混合套题1套：数量10＋资料10，先独立作答并计时，再核对错、空与猜题。';
+    action+=taper?'只用熟悉题型，不开新难题。':'针对最集中的1—2个错型，必要时补对应课段，各做2道同型新题。';
+    var t=clear8Task(d,TRAIN9_PAIR_ID,60,'数资｜每日20题',action,taper?'保持选数、列式和作答节奏。':'首轮向'+train9PairGoal(d)+'/20推进；练习限时'+limit+'分钟。','记首轮数量__/10、资料__/10与用时；补练后独立说清错因。','套题__ · 数量__/10 · 资料__/10 · 用时__ · 错型/补练__','数资-套题','刷题');
+    t.train9Pair=train9PairSpec(d);t.train9Pair.inWeeklyPaper=false;return t;
+  }
   function exec17WithoutDailyMemoryPlan(vds,forcedDose){
-    if(!train70Active(vds)||vds>='2026-12-18'||exec17DayOfWeek(vds)===0)return exec17PriorDayPlanR6(vds,forcedDose);
-    var dose=forcedDose||exec17Dose(vds),dow=exec17DayOfWeek(vds),q=TRAIN70_QUANT_TOPICS[train70QuantKey(vds)],list=[];
-    var result='记录：新题来源__ / 独立做__题 / 对__题 / 实际__分钟 / 卡在读题、列式、计算或判断依据__';
-    if(dose==='rescue'){
-      list=[
-        exec17Task(vds,'train70_rescue_knowledge',15,'应急知识：少量公基新题','只围绕当前知识主题做3—5道没做过的新题并核对；不回翻已复盘原卷。题量是参考，不会就记下具体卡点，到点结束。',result,'公基-刷题','刷题'),
-        exec17Task(vds,'train70_rescue_quant',10,'应急数量：'+q.name,'只看一个完整示范，尝试1—2道没做过的基础变式。\n'+q.how+'\n今天只用10分钟，不追齐普通日题量；本项是固定应急训练，不是自选。',result,'数量-刷题','刷题'),
-        exec17Task(vds,'train70_rescue_data',10,'应急资料：读数、单位与一道新题','选一份没做过的短材料，认清时间、单位与题目所求，做1—2道基础新题并核对。停点记在本项内，不额外加收尾块。',result,'资料-刷题','刷题'),
-        exec17Task(vds,'train70_rescue_reason',5,'应急判断：一题说清依据','只独立完成一道新的基础判断题，核对关键条件或规律；不要为题量赶进度。',result,'逻辑','刷题'),
-        exec17Task(vds,'train70_rescue_zc',20,'应急综测：实际未学片段20分钟','从独立进度卡的实际课次和停点继续，遇到本课新例题先尝试一个小部分再听。没有题干不强写，不重改已复盘旧稿。到点保存停点，不勾整节完成。','记录：实际第__节 / 停在__分 / 新例题有无__','综测-刘流13','听课')
-      ];
-      return {dayInfo:['2h应急：各模块不断线','知识15＋数量10＋资料10＋判断5＋综测20＋独立记忆卡60＝120分钟。仅当天缩量，不计完整达标；不补旧卷、不叠加昨日欠账。'],tasks:list,protectedReview:true};
+    if(!train70Active(vds))return exec17PriorDayPlanR6(vds,forcedDose);
+    var dose=forcedDose||exec17Dose(vds),dow=exec17DayOfWeek(vds),x=clear8Theme(vds),list=[];
+    if(vds==='2026-12-20')return {dayInfo:['考试日',''],tasks:[],protectedReview:true};
+    if(vds==='2026-12-19'){
+      var prep=clear8Task(vds,'exec17_prepare',0,'考前准备','检查证件、文具、路线和出发时间。','考试用品齐备，明确到场安排。','逐项确认后勾选。','证件__ · 文具__ · 路线__','复盘','复盘');prep.time='不计时';
+      return {dayInfo:['数资20题＋用品检查＋记忆卡1h',''],tasks:[train9PairTask(vds),prep],protectedReview:true};
     }
-    var prior=exec17PriorDayPlanR6(vds,'base'),zc=(prior.tasks||[]).find(function(t){return t.id==='exec17_zc';});
+    if(vds==='2026-12-18')return {dayInfo:['轻量3h',''],tasks:[train9PairTask(vds),clear8Task(vds,'exec17_final',60,'考前轻回看','回忆已整理规则20分钟，回看综测格式与框架40分钟。','稳定易混条件、审题和书写顺序。','闭卷说出3条易混规则；列出答题检查顺序。','易混规则__ · 答题顺序__','复盘','复盘')],protectedReview:true};
+    if(dow===0)return {dayInfo:['数资20题＋记忆卡2h',''],tasks:[train9PairTask(vds)],protectedReview:true};
+    if(dose==='rescue')return {dayInfo:['应急2h40',''],tasks:[
+      clear8Task(vds,'train70_rescue_knowledge',15,x.subject+'｜'+x.topic,'同专题新题3道并核对。',x.goal,'逐题说出依据；记对__/3。','题源__ · 对__/3 · 卡点__','公基-刷题','刷题'),
+      train9PairTask(vds),
+      clear8Task(vds,'train70_rescue_reason',5,'判断｜'+x.ability,'独立做1道新题并核对。',x.abilityGoal,'说出关键依据；记对__/1。','对__/1 · 依据__','逻辑','刷题'),
+      clear8Course(vds,20,'train70_rescue_zc')
+    ],protectedReview:true};
     if(dow===6){
-      var mock=exec17Task(vds,exec17PublicId(vds),120,'公基新卷周测：替换全部公基专项','本次公基新卷占用知识60＋数量25＋资料20＋判断15的120分钟学习预算，不再另排四项。\n只用一套没做过、尽量贴近本场范围的卷；正式科目、题量和限时待本场公告核实，不能把本块120分钟当作官方时限。核实前按所选新卷标注时限作答，在预算内核对这份新作答。\n只记录真实得分、题数、猜题、分项用时与未写完内容；不把答对题数直接换成分数，不计算尚未确认权重的折算分。\n本次新卷尚未处理的问题，放到下一学习日对应知识／能力块内等量替换；已经处理完就跳过。不是重做之前已复盘的旧卷，也不额外加30分钟。','记录：新卷来源__ / 原始分__ / 分项对__/题 / 猜题__ / 用时__ / 未处理__','公基-刷题','刷题');
-      mock.rollHint='新卷替换公基四项，共120分钟预算；已复盘原卷不再安排。';list.push(mock);
+      var paper=clear8Task(vds,exec17PublicId(vds),135,'公基周测｜新卷含数资20题','新卷按卷面时限独立作答；数资计数量10＋资料10，不足用未做同类题补齐；本块内核对，不另加一套。','取得可比较的整卷分数；数资向'+train9PairGoal(vds)+'/20推进。','记原始分、首轮数量__/10、资料__/10、猜题与用时。','卷名__ · 原始分__ · 数量__/10 · 资料__/10 · 用时__','公基-刷题','刷题');
+      paper.train9Pair=train9PairSpec(vds);list.push(paper);
     }else{
-      var knowledge=exec17Task(vds,exec17PublicId(vds),60,'公基知识：'+train70Knowledge(vds),'这60分钟是法律、政治及轮换知识模块的新题训练，不再用公基块包办一切。\n'+train70Knowledge(vds)+'。\n参考做10—15道没做过的新题，再只核对本组新错点和猜题依据；确有知识缺口时看相应讲义或短片段。题量服从理解和真实速度，不硬凑。\n本周新卷若确有尚未处理的对应问题，可在本60分钟内等量替换；已复盘完成的旧卷不重分类、不复做、不重抄。\n同日原有公基新题块若已实际完成，原打卡、计时和备注保留，不因本次由90调为60分钟要求重做。',result,'公基-刷题','刷题');
-      knowledge.rollHint='知识主线60分钟；数量、资料、判断另有固定训练卡，不需要选加量才出现。';list.push(knowledge);
-      var qt=exec17Task(vds,'train70_quant',25,'数量固定训练：'+q.name,'先懂一个概念再做少量新题，不以知道公式或看懂解析冒充独立会做。\n'+q.how+'\n建议约10分钟示范与讲解、约15分钟独立新变式和核对，包含记录，不再额外加复盘时间。参考题量不是必须凑满；概念仍不清就停在本训练点。\n当前点由上方“数量实际训练点”手动选择，默认百分数基数；日期过去、打卡或做过一题不会自动切到工程／行程。能独立完成新变式并说清依据，再切下一点。',result,'数量-刷题','刷题');
-      qt.rollHint='必做25分钟 · 不是可选加练；训练点按实际掌握手动切换，不按日历升级。';list.push(qt);
-      var dt=exec17Task(vds,'train70_data',20,'资料固定训练：'+train70AbilityTheme(vds,'data'),'资料4/5只是一次5题样本，保留固定小组训练，不当作已稳定掌握。\n今天主题：'+train70AbilityTheme(vds,'data')+'。选一份没做过的短材料，参考完成3—5题；先圈时间、单位、所求量，再列式。\n记录独立正确数和实际用时；刚做新题中的问题在本20分钟内核对，不重新整理已复盘旧卷，不为求快牺牲条件核对。',result,'资料-刷题','刷题');
-      dt.rollHint='必做20分钟 · 先准确读数和单位，再练速度；不依赖自选加量。';list.push(dt);
-      var rt=exec17Task(vds,'train70_reason',15,'判断固定训练：'+train70AbilityTheme(vds,'reason'),'判断1/2样本太小，先按类型轮换，不能据此直接判定强弱。\n今天主题：'+train70AbilityTheme(vds,'reason')+'。参考做3—5道没做过的新题，每题先说依据或写清条件再选。\n不会的先看一个完整示范，再做不同的新变式；只核对刚做的题，15分钟内完成记录，不追冷门难题。',result,'逻辑','刷题');
-      rt.rollHint='必做15分钟 · 图形、定义、类比、条件与论证按周轮换；不要求每类一天全刷。';list.push(rt);
+      list.push(clear8Task(vds,exec17PublicId(vds),60,x.subject+'｜'+x.topic,'同专题新题8道并核对，再做2道新变式。',x.goal,'末2题闭卷作答并写依据；记总对__/10、变式对__/2。','题源__ · 对__/10 · 变式对__/2 · 卡点__','公基-刷题','刷题'));
+      list.push(train9PairTask(vds));
+      list.push(clear8Task(vds,'train70_reason',15,'判断｜'+x.ability,'同类型新题4道，独立作答并核对。',x.abilityGoal,'逐题说出依据；记对__/4、作答用时。','题源__ · 对__/4 · 用时__ · 依据__','逻辑','刷题'));
     }
-    if(zc){
-      if(dow!==6&&!(dow===5&&vds>='2026-11-27')){
-        zc.detail+='\n本块必须能记下实际新学内容，而不只是播放时长。周二／四在本课遇到一个尚未做过的新例题时，先读题干和材料，暂停独立写要点或提纲，再听同题讲解核对；已做过的例题不重做。当前片段还没有题干，就先续未学课，不凭空强写，记下本次是否出现新例题。所有尝试和核对都包含在这120分钟内，不额外叠加。';
-      }
-      zc.out='记录：实际第__节 / 视频停点__ / 新例题独立尝试有无__ / 新作答漏点或耗时__';zc.rawDetail=zc.detail;zc.rawOut=zc.out;list.push(zc);
-    }
+    list.push(clear8Course(vds,120,'exec17_zc'));
     if(dose==='grow'){
-      list.push(exec17Task(vds,'exec17_gj_plus',45,'主动加量①：根据新题结果选一个公基缺口','只在常规固定训练已经做稳、本人主动选择时追加45分钟。数量、资料、判断本来就在普通日必做内，这里不是它们的唯一入口。\n依据最近新题的正确数、猜题和用时，选一个仍未解决的缺口补讲与新变式；不重做已复盘旧卷，不给所有科目平均加题。',result,'公基-刷题','刷题'));
-      list.push(exec17Task(vds,'exec17_zc_plus',45,'主动加量②：综测当前未学片段／新作答','自愿追加45分钟，接未学停点或完成一个没做过的新例题。只核对本次新作答，不能用加量强行追完13节，也不挤掉睡眠。','记录：停点或新作答__ / 具体缺口__','综测-刘流13','听课'));
+      list.push(clear8Task(vds,'exec17_gj_plus',45,dow===6?'公基加练｜本次新卷失分点':x.subject+'加练｜'+x.topic,dow===6?'补本次新卷1个失分点，再做3道新变式。':'补今日最集中1处错误，再做3道新变式。','消除这一处概念或条件混淆。','3题独立作答并说依据。','缺口__ · 对__/3','公基-刷题','刷题'));
+      list.push(clear8Course(vds,45,'exec17_zc_plus'));
     }
-    return {dayInfo:[dose==='grow'?'6.5h主动加量 · 固定训练仍优先':'5h训练日 · 六项固定必做',
-      '知识60＋数量25＋资料20＋判断15＋综测120＋记忆卡60＝300分钟。周六公基新卷替换前四项，不叠加；周日只记忆卡。两科训练时间不是分值权重；正式折算规则尚未核实。'],tasks:list,protectedReview:dow===6||(dow===5&&vds>='2026-11-27')};
+    return {dayInfo:[dose==='grow'?'加量6h45':dow===6?'周测5h15':'常规5h15',''],tasks:list,protectedReview:dow===6||(dow===5&&vds>='2026-11-27')};
   }
-  window.train70SetQuant=function(key){
-    var today=fmt(new Date());if(!TRAIN70_QUANT_TOPICS[key]||!train70Active(today)||viewDs!==today){showToast('只在当前训练日调整数量实际训练点，历史记录不重排。','orange');return;}
-    if((typeof tOn!=='undefined'&&tOn)||isDoneId(today,'train70_quant')||isDoneId(today,'train70_rescue_quant')){showToast('今天数量任务已完成或有计时正在运行，先保留本日记录，下一学习日开始前再切换。','orange');render();return;}
-    if(exec17DayOfWeek(today)===0||today>='2026-12-18'){showToast('今天是休息／收官日，不切换新训练点。','orange');return;}
-    setNote(today,'train70_quant_focus',key);CACHE_VER++;render();showToast('已调整当前数量训练点；不新增时长、不自动打卡，也不按日期跳级。');
-  };
-  function train70QuantPanel(){
-    if(!train70Active(viewDs)||viewDs>='2026-12-18'||exec17DayOfWeek(viewDs)===0)return '';
-    var current=viewDs===fmt(new Date()),locked=!current||(typeof tOn!=='undefined'&&tOn)||isDoneId(viewDs,'train70_quant')||isDoneId(viewDs,'train70_rescue_quant'),key=train70QuantKey(viewDs);
-    return '<div class="train70-quant-control"><label for="train70-quant-focus"><b>数量实际训练点（不按日历自动升级）</b></label><select id="train70-quant-focus" onchange="train70SetQuant(this.value)" '+(locked?'disabled':'')+'>'+Object.keys(TRAIN70_QUANT_TOPICS).map(function(k){return '<option value="'+k+'" '+(k===key?'selected':'')+'>'+esc(TRAIN70_QUANT_TOPICS[k].name)+'</option>';}).join('')+'</select><div class="exec17-small">起点是百分数基数；先能独立做新变式并说清依据，再手动向后选。某天未懂就用次日同一25分钟继续，不把两天任务叠加。工程已答对一题可少讲，但不凭一题断定整类掌握。</div></div>';
-  }
+  // The old selector is retained only as a history-reading API; it is not a prerequisite.
+  window.train70SetQuant=function(){showToast('现在先做数资20题，再按本套错型补练。');};
+  function train70QuantPanel(){return '';}
 
   // 旧项档案只读取原记录，不自动勾选、不清除、不占用今天的任务卡。
   function exec17Archive(vds,plan){
@@ -8892,11 +9196,11 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
     if(['base','grow','rescue'].indexOf(mode)<0)return;
     var today=fmt(new Date());if(viewDs!==today||!exec17StudyDay(today)){showToast('只在当天学习日切换强度；历史记录不重排。','orange');return;}
     if(typeof tOn!=='undefined'&&tOn){showToast('请先结束当前计时，再切换强度。','orange');return;}
-    if(mode==='grow'&&exec17QualifiedStreak(today)<3&&!confirm('尚未核验此前连续3个学习日完成当天必做、非记忆卡至少240分钟且记忆卡至少60分钟。先做稳知识与三个能力模块的固定训练；加量不是必选。若线下已稳定且不挤休息，仍主动选择6.5h吗？'))return;
-    if(mode==='rescue'&&!confirm('应急保留知识15＋数量10＋资料10＋判断5＋综测20＋独立记忆卡60，共2小时，不计完整达标。只影响当天，不生成明日补债。今天确定使用吗？'))return;
+    if(mode==='grow'&&exec17QualifiedStreak(today)<3&&!confirm('尚未核验连续3个完整训练日。仍主动切换到6h45吗？'))return;
+    if(mode==='rescue'&&!confirm('今天切换应急2h40？数资仍做20题，次日恢复原设置。'))return;
     if(mode!=='rescue')setNote(today,'exec17_regular_mode',mode);
     setNote(today,'exec17_mode',mode);CACHE_VER++;render();try{renderSchedule();updateDayProgress(today);}catch(e){}
-    showToast(mode==='grow'?'已主动选6.5h；固定模块仍优先，两科各追加45分钟。':mode==='rescue'?'今天应急2h；各模块缩量，不累计补债。':'已选择5h固定训练：知识、数量、资料、判断、综测、记忆卡。');
+    showToast(mode==='grow'?'已主动选6h45；数资20题不变，两科各追加45分钟。':mode==='rescue'?'今天应急2h40；数资20题保留，不累计补债。':'已选择5h15：指定专题、数资20题、判断、综测、独立记忆卡。');
   };
   window.exec17Phone=function(checked){var today=fmt(new Date());if(viewDs!==today)return;var s=store();s.landing[today]=s.landing[today]||{};s.landingTs[today]=s.landingTs[today]||{};s.landing[today].exec17_phone=!!checked;s.landingTs[today].exec17_phone=Date.now();saveLocal();saveCloud();};
   window.exec17OpenDate=function(d){if(!/^\d{4}-\d{2}-\d{2}$/.test(d))return;curDate=parse(d);renderSchedule();applyView(d);render();window.scrollTo(0,0);};
@@ -8920,15 +9224,23 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
   }
   function exec17Controls(){
     if(!train70Active(viewDs))return exec17ControlsR6();
-    var today=fmt(new Date()),current=viewDs===today,dose=exec17Dose(viewDs),study=exec17StudyDay(viewDs),c=train70Counts(viewDs),lm=(D.landing||{})[viewDs]||{},warning='';
-    try{localStorage.getItem('doit2026_dashboard_v1');}catch(e){warning='<div class="exec17-callout"><b>当前是受限预览／存储不可用。</b>请下载后在原浏览器或原站点打开；不要清除旧数据。</div>';}
-    var buttons=study?'<div class="exec17-dose-grid">'+[['base','5h 固定训练'],['grow','6.5h 稳定后自选'],['rescue','2h 当天应急']].map(function(x){return '<button type="button" class="exec17-dose '+(dose===x[0]?'is-on':'')+'" onclick="exec17SetDose(\''+x[0]+'\')" '+(!current?'disabled':'')+'>'+x[1]+'</button>';}).join('')+'</div>':'';
-    var phone=current&&study?'<label class="exec17-phone"><input type="checkbox" '+(lm.exec17_phone?'checked':'')+' onchange="exec17Phone(this.checked)"><span><b>开始前：手机离手，或开勿扰并限制娱乐应用</b><br><small>短块开始就做第一步，不等待整段状态；休息先结束计时。</small></span></label>':'';
-    var status=c.done+'/'+c.total+'个当日必做 · 当前必做计时'+(exec17RequiredMinutes(viewDs)/60).toFixed(1)+'h'+(exec17OptionalMinutes(viewDs)?' · 自选额外'+(exec17OptionalMinutes(viewDs)/60).toFixed(1)+'h':'');
-    return warning+'<div class="exec17-panel" id="train70-daily-panel"><div class="exec17-kicker">70分目标训练 · '+esc(exec17GoalLabel(viewDs))+'</div><div class="exec17-scoreline"><b>12/20 四川事业单位</b> · 目标：笔试折算70分</div><p class="exec17-small"><b>权重待核实：</b>不默认两科各占50%，不生成折算分。当前配额按训练需要起步，不是分值权重。</p>'+buttons+'<div class="exec17-small">'+esc(status)+'</div>'+(study?'<div class="exec17-small">此前连续训练日：'+exec17QualifiedStreak(viewDs)+'/3；须当日必做全完成、非记忆卡≥240分钟且记忆卡≥60分钟才核验完整达标。应急不计。</div>':'')+phone+train70QuantPanel()+'<details class="exec17-guide"><summary>本版为什么这样排／怎么反馈</summary><div>普通日：知识60＋数量25＋资料20＋判断15＋综测120＋记忆卡60＝300分钟。知识由90调60，能力三项固定增加，不再依赖自选；这不是把已取消的旧题复测补回。周六公基新卷替换前四项，共120分钟；周日仅记忆卡。完整首周与阶段安排见“总规划”。<br>数量从实际概念起点出发，未懂不按日期跳级；资料/判断按类型轮换，轮换不代表已经掌握。每块备注写新题来源、独立题数/正确数、实际用时及卡点。把结果发到聊天后据此调整下一轮；页面不会仅凭勾选自动判断能力。<br>综测只接真实未学停点，课内新例题尝试包含在120分钟中，不重改旧稿。课程整节进度独立标记。旧卷已复盘，不再复做、不重新分类，也不进次日欠账。旧记录全保留；同日知识/综测/记忆卡已完成的不重复，三个新增能力块各用独立ID。<br>迟开始不废掉全天；可临时选应急2h（知识15＋数量10＋资料10＋判断5＋综测20＋记忆卡60），次日恢复原设置。未完成如实保留，不熬夜补两天。自选仍须当天计划全完成后才开放，独立统计、不替代必做。</div></details></div>';
+    var today=fmt(new Date()),current=viewDs===today,dose=exec17Dose(viewDs),study=exec17StudyDay(viewDs),lm=(D.landing||{})[viewDs]||{},warning='';
+    try{localStorage.getItem('doit2026_dashboard_v1');}catch(e){warning='<div class="exec17-callout">受限预览：记录无法保存，请在原站点使用。</div>';}
+    var buttons=study?'<div class="exec17-dose-grid">'+[['base','常规5h15'],['grow','加量6h45'],['rescue','应急2h40']].map(function(x){return '<button type="button" class="exec17-dose '+(dose===x[0]?'is-on':'')+'" onclick="exec17SetDose(\''+x[0]+'\')" '+(!current?'disabled':'')+'>'+x[1]+'</button>';}).join('')+'</div>':'';
+    var phone=current&&study?'<label class="clear8-phone"><input type="checkbox" '+(lm.exec17_phone?'checked':'')+' onchange="exec17Phone(this.checked)">手机离手，开始学习</label>':'';
+    return warning+'<div class="exec17-panel clear8-control" id="train70-daily-panel"><div class="clear8-control-head"><b>12/20 · 目标：笔试折算70</b><span>已计 '+exec17RequiredMinutes(viewDs)+' / '+Math.round(exec17Target(viewDs)*60)+' 分钟</span></div>'+buttons+phone+'</div>';
   }
 
   function exec17CoursePanel(){
+    if(!train70Active(viewDs))return exec17LegacyCoursePanel();
+    if(viewDs>='2026-12-18'||exec17DayOfWeek(viewDs)===0)return '';
+    var p=rollData(),next=rollNextLesson(p),done=0,rows='';
+    for(var i=1;i<=13;i++){var yes=!!(p.lessons[String(i)]||{}).done,txt=rollNote(p,'lessonNotes',i);if(yes)done++;rows+='<label class="exec17-lesson-row"><input type="checkbox" data-roll-lesson="'+i+'" '+(yes?'checked':'')+' onchange="rollingSetLesson('+i+',this.checked)"><span>第'+i+'节'+(txt?' <small>（'+esc(txt)+'）</small>':'')+'</span></label>';}
+    var topics=ROLL_TOPICS.map(function(it){return '<label class="exec17-lesson-row"><input type="checkbox" data-roll-topic="'+it.key+'" '+((p.topics[it.key]||{}).done?'checked':'')+' onchange="rollingSetTopic(\''+it.key+'\',this.checked)"><span>'+esc(it.name)+'</span></label>';}).join('');
+    return '<div class="exec17-course clear8-course"><div class="clear8-course-head"><b>刘流课程记录</b><span data-roll-count="lessons">'+done+'/13</span></div>'+(next?rollNoteField('lessonNotes',next,rollNote(p,'lessonNotes',next),'第'+next+'节实际停点')+'<div style="margin-top:6px">'+rollButton('第'+next+'节整节完成','rollingSetLesson('+next+',true)')+'</div>':'')+'<details '+(rollDetailOpen.lessons?'open':'')+' ontoggle="rollingDetails(\'lessons\',this.open)" class="exec17-guide"><summary>13节课程记录</summary>'+rows+'</details><details '+(rollDetailOpen.topics?'open':'')+' ontoggle="rollingDetails(\'topics\',this.open)" class="exec17-guide"><summary>公基原专项记录</summary>'+topics+'</details></div>';
+  }
+
+  function exec17LegacyCoursePanel(){
     var p=rollData(),next=rollNextLesson(p),done=0;for(var n=1;n<=13;n++)if((p.lessons[String(n)]||{}).done)done++;
     var rows='';for(var i=1;i<=13;i++){var yes=!!(p.lessons[String(i)]||{}).done,txt=rollNote(p,'lessonNotes',i);rows+='<label class="exec17-lesson-row"><input type="checkbox" data-roll-lesson="'+i+'" '+(yes?'checked':'')+' onchange="rollingSetLesson('+i+',this.checked)"><span>第'+i+'节'+(txt?' <small>（'+esc(txt)+'）</small>':'')+'</span></label>';}
     var nextLine=next?'接着学第 '+next+' 节':'13节均已标记听完：转独立作答与精改';
@@ -8944,9 +9256,9 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
     var rows=carryQueue.map(function(t){var title=String(t.rawTitle||t.title||'').replace(/^续做（[^）]+）·\s*/,''),source=t.origDay,id=t.origId,note=noteOf(source,id);
       return '<div class="exec17-archive-row"><div><b>'+esc(source.slice(5).replace('-','/'))+' · '+esc(title)+'</b>'+(note?'<div class="exec17-small">原记录：'+esc(note)+'</div>':'')+'</div><div class="exec17-archive-actions"><button type="button" onclick="exec17OpenDate('+esc(JSON.stringify(source))+')">查看原日</button></div></div>';
     }).join('');
-    return '<details id="exec17-archive" class="exec17-archive" '+(exec17ArchiveOpen?'open':'')+' ontoggle="exec17ToggleArchive(this.open)"><summary>历史条目 · '+carryQueue.length+'条（只读，不是补做清单）</summary><div class="exec17-small">原打卡、备注和计时保留，不自动结清，也不作为今日或次日欠账。已取消重复旧复盘及“借用30分钟”入口；不会换个名字塞回必做。若你主动想练某题，可完成当日计划后另加自选，原日记录不改。</div><div style="max-height:350px;overflow:auto">'+rows+'</div></details>';
+    return '<details id="exec17-archive" class="exec17-archive" '+(exec17ArchiveOpen?'open':'')+' ontoggle="exec17ToggleArchive(this.open)"><summary>历史条目 · '+carryQueue.length+'条（只读，不是补做清单）</summary><div style="max-height:350px;overflow:auto">'+rows+'</div></details>';
   }
-  window.__exec17Inspect=function(d){var p=exec17DayPlan(d||viewDs),a=exec17Archive(d||viewDs,p);return {date:d||viewDs,dose:exec17Dose(d||viewDs),target:exec17Target(d||viewDs),qualified:exec17QualifiedStreak(d||viewDs),protectedReview:p.protectedReview,evening:exec17EveningDay(d||viewDs),remaining:exec17EveningDay(d||viewDs)?exec17EveningRemaining(d||viewDs):null,tasks:p.tasks.map(function(t){return {id:t.id,title:t.title,minutes:t.exec17Minutes,subject:t.exec17Subject,optional:!!t.exec17Optional,dailyMemory:!!t.exec17DailyMemory,detail:t.detail};}),archive:a.carryQueue.map(function(t){return {date:t.origDay,id:t.origId,title:t.title};}),lessonState:rollingLessonState()};};
+  window.__exec17Inspect=function(d){var p=exec17DayPlan(d||viewDs),a=exec17Archive(d||viewDs,p);return {date:d||viewDs,dose:exec17Dose(d||viewDs),target:exec17Target(d||viewDs),qualified:exec17QualifiedStreak(d||viewDs),protectedReview:p.protectedReview,evening:exec17EveningDay(d||viewDs),remaining:exec17EveningDay(d||viewDs)?exec17EveningRemaining(d||viewDs):null,tasks:p.tasks.map(function(t){return {id:t.id,title:t.title,minutes:t.exec17Minutes,subject:t.exec17Subject,paired:t.train9Pair||null,optional:!!t.exec17Optional,dailyMemory:!!t.exec17DailyMemory,detail:t.detail,clear8:!!t.clear8,action:t.action||'',goal:t.goal||'',test:t.test||''};}),archive:a.carryQueue.map(function(t){return {date:t.origDay,id:t.origId,title:t.title};}),lessonState:rollingLessonState()};};
 
   function dec20DailyPlan(vds){return exec17Applies(vds)?exec17DayPlan(vds):dec20LegacyDailyPlan(vds);}
   function dec20LegacyDailyPlan(vds){
@@ -9544,6 +9856,7 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
         window.exec17Phone(true);
       }
     }
+    if(t.exec17Subject==='数资-套题'&&typeof getSubjs==='function'){var pairSubjects=getSubjs();if(!pairSubjects.some(function(x){return x.v==='数资-套题';})){pairSubjects.push({v:'数资-套题',label:'🔢 数资20题'});D.subjs=pairSubjects;saveLocal();try{renderSubjs();}catch(e){}}}
     if(t.exec17DailyMemory&&typeof getSubjs==='function'){var subjects=getSubjs();if(!subjects.some(function(x){return x.v==='记忆卡';})){subjects.push({v:'记忆卡',label:'🧠 记忆卡背诵'});D.subjs=subjects;saveLocal();try{renderSubjs();}catch(e){}}}
     if(t.exec17DailyMemory){try{var mb=Array.from(document.querySelectorAll('#mode-wrap .mb')).find(function(b){return (b.textContent||'').indexOf('背诵')>=0;});if(mb)setMode('背诵',mb);}catch(e){}}
     var key='landing_'+viewDs+'_'+id;
@@ -9594,6 +9907,21 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
     for(var i=0;i<btns.length;i++){ if((btns[i].textContent||'').indexOf('计时器')>=0){ goTab('timer', btns[i]); window.scrollTo(0,0); return; } }
     if(typeof goTab==='function') goTab('timer', null);
   };
+  function clear8RenderTask(t){
+    var key=keyOf(viewDs,t.id),running=typeof tOn!=='undefined'&&tOn&&activeSlotKey===key;
+    var mins=t.exec17DailyMemory?exec17MemoryMinutes(viewDs):(typeof taskMinutes==='function'?taskMinutes(key):0),note=noteOf(viewDs,t.id),badge='';
+    if(running)badge='<small class="clear8-running">'+esc(fmtDur(elapsedSec()))+'</small>';
+    else if(mins>0)badge='<small class="clear8-logged">已计'+mins+'分</small>';
+    var timer=t.exec17Minutes===0?'':'<button type="button" class="clear8-timer '+(running?'is-running':'')+'" onclick="toggleLandingTimer(\''+t.id+'\',event)">'+(running?'⏹ 结束':'▶ 计时')+'</button>';
+    var ph=String(t.out||'').replace(/^记录[:：]\s*/,'');
+    return '<article class="landing-task clear8-task" data-task-id="'+esc(t.id)+'">'
+      +'<div class="clear8-task-head"><input type="checkbox" data-landing="'+esc(t.id)+'" aria-label="完成'+esc(t.title)+'" onchange="toggleLandingCheck(\''+t.id+'\',this.checked)">'
+      +'<div class="clear8-task-title"><b>'+esc(t.title)+'</b><small>'+esc(t.time)+'</small></div><div class="clear8-task-actions">'+badge+timer+'</div></div>'
+      +'<div class="clear8-task-body"><dl class="clear8-lines"><div><dt>任务</dt><dd>'+esc(t.action)+'</dd></div><div><dt>目标</dt><dd>'+esc(t.goal)+'</dd></div><div><dt>检验</dt><dd>'+esc(t.test)+'</dd></div></dl>'
+      +exec17MemoryInline(t)
+      +'<label class="clear8-result"><span>结果</span><input data-lp="'+esc(viewDs+'|'+t.origId)+'" value="'+esc(note)+'" placeholder="'+esc(ph)+'" onchange="landingSaveNote(this)" onblur="landingSaveNote(this)"></label></div></article>';
+  }
+
   function render(){
     var host=document.getElementById('landing-panel'); if(!host) return;
     try{ applyView(viewDs); }catch(e){}   // 勾选/取消后重新算一遍「同一套重做」和补债槽
@@ -9605,7 +9933,7 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
     // 🧱 开荒队列横幅：一眼看到还欠哪几科、今天做哪科
     function pioBanner(){
       try{
-        if(exec17Applies(viewDs))return exec17Controls()+exec17CoursePanel();
+        if(exec17Applies(viewDs))return exec17Controls()+(train70Active(viewDs)?'':exec17CoursePanel());
         var rollPrefix=viewDs>='2026-11-04'?rollPanel():'';
         if(viewDs>=fmt(new Date())&&viewDs<='2026-12-20') return ''; // 新计划的未完成项已进执行单续做队列；这里不重复显示旧开荒队列
         if(viewDs>='2026-11-04' && viewDs<='2026-11-15') return rollPrefix;
@@ -9637,6 +9965,7 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
     var pendingTasks=tasks.filter(function(t){ return !t.doneDebt && !t.exec17Optional && !isDone(t); });
     var doneTasks=tasks.filter(function(t){ return !t.exec17Optional && (!!t.doneDebt || isDone(t)); });
     function renderPendingTask(t){
+      if(t.clear8)return clear8RenderTask(t);
       var done=isDone(t);
       var checked=done?'checked':'';
       var style=done?'opacity:.62;text-decoration:line-through':'';
@@ -9723,6 +10052,7 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
       +'<div style="font-size:12px;color:var(--t2);margin-top:4px">已完成 <b style="color:var(--p)">'+finished+'/'+total+'</b></div>'
       +pioBanner()
       +rows
+      +(train70Active(viewDs)?exec17CoursePanel():'')
       +(exec17Applies(viewDs)?exec17CustomPanel(renderPendingTask,renderDoneTask):'')
       +carryQueuePanel
       +'</div>';
@@ -9786,10 +10116,11 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
         for(var i=0;i<bs.length;i++){ if(bs[i].id===p[1]){ name=bs[i].title; break; } }
         if(exec17RetiredDiagnostic(d,p[1]))name='已移除诊断的原笔记（保留，不安排重做）';
         if(exec17RetiredReview(d,p[1]))name='已取消旧复盘的原笔记（保留，不安排重做）';
+        if(train9Retired(d,p[1]))name='原数量/资料短练记录（保留，不计作新20题）';
         notes.push({id:p[1],name:String(name).replace(/^【明天再做】/,''),note:n});
       });
     }catch(e){}
-    return {date:d,done:done,openProg:openProg,openDrill:openDrill,deferred:deferred,total:tasks.length-deferred.length,mins:mins,notes:notes,optionalDone:optionalDone,optionalOpen:optionalOpen,optionalMins:exec17Applies(d)?exec17OptionalMinutes(d):0,memoryMins:exec17MemoryMinutes(d),memoryTarget:exec17MemoryActive(d)?60:0,trainingGoal:train70Active(d)?TRAIN70_GOAL:null,quantFocus:train70Active(d)?train70QuantKey(d):null,requiredMins:exec17Applies(d)?exec17RequiredMinutes(d):mins,retiredMins:exec17Applies(d)?exec17RetiredMinutes(d):0,future:(d>fmt(new Date()))};
+    return {date:d,done:done,openProg:openProg,openDrill:openDrill,deferred:deferred,total:tasks.length-deferred.length,mins:mins,notes:notes,optionalDone:optionalDone,optionalOpen:optionalOpen,optionalMins:exec17Applies(d)?exec17OptionalMinutes(d):0,memoryMins:exec17MemoryMinutes(d),memoryTarget:exec17MemoryActive(d)?60:0,trainingGoal:train70Active(d)?TRAIN70_GOAL:null,quantFocus:train70Active(d)?train70QuantKey(d):null,pairedSet:train70Active(d)&&d<'2026-12-20'?train9PairSpec(d):null,requiredMins:exec17Applies(d)?exec17RequiredMinutes(d):mins,retiredMins:exec17Applies(d)?exec17RetiredMinutes(d):0,future:(d>fmt(new Date()))};
   }
   function curWeekNo(){ try{ return Math.max(1,Math.ceil(dayIdx(new Date())/7)||1); }catch(e){ return 1; } }
   // 第 N 周 = 课表第 (N-1)*7+1 ~ N*7 天（跟「统计/总规划」里的第几周一致）
@@ -10058,5 +10389,6 @@ window.addEventListener('storage',function(e){
 });
 </script>
 
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a5c360d55ca51f07',t:'MTc5NDk2NzE5MQ=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a5c360d55ca51f07',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
+</body>
 </html>
