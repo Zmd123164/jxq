@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Doit · 按课程选卡与真实新增排序 | 2026-11-17 r5</title>
+<title>Doit · 70分目标训练课表 | 2026-11-17 r7</title>
 <style>
 :root{
   --bg:#f0f6ff;--surface:#fff;--s2:#f7faff;--border:#d0e2ff;
@@ -212,8 +212,11 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
 
 /* r4: one-evening concrete action plan. */
 .exec17-evening{margin-top:9px;margin-bottom:10px;padding:12px;border:1px solid #f2c77f;border-radius:11px;background:#fffaf0;color:#70451a;font-size:12px;line-height:1.8;overflow-wrap:anywhere}.exec17-evening-head{display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap}.exec17-evening-head b{font-size:14px;color:#92400e}.exec17-evening-head span{font-size:10px;color:#8c6a3b}.exec17-evening p{margin:7px 0}.exec17-evening-next{background:#fff;border:1px solid #f4dbb2;border-radius:8px;padding:8px 9px;margin:7px 0;color:#6b4a28}.exec17-evening details{margin-top:9px;padding:8px 10px;border:1px solid #efd8b4;border-radius:8px;background:#fffdf7}.exec17-evening summary{font-size:11px;font-weight:600;cursor:pointer}.exec17-evening details>div{font-size:12px;line-height:2;margin-top:6px}.exec17-evening .exec17-small{color:#8b6c4a}
+
+/* r7 training curriculum */
+.train70-quant-control{margin-top:10px;padding:10px;border:1px solid #c7d2fe;border-radius:9px;background:#f5f7ff}.train70-quant-control label{display:block;font-size:12px;margin-bottom:6px}.train70-quant-control select{display:block;width:100%;max-width:100%;min-width:0;font-size:12px;padding:8px 5px;border:1px solid #cbd5e1;border-radius:7px;background:#fff;color:#1e3a8a;margin-bottom:6px}.train70-time-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.train70-time-grid>div{padding:10px;border:1px solid #dbeafe;background:#f8fbff;border-radius:9px}.train70-time-grid b{display:block;font-size:12px;color:#1e40af}.train70-time-grid span{display:block;font-size:11px;line-height:1.7;margin-top:4px;color:#475569}.train70-week{min-width:680px}#train70-daily-panel{overflow-wrap:anywhere}@media(max-width:420px){.train70-time-grid{grid-template-columns:1fr}}
 </style>
-<meta name="doit-release" content="2026-11-17-execution-r5-exact-course-cards">
+<meta name="doit-release" content="2026-11-17-execution-r7-training70">
 </head>
 <body>
 
@@ -250,7 +253,7 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
     <button class="tb" onclick="showMemoryCard()" style="display:inline-flex;align-items:center">🧠 记忆卡</button>
   </div>
   <div style="font-size:10px;margin-top:4px;opacity:.8;cursor:pointer;display:inline-block" id="sync-status" onclick="manualSync()" title="点击立即同步合并">⚪ 未配置</div>
-  <div id="app-version" style="font-size:10px;margin-top:3px;opacity:.8">✅ Doit v2026-11-17 r5（按课程直接选卡 · 新增时间排序修复 · 原学习记录保留）</div>
+  <div id="app-version" style="font-size:10px;margin-top:3px;opacity:.8">✅ Doit v2026-11-17 r7（70分目标训练表 · 数量资料判断固定必做 · 首周与阶段安排）</div>
 </div>
 
 <div class="main">
@@ -412,7 +415,7 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
   <div class="debt" id="debt-banner" style="display:none"></div>
   <div class="card">
     <div class="ct">🗺 备考总规划 · 11/17双科执行校准</div>
-    <div class="alert" style="background:#eff6ff;border-color:#93c5fd;color:#1e3a8a">📌 沿用原文件12/20考试目标，以本场公告及准考证为准。本次公基50.6、综测以往50多；11/17 21:06后只执行晚间收口；以后普通日默认5h（含记忆卡1h），稳定3个学习日后主动选择6.5h。综测独立进度从已确认的1/13继续；旧项只存档，不挤掉当前训练。</div>
+    <div class="alert" style="background:#eff6ff;border-color:#93c5fd;color:#1e3a8a">🎯 12/20四川事业单位，目标笔试折算70。新表11/18起：知识60＋数量25＋资料20＋判断15＋综测120＋独立记忆卡60＝5h；数量资料判断均为必做。正式权重待核实，不默认各50%。首周和阶段见总规划；旧卷不重复复盘。</div>
     <div id="plan-gap" style="margin-bottom:13px"></div>
   </div>
 </div>
@@ -1821,6 +1824,7 @@ function makeupRows(){
   ];
 }
 function priorityHTML(){
+  if(exec17Applies(ds(new Date())))return '<div class="exec17-callout"><b>当前按70分目标训练表执行。</b>数量、资料、判断均已固定排入；正式两科权重待核实，不沿用旧版各50%的假设。详见总规划。</div>';
   const P=D.prog||{},n=k=>P[k]||0;
   const d1=dBetween(E1), d2=dBetween(E2);
   const gj=n('公基-系统'),zc=n('综测-基础'),sl=n('申论-小题'),lj=n('逻辑'),yz=n('言语-刷题'),zl=n('资料-刷题');
@@ -1966,7 +1970,7 @@ const EXEC17_MOCK={score:50.6,total:100,correct:51,wrong:49,seconds:3883,
     {name:'常识',n:14,c:7,sec:259,advice:'固定短补漏，不只在套卷里碰到'},
     {name:'经济',n:6,c:3,sec:215,advice:'按错点短补，样本小不判定强弱'},
     {name:'管理',n:6,c:4,sec:94,advice:'重复错概念可补15—30分钟，不永久禁止补课'},
-    {name:'公文',n:9,c:7,sec:135,advice:'压缩长课；保留错题、猜对题与易混点复测'},
+    {name:'公文',n:9,c:7,sec:135,advice:'旧卷已复盘，不再复做；需要时用未做过的新题检验'},
     {name:'数量关系',n:5,c:0,sec:535,advice:'少量基础题型短训，不全面铺开'},
     {name:'资料分析',n:5,c:4,sec:296,advice:'少量保手感；仅5题，不视为稳定强项'},
     {name:'判断推理',n:2,c:1,sec:233,advice:'随卷记录，2题不足以定长期投入'},
@@ -1979,7 +1983,7 @@ function exec17DateAdd(d,n){var x=new Date(d+'T12:00:00');x.setDate(x.getDate()+
 const EXEC17_EVENING_DATE='2026-11-17';
 function exec17EveningDay(d){return d===EXEC17_EVENING_DATE;}
 function exec17PublicId(d){return d==='2026-11-18'?'exec17_gj_transfer':'exec17_gj';}
-function exec17RetiredDiagnostic(d,id){return (d==='2026-11-17'||d==='2026-11-18')&&id==='exec17_gj';}
+function exec17RetiredDiagnostic(d,id){return ((d==='2026-11-17'||d==='2026-11-18')&&id==='exec17_gj')||exec17RetiredReview(d,id);}
 function exec17EveningZcNeeded(d){var m=((typeof D!=='undefined'&&D&&D.landing)||{})[d]||{};return !m.exec17_zc;}
 function exec17EveningTaskMinutes(d,id){return ((typeof D!=='undefined'&&D&&D.logs)||[]).filter(function(l){return l.date===d&&l.taskKey==='landing_'+d+'_'+id;}).reduce(function(n,l){return n+(Number(l.duration)||0);},0);}
 function exec17EveningLogged(d){return (exec17EveningZcNeeded(d)?exec17EveningTaskMinutes(d,'exec17_evening_zc'):0)+Math.min(60,exec17MemoryMinutes(d))+exec17EveningTaskMinutes(d,'exec17_evening_close');}
@@ -1996,24 +2000,80 @@ function exec17Dose(d){
   return dose;
 }
 function exec17MemoryActive(d){return exec17Applies(d)&&d<'2026-12-20';}
+// r6: Completed old-paper reviews are not recurring required tasks.
+function exec17RetiredReview(d,id){return d>='2026-11-18'&&d<='2026-12-20'&&id==='exec17_review';}
+function exec17RetiredMinutes(d){return ((D&&D.logs)||[]).filter(function(l){var prefix='landing_'+d+'_';return l.date===d&&String(l.taskKey||'').indexOf(prefix)===0&&exec17RetiredDiagnostic(d,String(l.taskKey).slice(prefix.length));}).reduce(function(n,l){return n+(Number(l.duration)||0);},0);}
+function exec17NonMemoryMinutes(d){return Math.max(0,exec17RequiredMinutes(d)-exec17MemoryMinutes(d));}
+
+// r7: 70 is the user's weighted written-score goal, NOT an assumed 50/50 formula.
+const TRAIN70_START='2026-11-18';
+const TRAIN70_GOAL={exam:'四川事业单位',date:'2026-12-20',target:70,metric:'笔试折算成绩',weights:null,officialRulesVerified:false};
+const TRAIN70_QUANT_TOPICS={
+ percent_base:{name:'百分数基数：到底是谁的百分之几',how:'先用100元、人数等具体量看懂“谁的百分之几”，特别区分涨价前、涨价后、最后现价。看1个完整示范后，做2—4道没做过的新变式；每道先圈基数，再列式。还认错基数就停在这一点，不跳去工程或行程。'},
+ percent_reverse:{name:'涨降与倒推：已知结果找起点',how:'在已经分清基数的前提下，用价格变化图标出起点、中间价、终点。先讲透1个示范，再独立做2—4道新变式；写清题目给的是原价还是现价，不靠背1.2、0.8硬套。'},
+ ratio_counts:{name:'比例转人数：先算实际数量再合并',how:'先把每一组百分数变成实际人数或数量，再求合计量与总数的比。用1个完整示范带2—4道新变式，不直接平均不同规模组的百分数。'},
+ work:{name:'工程基础：总量、每天完成多少、合作',how:'先用具体工作量或把总量设为1理解每天效率；再做3—5道新的单人、合作与分段基础题。已经能独立说明依据的简单题跳过，不铺偏难工程题。'},
+ travel:{name:'行程基础：画起点、时间线和距离差',how:'先统一分钟与小时，画清谁先出发、领先多少、每小时缩短多少距离。先示范再做2—4道新的相遇或追及题，不把知道公式当成能独立代入。'},
+ profit:{name:'利润与基础应用：条件转等量关系',how:'只选本场范围内的基础利润、折扣或比例应用，先说清每个数的含义，再做3—5道新题。难题不恋战，学会可稳定列式的基础题。'},
+ mixed:{name:'已学基础混合：有限时的新题迁移',how:'只混合已经理解的题型，做一小组未做过的新题并记录每题用时、确定/猜测与跳过。若反复卡住同一概念，手动回到对应训练点，不为追题量硬刷。'}
+};
+function train70Active(d){return typeof d==='string'&&d>=TRAIN70_START&&d<='2026-12-20';}
+function train70QuantKey(d){
+ var p=(typeof D!=='undefined'&&D&&D.landingProg)||{},best='',out='percent_base';
+ Object.keys(p).forEach(function(k){var m=/^(\d{4}-\d{2}-\d{2})\|train70_quant_focus$/.exec(k);if(!m||m[1]<TRAIN70_START||m[1]>d||m[1]<best)return;var v=String((p[k]||{}).note||'');if(TRAIN70_QUANT_TOPICS[v]){best=m[1];out=v;}});
+ return out;
+}
+function train70CoreIds(d){
+ if(d>='2026-12-18'||exec17DayOfWeek(d)===0)return null;
+ if(exec17Dose(d)==='rescue')return ['train70_rescue_knowledge','train70_rescue_quant','train70_rescue_data','train70_rescue_reason','train70_rescue_zc','exec17_memory'];
+ if(exec17DayOfWeek(d)===6)return [exec17PublicId(d),'exec17_zc','exec17_memory'];
+ return [exec17PublicId(d),'train70_quant','train70_data','train70_reason','exec17_zc','exec17_memory'];
+}
+function train70Counts(d){
+ var ids=exec17CoreIds(d),m=((D&&D.landing)||{})[d]||{};return {done:ids.filter(function(k){return !!m[k];}).length,total:ids.length};
+}
+const TRAIN70_WEEK=[
+ ['2026-11-18','法律／政治新题接续；法律用民事行为与代理等高频点做新题检验','读题找数、单位与部分/整体','图形：数量与位置规律','综测从真实未学停点接课；不强写没有题干的题'],
+ ['2026-11-19','政治理论概念辨析＋对应时政新题','百分数与实际数量，直接比重','定义判断：逐项对条件','综测在120分钟内完成本课一个新例题的独立尝试与核对'],
+ ['2026-11-20','常识／经济／管理／公文混合新题，各类少量覆盖','表格直接查找、比较与单位换算','类比推理：先说关系再选','综测继续未学片段；记录停点与本周新学内容'],
+ ['2026-11-21','公基未做过的新卷周测：替换知识＋数量＋资料＋判断，共120分钟','并入本次新卷，不另加专项','并入本次新卷，不另加专项','综测继续实际新课；本次新卷核对只在原学习块内处理'],
+ ['2026-11-22','周日休息：公基、综测主线均不排','不排新题','不排新题','仅独立记忆卡60分钟；不补整天欠账'],
+ ['2026-11-23','法律新题：刑法基础概念、行为阶段与责任条件','现期量、基期量与增长量的文字含义','图形：样式与属性规律','综测接实际停点，不按日期假定已经学完哪一节'],
+ ['2026-11-24','政治新题：理论关键词与易混表述','增长率与增长量的区分，少量新题','条件推理：把条件写清再判断','综测在120分钟内尝试一个没做过的新例题；记录独写情况']
+];
+function train70Knowledge(d){
+ var row=TRAIN70_WEEK.find(function(x){return x[0]===d;});if(row)return row[1];
+ var dow=exec17DayOfWeek(d);
+ if(d>='2026-12-09')return '法律／政治为主的公基混合新题，兼顾常识经管公文；依据最近新卷结果定向替换';
+ return dow===1?'法律新题：刑法基础与条件辨析':dow===3?'法律新题：民法／行政法的易混条件':dow===2||dow===4?'政治理论／时政新题：概念与表述辨析':'常识／经济／管理／公文混合新题：按本场范围轮换';
+}
+function train70AbilityTheme(d,kind){
+ var row=TRAIN70_WEEK.find(function(x){return x[0]===d;});if(row)return row[kind==='data'?2:3];
+ var i=exec17DayOfWeek(d);
+ return kind==='data'?(['','比重与直接读数','增长量与增长率','基期量与单位换算','平均数与倍数','一组未做过的资料综合材料'][i]||'资料小组训练'):(['','图形数量与位置','定义判断逐项对条件','类比关系与属性','条件推理与必要翻译','论证基础：结论、理由与选项作用'][i]||'判断小组训练');
+}
+function train70PhaseLabel(d){return d<='2026-11-24'?'首周：概念落地与固定训练':d<='2026-12-08'?'第二阶段：新题迁移与周测反馈':'第三阶段：限时整合与稳定性检验';}
+function train70FeedbackContext(){return '【用户当前要的是重新设计Doit课表，不要在交付课表前继续强行问逐题口算。】【已确认目标】四川事业单位，2026/12/20，笔试折算成绩70分；具体招考、两科满分/权重和正式限时尚未核实。权重=null，不得自行假设各50%，不拆公基80+综测60之类目标，不生成虚构折算分，不承诺保过。当前训练时间两科各120分钟只是起始训练配额，不是分值权重。】【普通日5h的明确变化】原公基知识90分钟改60分钟，固定新增数量25+资料20+判断15，共公基训练120；综测120，另加记忆卡60，共300分钟。不是把已删除的旧错题复测30分钟换名补回。数量、资料、判断均为必做，不依赖加量或自选。稳定3个学习日后才可主动加到6.5h，两科各45分钟；不自动加量。】【先验依据】公基50.6分，51/100；法律9/24、政治15/27、常识7/14、经济3/6、管理4/6、公文7/9、数量0/5、资料4/5、判断1/2。题数不直接等于分值，一套小样本不能宣称稳定强弱。最新4道基础新题反馈：工程一道答对；百分数基数/倒推尚不理解；合并比例无概念；追及知道公式但不能代入，未报告用时，不能据此预测分数。数量从基数开始，看示范后做少量新变式；训练点由本人根据新题掌握情况手动切换，不按日期或打卡自动升级。】【知识轮换】周一/三法律、周二/四政治理论时政、周五常识经管公文混合；首周具体主题以总规划逐日表为准。这次旧卷和旧错题已复盘，绝不重分类、重抄或重做原卷。每块只处理本次新题的新问题；必要规则补充包含在块内。】【综测】真实基线刘流1/13，每节原长2—3小时，按独立进度卡的实际停点续学；120可拆60+60，课堂新例题尝试/核对包含其中，不固定给旧题35分钟手写/25分钟改稿。每周二/四在当前新课中安排新例题独写；没有题干不能先写。打卡/日期不代表课次完成。周五从11/27起综测新卷替换120分钟，次日只核对本周新卷尚未处理的部分；已处理完则接新课。】【每周与收官】周六公基新卷及必要本卷核对替换知识和三个能力块，共120分钟学习预算，不叠加专项；正式限时待公告核对，不能把学习预算当考试时限。周日仅记忆卡60分钟；应急知识15+数量10+资料10+判断5+综测20+记忆卡60=120分钟，不计完整达标，明日恢复原设置。12/18轻回看90+记忆卡60；12/19用品检查+记忆卡60；12/20不排学习。11/17此前晚间休息许可不追债。】【记录与反馈】每项新题记来源、独立作答数/正确数、实际用时、卡点；综测记新例题独写、材料依据漏点、格式和时间。不硬凑题量/时长，不把猜对当稳定掌握，不用四道题评定整体能力。首周主题是初始假设，每周按新卷分项正确数、猜题、用时和独立作答改下一周；不是每周固定加量。至少两份不同且规则接近本场的新卷，在权重核实后按正式口径检验折算70的稳定性；模考不保证正式结果。】【记录保护】旧卷复盘已取消，只保留原打卡/笔记/计时，不变成今日或次日欠账。数量资料判断是新ID，不借旧完成记录；已有知识/综测/记忆卡同日真实完成保留，不要求重做。自选独立统计，完成当日所有计划后才开放，不替代必做、不顺延。记忆卡每天独立60分钟，周日/应急/减量保留、考试日排除，可按课程/来源选卡，不先清旧民法，不重置SRS。不同任务禁止重复计时。用户时间并非受限，主要是手机和拖延，先做短启动、物理隔离娱乐，不把迟开始当整天作废。';}
+
 function exec17CoreIds(d){
   if(!exec17MemoryActive(d))return [];
+  if(train70Active(d)){var ids=train70CoreIds(d);if(ids)return ids;}
   if(exec17EveningDay(d))return (exec17EveningZcNeeded(d)?['exec17_evening_zc']:[]).concat(['exec17_memory','exec17_evening_close']);
   if(d==='2026-12-18')return ['exec17_final','exec17_memory'];
   if(d==='2026-12-19')return ['exec17_prepare','exec17_memory'];
   if(exec17DayOfWeek(d)===0)return ['exec17_memory'];
-  return exec17Dose(d)==='rescue'?['exec17_rescue_gj','exec17_rescue_zc','exec17_rescue_note','exec17_memory']:[exec17PublicId(d),'exec17_zc','exec17_review','exec17_memory'];
+  return exec17Dose(d)==='rescue'?['exec17_rescue_gj','exec17_rescue_zc','exec17_rescue_note','exec17_memory']:[exec17PublicId(d),'exec17_zc','exec17_memory'];
 }
 function exec17MemoryMinutes(d){
   return ((typeof D!=='undefined'&&D&&D.logs)||[]).filter(function(l){return l.date===d&&(String(l.taskKey||'')==='landing_'+d+'_exec17_memory'||(!l.taskKey&&l.subject==='记忆卡'&&l.mode==='背诵'));}).reduce(function(n,l){return n+(Number(l.duration)||0);},0);
 }
 function exec17Minutes(d){return ((typeof D!=='undefined'&&D&&D.logs)||[]).filter(function(l){return l.date===d;}).reduce(function(s,l){return s+(Number(l.duration)||0);},0);}
 function exec17OptionalMinutes(d){return ((D&&D.logs)||[]).filter(function(l){return l.date===d&&String(l.taskKey||'').indexOf('landing_'+d+'_exec17_custom_')===0;}).reduce(function(n,l){return n+(Number(l.duration)||0);},0);}
-function exec17RequiredMinutes(d){return Math.max(0,exec17Minutes(d)-exec17OptionalMinutes(d));}
+function exec17RequiredMinutes(d){return Math.max(0,exec17Minutes(d)-exec17OptionalMinutes(d)-exec17RetiredMinutes(d));}
 function exec17Qualified(d){
   if(!exec17StudyDay(d)||exec17Dose(d)==='rescue')return false;
   var m=((D.landing||{})[d])||{};
-  return [exec17PublicId(d),'exec17_zc','exec17_review','exec17_memory'].every(function(k){return !!m[k];})&&exec17RequiredMinutes(d)>=300&&exec17MemoryMinutes(d)>=60;
+  return exec17CoreIds(d).every(function(k){return !!m[k];})&&exec17RequiredMinutes(d)>=300&&exec17MemoryMinutes(d)>=60&&exec17NonMemoryMinutes(d)>=240;
 }
 function exec17PreviousDays(d,n){var out=[],x=d;for(var i=0;i<45&&out.length<n;i++){x=exec17DateAdd(x,-1);if(x<EXEC17_START)break;if(exec17StudyDay(x))out.push(x);}return out;}
 function exec17QualifiedStreak(d){var days=exec17PreviousDays(d,3),n=0;for(var i=0;i<days.length;i++){if(!exec17Qualified(days[i]))break;n++;}return n;}
@@ -2030,9 +2090,9 @@ function exec17GoalLabel(d){
   if(d==='2026-12-19')return '用品准备＋记忆卡1h';
   if(d==='2026-12-18')return '2.5h轻量 · 含记忆卡1h';
   if(exec17DayOfWeek(d)===0)return '周日轻量 · 仅记忆卡1h';
-  var mode=exec17Dose(d);return mode==='rescue'?'2h应急 · 含记忆卡1h':mode==='grow'?'6.5h加量 · 含记忆卡1h':'5h起步 · 含记忆卡1h';
+  var mode=exec17Dose(d);return mode==='rescue'?'2h应急 · 各模块缩量':mode==='grow'?'6.5h主动加量 · 含记忆卡1h':exec17DayOfWeek(d)===6?'5h周测日 · 三个整块':'5h固定训练 · 六项必做';
 }
-function exec17FeedbackContext(){return '【最新确认：法律和政治的本次旧卷已复盘，两项分项诊断已取消，不得再要求重做或按未完成追债。11/17 21:06后仅安排综测40分钟（今日原综测主块已打卡则跳过）、记忆卡补足今日60分钟（已完成不重复）、5分钟收尾，23:00左右结束，不追赶5h；此晚间缩量不计完整5h达标，也不改变以后普通日强度。11/18起公基用已复盘错点的新题迁移验证，只有新题重复错的规则才短补，不再重新分类原卷。】【11/17执行校准＋每日记忆卡】本次公基50.6分，答对51/100；法律9/24、政治15/27、常识7/14、公文7/9、数量0/5。综测以往50多分，刘流13节仅确认已听第1节；每节原长2—3小时，实际课次以独立进度卡为准。学生可用时间充足，主要障碍是手机与拖延。用户明确选择每日固定另加记忆卡背诵60分钟，周日、应急日、考前减量日均保留，12/20考试当天不加。普通日5h（原公基90min＋综测120min＋短复习30min不减，另加记忆卡60min）；稳定3个学习日后可主动选6.5h；应急日2h；周日仅记忆卡1h；12/18原轻回看1.5h另加记忆卡1h共2.5h；12/19用品准备外加记忆卡1h。记忆卡可拆30＋30分钟，以主动回忆、到期和错题卡为主，不要求清空或盲开新卡，不同任务不得重复计时。四项完成、原计划至少5h计时且其中记忆卡至少60min，才作为新规则下的连续达标日；应急、周日和考前减量不计完整达标。不要按日期自动加量，不重写历史记录。两科并行，综测听课、独立手写、改稿同步；周测和第二周起综测限时训练与复盘替换原块，不再叠加。旧项只作档案，普通日可借一个错点替换30min短复习，不自动结清原任务。原计划（包括记忆卡60min）全部打卡后可添加自选加练；自选独立统计，不提高原目标，不滚成次日欠账，不替代原计划达标。记忆卡评分、SRS与课程进度仍分别保存；考试日期、题型和时长以本场公告及准考证为准。';}
+function exec17FeedbackContext(){return train70FeedbackContext();}
 
 function dayTargetH(dateKey){const _dk0=dateKey||ds(new Date());
   if(exec17Applies(_dk0))return exec17Target(_dk0);
@@ -2846,7 +2906,7 @@ function renderSidePanel(date){
     const st=rollingLessonState();
     sp.innerHTML=`<div class="exec17-callout"><b>已复盘后执行版</b><br>${exec17GoalLabel(_dkeySp)}；两科并行，具体题型与时长以本场公告为准。</div>
     <div class="sp-item"><b>本次公基：</b>50.6分，51/100；法律9/24、政治15/27的旧卷已复盘，接下来做新题验证；常识7/14短补。</div>
-    <div class="sp-item"><b>公文：</b>7/9，压缩长课、保留错题与猜对题复测；资料4/5仅作暂时保温。</div>
+    <div class="sp-item"><b>公文：</b>7/9，旧卷已复盘，不再安排旧错题或猜对题复做；有需要时在公基块内用新题检验。资料4/5不直接当作稳定强项。</div>
     <div class="sp-item"><b>综测：</b>以往50多；当前刘流${st.done}/13，${st.next?'真实下一节为第'+st.next+'节':'已标记听完，转独立作答和精改'}。每节原长2—3h，长课拆开，听课/手写/改稿同步，每周约3节只是参考。</div>
     <div class="sp-item"><b>每周：</b>周六公基代表卷；第二周起周五综测整套、周六精改；每天另背记忆卡1h，周日只保留这1h。整套训练替换课程块，不叠加。</div>
     <div class="sp-item"><b>手机：</b>离手或手动限制娱乐应用；网页不锁手机。晚开始不作废，直接接着第一块做。</div>
@@ -3054,7 +3114,7 @@ function renderPlanGap(){
 function renderScoreGuess(){
   const el=document.getElementById('score-guess');
   if(!el) return;
-  if(exec17Applies(ds(new Date()))){el.innerHTML='<div class="exec17-callout"><b>当前不做分数或进面承诺。</b>以本次公基50.6、综测以往50多为起点，看新题复测、分题漏点和限时完成情况；听完课程或打卡时长不等于必然提分。</div>';return;}
+  if(exec17Applies(ds(new Date()))){el.innerHTML='<div class="exec17-callout"><b>目标是笔试折算70，不作保分承诺。</b>公基50.6、综测以往50多为起点。权重与正式规则尚未核实，不假设各50%、不生成折算分；用不同新卷的真实得分、分项用时与独立作答检验稳定性。</div>';return;}
   if(cycleFor(ds(new Date()))){
     el.innerHTML=`<div style="border:1.5px solid #93c5fd;border-radius:10px;overflow:hidden">
     <div style="background:linear-gradient(90deg,#eff6ff,#dbeafe);padding:9px 13px;font-weight:800;font-size:13px;color:#1e3a8a">🎯 当前评分口径：先看真实确定会率，不用表面正确率骗自己</div>
@@ -3084,14 +3144,14 @@ function renderScoreGuess(){
 
 // ==================== RENDER SCHEDULE ====================
 const NEW_PHASES=[
- {s:'2026-10-15',e:'2026-11-16',name:'历史方案与记录',icon:'🗂',desc:'保留旧计划、打卡、计时和备注；历史日期经过不代表完成。11/17起按本次模考与执行情况校准，不将旧任务自动挤进当前三块。'},
- {s:'2026-11-17',e:'2026-11-17',name:'21:06后晚间收口',icon:'🌙',desc:'法律与政治的旧卷复盘已完成，两项诊断已取消。今晚只做综测40分钟、记忆卡补足今日1小时、5分钟收尾；今日综测主块已打卡则跳过短块，记忆卡已完成的不重复。23:00左右结束，不追赶5h。'},
- {s:'2026-11-18',e:'2026-11-19',name:'复盘之后 · 新题迁移验证',icon:'🌱',desc:'普通日起步5h：公基90分钟新题验证＋综测120分钟真实课次、手写与改稿＋短复习30分钟＋记忆卡60分钟。法律和政治不再重新分类原卷；只有新题重复错的规则才短补。夜间缩量不顺延成明天加量，日期过去不会自动视为达标。'},
- {s:'2026-11-20',e:'2026-12-13',name:'两科并行 · 稳定后自选加量',icon:'🔧',desc:'默认5h（含记忆卡1h）；此前连续3个学习日完成四项必做、实学记录达5h且记忆卡至少60min后，再主动选6.5h（公基、综测各加45分钟）。综测每周约3节仅为参考，按真实进度接续；周六公基整卷，第二周起穿插综测限时整套与精改，替换而非叠加任务。周日其余主线休息，仅背记忆卡1h。'},
- {s:'2026-12-14',e:'2026-12-17',name:'考前整合 · 新题复测与完整作答',icon:'🎯',desc:'两科以限时作答、错点复测和精改为主；综测按本场题型检查能否独立完成，不为听完13节盲目赶课。法律按最近分项失分补漏，不写死刑法优先；常识经管短补，公文保温。'},
- {s:'2026-12-18',e:'2026-12-19',name:'轻量收官',icon:'🌙',desc:'12/18原90分钟轻回看另加记忆卡60分钟，共2.5h；12/19用品、交通与睡眠检查之外，保留记忆卡1h。考前只背已学内容，不开新卡、不熬夜。未完成记录不删除、不强行补课。'},
- {s:'2026-12-20',e:'2026-12-20',name:'目标考试日',icon:'🏁',desc:'沿用文件中已设置的12/20目标；实际考试日期、科目、题型和时长以你那场公告及准考证为准。当天不排课程、刷题或补债。'},
- {s:'2026-12-21',e:'2027-06-30',name:'考后 · 按新目标再安排',icon:'🔗',desc:'考后休息，再依据实际目标恢复长期备考；不自动执行本轮遗留清单。'}
+ {s:'2026-10-15',e:'2026-11-16',name:'历史方案与记录',icon:'🗂',desc:'只保留原打卡、计时和笔记；历史日期不等于完成，不把旧项塞回当前训练。'},
+ {s:'2026-11-17',e:'2026-11-17',name:'历史晚间安排',icon:'🌙',desc:'原晚间记录保留；用户后来已选择休息，不把那晚未做任务转成明天欠账。新训练表从11/18起执行。'},
+ {s:'2026-11-18',e:'2026-11-24',name:'首周：概念落地与固定覆盖',icon:'🌱',desc:'普通日5h：知识60＋数量25＋资料20＋判断15＋综测120＋独立记忆卡60。数量从百分数基数起，示范后做少量新变式，实际掌握后手动换点；其他模块按首周逐日表轮换，周六新卷替换公基四项。'},
+ {s:'2026-11-25',e:'2026-12-08',name:'第二阶段：新题迁移与周测反馈',icon:'🔧',desc:'保留固定覆盖，用新题正确数、猜题和用时调整块内内容；概念未懂继续示范，准确但慢才限时。刘流按真实停点推进；11/27起周五综测新卷、次日仅核对本卷未处理部分，替换课程块不叠加。'},
+ {s:'2026-12-09',e:'2026-12-17',name:'第三阶段：限时整合与稳定性检验',icon:'🎯',desc:'用不同的新题组和新卷检验独立作答、分项速度与失分；正式规则核实后按本场口径检验折算70的稳定性。不因某次小样本高分宣称稳过，不为听完13节挤掉实际作答。'},
+ {s:'2026-12-18',e:'2026-12-19',name:'轻量收官',icon:'🌙',desc:'12/18已整理规则与作答提醒轻回看90分钟＋记忆卡60，共2.5h；12/19用品检查＋记忆卡60。不开新卡、不追补旧课、不熬夜。'},
+ {s:'2026-12-20',e:'2026-12-20',name:'考试日（用户确认）',icon:'🏁',desc:'用户确认12/20笔试；具体地点、科目、题型、分值与时间按本场公告/准考证。当天不排课程、背卡、刷题或补债。'},
+ {s:'2026-12-21',e:'2027-06-30',name:'考后休息与新目标',icon:'🔗',desc:'本轮计划结束，不自动执行遗留任务，按新目标另排。'}
 ];
 function newPlanPhaseFor(dkey){for(const p of NEW_PHASES){if(dkey>=p.s&&dkey<=p.e)return p;}return null;}
 function inNewPlan(dkey){return dkey>='2026-11-06'&&dkey<='2026-12-20';}
@@ -3106,20 +3166,24 @@ function renderNewPlanDay(d,dkey){
  try{updateDayProgress(dkey);}catch(e){}
 }
 function newPlanOverviewHTML(){
- const today=ds(new Date());
- let cards='';NEW_PHASES.forEach(p=>{const cur=today>=p.s&&today<=p.e,past=today>p.e;cards+=`<div class="debt-cell" style="${cur?'border-color:#2563eb;background:#eff6ff':past?'opacity:.7':''}"><div class="n">${p.s.slice(5).replace('-','/')} — ${p.e==='2027-06-30'?'2027/6':p.e.slice(5).replace('-','/')}${cur?' · 当前建议阶段':past?' · 已过去（不代表完成）':''}</div><div class="v" style="font-size:.95rem"><strong>${p.icon} ${p.name}</strong></div><div class="n" style="font-weight:400">${p.desc}</div></div>`;});
- const rows=EXEC17_MOCK.parts.map(x=>`<tr><td>${x.name}</td><td>${x.c}/${x.n}</td><td>${(x.c/x.n*100).toFixed(1)}%</td><td>${x.n-x.c}</td><td>${x.advice}</td></tr>`).join('');
- return `<div class="exec17-overview"><h3 style="font-size:17px;color:#1e3a8a;margin-bottom:8px">11/17校准：两科并行，先完成，再加量</h3>
- <div class="exec17-callout"><b>最新确认：</b>法律和政治本次旧卷均已复盘，两项诊断已取消；11/17晚间按缩量清单收尾，不追赶5h。<br><b>本次依据：</b>公基50.6分，答对51题、答错49题，用时64分43秒；综测以往50多分。刘流13节目前仅确认听完第1节，每节原长2—3小时。可用时间充足，主要障碍是手机与拖延，不是每天只有两三小时空闲。<br><b>目标日期：</b>沿用原文件12/20，具体以本场公告和准考证为准，不用旧计划日期代替官方通知。</div>
- <div class="exec17-stat-grid"><div><b>5h</b><span>默认起步 · 含记忆卡1h</span></div><div><b>6.5h</b><span>稳定3个学习日后自选</span></div><div><b>2h</b><span>应急 · 含记忆卡1h</span></div></div>
- <h4 style="margin:14px 0 7px">本次模考分项（以题数分析，不等于每题一分）</h4><div style="overflow-x:auto"><table class="exec17-table"><thead><tr><th>模块</th><th>答对/总题</th><th>正确率</th><th>错题</th><th>安排依据</th></tr></thead><tbody>${rows}</tbody></table></div>
- <div style="font-size:11px;color:#64748b;margin-top:6px">法律与政治合计错27题，占全部错题约55%；一套模拟卷不等于正式考试固定权重。分数、答对题数和用时按APP原值保留，不强行按一题一分换算。小样本高正确率不视为稳定强项。</div>
- <h4 style="margin:15px 0 6px">每天四项：原三块不减，另加记忆卡1小时</h4>
- <ol style="padding-left:20px;font-size:12px;line-height:1.9"><li><b>公基90分钟：</b>法律与政治主攻；先题后补对应知识，再订正。法律和政治这次旧卷已复盘，直接用新题检验迁移，不再安排重复诊断。</li><li><b>综测120分钟：</b>从真实下一节继续；先尝试例题，再听讲，最后改写漏点。视频2—3小时可拆两次，计时完成不等于整节已听完。</li><li><b>短复习30分钟：</b>常识省情、经管、公文易混点与卡片按日轮换；只复习到期/错题卡，不要求清空。周测、综测整套日优先留给复盘。</li><li><b>记忆卡60分钟（另加）：</b>可拆30＋30分钟，优先到期、错题与实际薄弱专题；先回忆再翻面评分，不规定必须背多少张、不要求清空。周日、应急日和考前减量日都保留，12/20考试当天不加；不与其他学习块重复计时，未完成不自动翻倍补债。</li></ol>
- <div class="exec17-callout" style="margin-top:10px"><b>加量规则：</b>先稳定完成四项必做及5h实学记录（含记忆卡至少60min），连续3个学习日后主动选6.5h；增加公基45分钟和综测45分钟，不自动升级。每周约3节是参考，不按日期跳课或自动标记完成。<br><b>手机规则：</b>学习前物理隔离手机；需用本机看课则手动开勿扰、限制娱乐应用；短休息不刷短视频，娱乐集中到固定窗口。本网页只提醒，不会锁手机或识别真实使用。<br><b>旧项规则：</b>只保留档案，绝不顶掉当前主线、周测或精改。普通日可自选一个错点，替换当天30分钟短复习，不额外加时；不自动结清原任务。</div>
- <div class="exec17-callout" style="margin-top:10px"><b>新增自选科目：</b>当天原计划全部打卡后，在执行单底部点“＋添加自选科目”。可选择或输入科目、内容、时长和学习方式，支持计时、备注、打卡、编辑及移除恢复。自选不改原目标，不计原计划分母，不滚入明天欠账；自选时长不替代原计划的连续达标核验。</div><h4 style="margin:15px 0 6px">每周节奏</h4><div style="font-size:12px;line-height:1.9">周一/三：法律实测弱项；周二/四：政治理论/时政；周五：法律政治混合。周六：公基代表卷限时90分钟并分次订正。第二周起周五综测限时整套、周六精改，替换课程块；实际时长按本场规定调整，不额外叠加。周日仅固定记忆卡1h，其余主线休息；未完成不形成整天补债。公文压缩为短复测；数量只补少数基础题型，资料与判断少量保温。若经管反复错，可补15—30分钟，不永久禁止补课。</div>
- <h4 style="margin:15px 0 8px">阶段建议（不是自动完成表）</h4><div class="debt-grid">${cards}</div>
- <div style="margin-top:12px;font-size:11px;color:#64748b">本次改动从11/17生效；原存储键、历史打卡、日志、错题、笔记、刘流13节独立进度及内嵌记忆卡保留。更换文件或打开地址可能改变浏览器存储环境，请先在旧版导出备份；若新版未显示原记录，使用原同步配置或导入备份，不要清除网站数据。</div></div>`;
+ const today=ds(new Date());let phases='';NEW_PHASES.forEach(p=>{phases+=`<div class="debt-cell" style="${today>=p.s&&today<=p.e?'border-color:#2563eb;background:#eff6ff':''}"><div class="n">${p.s.slice(5)} — ${p.e.slice(5)}${today>p.e?' · 历史，不代表完成':''}</div><div class="v" style="font-size:.95rem"><strong>${p.icon} ${p.name}</strong></div><div class="n" style="font-weight:400">${p.desc}</div></div>`;});
+ const rows=EXEC17_MOCK.parts.map(x=>`<tr><td>${x.name}</td><td>${x.c}/${x.n}</td><td>${x.n-x.c}</td><td>${x.advice}</td></tr>`).join('');
+ const week=TRAIN70_WEEK.map(x=>`<tr><td style="white-space:nowrap">${x[0].slice(5)}</td><td>${x[1]}</td><td>${x[2]}</td><td>${x[3]}</td><td>${x[4]}</td></tr>`).join('');
+ return `<div class="exec17-overview" id="train70-overview"><h3 style="font-size:18px;color:#1e3a8a;margin-bottom:8px">70分目标训练课表 · 先交付安排，再按结果带练</h3>
+ <div class="exec17-callout"><b>已确认：</b>四川事业单位，2026年12月20日，目标为<b>笔试折算70分</b>，不是擅自要求两科各70。<br><b>待核实：</b>具体招考公告、正式科目/满分、两科权重和考试限时。当前不假设各占50%，不生成折算分，不把两科各120分钟的训练配额当成分值权重。公告之后补，不耽误先训练；本表是基于现有信息的起始方案，不是已经核实官方考纲的最终配比。</div>
+ <div class="exec17-stat-grid"><div><b>5h</b><span>普通训练日 · 六项必做</span></div><div><b>1h</b><span>周日 · 只背记忆卡</span></div><div><b>2h</b><span>临时应急 · 各模块缩量</span></div></div>
+ <h4 style="margin:15px 0 7px">普通日怎么排：先保证覆盖，不靠自选补漏洞</h4>
+ <div class="train70-time-grid"><div><b>公基知识 60分钟</b><span>法律／政治重点，常识经管公文轮换；新题＋本组问题核对</span></div><div><b>数量 25分钟</b><span>从基数和比例概念开始：完整示范→少量新变式，未懂不跳级</span></div><div><b>资料 20分钟</b><span>固定短材料训练，记录准确数与用时，不凭4/5当稳定强项</span></div><div><b>判断 15分钟</b><span>图形、定义、类比、条件与论证轮换，写清依据</span></div><div><b>综测 120分钟</b><span>真实未学停点＋课内新例题尝试，可拆60＋60，不重改旧稿</span></div><div><b>记忆卡 60分钟</b><span>每天独立另加，可拆30＋30；按今天课程、来源或到期卡选</span></div></div>
+ <p class="exec17-small" style="margin-top:8px"><b>与上版差别：</b>不是给已删除的旧复盘换名。知识90→60分钟，固定新增数量25＋资料20＋判断15，公基合计120；综测120＋独立记忆卡60，共300分钟。题量和配额是首周起点，之后看真实结果调整，不宣称这几个数字是最优处方。</p>
+ <h4 style="margin:15px 0 7px">建议执行顺序（有效学习，不含休息）</h4><div class="exec17-callout">第一段：知识60 → 休息10 → 数量25 → 休息5 → 资料20 → 休息5 → 判断15。<br>第二段：综测60 → 休息10—15 → 综测60；新例题作答包含其中。<br>第三段：记忆卡30＋30，中间休息。开始时间按实际顺移，不因错过某个钟点整天作废；不能把休息、手机娱乐或同一段学习重复计时。晚开始可主动选当天应急，不靠熬夜补两天。</div>
+ <h4 style="margin:15px 0 7px">首周逐日安排：11/18—11/24</h4><p class="exec17-small">周一至周五另有固定数量25分钟，训练点从“百分数基数”起，由实际掌握手动切换，不按这张日期表自动进入工程或行程。常规综测120、记忆卡60照常；表中只写各日变化。11/21为公基整卷替换，11/22只记忆卡。</p>
+ <div style="overflow-x:auto"><table class="exec17-table train70-week"><thead><tr><th>日期</th><th>公基知识60／周测</th><th>资料20</th><th>判断15</th><th>综测120／例外</th></tr></thead><tbody>${week}</tbody></table></div>
+ <h4 style="margin:15px 0 7px">数量不是每天换一套公式</h4><div style="font-size:12px;line-height:1.9">路线：<b>百分数基数 → 涨降倒推 → 比例转实际数量 → 工程基础 → 行程时间线 → 利润基础 → 已学混合新题</b>。工程一道答对只作为起点，不重复讲已会部分；其他概念未懂先示范，再做2—4道新的变式。每天执行单上方可选择“数量实际训练点”，不会因为日期、打卡或做过一题自动升级，也不会把未懂概念滚成双倍任务。</div>
+ <h4 style="margin:15px 0 7px">怎样检验有没有向70分接近</h4><ol style="padding-left:20px;font-size:12px;line-height:1.95"><li><b>每次训练留证据：</b>各项备注记新题来源、独立作答数/正确数、实际用时、猜题和卡点。只写“做完”或只打卡不当成能力提升。</li><li><b>每周用新卷检验：</b>周六公基新卷替换知识＋数量＋资料＋判断的120分钟；11/27起周五综测新卷替换课程120，次日只核对这份新卷尚未处理部分。学习预算不冒充官方考试时限，规则核实后校准。</li><li><b>按结果调，不一律加时：</b>下一周仍卡概念就保留示范；准确但慢才缩限时；持续独立正确的基础内容减少，空出的同一学习块给新缺口。数量/资料/判断不再被放回可选区。页面只保留记录和手动训练点，不会仅凭打卡自动判定掌握；训练结果发到聊天后再据此调整。</li><li><b>70分看正式口径：</b>待权重与规则核实后，用至少两份不同、尽量贴近本场范围的限时新卷看折算70的稳定性。四道基础题、听完课程、某一次高分都不能保证正式成绩或录取。</li></ol>
+ <h4 style="margin:15px 0 7px">为什么这样安排：现有证据，不把题数当分值</h4><p class="exec17-small">公基50.6，51/100，用时64分43秒；综测仅知以往50多。法律和政治本卷合计错27题，值得重点投入，但不是其他模块可以不练。数量0/5及这次基础新题反馈支持先练概念；资料5题、判断2题样本有限。旧卷已经复盘，不再要求分类、复做或重抄。</p>
+ <div style="overflow-x:auto"><table class="exec17-table"><thead><tr><th>模块</th><th>答对/题数</th><th>错题</th><th>当前处理</th></tr></thead><tbody>${rows}</tbody></table></div>
+ <h4 style="margin:15px 0 7px">至考试的阶段安排</h4><div class="debt-grid">${phases}</div>
+ <details class="exec17-guide" style="margin-top:12px"><summary>强度、历史记录与自选规则</summary><div>先按5h普通训练日做稳。连续3个学习日完成当日必做、非记忆卡≥240分钟且记忆卡≥60分钟后，才主动选择6.5h；两科各追加45分钟，不自动升级，不是提分保证。周六必做为3个整块，普通工作日为6项。应急2h不计完整达标，次日恢复之前设置；周日只记忆卡60分钟。12/18轻回看90＋记忆卡60，12/19用品检查＋记忆卡60，12/20不排学习。<br>所有新题核对在原块内，不另加旧错题30分钟。11/17原休息许可不追债。旧打卡、计时、笔记、课程进度与SRS均保留，已完成的同日知识/综测/记忆卡不强迫重做；新增三个能力任务有独立ID，不能借旧勾选冒充完成。自选科目须当日计划全完成后添加，不替代必做、不计原计划分母，也不滚次日欠账。课程只按整节实际听完单独标记；记忆卡可直接按课程、来源、今天新增或导入批次选择，无须先清旧民法。<br>更换文件前备份，原站点内替换即可；不要清浏览器数据。记忆卡完整备份在“记忆卡→设置”，仪表盘备份只含课表数据。</div></details></div>`;
 }
 
 function renderSchedule(){
@@ -3341,8 +3405,8 @@ function updateDayProgress(dkey){
   document.getElementById('cur-task-pct').textContent=taskLabel;
   document.getElementById('t-bar').style.width=tpct+'%';
 
-  const todayMin=exec17EveningDay(dkey)?exec17EveningLogged(dkey):D.logs.filter(l=>l.date===dkey).reduce((s,l)=>s+l.duration,0);
-  const _hl=document.getElementById('cur-h-label');if(_hl)_hl.textContent=exec17EveningDay(dkey)?'本轮计时':'已学';
+  const todayMin=exec17EveningDay(dkey)?exec17EveningLogged(dkey):exec17Applies(dkey)?exec17RequiredMinutes(dkey):D.logs.filter(l=>l.date===dkey).reduce((s,l)=>s+l.duration,0);
+  const _hl=document.getElementById('cur-h-label');if(_hl)_hl.textContent=exec17EveningDay(dkey)?'本轮计时':exec17Applies(dkey)?'本计划计时':'已学';
   const h=todayMin/60;
   const _th=dayTargetH(dkey);
   const _thEl=document.getElementById('target-h');
@@ -8557,7 +8621,7 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
   function exec17Task(vds,id,mins,title,detail,out,subject,mode){
     var t={id:id,origId:id,origDay:vds,time:mins+'分钟',title:title,detail:detail,out:out||'',
       exec17:true,exec17Minutes:mins,exec17Subject:subject||'复盘',exec17Mode:mode||'复盘',
-      rollHint:'只记录这次学习块；课次在独立进度卡按整节实际听完标记，不按日期或勾选自动跳课。'};
+      rollHint:mode==='听课'&&/综测/.test(subject||'')?'只接未学新课；这'+mins+'分钟是学习用时，可拆段，不要求听完一整节，也不重改旧题。整节完成仍需单独标记。':id===exec17PublicId(vds)?'只处理本次新题；已完成复盘的旧卷、旧错题不重复安排。':'只记录本次任务；不自动结清旧项，不按日期假定已经学过。'};
     t.rawTitle=t.title;t.rawDetail=t.detail;t.rawOut=t.out;return t;
   }
   // 自选加练定义复用 landingProg 的逐条时间戳合并；完成、备注、计时仍使用原有数据结构。
@@ -8605,7 +8669,7 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
       +'<p class="exec17-small">'+esc(today)+' · 自愿加练，不改原目标，不滚入明天欠账。</p>'
       +'<input type="hidden" id="exec17-custom-id">'
       +'<label for="exec17-custom-subject">选择或输入科目</label><input id="exec17-custom-subject" list="exec17-custom-subject-list" placeholder="如：民法、综测，或自行输入" maxlength="24" required><datalist id="exec17-custom-subject-list">'+EXEC17_CUSTOM_SUBJECTS.map(function(x){return '<option value="'+esc(x)+'"></option>';}).join('')+'</datalist>'
-      +'<label for="exec17-custom-title">本次具体学什么</label><input id="exec17-custom-title" placeholder="如：民法业主表决比例错题复测" maxlength="80" required>'
+      +'<label for="exec17-custom-title">本次具体学什么</label><input id="exec17-custom-title" placeholder="如：一组没做过的公文新题" maxlength="80" required>'
       +'<div class="exec17-custom-fields"><div><label for="exec17-custom-minutes">参考时长（分钟）</label><input type="number" id="exec17-custom-minutes" min="5" max="180" step="1" value="25" required></div><div><label for="exec17-custom-mode">学习方式</label><select id="exec17-custom-mode">'+['刷题','听课','背诵','手写','复盘'].map(function(x){return '<option>'+x+'</option>';}).join('')+'</select></div></div>'
       +'<label for="exec17-custom-goal">完成标准（可选）</label><textarea id="exec17-custom-goal" rows="3" maxlength="500" placeholder="如：做10题并订正，记下仍混淆的条件"></textarea>'
       +'<div class="exec17-custom-form-actions"><button type="button" onclick="exec17CloseCustom()">取消</button><button type="submit" class="primary">'+(r?'保存修改':'添加自选任务')+'</button></div></form>';
@@ -8641,9 +8705,9 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
   // 每日固定记忆卡：用户选择周日、应急日和考前减量日也保留；考试日除外。
   function exec17DailyMemoryTask(vds){
     var t=exec17Task(vds,'exec17_memory',60,'记忆卡背诵：每天1小时（可拆30＋30分钟）',
-      '每天单独背诵60分钟，可拆成30＋30分钟或多段累计；周日、应急日和考前减量日同样保留，12/20考试当天不安排。\n先点本任务的“计时”，再点“打开记忆卡”；休息和离开时结束计时，回来可继续累计。正计时不会到60分钟自动停止。\n先处理到期卡、错题卡和实际薄弱专题：先闭卷回忆，再翻面核对，按真实掌握程度评分。民法可用重点分层版；不规定必须背多少张，不要求清空卡库，不为凑时长盲开大量新卡。\n这1小时另加，不挤占公基90分钟、综测120分钟和短复习30分钟；同一段学习不重复计时。\n做满后记下科目、实际分钟、复习与遗忘情况，再自行勾选完成。计时不会自动打卡或修改记忆卡评分、卡号、SRS间隔和课程进度。\n没完成仍保留原日记录；明天仍是1小时，不自动翻倍补债。考前只复习已学内容，不开新卡、不熬夜。',
+      '每天单独背诵60分钟，可拆成30＋30分钟或多段累计；周日、应急日和考前减量日同样保留，12/20考试当天不安排。\n先点本任务的“计时”，再点“打开记忆卡”；休息和离开时结束计时，回来可继续累计。正计时不会到60分钟自动停止。\n可直接按今天课程、来源或导入批次选卡，也可处理到期卡和实际薄弱专题；不用先清完旧民法。先闭卷回忆，再翻面核对，按真实掌握程度评分。民法可用重点分层版；不规定必须背多少张，不要求清空卡库，不为凑时长盲开大量新卡。\n这1小时仍独立另加，不挤占知识、数量、资料、判断和综测训练；已删除的旧卷复盘不补回，同一段学习不重复计时。\n做满后记下科目、实际分钟、复习与遗忘情况，再自行勾选完成。计时不会自动打卡或修改记忆卡评分、卡号、SRS间隔和课程进度。\n没完成仍保留原日记录；明天仍是1小时，不自动翻倍补债。考前只复习已学内容，不开新卡、不熬夜。',
       '记录：科目__ / 实背__分钟 / 复习__张 / 仍易忘__','记忆卡','背诵');
-    if(exec17EveningDay(vds))t.detail=t.detail.replace('这1小时另加，不挤占公基90分钟、综测120分钟和短复习30分钟；同一段学习不重复计时。','今晚只补足今天记忆卡累计60分钟，已经完成的不重复背；今天不再叠加原公基、120分钟综测或短复习，不追赶5小时。');
+    if(exec17EveningDay(vds))t.detail=t.detail.replace('这1小时仍独立另加，不挤占知识、数量、资料、判断和综测训练；已删除的旧卷复盘不补回，同一段学习不重复计时。','今晚只补足今天记忆卡累计60分钟，已经完成的不重复背；今天不再叠加原公基、120分钟综测或短复习，不追赶5小时。');
     t.exec17DailyMemory=true;
     t.rollHint='每天固定60分钟 · 独立计时、可分段累计；不与其他学习块重复计时。';
     t.rawDetail=t.detail;return t;
@@ -8685,81 +8749,120 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
     return '<div class="exec17-memory-inline" onclick="event.stopPropagation()"><div class="exec17-memory-total"><b>本日已记录 '+esc(n)+'/60 分钟</b><small>'+(left?'还差 '+esc(left)+' 分钟，可分次累计':'时长已达到；是否完成请按实际勾选')+'</small></div><div class="exec17-memory-track"><i style="width:'+Math.min(100,n/60*100)+'%"></i></div><button type="button" onclick="exec17OpenMemory(event)" title="仅打开记忆卡；请先单独开始计时，休息时结束">🧠 打开记忆卡</button><small class="exec17-small">先计时再背诵；正计时需手动结束。评分进度独立保存。</small></div>';
   }
 
-  function exec17WithoutDailyMemoryPlan(vds,forcedDose){
+  function exec17PriorDayPlanR6(vds,forcedDose){
     var dow=parse(vds).getDay(),dose=forcedDose||exec17Dose(vds),stage=vds>='2026-12-14',list=[];
     if(vds==='2026-12-20')return {dayInfo:['目标考试日','按本场准考证执行，今天不排课程、刷题或补债。'],tasks:[],protectedReview:true};
     if(vds==='2026-12-19')return {dayInfo:['用品准备＋记忆卡1h','保留证件、交通与睡眠检查，另背已学记忆卡60分钟；不补旧课，不熬夜。'],protectedReview:true,tasks:[exec17Task(vds,'exec17_prepare',0,'检查证件、文具、交通与睡眠','本项只检查准考证、身份证、文具、考点路线和出发时间。\n另有独立记忆卡60分钟任务，只回忆已学内容；不做新题、不追赶课程，按时休息。','确认：用品__ / 路线__ / 睡眠__','复盘','复盘')]};
-    if(vds==='2026-12-18')return {dayInfo:['2.5h轻量收官','原90分钟轻回看保留，另加记忆卡60分钟；只回看已整理内容，不追补旧课。'],protectedReview:true,tasks:[exec17Task(vds,'exec17_final',90,'高频错点＋综测框架轻回看','只回看已经标记的高频错点，不扩大范围。\n15分钟到期/错题卡主动回忆＋30分钟法律政治易混规则＋45分钟综测采分点、应用文格式和写作框架回看。\n不刷新卷，不补完旧课，也不要求清空卡片。','记录：最易错规则__ / 综测提醒__','复盘','复盘')]};
-    if(dow===0)return {dayInfo:['周日轻量 · 记忆卡1h','按你的选择，仅固定背诵记忆卡60分钟；其余公基、综测主线休息，不用旧欠项挤占。每周反馈可另花约15分钟如实记录，不计入背诵时长。'],tasks:[],protectedReview:true};
-    if(dose==='rescue')return {dayInfo:['2h应急 · 含记忆卡1h','原25分钟公基＋25分钟综测＋10分钟收尾保留，另加记忆卡60分钟。仅当天应急，下一学习日恢复5h或6.5h；不计完整达标，不叠加旧欠账。'],protectedReview:true,tasks:[
-      exec17Task(vds,'exec17_rescue_gj',25,'公基：只处理一个实际错点','选一个法律或政治的高价值错点。\n先闭卷说规则，再做少量同类题并核对；不要求补完整章。25分钟到点记下停点。','记录：考点__ / 题目__ / 仍卡__','公基-刷题','刷题'),
-      exec17Task(vds,'exec17_rescue_zc',25,'综测：独立写一个课例片段并核对','从实际下一节或最近例题里选一个明确片段。\n独立写出要点、应用文主体或一个论证段，再对照讲解标漏点；这不等于整套手写或整节已听完。','记录：课例片段__ / 漏点__','综测-真题','手写'),
-      exec17Task(vds,'exec17_rescue_note',10,'收尾：写清下一步，结束当天','记下课程停点和下次第一步，把纸笔放好。\n不重新排满明天，不用应急记录替代5小时四项必做完成。','记录：下次从__开始','复盘','复盘') ]};
+    if(vds==='2026-12-18')return {dayInfo:['2.5h轻量收官','原90分钟轻回看保留，另加记忆卡60分钟；不是把已复盘的旧卷再做一遍，不追补旧课。'],protectedReview:true,tasks:[exec17Task(vds,'exec17_final',90,'考前轻回看：规则、格式与作答提醒','只回看已经整理好的简要规则和作答提醒，不重新分类、重做或重抄已复盘旧卷。\n15分钟主动回忆＋30分钟易混条件＋45分钟综测格式和作答框架轻回看。\n不刷新卷，不补完旧课，也不要求清空卡片。','记录：最易忘条件__ / 综测提醒__','复盘','复盘')]};
+    if(dow===0)return {dayInfo:['周日轻量 · 记忆卡1h','仅固定背诵记忆卡60分钟；公基、综测主线休息，不把已完成的旧卷复盘或其他旧欠项塞回来。每周反馈可另花约15分钟如实记录，不计入背诵时长。'],tasks:[],protectedReview:true};
+    if(dose==='rescue')return {dayInfo:['2h应急 · 含记忆卡1h','25分钟公基新题＋25分钟综测未学片段＋10分钟记录停点，另有记忆卡60分钟。仅当天应急；下一学习日恢复原先普通日或加量设置，不补旧卷、不叠加欠账。'],protectedReview:true,tasks:[
+      exec17Task(vds,'exec17_rescue_gj',25,'公基：做少量没做过的新题','选一个当前要学的法律、政治或其他公基考点，做少量没做过的新题并核对。\n只处理这组新题新暴露的问题，不复做已经完成复盘的旧题。25分钟到点记停点。','记录：新题__ / 新问题__','公基-刷题','刷题'),
+      exec17Task(vds,'exec17_rescue_zc',25,'综测：继续尚未学完的课程片段','从独立进度卡标明的真实停点继续未学片段，遇到本课新例题可先尝试再听讲。\n不重听已完成的课，不重改已经订正过的旧题；本块结束不等于一整节已学完。','记录：实际第__节 / 停在__分','综测-刘流13','听课'),
+      exec17Task(vds,'exec17_rescue_note',10,'收尾：记停点，结束当天','只记下课程停点和下次第一步，把纸笔放好。\n这不是错题复盘；不重新排满明天，不用应急日代替完整普通日达标。','记录：下次从__开始','复盘','复盘') ]};
 
-    var gjTitle,gjDetail,gjOut='记录：专题__ / 对__/题 / 猜对__ / 复做仍错__';
-    if(vds==='2026-11-18'){
-      gjTitle='法律／政治：已复盘错点的新题迁移验证';
-      gjDetail='法律和政治这次旧卷已经复盘完，今天不重做分项诊断、不再把原卷重新分类。\n10分钟：从已经整理好的清单中选1—2个易混考点，先闭卷复述规则。\n45分钟：限时做一组同考点新题或混合题，按实际速度做，不为凑数乱刷。\n25分钟：只订正这一组新题的错题与猜对题；发现同一规则再次错，才定向翻讲义或补一个必要片段，不重听整科。\n10分钟：闭卷说清易混条件，记下下一次要复测的题号。此前复盘记录原样保留，不把新练习自动标成已完成。';
-      gjOut='记录：新题对__/题 / 猜对__ / 再次错的规则__ / 下次复测__';
-    }else if(dow===6){
-      gjTitle='公基代表卷限时周测（固定保留）';
-      gjDetail='本块只做一套公基代表卷，含涂卡和检查。\n参考本次100题、90分钟；如本场规定不同，按真实时长执行并等量调整当天其他块，不叠加时长。\n不确定题做标记；先完成会做的，再用剩余时间检查可通过重读、重算解决的题。数量没思路先跳，不为凑速度提前交卷。\n记录总分、猜对题、法律法别和政治理论/时政失分；订正放晚间及下一学习块，旧欠课不得顶掉本次周测。';
-      gjOut='记录：总分__ / 对__/100 / 法律__ / 政治__ / 猜对__ / 用时__';
+    var gjTitle,gjDetail,gjOut='记录：新题范围__ / 对__/题 / 这组新问题__';
+    if(dow===6){
+      gjTitle='公基：一套未做过的代表卷限时周测';
+      gjDetail='只做一套尚未做过的公基代表卷，含涂卡和检查；不是重做已复盘的原卷。\n参考100题、90分钟，实际时长以本场要求为准；若时长不同，等量调整本日其他块，不额外叠加。\n记录分数、猜题与未完成题。若本次新卷仍有未订正部分，放进下一次公基90分钟块里处理；已订正完的不再复盘，今天不另加30分钟。';
+      gjOut='记录：本次新卷__ / 对__/100 / 用时__ / 未处理题号__';
+    }else if(vds==='2026-11-18'){
+      gjTitle='公基：做一组没做过的法律／政治新题';
+      gjDetail='法律、政治及其他这次旧卷错题已经复盘过；本块直接做新题，不重分类、不复做原卷，也不重新开诊断。\n约60分钟：完成一组没做过的法律／政治新题或混合题，按实际速度做。\n约25分钟：只核对刚做的这组新题；有新错点或猜对题才查相应规则，没有新问题就不回翻旧卷。\n最后约5分钟：记下本组新题情况后结束。不是把已复盘的题换个名字再安排。';
     }else if(stage){
-      gjTitle='公基考前整合：只补最近真实失分';
-      gjDetail='用最近两次周测，选一个最影响得分的法律或政治考点。\n15分钟闭卷回忆；30分钟对照规则补差；35分钟做同考点新题和错题复做；10分钟写一页最后提醒。\n常识、经管和公文若反复错，可替换其中15—30分钟补概念；不为完课而开冷门章节。';
+      gjTitle='公基考前整合：新题检验与简要规则';
+      gjDetail='用一组没做过、与本场题型接近的题检验当前掌握情况，只核对这组新题。\n若当周新做试卷确有尚未处理的题，可使用本块的一部分完成；已经订正过的部分直接跳过，不重新复盘旧卷。\n剩余时间用已整理的简短规则查缺，不开冷门长课，也不额外加30分钟。';
     }else if(dow===1||dow===3){
-      gjTitle='法律主攻：按分项失分选一个小专题';
-      gjDetail='选最近分项数据最弱的法别，不固定刑法优先。\n15分钟复做上次错题并闭卷说规则；30分钟补一个明确知识缺口；35分钟做同类新题、订正错题与猜对题；10分钟复述结论。\n法律至少区分民、刑、行政、宪法/其他；缺数据先诊断，已经稳定的章节不重听。相关到期/错题卡包含在这90分钟内，不追清空。';
+      gjTitle='公基新题：法律小专题';
+      gjDetail='从当前最需要提高的法别中选一个小专题，直接做没做过的新题。\n约55分钟限时作答，约30分钟只核对这组新题与必要的规则，最后约5分钟记下新问题。\n若有本周新卷尚未订正的题，可在这90分钟内替换一部分新题时间处理；已复盘完的原卷不再重做，已学会的章节不重听。';
     }else if(dow===2||dow===4){
-      gjTitle='政治主攻：理论与时政按错点选一项';
-      gjDetail='一次只攻一个最不牢的主题。\n15分钟闭卷回忆上次内容；30分钟补对应理论、文件或时间线；35分钟做对应题并核对；10分钟把混淆表述改成正确句子。\n错题标记概念不清、时间线混淆或审题；猜对也说明依据，不靠反复看讲义替代自测。';
+      gjTitle='公基新题：政治理论／时政';
+      gjDetail='选一个当前要掌握的理论主题或时政专题，做一组没做过的新题。\n只对照这组新题核对依据；需要补新的知识缺口时，才定向看相应讲义或片段。\n不从旧卷重新拆理论／时政，不复做已经订正过的旧错题；新题出现的问题在本90分钟内解决，不另加复盘块。';
     }else{
-      gjTitle='法律＋政治混合新题复测';
-      gjDetail='检查前几天补过的知识能否迁移到新题。\n先用一组法律、政治混合题限时自测，再将错题和猜对题按法别、理论/时政拆开订正。\n只补实际卡住的规则，复做上周同类错题；不要求每次抄整份解析。保留约10分钟回忆关键规则。';
+      gjTitle='公基：法律／政治混合新题';
+      gjDetail='做一组没做过的法律、政治混合题，再核对本组答案与依据。\n只处理本次新作答暴露的问题，不复做已经复盘过的旧题，不重抄旧解析。\n必要时可把本周新卷尚未处理的部分放进这90分钟；已经处理完就做新题，不额外叠加30分钟。';
     }
 
-    var fullZc=(dow===5&&vds>='2026-11-27'),afterFull=(dow===6&&vds>='2026-11-28');
-    var zcTitle='刘流综测：真实下一节＋独立手写＋改稿',zcMode='听课',zcSubject='综测-刘流13';
-    var zcDetail='长课可以拆两次学，今天不要求硬听完整节。\n10分钟：回忆上次方法、核对实际停点。\n50分钟：从进度卡显示的真实下一节继续；听得懂再用1.25—1.5倍速，例题出现先暂停尝试。\n35分钟：独立完成一道对应小题或明确课例；遇到长题可写完整的一个部分，并如实注明。\n25分钟：对照采分点改写最弱部分，保存原稿与改稿，记下视频停点。\n课上独立写过的例题可以算当天练习，不额外叠加同类作业；只播放完视频不算作答能力提升。';
-    var zcOut='记录：实际第__节 / 停在__分 / 独立作答__ / 漏点与改写__';
+    var fullZc=(dow===5&&vds>='2026-11-27'),afterFull=(dow===6&&vds>='2026-11-28'),progress=rollData(),next=rollNextLesson(progress),stop=next?rollNote(progress,'lessonNotes',next):'';
+    var zcTitle='刘流综测新课：接实际停点继续听',zcMode='听课',zcSubject='综测-刘流13';
+    var zcDetail='这120分钟是继续尚未学完的新课，不是复盘旧错题，也不是要求120分钟听完一整节。\n'+(next?'按独立进度卡接第'+next+'节。'+(stop?'已保存停点：'+stop+'。':'没有保存停点时，从你实际尚未听到的位置开始。'):'13节均已实际标记完成：不再重听，改为一组没做过的对应新题。')+'\n可以拆成两段，每段约60分钟；休息不计学习时间。老师讲到本课新例题时，可先暂停尝试，再听对应讲解，这属于新课课堂练习。\n不再硬分“35分钟旧题手写＋25分钟旧稿精改”，不额外找已经做过的题来凑任务。\n最后几分钟记下实际课次、视频停点和新学要点即可（包含在这120分钟里）。原课2—3小时可以跨天接着听；只有整节实际听完，才在课程进度卡标记完成，任务打卡不会自动推进课次。';
+    var zcOut='记录：实际第__节 / 视频停在__分 / 新学要点__';
+    if(!next){zcTitle='综测：一组没做过的新题';zcMode='手写';zcSubject='综测-真题';}
     if(fullZc){
-      zcTitle='综测限时整套作答（固定保护）';zcMode='手写';zcSubject='综测-真题';
-      zcDetail='本块用整套独立作答替换听课，不额外加一套。\n参考120分钟，题型、字数、时长以本场规定为准；若时长不同，等量调整其他块。\n用答题纸完成，不边写边看答案，不用只列提纲冒充整套完成。记录每题用时、空题和未写完部分。\n晚间先做30分钟诊断，明天综测块继续精改。课程没听完也不取消本次训练，不必等到13节全听完才动笔。';
-      zcOut='记录：试卷__ / 每题用时__ / 未完成__ / 明日精改重点__';
+      zcTitle='综测：一套未做过的卷限时作答';zcMode='手写';zcSubject='综测-真题';
+      zcDetail='用一套没做过的卷替换今天的课程块，不额外加题，也不是重做已复盘旧卷。\n参考120分钟，题型、字数、时长以本场要求为准。用答题纸独立完成，记录每题用时和未写完部分。\n仅这份新答卷尚未订正的部分，放进下一次综测120分钟块里处理；已经订正过就跳过。当天不另加30分钟诊断，不等13节全听完才开始新卷训练。';
+      zcOut='记录：本次新卷__ / 每题用时__ / 未完成__';
     }else if(afterFull){
-      zcTitle='综测整套精改＋最弱题重写';zcMode='手写';zcSubject='综测-真题';
-      zcDetail='精改昨天答卷，本块不再追加一整套。\n30分钟逐题对照材料采分点、结构、格式与字数；45分钟重写最弱一题或关键部分；30分钟核对改稿；15分钟记录下次时间策略。\n重点分清没找到点、表达不准、结构问题还是时间没分好；自评分只是参考，不承诺与正式阅卷一致。';
-      zcOut='记录：分题漏点__ / 重写__ / 下次时间分配__';
+      zcTitle='综测：处理本周新卷尚未订正的部分';zcMode='手写';zcSubject='综测-真题';
+      zcDetail='只处理本周新做、尚未订正的那份综测答卷；不是让你把已经复盘的旧题再改一遍。\n在本120分钟内核对材料要点、表达、结构与格式，必要时改写其中一个未解决部分；不追加一整套，不另加30分钟。\n如果这份新卷也已经订正完，就直接接尚未听完的新课；13节都听完则做一组没做过的新题。不要为了打卡重改旧稿。';
+      zcOut='记录：新卷未解决部分__ / 或实际新课停点__';
     }else if(stage){
-      zcTitle='综测考前整合：完整作答与最弱题精改';zcMode='手写';zcSubject='综测-真题';
-      zcDetail='按本场要求检查能否独立完成主要题型。\n在120分钟内选择一次限时完整作答，或先限时完成最弱题再逐点精改；以最近训练暴露的问题决定，不为了听完课程牺牲手写。\n回看材料关键词、层次、文种格式与论证是否贴题，形成自己的最后一页提醒；不新背大量模板。';
+      zcTitle='综测考前整合：未做过的题型检验';zcMode='手写';zcSubject='综测-真题';
+      zcDetail='按本场要求，用一组未做过的题检验主要题型，核对的也仅是本次新作答。\n在120分钟内完成必要作答、核对与时间策略整理；如果没有尚未解决的问题，不翻出已复盘旧题重改。\n不为听完课程牺牲实际作答，不新背大量模板，也不额外添加30分钟复盘。';
     }
-
-    var reviewMap={
-      1:['常识／省情错点＋到期卡回忆','从这次常识7道错题或本周重复错点里选一个主题。\n20分钟闭卷回忆、核对与短题检验，10分钟复做相关错题；只处理到期/错题卡，不要求清空。'],
-      2:['数量基础短训＋资料／判断保手感','只练少数基础题型，不全面铺开。\n20分钟练1—3道已学过的数量基础题，写清已知、原理、列式与计算；10分钟做少量资料或判断题并核对。不会的记卡点，不把这30分钟拉成长课。'],
-      3:['公文错题／猜对题短复测','公文这次7/9，先验证有把握做对，不重听整科。\n用30分钟复做错题、猜对题和易混点；按用途、行文方向、格式归类。相关卡片先口头回忆再翻答案；若新题反复错，再按实际缺口短补。'],
-      4:['经济／管理错点短补','经济3/6、管理4/6，题少不能认定稳定掌握。\n选一个反复混淆的概念，用15分钟补规则、15分钟做题核验；必要时允许补一个新概念，不永久禁止管理专题。'],
-      5:['本周错点间隔回忆','用30分钟复做两三天前的法律/政治错点或猜对题。\n先说依据再核对，不重抄解析；发现重复错就写入下周最优先的3项。'],
-      6:['公基周测归因：先解决最亏的3题','把今天公基错题按法律法别、政治理论/时政、常识、经管、公文和能力题归类。\n只挑最影响得分的3题做基础订正，其余保留题号和卡点，下一主攻块接着处理；不要求30分钟消化整卷。']
-    };
-    var rv=reviewMap[dow],rvTitle=rv[0],rvDetail=rv[1],protectedReview=dow===6||fullZc||afterFull;
-    if(fullZc){rvTitle='综测整套首轮诊断（固定保留）';rvDetail='先给今天的综测答卷定位问题，不追求30分钟精改完整套。\n逐题标材料漏点、格式、结构和时间问题，选最弱一题写出改写方向；明天的综测120分钟继续精改。旧欠课不得占用本块。';}
-    var chosen=exec17Note(vds,'exec17_carry_choice');
-    if(chosen&&!protectedReview){try{var c=JSON.parse(chosen);if(c.d&&c.id){rvTitle='自选旧错点短补（只借一个点）';rvDetail='用本块替换原来的短复习，不增加总时长。\n来源：'+c.d+' · '+String(c.title||c.id)+'。\n只挑其中一个错点，先回忆规则，再做少量题或改写；30分钟到点记停点，不要求补完整个旧学习块。\n勾完今天这块只代表今天短补完成，不会自动把原日期整项标为完成。';}}catch(e){}}
     list.push(exec17Task(vds,exec17PublicId(vds),90,gjTitle,gjDetail,gjOut,'公基-刷题','刷题'));
     list.push(exec17Task(vds,'exec17_zc',120,zcTitle,zcDetail,zcOut,zcSubject,zcMode));
-    list.push(exec17Task(vds,'exec17_review',30,rvTitle,rvDetail,'记录：主题或题号__ / 复做__ / 下次第一步__','复盘','复盘'));
+    // exec17_review is deliberately absent: deleted, not renamed, auto-checked or moved to debt.
     if(dose==='grow'){
-      var small=(dow===2||dow===4||dow===6)?'先用20分钟做少量数量基础题，再用25分钟复测本周法律/政治或常识错点。':'用45分钟补本周重复错的一个法律/政治考点，或完成一组同考点新题复测。';
-      if(dow===6)small='优先用45分钟继续订正今天公基代表卷的高价值错题；错题很多就分次做，不为了题量拉长。';
-      list.push(exec17Task(vds,'exec17_gj_plus',45,'加量①：公基新题复测／错点短补',small+'\n这是稳定后自选的加量，不挤掉三核心块；到点结束，不把未做完的整块叠到明天。','记录：考点__ / 新题对__ / 重复错__','公基-刷题','刷题'));
-      list.push(exec17Task(vds,'exec17_zc_plus',45,'加量②：综测独立作答与精改','用45分钟独立写一道对应小题或完整关键部分，并对照漏点改写。\n如有整套训练遗留，优先精改；长课未完且影响当前题型时，可补必要片段，但不能整块只播放视频。','记录：独写__ / 改写漏点__','综测-真题','手写'));
+      list.push(exec17Task(vds,'exec17_gj_plus',45,'自选加量①：公基新题／必要新概念','稳定后主动选择的45分钟。可练数量基础、资料、判断，或一组法律／政治等没做过的新题。\n只核对本组新题；需要时补必要新概念，不重复已完成的旧卷复盘，不挤占记忆卡或休息。','记录：新题__ / 新学__','公基-刷题','刷题'));
+      list.push(exec17Task(vds,'exec17_zc_plus',45,'自选加量②：综测未学片段／新例题','主动选择的45分钟。继续未听完的课程片段，或独立尝试一道没做过的新例题并核对。\n不重听已完成的课，不重改已经处理过的旧稿；到点结束，不把未做完的整块叠到明天。','记录：新课停点或新例题__','综测-刘流13','听课'));
     }
-    return {dayInfo:[dose==='grow'?'6.5h加量 · 含记忆卡1h':'5h起步 · 四项必做',
-      '有效时长不含休息；公基90分钟、综测120分钟、短复习30分钟保持，再独立背诵记忆卡60分钟。周日仅记忆卡1小时；旧欠项不顶替当前任务。'],tasks:list,protectedReview:protectedReview};
+    return {dayInfo:[dose==='grow'?'6h自选加量 · 含记忆卡1h':'4.5h普通日 · 三项必做',
+      '公基新题90分钟＋综测新课／本次新作答120分钟＋独立记忆卡60分钟。已删除固定30分钟旧错题复测，不换任务凑5小时。新题新卷的核对仅在原学习块内完成；已经复盘的旧卷不再安排。'],tasks:list,protectedReview:fullZc||afterFull||dow===6};
   }
+
+  function exec17WithoutDailyMemoryPlan(vds,forcedDose){
+    if(!train70Active(vds)||vds>='2026-12-18'||exec17DayOfWeek(vds)===0)return exec17PriorDayPlanR6(vds,forcedDose);
+    var dose=forcedDose||exec17Dose(vds),dow=exec17DayOfWeek(vds),q=TRAIN70_QUANT_TOPICS[train70QuantKey(vds)],list=[];
+    var result='记录：新题来源__ / 独立做__题 / 对__题 / 实际__分钟 / 卡在读题、列式、计算或判断依据__';
+    if(dose==='rescue'){
+      list=[
+        exec17Task(vds,'train70_rescue_knowledge',15,'应急知识：少量公基新题','只围绕当前知识主题做3—5道没做过的新题并核对；不回翻已复盘原卷。题量是参考，不会就记下具体卡点，到点结束。',result,'公基-刷题','刷题'),
+        exec17Task(vds,'train70_rescue_quant',10,'应急数量：'+q.name,'只看一个完整示范，尝试1—2道没做过的基础变式。\n'+q.how+'\n今天只用10分钟，不追齐普通日题量；本项是固定应急训练，不是自选。',result,'数量-刷题','刷题'),
+        exec17Task(vds,'train70_rescue_data',10,'应急资料：读数、单位与一道新题','选一份没做过的短材料，认清时间、单位与题目所求，做1—2道基础新题并核对。停点记在本项内，不额外加收尾块。',result,'资料-刷题','刷题'),
+        exec17Task(vds,'train70_rescue_reason',5,'应急判断：一题说清依据','只独立完成一道新的基础判断题，核对关键条件或规律；不要为题量赶进度。',result,'逻辑','刷题'),
+        exec17Task(vds,'train70_rescue_zc',20,'应急综测：实际未学片段20分钟','从独立进度卡的实际课次和停点继续，遇到本课新例题先尝试一个小部分再听。没有题干不强写，不重改已复盘旧稿。到点保存停点，不勾整节完成。','记录：实际第__节 / 停在__分 / 新例题有无__','综测-刘流13','听课')
+      ];
+      return {dayInfo:['2h应急：各模块不断线','知识15＋数量10＋资料10＋判断5＋综测20＋独立记忆卡60＝120分钟。仅当天缩量，不计完整达标；不补旧卷、不叠加昨日欠账。'],tasks:list,protectedReview:true};
+    }
+    var prior=exec17PriorDayPlanR6(vds,'base'),zc=(prior.tasks||[]).find(function(t){return t.id==='exec17_zc';});
+    if(dow===6){
+      var mock=exec17Task(vds,exec17PublicId(vds),120,'公基新卷周测：替换全部公基专项','本次公基新卷占用知识60＋数量25＋资料20＋判断15的120分钟学习预算，不再另排四项。\n只用一套没做过、尽量贴近本场范围的卷；正式科目、题量和限时待本场公告核实，不能把本块120分钟当作官方时限。核实前按所选新卷标注时限作答，在预算内核对这份新作答。\n只记录真实得分、题数、猜题、分项用时与未写完内容；不把答对题数直接换成分数，不计算尚未确认权重的折算分。\n本次新卷尚未处理的问题，放到下一学习日对应知识／能力块内等量替换；已经处理完就跳过。不是重做之前已复盘的旧卷，也不额外加30分钟。','记录：新卷来源__ / 原始分__ / 分项对__/题 / 猜题__ / 用时__ / 未处理__','公基-刷题','刷题');
+      mock.rollHint='新卷替换公基四项，共120分钟预算；已复盘原卷不再安排。';list.push(mock);
+    }else{
+      var knowledge=exec17Task(vds,exec17PublicId(vds),60,'公基知识：'+train70Knowledge(vds),'这60分钟是法律、政治及轮换知识模块的新题训练，不再用公基块包办一切。\n'+train70Knowledge(vds)+'。\n参考做10—15道没做过的新题，再只核对本组新错点和猜题依据；确有知识缺口时看相应讲义或短片段。题量服从理解和真实速度，不硬凑。\n本周新卷若确有尚未处理的对应问题，可在本60分钟内等量替换；已复盘完成的旧卷不重分类、不复做、不重抄。\n同日原有公基新题块若已实际完成，原打卡、计时和备注保留，不因本次由90调为60分钟要求重做。',result,'公基-刷题','刷题');
+      knowledge.rollHint='知识主线60分钟；数量、资料、判断另有固定训练卡，不需要选加量才出现。';list.push(knowledge);
+      var qt=exec17Task(vds,'train70_quant',25,'数量固定训练：'+q.name,'先懂一个概念再做少量新题，不以知道公式或看懂解析冒充独立会做。\n'+q.how+'\n建议约10分钟示范与讲解、约15分钟独立新变式和核对，包含记录，不再额外加复盘时间。参考题量不是必须凑满；概念仍不清就停在本训练点。\n当前点由上方“数量实际训练点”手动选择，默认百分数基数；日期过去、打卡或做过一题不会自动切到工程／行程。能独立完成新变式并说清依据，再切下一点。',result,'数量-刷题','刷题');
+      qt.rollHint='必做25分钟 · 不是可选加练；训练点按实际掌握手动切换，不按日历升级。';list.push(qt);
+      var dt=exec17Task(vds,'train70_data',20,'资料固定训练：'+train70AbilityTheme(vds,'data'),'资料4/5只是一次5题样本，保留固定小组训练，不当作已稳定掌握。\n今天主题：'+train70AbilityTheme(vds,'data')+'。选一份没做过的短材料，参考完成3—5题；先圈时间、单位、所求量，再列式。\n记录独立正确数和实际用时；刚做新题中的问题在本20分钟内核对，不重新整理已复盘旧卷，不为求快牺牲条件核对。',result,'资料-刷题','刷题');
+      dt.rollHint='必做20分钟 · 先准确读数和单位，再练速度；不依赖自选加量。';list.push(dt);
+      var rt=exec17Task(vds,'train70_reason',15,'判断固定训练：'+train70AbilityTheme(vds,'reason'),'判断1/2样本太小，先按类型轮换，不能据此直接判定强弱。\n今天主题：'+train70AbilityTheme(vds,'reason')+'。参考做3—5道没做过的新题，每题先说依据或写清条件再选。\n不会的先看一个完整示范，再做不同的新变式；只核对刚做的题，15分钟内完成记录，不追冷门难题。',result,'逻辑','刷题');
+      rt.rollHint='必做15分钟 · 图形、定义、类比、条件与论证按周轮换；不要求每类一天全刷。';list.push(rt);
+    }
+    if(zc){
+      if(dow!==6&&!(dow===5&&vds>='2026-11-27')){
+        zc.detail+='\n本块必须能记下实际新学内容，而不只是播放时长。周二／四在本课遇到一个尚未做过的新例题时，先读题干和材料，暂停独立写要点或提纲，再听同题讲解核对；已做过的例题不重做。当前片段还没有题干，就先续未学课，不凭空强写，记下本次是否出现新例题。所有尝试和核对都包含在这120分钟内，不额外叠加。';
+      }
+      zc.out='记录：实际第__节 / 视频停点__ / 新例题独立尝试有无__ / 新作答漏点或耗时__';zc.rawDetail=zc.detail;zc.rawOut=zc.out;list.push(zc);
+    }
+    if(dose==='grow'){
+      list.push(exec17Task(vds,'exec17_gj_plus',45,'主动加量①：根据新题结果选一个公基缺口','只在常规固定训练已经做稳、本人主动选择时追加45分钟。数量、资料、判断本来就在普通日必做内，这里不是它们的唯一入口。\n依据最近新题的正确数、猜题和用时，选一个仍未解决的缺口补讲与新变式；不重做已复盘旧卷，不给所有科目平均加题。',result,'公基-刷题','刷题'));
+      list.push(exec17Task(vds,'exec17_zc_plus',45,'主动加量②：综测当前未学片段／新作答','自愿追加45分钟，接未学停点或完成一个没做过的新例题。只核对本次新作答，不能用加量强行追完13节，也不挤掉睡眠。','记录：停点或新作答__ / 具体缺口__','综测-刘流13','听课'));
+    }
+    return {dayInfo:[dose==='grow'?'6.5h主动加量 · 固定训练仍优先':'5h训练日 · 六项固定必做',
+      '知识60＋数量25＋资料20＋判断15＋综测120＋记忆卡60＝300分钟。周六公基新卷替换前四项，不叠加；周日只记忆卡。两科训练时间不是分值权重；正式折算规则尚未核实。'],tasks:list,protectedReview:dow===6||(dow===5&&vds>='2026-11-27')};
+  }
+  window.train70SetQuant=function(key){
+    var today=fmt(new Date());if(!TRAIN70_QUANT_TOPICS[key]||!train70Active(today)||viewDs!==today){showToast('只在当前训练日调整数量实际训练点，历史记录不重排。','orange');return;}
+    if((typeof tOn!=='undefined'&&tOn)||isDoneId(today,'train70_quant')||isDoneId(today,'train70_rescue_quant')){showToast('今天数量任务已完成或有计时正在运行，先保留本日记录，下一学习日开始前再切换。','orange');render();return;}
+    if(exec17DayOfWeek(today)===0||today>='2026-12-18'){showToast('今天是休息／收官日，不切换新训练点。','orange');return;}
+    setNote(today,'train70_quant_focus',key);CACHE_VER++;render();showToast('已调整当前数量训练点；不新增时长、不自动打卡，也不按日期跳级。');
+  };
+  function train70QuantPanel(){
+    if(!train70Active(viewDs)||viewDs>='2026-12-18'||exec17DayOfWeek(viewDs)===0)return '';
+    var current=viewDs===fmt(new Date()),locked=!current||(typeof tOn!=='undefined'&&tOn)||isDoneId(viewDs,'train70_quant')||isDoneId(viewDs,'train70_rescue_quant'),key=train70QuantKey(viewDs);
+    return '<div class="train70-quant-control"><label for="train70-quant-focus"><b>数量实际训练点（不按日历自动升级）</b></label><select id="train70-quant-focus" onchange="train70SetQuant(this.value)" '+(locked?'disabled':'')+'>'+Object.keys(TRAIN70_QUANT_TOPICS).map(function(k){return '<option value="'+k+'" '+(k===key?'selected':'')+'>'+esc(TRAIN70_QUANT_TOPICS[k].name)+'</option>';}).join('')+'</select><div class="exec17-small">起点是百分数基数；先能独立做新变式并说清依据，再手动向后选。某天未懂就用次日同一25分钟继续，不把两天任务叠加。工程已答对一题可少讲，但不凭一题断定整类掌握。</div></div>';
+  }
+
   // 旧项档案只读取原记录，不自动勾选、不清除、不占用今天的任务卡。
   function exec17Archive(vds,plan){
     var today=fmt(new Date()),stop=vds<today?vds:today,all=[],seen={},s=store(),knownLegacyStart=dec20PlanStartDate(),legacyStart=knownLegacyStart||EXEC17_START;
@@ -8771,7 +8874,7 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
         var pp;try{pp=(d==='2026-11-16'||d>=legacyStart)?dec20LegacyDailyPlan(d):buildFor(d);}catch(e){pp={tasks:[]};}
         (pp.tasks||[]).concat(pp.carrySourceTasks||[]).forEach(function(t){if(t&&t.origDay===d&&!t.rollLegacy&&!(t.rollHint&&/本行只记录学习时段/.test(t.rollHint)))add(t);});
       }else{
-        var lm=(s.landing||{})[d]||{},started=Object.keys(lm).some(function(k){return /^exec17_/.test(k);})||Object.keys(s.landingProg||{}).some(function(k){return k.indexOf(d+'|exec17_')===0&&!/\|exec17_(mode|regular_mode|carry_choice)$/.test(k);})||(s.logs||[]).some(function(l){return l.date===d&&String(l.taskKey||'').indexOf('landing_'+d+'_exec17_')===0;});
+        var lm=(s.landing||{})[d]||{},started=Object.keys(lm).some(function(k){return /^(exec17_|train70_)/.test(k);})||Object.keys(s.landingProg||{}).some(function(k){return (k.indexOf(d+'|exec17_')===0||k.indexOf(d+'|train70_')===0)&&!(/\|exec17_(mode|regular_mode|carry_choice)$/.test(k)||/\|train70_quant_focus$/.test(k));})||(s.logs||[]).some(function(l){return l.date===d&&(String(l.taskKey||'').indexOf('landing_'+d+'_exec17_')===0||String(l.taskKey||'').indexOf('landing_'+d+'_train70_')===0);});
         if(started)(exec17DayPlan(d).tasks||[]).forEach(add);
       }
     }
@@ -8789,39 +8892,42 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
     if(['base','grow','rescue'].indexOf(mode)<0)return;
     var today=fmt(new Date());if(viewDs!==today||!exec17StudyDay(today)){showToast('只在当天学习日切换强度；历史记录不重排。','orange');return;}
     if(typeof tOn!=='undefined'&&tOn){showToast('请先结束当前计时，再切换强度。','orange');return;}
-    if(mode==='grow'&&exec17QualifiedStreak(today)<3&&!confirm('尚未核验此前连续3个学习日均完成四项必做、原计划计时达到5小时且记忆卡至少60分钟。建议先保留5h；如果线下已经稳定做到，并确认不会挤掉休息，可主动选择6.5h。仍要切换吗？'))return;
-    if(mode==='rescue'&&!confirm('应急保留25分钟公基＋25分钟综测＋10分钟收尾，并按你的选择另背记忆卡60分钟，共2小时，不计完整连续达标。已有记录不删除；下一学习日恢复原设置。今天确定使用吗？'))return;
+    if(mode==='grow'&&exec17QualifiedStreak(today)<3&&!confirm('尚未核验此前连续3个学习日完成当天必做、非记忆卡至少240分钟且记忆卡至少60分钟。先做稳知识与三个能力模块的固定训练；加量不是必选。若线下已稳定且不挤休息，仍主动选择6.5h吗？'))return;
+    if(mode==='rescue'&&!confirm('应急保留知识15＋数量10＋资料10＋判断5＋综测20＋独立记忆卡60，共2小时，不计完整达标。只影响当天，不生成明日补债。今天确定使用吗？'))return;
     if(mode!=='rescue')setNote(today,'exec17_regular_mode',mode);
     setNote(today,'exec17_mode',mode);CACHE_VER++;render();try{renderSchedule();updateDayProgress(today);}catch(e){}
-    showToast(mode==='grow'?'已主动选择6.5h（含记忆卡1h）；两科各加45分钟。':mode==='rescue'?'今天2h应急（含记忆卡1h）；不累计整天补债。':'已选择5h起步（含记忆卡1h）；不自动加量。');
+    showToast(mode==='grow'?'已主动选6.5h；固定模块仍优先，两科各追加45分钟。':mode==='rescue'?'今天应急2h；各模块缩量，不累计补债。':'已选择5h固定训练：知识、数量、资料、判断、综测、记忆卡。');
   };
   window.exec17Phone=function(checked){var today=fmt(new Date());if(viewDs!==today)return;var s=store();s.landing[today]=s.landing[today]||{};s.landingTs[today]=s.landingTs[today]||{};s.landing[today].exec17_phone=!!checked;s.landingTs[today].exec17_phone=Date.now();saveLocal();saveCloud();};
   window.exec17OpenDate=function(d){if(!/^\d{4}-\d{2}-\d{2}$/.test(d))return;curDate=parse(d);renderSchedule();applyView(d);render();window.scrollTo(0,0);};
-  window.exec17Borrow=function(d,id){
-    var today=fmt(new Date());if(viewDs!==today||!exec17StudyDay(today)||exec17Dose(today)==='rescue'){showToast('只在当天普通学习日借用一个旧错点。','orange');return;}
-    var p=exec17DayPlan(today);if(p.protectedReview){showToast('今天的周测／综测精改需要保护，不替换复习块。','orange');return;}
-    if(isDoneId(today,'exec17_review')||(typeof tOn!=='undefined'&&tOn)){showToast('请勿改写已完成或正在计时的学习安排。','orange');return;}
-    var source=carryQueue.find(function(t){return t.origDay===d&&t.origId===id;});if(!source)return;
-    setNote(today,'exec17_carry_choice',JSON.stringify({d:d,id:id,title:String(source.rawTitle||source.title||'').slice(0,110)}));
-    CACHE_VER++;render();showToast('已替换今天30分钟短复习；只借一个错点，不自动结清旧任务。');
-  };
+  window.exec17Borrow=function(d,id){showToast('已取消旧错题替换必做项；旧记录只读保留。若你主动想加练，可在完成当天计划后添加自选科目。','orange');};
   window.exec17ToggleDetail=function(id,open){exec17DetailOpen[id]=!!open;};
   window.exec17ToggleArchive=function(open){exec17ArchiveOpen=!!open;};
-  function exec17Controls(){
+  function exec17ControlsR6(){
     var today=fmt(new Date()),current=viewDs===today,dose=exec17Dose(viewDs),study=exec17StudyDay(viewDs),lm=(D.landing||{})[viewDs]||{},core=exec17CoreIds(viewDs),n=core.filter(function(k){return !!lm[k];}).length;
     var disabled=!current||!study?' disabled':'',phone=!!lm.exec17_phone,storageWarning='';
     try{localStorage.getItem('doit2026_dashboard_v1');}catch(e){storageWarning='<div style="margin:8px 0;padding:9px;border:1px solid #fcd34d;border-radius:8px;background:#fffbeb;color:#92400e;font-size:11px"><b>当前是受限预览／存储不可用。</b>此处打卡可能无法保存。请下载后在原浏览器或原站点打开；若记录未显示，先从旧版导出备份再导入，不要清除旧数据。</div>';}
-    var status=exec17EveningDay(viewDs)?n+'/'+core.length+'个今晚步骤 · 仅统计综测短块、收尾和今日记忆卡（最多60min）；全天记录在统计中保留':dose==='rescue'?'应急不计连续达标':n+'/'+core.length+'个核心块 · 原计划计时'+(exec17RequiredMinutes(viewDs)/60).toFixed(1)+'h'+(exec17OptionalMinutes(viewDs)>0?' · 自选额外'+(exec17OptionalMinutes(viewDs)/60).toFixed(1)+'h':'');
-    var buttons=study?'<div class="exec17-dose-grid">'+[['base','5h 起步'],['grow','6.5h 稳定后加量'],['rescue','2h 当天应急']].map(function(x){return '<button type="button" class="exec17-dose '+(dose===x[0]?'is-on':'')+'" onclick="exec17SetDose(\''+x[0]+'\')"'+disabled+'>'+x[1]+'</button>';}).join('')+'</div>':'';
+    var status=exec17EveningDay(viewDs)?n+'/'+core.length+'个今晚步骤 · 仅统计综测短块、收尾和今日记忆卡（最多60min）；全天记录在统计中保留':dose==='rescue'?'应急不计连续达标':n+'/'+core.length+'个核心块 · 当前必做计时'+(exec17RequiredMinutes(viewDs)/60).toFixed(1)+'h'+(exec17OptionalMinutes(viewDs)>0?' · 自选额外'+(exec17OptionalMinutes(viewDs)/60).toFixed(1)+'h':'');
+    var buttons=study?'<div class="exec17-dose-grid">'+[['base','4.5h 普通日'],['grow','6h 稳定后自选'],['rescue','2h 当天应急']].map(function(x){return '<button type="button" class="exec17-dose '+(dose===x[0]?'is-on':'')+'" onclick="exec17SetDose(\''+x[0]+'\')"'+disabled+'>'+x[1]+'</button>';}).join('')+'</div>':'';
     var phoneBox=current&&study?'<label class="exec17-phone"><input type="checkbox" '+(phone?'checked':'')+' onchange="exec17Phone(this.checked)"><span><b>开始前：手机已离手，或已开勿扰并限制娱乐应用</b><br><small>本网页只提醒，不会锁手机；休息先结束计时，短休息不刷短视频。</small></span></label>':'';
-    var grow=!exec17EveningDay(viewDs)&&dose==='grow'?'<div class="exec17-small">加量块：'+['exec17_gj_plus','exec17_zc_plus'].filter(function(k){return !!lm[k];}).length+'/2；四项必做仍优先，不用加量补旧整天欠账。</div>':'';
+    var grow=!exec17EveningDay(viewDs)&&dose==='grow'?'<div class="exec17-small">加量块：'+['exec17_gj_plus','exec17_zc_plus'].filter(function(k){return !!lm[k];}).length+'/2；当前三项必做优先，不用加量补已完成的旧卷。</div>':'';
     return storageWarning+exec17EveningPanel()+'<div class="exec17-panel"><div class="exec17-kicker">11/17 双科执行校准 · '+esc(exec17GoalLabel(viewDs))+'</div>'
       +'<div class="exec17-scoreline"><b>公基50.6</b>（51/100） · <b>综测50多</b> · 两科并行</div>'
-      +'<div class="exec17-small">法律9/24、政治15/27的本次旧卷已复盘；以后用新题检验，不重复诊断。常识7/14固定短补，公文7/9压缩长课。</div>'
+      +'<div class="exec17-small">本次旧卷及旧错题已复盘；公基只做新题或补新题新暴露的缺口，不再安排公文等旧题复测。120分钟指继续未听的新课，不是旧题复盘。</div>'
       +buttons+'<div class="exec17-small">'+esc(status)+'</div>'+grow
-      +(study?'<div class="exec17-small">此前连续学习日核验：'+exec17QualifiedStreak(viewDs)+'/3（四项完成＋5h计时，其中记忆卡≥60min；离开时如实暂停）。只勾选不等于有效学习，日期过去不会自动升级。</div>':'')
-      +phoneBox+'<details class="exec17-guide"><summary>执行规则与最新成绩依据</summary><div>11/17晚间只按上方收口清单，不补白天5h。其他常规学习日先完成5h，再主动加到6.5h；两者都含每天固定记忆卡1h，这是目标，不是锁定下一天的门槛。迟开始不作废，直接接着做。周日仅记忆卡1h，应急共2h，考前减量日也保留1h背诵，12/20考试日不加。娱乐留到固定窗口；旧项只存档，普通日可借一个错点替换30分钟短复习。<br>分项、阶段与每周节奏见「总规划」。考试沿用12/20目标，具体以本场公告和准考证为准。</div></details></div>';
+      +(study?'<div class="exec17-small">此前连续学习日核验：'+exec17QualifiedStreak(viewDs)+'/3（三项完成＋非记忆卡≥210min＋记忆卡≥60min；离开时如实暂停）。不计自选及已取消复盘，日期过去不会自动升级。</div>':'')
+      +phoneBox+'<details class="exec17-guide"><summary>执行规则与最新成绩依据</summary><div>已删除固定30分钟旧错题复测，不换任务凑5h。普通日公基新题90分钟＋综测未学新课120分钟＋记忆卡60分钟，共4.5h；主动加量才到6h。新题新卷只在原块内核对，已复盘的旧卷不重做。迟开始不作废，不锁下一天。周日仅记忆卡1h，应急共2h，考前减量日也保留1h背诵，12/20考试日不加。旧项只读存档，取消借用复习功能。<br>分项、阶段与每周节奏见「总规划」。考试沿用12/20目标，具体以本场公告和准考证为准。</div></details></div>';
   }
+  function exec17Controls(){
+    if(!train70Active(viewDs))return exec17ControlsR6();
+    var today=fmt(new Date()),current=viewDs===today,dose=exec17Dose(viewDs),study=exec17StudyDay(viewDs),c=train70Counts(viewDs),lm=(D.landing||{})[viewDs]||{},warning='';
+    try{localStorage.getItem('doit2026_dashboard_v1');}catch(e){warning='<div class="exec17-callout"><b>当前是受限预览／存储不可用。</b>请下载后在原浏览器或原站点打开；不要清除旧数据。</div>';}
+    var buttons=study?'<div class="exec17-dose-grid">'+[['base','5h 固定训练'],['grow','6.5h 稳定后自选'],['rescue','2h 当天应急']].map(function(x){return '<button type="button" class="exec17-dose '+(dose===x[0]?'is-on':'')+'" onclick="exec17SetDose(\''+x[0]+'\')" '+(!current?'disabled':'')+'>'+x[1]+'</button>';}).join('')+'</div>':'';
+    var phone=current&&study?'<label class="exec17-phone"><input type="checkbox" '+(lm.exec17_phone?'checked':'')+' onchange="exec17Phone(this.checked)"><span><b>开始前：手机离手，或开勿扰并限制娱乐应用</b><br><small>短块开始就做第一步，不等待整段状态；休息先结束计时。</small></span></label>':'';
+    var status=c.done+'/'+c.total+'个当日必做 · 当前必做计时'+(exec17RequiredMinutes(viewDs)/60).toFixed(1)+'h'+(exec17OptionalMinutes(viewDs)?' · 自选额外'+(exec17OptionalMinutes(viewDs)/60).toFixed(1)+'h':'');
+    return warning+'<div class="exec17-panel" id="train70-daily-panel"><div class="exec17-kicker">70分目标训练 · '+esc(exec17GoalLabel(viewDs))+'</div><div class="exec17-scoreline"><b>12/20 四川事业单位</b> · 目标：笔试折算70分</div><p class="exec17-small"><b>权重待核实：</b>不默认两科各占50%，不生成折算分。当前配额按训练需要起步，不是分值权重。</p>'+buttons+'<div class="exec17-small">'+esc(status)+'</div>'+(study?'<div class="exec17-small">此前连续训练日：'+exec17QualifiedStreak(viewDs)+'/3；须当日必做全完成、非记忆卡≥240分钟且记忆卡≥60分钟才核验完整达标。应急不计。</div>':'')+phone+train70QuantPanel()+'<details class="exec17-guide"><summary>本版为什么这样排／怎么反馈</summary><div>普通日：知识60＋数量25＋资料20＋判断15＋综测120＋记忆卡60＝300分钟。知识由90调60，能力三项固定增加，不再依赖自选；这不是把已取消的旧题复测补回。周六公基新卷替换前四项，共120分钟；周日仅记忆卡。完整首周与阶段安排见“总规划”。<br>数量从实际概念起点出发，未懂不按日期跳级；资料/判断按类型轮换，轮换不代表已经掌握。每块备注写新题来源、独立题数/正确数、实际用时及卡点。把结果发到聊天后据此调整下一轮；页面不会仅凭勾选自动判断能力。<br>综测只接真实未学停点，课内新例题尝试包含在120分钟中，不重改旧稿。课程整节进度独立标记。旧卷已复盘，不再复做、不重新分类，也不进次日欠账。旧记录全保留；同日知识/综测/记忆卡已完成的不重复，三个新增能力块各用独立ID。<br>迟开始不废掉全天；可临时选应急2h（知识15＋数量10＋资料10＋判断5＋综测20＋记忆卡60），次日恢复原设置。未完成如实保留，不熬夜补两天。自选仍须当天计划全完成后才开放，独立统计、不替代必做。</div></details></div>';
+  }
+
   function exec17CoursePanel(){
     var p=rollData(),next=rollNextLesson(p),done=0;for(var n=1;n<=13;n++)if((p.lessons[String(n)]||{}).done)done++;
     var rows='';for(var i=1;i<=13;i++){var yes=!!(p.lessons[String(i)]||{}).done,txt=rollNote(p,'lessonNotes',i);rows+='<label class="exec17-lesson-row"><input type="checkbox" data-roll-lesson="'+i+'" '+(yes?'checked':'')+' onchange="rollingSetLesson('+i+',this.checked)"><span>第'+i+'节'+(txt?' <small>（'+esc(txt)+'）</small>':'')+'</span></label>';}
@@ -8829,17 +8935,16 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
     var body=next?rollNoteField('lessonNotes',next,rollNote(p,'lessonNotes',next),'记实际停点与例题漏点；没听完不要勾整节完成')+'<div style="margin-top:7px">'+rollButton('整节已听完（不等于会作答）','rollingSetLesson('+next+',true)')+'</div>':'';
     var topicRows=ROLL_TOPICS.map(function(it){var yes=!!(p.topics[it.key]||{}).done;return '<label class="exec17-lesson-row"><input type="checkbox" data-roll-topic="'+it.key+'" '+(yes?'checked':'')+' onchange="rollingSetTopic(\''+it.key+'\',this.checked)"><span>'+esc(it.name)+'</span></label>';}).join('');
     return '<div class="exec17-course"><div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap"><b>'+esc(nextLine)+'</b><span data-roll-count="lessons">当前 '+done+'/13</span></div>'
-      +'<div class="exec17-small">确认起点为已听第1节；已有本机/同步标记优先，可在下方纠正。每节原长2—3h，可拆两次；每周约3节仅为参考，不按日期自动跳课。听课、独写、改稿同步，不等完课才练整套。</div>'+body
+      +'<div class="exec17-small">确认起点为已听第1节；已有本机/同步标记优先，可在下方纠正。每节原长2—3h，可拆两次；每周约3节仅为参考，不按日期自动跳课。这里只接实际未学片段；课堂新例题可先尝试再核对，不额外重改已复盘旧稿。任务打卡不会自动完成整节。</div>'+body
       +'<details '+(rollDetailOpen.lessons?'open':'')+' ontoggle="rollingDetails(\'lessons\',this.open)" class="exec17-guide"><summary>查看／纠正13节真实进度</summary>'+rows+'</details>'
       +'<details '+(rollDetailOpen.topics?'open':'')+' ontoggle="rollingDetails(\'topics\',this.open)" class="exec17-guide"><summary>保留的6项公基专项记录（不控制当前排课）</summary><div class="exec17-small">仅保留原状态，不再按公文→行政法等固定队列决定今天学什么；当前优先级按本次与后续周测错点。</div>'+topicRows+'</details></div>';
   }
   function exec17ArchivePanel(){
     if(!carryQueue.length)return '';
-    var today=fmt(new Date()),can=viewDs===today&&exec17StudyDay(today)&&exec17Dose(today)!=='rescue'&&!exec17DayPlan(today).protectedReview;
     var rows=carryQueue.map(function(t){var title=String(t.rawTitle||t.title||'').replace(/^续做（[^）]+）·\s*/,''),source=t.origDay,id=t.origId,note=noteOf(source,id);
-      return '<div class="exec17-archive-row"><div><b>'+esc(source.slice(5).replace('-','/'))+' · '+esc(title)+'</b>'+(note?'<div class="exec17-small">原记录：'+esc(note)+'</div>':'')+'</div><div class="exec17-archive-actions"><button type="button" onclick="exec17OpenDate('+esc(JSON.stringify(source))+')">查看原日</button>'+(can?'<button type="button" onclick="exec17Borrow('+esc(JSON.stringify(source))+','+esc(JSON.stringify(id))+')">借用30min复习</button>':'')+'</div></div>';
+      return '<div class="exec17-archive-row"><div><b>'+esc(source.slice(5).replace('-','/'))+' · '+esc(title)+'</b>'+(note?'<div class="exec17-small">原记录：'+esc(note)+'</div>':'')+'</div><div class="exec17-archive-actions"><button type="button" onclick="exec17OpenDate('+esc(JSON.stringify(source))+')">查看原日</button></div></div>';
     }).join('');
-    return '<details id="exec17-archive" class="exec17-archive" '+(exec17ArchiveOpen?'open':'')+' ontoggle="exec17ToggleArchive(this.open)"><summary>旧项档案 · '+carryQueue.length+'条未完成（不占用今日任务）</summary><div class="exec17-small">记录保留，不自动结清、不自动顺延成整天欠账。仅普通日可主动选一条中的一个错点，替换30分钟短复习；周测和综测精改不可替换。借用后不会把原整块冒充完成。没有原打卡、备注或计时证据的日期不批量生成欠项；历史考试与用品事项不作学习补债。</div><div style="max-height:350px;overflow:auto">'+rows+'</div></details>';
+    return '<details id="exec17-archive" class="exec17-archive" '+(exec17ArchiveOpen?'open':'')+' ontoggle="exec17ToggleArchive(this.open)"><summary>历史条目 · '+carryQueue.length+'条（只读，不是补做清单）</summary><div class="exec17-small">原打卡、备注和计时保留，不自动结清，也不作为今日或次日欠账。已取消重复旧复盘及“借用30分钟”入口；不会换个名字塞回必做。若你主动想练某题，可完成当日计划后另加自选，原日记录不改。</div><div style="max-height:350px;overflow:auto">'+rows+'</div></details>';
   }
   window.__exec17Inspect=function(d){var p=exec17DayPlan(d||viewDs),a=exec17Archive(d||viewDs,p);return {date:d||viewDs,dose:exec17Dose(d||viewDs),target:exec17Target(d||viewDs),qualified:exec17QualifiedStreak(d||viewDs),protectedReview:p.protectedReview,evening:exec17EveningDay(d||viewDs),remaining:exec17EveningDay(d||viewDs)?exec17EveningRemaining(d||viewDs):null,tasks:p.tasks.map(function(t){return {id:t.id,title:t.title,minutes:t.exec17Minutes,subject:t.exec17Subject,optional:!!t.exec17Optional,dailyMemory:!!t.exec17DailyMemory,detail:t.detail};}),archive:a.carryQueue.map(function(t){return {date:t.origDay,id:t.origId,title:t.title};}),lessonState:rollingLessonState()};};
 
@@ -9675,15 +9780,16 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
     var notes=[];
     try{
       Object.keys(D.landingProg||{}).forEach(function(k){
-        var p=k.split('|'); if(p[0]!==d||/^exec17_(mode|regular_mode|carry_choice)$/.test(p[1])||/^exec17_customdef_/.test(p[1])) return;
+        var p=k.split('|'); if(p[0]!==d||/^exec17_(mode|regular_mode|carry_choice)$/.test(p[1])||p[1]==='train70_quant_focus'||/^exec17_customdef_/.test(p[1])) return;
         var n=(D.landingProg[k]||{}).note; if(!n) return;
         var name=p[1], bs=exec17Applies(d)?exec17DayPlan(d).tasks:(baseOf(d).tasks||[]);
         for(var i=0;i<bs.length;i++){ if(bs[i].id===p[1]){ name=bs[i].title; break; } }
         if(exec17RetiredDiagnostic(d,p[1]))name='已移除诊断的原笔记（保留，不安排重做）';
+        if(exec17RetiredReview(d,p[1]))name='已取消旧复盘的原笔记（保留，不安排重做）';
         notes.push({id:p[1],name:String(name).replace(/^【明天再做】/,''),note:n});
       });
     }catch(e){}
-    return {date:d,done:done,openProg:openProg,openDrill:openDrill,deferred:deferred,total:tasks.length-deferred.length,mins:mins,notes:notes,optionalDone:optionalDone,optionalOpen:optionalOpen,optionalMins:exec17Applies(d)?exec17OptionalMinutes(d):0,memoryMins:exec17MemoryMinutes(d),memoryTarget:exec17MemoryActive(d)?60:0,future:(d>fmt(new Date()))};
+    return {date:d,done:done,openProg:openProg,openDrill:openDrill,deferred:deferred,total:tasks.length-deferred.length,mins:mins,notes:notes,optionalDone:optionalDone,optionalOpen:optionalOpen,optionalMins:exec17Applies(d)?exec17OptionalMinutes(d):0,memoryMins:exec17MemoryMinutes(d),memoryTarget:exec17MemoryActive(d)?60:0,trainingGoal:train70Active(d)?TRAIN70_GOAL:null,quantFocus:train70Active(d)?train70QuantKey(d):null,requiredMins:exec17Applies(d)?exec17RequiredMinutes(d):mins,retiredMins:exec17Applies(d)?exec17RetiredMinutes(d):0,future:(d>fmt(new Date()))};
   }
   function curWeekNo(){ try{ return Math.max(1,Math.ceil(dayIdx(new Date())/7)||1); }catch(e){ return 1; } }
   // 第 N 周 = 课表第 (N-1)*7+1 ~ N*7 天（跟「统计/总规划」里的第几周一致）
@@ -9727,6 +9833,7 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
       if(x.optionalDone&&x.optionalDone.length)L.push('  ➕ 自选已完成：'+brief(x.optionalDone,10));
       if(x.optionalOpen&&x.optionalOpen.length)L.push('  ➕ 自选未完成（不滚欠账）：'+brief(x.optionalOpen,6));
       if(x.optionalMins)L.push('  ⏱ 其中自选加练 '+x.optionalMins+'min（不替代原计划）');
+      if(x.retiredMins)L.push('  🗂 已取消任务的历史计时 '+x.retiredMins+'min（保留原记录，不计当前必做，也不要求重做）');
       if(x.openProg.length) L.push((exec17Applies(x.date)?'  ⏳ 未完成（保留记录，不自动挤占主线）：':'  ⏳ 未完成（历史口径）：')+brief(x.openProg));
       if(x.openDrill.length) L.push((exec17Applies(x.date)?'  🔁 未完成练习（按错点再安排）：':'  🔁 练习类顺延（历史口径）：')+brief(x.openDrill));
       if(x.deferred.length) L.push('  ↪ 已顺延：'+brief(x.deferred,4));
@@ -9951,5 +10058,5 @@ window.addEventListener('storage',function(e){
 });
 </script>
 
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a5bf30ab5ba6155d',t:'MTc5NDkyMzI3Ng=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a5bf30ab5ba6155d',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a5c360d55ca51f07',t:'MTc5NDk2NzE5MQ=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a5c360d55ca51f07',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
