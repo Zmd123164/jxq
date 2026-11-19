@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Doit · 记忆卡导入与同步修复 | 2026-11-17 r13</title>
+<title>Doit · 连接状态安全恢复 | 2026-11-17 r14</title>
 <style>
 :root{
   --bg:#f0f6ff;--surface:#fff;--s2:#f7faff;--border:#d0e2ff;
@@ -232,7 +232,7 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
 .train11-baseline,.train11-rhythm,.train11-evidence{margin:12px 0;padding:12px;border:1px solid #bfd5f5;border-radius:10px;background:#f7faff;color:#193d6a;font-size:12px;line-height:1.7;overflow-wrap:anywhere}.train11-baseline b,.train11-baseline span,.train11-baseline small,.train11-rhythm b,.train11-rhythm>span{display:block}.train11-baseline small,.train11-line{font-size:11px;color:#64748b}.train11-rhythm>span+span{margin-top:5px}.train11-evidence{background:#fff;scroll-margin-top:170px}.train11-evidence h3{font-size:14px;margin:0 0 7px}.train11-score-state{display:grid;grid-template-columns:35px minmax(0,1fr);gap:6px;margin:9px 0;padding:9px 0;border-top:1px solid #e2e8f0}.train11-score-state span{min-width:0}.train11-score-state small{display:block;color:#64748b;font-size:10px}.train11-score-state strong{grid-column:2;font-size:11px;color:#1d4ed8}.train11-status{padding:8px;background:#eff6ff;border-radius:7px;font-size:11px}.train11-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:12px}.train11-form-grid label{display:flex;flex-direction:column;min-width:0;font-size:11px;color:#475569}.train11-form-grid input,.train11-form-grid select{box-sizing:border-box;width:100%;min-width:0;max-width:100%;padding:8px 6px;border:1px solid #bfd1eb;border-radius:6px;background:white;color:#1e3a5f;font:inherit;font-size:13px}.train11-wide{grid-column:1/-1}.train11-form-actions{display:flex;gap:7px;flex-wrap:wrap;margin:11px 0}.train11-form-actions button,.train11-score-shortcut{padding:8px 10px;border:1px solid #93b4ef;border-radius:7px;color:#1d4ed8;background:#eff6ff;font-size:12px}.train11-form-actions button[type=submit]{background:#2563eb;color:#fff}.train11-score-shortcut{margin:7px 0 2px;font-size:11px}#train11-score-message{font-size:11px;white-space:pre-wrap}@media(max-width:420px){.train11-baseline,.train11-rhythm,.train11-evidence{padding:10px}.train11-form-grid{gap:7px}.train11-score-state{grid-template-columns:29px minmax(0,1fr)}}
 
 </style>
-<meta name="doit-release" content="2026-11-17-execution-r13-memory-import-sync">
+<meta name="doit-release" content="2026-11-17-execution-r14-safe-connection-recovery">
 </head>
 <body>
 
@@ -269,7 +269,7 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
     <button class="tb" onclick="showMemoryCard()" style="display:inline-flex;align-items:center">🧠 记忆卡</button>
   </div>
   <div style="font-size:10px;margin-top:4px;opacity:.8;cursor:pointer;display:inline-block" id="sync-status" onclick="manualSync()" title="点击立即同步合并">⚪ 未配置</div>
-  <div id="app-version" style="font-size:10px;margin-top:3px;opacity:.8">✅ Doit r13 · 简洁课表 · 记忆卡同步修复</div>
+  <div id="app-version" style="font-size:10px;margin-top:3px;opacity:.8">✅ Doit r14 · 简洁课表 · 连接安全恢复</div>
 </div>
 
 <div class="main">
@@ -746,6 +746,14 @@ CREATE TABLE IF NOT EXISTS doit_sync_backup (
     <label style="display:flex;gap:8px;align-items:flex-start;font-size:12px;line-height:1.6;margin:8px 0"><input type="checkbox" id="cf-ack-backups" style="margin-top:4px"><span>我已在<strong>两台设备分别</strong>导出仪表盘和记忆卡备份，并保存好未提交的周反馈草稿。</span></label>
     <label style="display:flex;gap:8px;align-items:flex-start;font-size:12px;line-height:1.6;margin:8px 0"><input type="checkbox" id="cf-ack-order" style="margin-top:4px"><span>我已确认：云端为空时这台是<strong>有最新进度</strong>的设备；连接另一台前，最新设备已完成同步。</span></label>
     <div id="cf-test-result" role="status" style="font-size:12px;line-height:1.7;color:var(--t2);white-space:pre-wrap;overflow-wrap:anywhere">尚未只读测试。测试本身不合并、不上传，也不修改旧 JSONBin。</div>
+    <details id="cf-reconnect-panel" style="margin-top:11px;padding:10px 12px;border:1px solid #f59e0b;border-radius:9px;background:#fffbeb;color:#92400e;font-size:12px;line-height:1.7;overflow-wrap:anywhere">
+      <summary style="cursor:pointer;font-weight:700">连接状态不一致？安全重新绑定（r14）</summary>
+      <div id="cf-reconnect-diagnostic" role="status" style="margin-top:8px;white-space:pre-wrap"></div>
+      <p style="margin:7px 0">只修本机连接：使用上方填写的地址和密钥，自动重新只读核验，不需要反复点“测试／启用”。不会自动采用存档里不同的连接，不会建库或清空数据；云端为空、版本回退、真实并发或本机仍写不进去时继续停止。</p>
+      <label style="display:flex;align-items:flex-start;gap:8px;margin:8px 0"><input type="checkbox" id="cf-reconnect-ack" style="margin-top:5px"><span>我已私下与另一台核对：<strong>上方地址和密钥属于另一台当前正在使用的同一套 Doit 同步服务</strong>。原有两项备份／顺序确认仍有效；不把密钥发到聊天或截图中。</span></label>
+      <button type="button" id="cf-reconnect-button" onclick="r14ReconnectAndSync()" style="padding:9px 12px;border:1px solid #b45309;border-radius:8px;background:#92400e;color:#fff;font-weight:700;cursor:pointer">核对连接并安全重连</button>
+      <div id="cf-reconnect-result" role="status" aria-live="polite" style="margin-top:8px;white-space:pre-wrap">本入口会先保存一份不含连接密钥的保护备份，再经两次只读核验和明确确认，合并并核验保存，最后等待服务器确认。重连后自动同步暂关，可在成功后手动开启。</div>
+    </details>
     <div style="margin-top:12px;padding:10px 12px;background:var(--s2);border:1px solid var(--border);border-radius:9px">
       <div id="cf-status" style="font-size:13px;font-weight:700">⚪ Cloudflare 同步尚未启用</div>
       <div id="cf-detail" style="font-size:11px;line-height:1.6;color:var(--t2);white-space:pre-wrap;margin-top:4px"></div>
@@ -1348,6 +1356,7 @@ async function doitImportLegacyCloud(){
   CLOUD.legacySourceCopiedAt=Date.now();saveCloudCfg(CLOUD);
 }
 async function doitPrepareCloud(silent){
+  if(_r14ReconnectBusy)return false;
   if(cfIsActive()){if(!silent)showToast('Cloudflare 同步启用中；旧 JSONBin 保留但不会连接。','orange');return false;}
   if(_doitPreparing){_pendingSave=true;_markSyncPending(true);return false;}
   try{
@@ -1369,6 +1378,7 @@ async function doitPrepareCloud(silent){
 function doitConnectionCode(){return /^[a-f0-9]{24}$/i.test(CLOUD.binId||'')&&CLOUD.binId!==CLOUD.legacySourceBinId?'DOIT3:'+CLOUD.binId:'';}
 async function doitCopyConnection(){var code=doitConnectionCode();if(!code){showToast('先在本台创建Doit专用云端，并等待完整同步成功。','orange');return;}try{await navigator.clipboard.writeText(code);showToast('已复制Doit连接码（不含密钥）');}catch(e){prompt('复制Doit连接码（不含密钥）；另一台仍使用自己的Master Key',code);}}
 async function doitConnectCode(){
+  if(_r14ReconnectBusy)return false;
   if(cfIsActive()){showToast('请先明确切回旧 JSONBin，再使用旧连接码。','orange');return false;}
   var el=document.getElementById('doit-connect-code'),text=(el&&el.value||'').trim(),id=text.replace(/^DOIT3:/i,'');if(!/^[a-f0-9]{24}$/i.test(id)){showToast('请粘贴另一台Doit的连接码。','orange');return false;}if(CLOUD.legacySourceBinId&&id.toLowerCase()===CLOUD.legacySourceBinId.toLowerCase()){showToast('这是旧共用Bin，不能作为Doit独立云端。','orange');return false;}
   if(!confirm('连接另一台Doit的专用云端并合并本机记录？不会修改index原配置或原Bin。'))return false;
@@ -6015,7 +6025,7 @@ function stripImgs(data){
 
 async function fetchWithTimeout(url, options={}, timeoutMs=13000){
   const legacy=new URL(url,location.href).hostname==='api.jsonbin.io';
-  if(legacy&&cfIsActive())throw Error('Cloudflare 模式不会请求或改写旧 JSONBin。');
+  if(legacy&&(cfIsActive()||_r14ReconnectBusy))throw Error('Cloudflare 模式或安全重连期间不会请求或改写旧 JSONBin。');
   doitProtectRequest(url,options);
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
@@ -6481,6 +6491,7 @@ function _syncFail(e,label){
   setSyncStatus('pending');_scheduleSyncRetry();
 }
 async function cloudSave(silent=true,force=false){
+  if(_r14ReconnectBusy)return false;
   if(cfIsActive())return cfSync(!silent);
   if(!silent)cancelQueuedCloudSave();
   if(force&&_splitAutoTimer){clearTimeout(_splitAutoTimer);_splitAutoTimer=0;}
@@ -6543,6 +6554,7 @@ async function cloudSave(silent=true,force=false){
   }
 }
 async function cloudLoad(silent,manual,seedResponse){
+  if(_r14ReconnectBusy)return false;
   if(cfIsActive())return cfSync(manual===true||!silent);
   var explicit=manual===true||!silent;if(explicit)_clearSyncHold();
   if(DOIT_ID_BLOCKED||(_syncHold&&!explicit)){_pendingSave=true;_markSyncPending(true);setSyncStatus('pending');return false;}
@@ -6970,6 +6982,7 @@ function doitCurrentEnvelope(){
 }
 var _doitPollRunning=false,_doitPollLast=0;
 async function doitPollVisible(foreground){
+  if(_r14ReconnectBusy)return false;
   if(cfIsActive())return cfPoll(foreground);
   if(document.hidden||!CLOUD.autoSync||!CLOUD.apiKey||!CLOUD.binId||
      !_netOnline()||_pageLeaving||_syncHold||DOIT_ID_BLOCKED||_pendingSave||_syncing||_pullBusy||_doitPollRunning)return false;
@@ -6994,6 +7007,7 @@ setInterval(function(){doitPollVisible(false);},DOIT_POLL_MS);
 // 对外的「拉取合并」入口：占全局锁，跑完把合并结果传上去
 
 async function cloudCreateBin(){
+  if(_r14ReconnectBusy)return false;
   if(cfIsActive()){showToast('Cloudflare 模式不会创建或修改 JSONBin。','orange');return false;}
   const key=document.getElementById('cfg-api-key').value.trim();if(key)CLOUD.apiKey=key;
   const binEl=document.getElementById('cfg-bin-id');
@@ -7985,7 +7999,7 @@ function r9CommitEnvelope(merged,g,nextCfg){
   const oldHold=_cfHold,oldError=_cfError;
   const text=JSON.stringify(d);writes.push([KEY,text]);
   if(nextCfg)writes.push([CF_SYNC_CFG_KEY,JSON.stringify(nextCfg)]);
-  writes.push([cfIsActive()?CF_SYNC_DIRTY_KEY:'doit_sync_pending_v1','1']);
+  writes.push([((nextCfg&&nextCfg.enabled===true)||cfIsActive())?CF_SYNC_DIRTY_KEY:'doit_sync_pending_v1','1']);
   const expected=r9WriteChecked(writes,g);
   Object.keys(D).forEach(k=>{if(!Object.prototype.hasOwnProperty.call(d,k))delete D[k];});
   Object.keys(d).forEach(k=>Object.defineProperty(D,k,{value:d[k],writable:true,enumerable:true,configurable:true}));syncSnapshot();
@@ -8022,9 +8036,133 @@ async function importLocalData(input){
     const message=(e&&e.message)||'导入未完成；原记录保留。';r9ImportMessage('⚠️ '+message,e&&e.r9Code==='blocked'?'blocked':'failed');showToast(message,'orange');return false;
   }finally{input.value='';_r9ImportBusy=false;}
 }
+/* r14: explicit, read-verified rebinding. Never select a changed connection silently. */
+var _r14ReconnectBusy=false;
+function r14StoredConfig(raw){
+  if(raw===null||raw==='')return {value:null,code:'CFG-MISSING',message:'本机保存的连接配置缺失'};
+  let v;try{v=JSON.parse(raw);}catch(e){return {value:null,code:'CFG-JSON',message:'本机保存的连接配置不是完整 JSON'};}
+  if(!cfPlain(v))return {value:null,code:'CFG-SHAPE',message:'本机保存的连接配置不是有效对象'};
+  if(typeof v.enabled!=='boolean')return {value:v,code:'CFG-ENABLED',message:'本机连接的启用标记格式异常'};
+  if(v.invalid)return {value:v,code:'CFG-INVALID',message:'本机连接被标记为无法读取'};
+  if(v.enabled!==true)return {value:v,code:'CFG-DISABLED',message:'本机保存的连接处于未启用状态'};
+  return {value:v,code:'CFG-OK',message:'本机保存的连接已启用'};
+}
+function r14Origin(c){
+  if(!c||typeof c.url!=='string')return '';
+  try{const u=new URL(c.url);return u.protocol==='https:'&&!u.username&&!u.password&&!u.search&&!u.hash&&(u.pathname==='/'||u.pathname==='')?u.origin:'';}catch(e){return '';}
+}
+function r14ConfigStatus(raw){
+  const x=r14StoredConfig(raw),v=x.value,m=_cfCfg;
+  if(x.code!=='CFG-OK')return x;
+  if(!m||m.invalid)return {value:v,code:'PAGE-CONFIG',message:'本机配置可读取，但本页连接尚未正确载入'};
+  if(m.enabled!==v.enabled)return {value:v,code:'CFG-STATE',message:'本页与本机保存的启用状态不一致'};
+  if(!r14Origin(v)||r14Origin(v)!==r14Origin(m)||String(v.url||'')!==String(m.url||''))return {value:v,code:'CFG-ADDRESS',message:'本页与本机保存的同步地址不一致'};
+  if(String(v.token||'')!==String(m.token||''))return {value:v,code:'CFG-SECRET',message:'本页与本机保存的同步密钥不一致（不显示密钥）'};
+  if(raw!==_cfObservedCfg)return {value:v,code:'CFG-UPDATED',message:'本机连接或版本标记已更新，本页尚未重新核验'};
+  return {value:v,code:'CFG-MATCH',message:'本页与本机保存的连接字段一致'};
+}
+function r14PaintReconnect(){
+  const e=document.getElementById('cf-reconnect-diagnostic');
+  if(e){try{const x=r14ConfigStatus(localStorage.getItem(CF_SYNC_CFG_KEY));e.textContent='['+x.code+'] '+x.message+'。此检查不读取云端、不显示或导出密钥。';}catch(err){e.textContent='[CFG-READ] 无法读取本机连接配置。请保留当前页面和已有备份，不要清除网站数据。';}}
+  const b=document.getElementById('cf-reconnect-button');if(b)b.disabled=!!_r14ReconnectBusy;
+}
+function r14OpenReconnect(){
+  const p=document.getElementById('cf-reconnect-panel');if(p)p.open=true;r14PaintReconnect();
+}
+function r14ReconnectResult(message){const e=document.getElementById('cf-reconnect-result');if(e)e.textContent=message;}
+function r14Fail(message,code){const e=r9Fail(message,'blocked');e.r14Code=code;return e;}
+function r14Ready(own){
+  if((!own&&(_cfBusy||_r9ImportBusy||_r14ReconnectBusy))||_syncing||_pullBusy||_doitPreparing||_doitPollRunning||_cfLegacyInFlight)throw r14Fail('有导入或同步尚未结束；本次没有重连。','BUSY');
+  if(_pageLeaving)throw r14Fail('页面正在离开；本次没有重连。','LEAVING');
+  if(DOIT_ID_BLOCKED||_doitScopeError)throw r14Fail('编号或独立存储需要核对；先保留备份，不要清空。','IDENTITY');
+  if(cfEditorActive()||cfMemoryVisible())throw r14Fail('请先保存正在编辑的内容，并返回仪表盘后操作。','EDITING');
+  if(typeof tOn!=='undefined'&&tOn)throw r14Fail('请先结束当前计时；不会中断或丢弃计时记录。','TIMER');
+  if(!_netOnline())throw r14Fail('当前离线；连接和数据均未更改，联网后再试。','OFFLINE');
+}
+function r14Acknowledged(){
+  return ['cf-ack-backups','cf-ack-order','cf-reconnect-ack'].every(id=>!!document.getElementById(id)?.checked);
+}
+function r14Recheck(g,modelCfg,candidate){
+  r14Ready(true);
+  if(!r9SameGuard(g)||JSON.stringify(_cfCfg)!==modelCfg)throw r14Fail('核验期间本页或本机存档又有修改；未继续重连，不会覆盖新修改。','LOCAL-CHANGED');
+  if(cfConfigId(cfInput())!==cfConfigId(candidate)||!r14Acknowledged())throw r14Fail('核验期间输入的连接或确认勾选发生变化；未继续重连。','INPUT-CHANGED');
+}
+function r14PinnedRevision(candidate,configs){
+  let pin={revision:0,sha256:null};const byRevision=new Map();
+  for(const c of configs){
+    // A token rotation must not erase the rollback pin for the same Worker URL.
+    if(!cfPlain(c)||r14Origin(c)!==candidate.url)continue;
+    const n=c.lastRev===undefined?0:c.lastRev;
+    if(!Number.isSafeInteger(n)||n<0)throw r14Fail('同一地址的本机云端版本标记异常；未丢弃回退保护，请保留备份。','PIN-FORMAT');
+    if(n>0){
+      if(!/^[a-f0-9]{64}$/.test(c.lastSha||''))throw r14Fail('同一地址的本机版本校验信息缺失；未丢弃回退保护。','PIN-HASH');
+      if(byRevision.has(n)&&byRevision.get(n)!==c.lastSha)throw r14Fail('同一云端版本的两份本机校验信息不一致；未解除保护。','PIN-CONFLICT');
+      byRevision.set(n,c.lastSha);if(n>pin.revision)pin={revision:n,sha256:c.lastSha};
+    }
+  }
+  return pin;
+}
+function r14CheckRemote(remote,pin){
+  if(remote.revision===0||!remote.envelope)throw r14Fail('这个云端为空。安全重连不会建库或用本机覆盖空库；请核对另一台正在使用的同步地址。','REMOTE-EMPTY');
+  if(remote.revision<pin.revision||(remote.revision===pin.revision&&pin.revision>0&&remote.sha256!==pin.sha256))throw r14Fail('云端版本回退或同版内容不一致；未解除保护。请核对是否仍为原来的数据库。','REMOTE-ROLLBACK');
+}
+async function r14ReconnectAndSync(){
+  r14OpenReconnect();let candidate;
+  try{
+    r14Ready(false);candidate=cfInput();
+    if(!r14Acknowledged())throw r14Fail('请保留原有两项备份/先后顺序确认，并勾选下方“已与另一台核对同一连接”。不需要重新导入卡包。','ACK');
+  }catch(e){r14ReconnectResult('未开始重连：['+(e.r14Code||'INPUT')+'] '+e.message);return false;}
+  _r14ReconnectBusy=true;_r9ImportBusy=true;_cfBusy=true;cfPaint();let ready=false;
+  try{
+    r14ReconnectResult('正在核验本机连接和其他页面；尚未写入本机，也未上传。');
+    if(await r9OtherPageOpen())throw r14Fail('仍有另一 Doit 页面回应；请保留各页数据并关闭多余页面。没有写入或上传。','PEER');
+    r14Ready(true);
+    const g=r9ReadGuard(),modelCfg=JSON.stringify(_cfCfg),stored=r14StoredConfig(g.slots[CF_SYNC_CFG_KEY]);
+    r14Recheck(g,modelCfg,candidate);
+    const pins=[_cfCfg,stored.value];
+    if(_cfTested&&cfConfigId(_cfTested)===cfConfigId(candidate))pins.push({url:candidate.url,lastRev:_cfTested.revision,lastSha:_cfTested.sha256});
+    const pin=r14PinnedRevision(candidate,pins);
+    r9EnsureSafety(g);
+    r14ReconnectResult('正在只读校验上方填写的连接；不会自动选择存档里的另一个地址。尚未修改连接或上传。');
+    const first=await cfRead(candidate);r14Recheck(g,modelCfg,candidate);r14CheckRemote(first,pin);
+    const oldOrigin=r14Origin(_cfCfg),storedOrigin=r14Origin(stored.value),known=[oldOrigin,storedOrigin].filter(Boolean);
+    const changed=known.length&&!known.includes(candidate.url)?'注意：上方地址不同于可读取的旧连接，必须由你确认它与另一台当前正在使用的地址完全一致。\n\n':'';
+    if(!confirm('安全重新绑定本机连接\n\n同步地址：'+candidate.url+'\n云端版本：'+first.revision+'（完整只读校验通过；密钥不显示）\n\n'+changed+'请确认这是另一台设备当前使用的同一套 Doit 同步服务，且已保存保护备份、关闭其他 Doit 页面。\n\n将合并本页、本机存档和这个云端的记录，核验保存后再按原协议同步。不清空、不建库、不强制覆盖云端。重连后自动同步暂关，本次会立即同步并等待服务器确认。继续？')){
+      r14ReconnectResult('已取消；没有改写连接、合并本机或上传，原有保护保留。');return false;
+    }
+    r14Recheck(g,modelCfg,candidate);
+    r14ReconnectResult('正在再次只读核对云端版本；确认期间有变化就停止，不盲目放行。');
+    const check=await cfRead(candidate);r14Recheck(g,modelCfg,candidate);r14CheckRemote(check,pin);
+    if(check.revision!==first.revision||check.sha256!==first.sha256)throw r14Fail('云端在确认期间发生变化；本次未写入，请等另一台同步结束后再点本按钮重新核验。','REMOTE-CHANGED');
+    let merged=r9LocalEnvelope(g);merged.dashboard=r9StampUnsaved(merged.dashboard);
+    const saved=r9ParseRaw(g.slots[KEY],'本机仪表盘');
+    if(saved){const d=r9Dashboard(saved),s=d.srs?r9Srs(d.srs):null;merged=cfMergeEnvelope(merged,{format:CF_SYNC_FORMAT,dashboard:d,srs:s,session:s&&s.session||null});}
+    merged=cfMergeEnvelope(merged,check.envelope);
+    // We have merged this verified remote row, so pin it without claiming an upload ACK.
+    const next={enabled:true,auto:false,url:candidate.url,token:candidate.token,lastRev:check.revision,lastSha:check.sha256,lastSyncTs:0,allowCreate:false};
+    r14Recheck(g,modelCfg,candidate);
+    const receipt=r9CommitEnvelope(merged,g,next);
+    cancelQueuedCloudSave();clearTimeout(_retryTimer);_retryTimer=0;clearTimeout(_splitAutoTimer);_splitAutoTimer=0;clearTimeout(_cfTimer);_cfTimer=0;
+    _cfTested=null;
+    if(receipt.reloadError)throw r14Fail('本机合并已保存，但记忆卡页面的重新载入尚未确认；保持暂停，没有上传。请保留保护备份。','MEMORY-RELOAD');
+    r14ReconnectResult('本机连接和合并记录已核验保存；尚未获服务器确认，接下来按原读云、合并、CAS 和回执流程同步。');ready=true;
+  }catch(e){
+    const message='重连未完成：['+(e.r14Code||(e.r9Code==='write'?'LOCAL-WRITE':'VERIFY'))+'] '+((e&&e.message)||'核验未完成。')+' 请保留原备份；不要清除网站数据。';
+    r14ReconnectResult(message);showToast(message,'orange');
+  }finally{
+    _cfBusy=false;_r9ImportBusy=false;if(!ready)_r14ReconnectBusy=false;cfPaint();
+  }
+  if(!ready)return false;
+  try{
+    const ok=await cfSync(true);
+    r14ReconnectResult(ok?'✅ 服务器已确认本次同步。本机连接已修复；自动同步暂关，需要时可点“开启自动同步”。':'本机连接与合并记录已保存，但本次尚未获服务器确认：'+(_cfError||'请查看同步状态。')+' 自动同步保持关闭；原备份保留。');
+    return ok;
+  }finally{_r14ReconnectBusy=false;cfPaint();}
+}
+
 function r9RecoveryCfg(raw){
-  const v=r9ParseRaw(raw,'本机同步配置');
-  if(!cfPlain(v)||v.enabled!==true||v.invalid||cfConfigId(v)!==cfConfigId(_cfCfg))throw r9Fail('另一页面改变了同步地址或连接状态；为防连错云端，未合并。请分别备份后核对连接，不要发送密钥。','blocked');
+  let v;try{v=r9ParseRaw(raw,'本机同步配置');}catch(e){const status=r14ConfigStatus(raw);r14OpenReconnect();throw r9Fail('['+status.code+'] '+status.message+'；普通合并未执行，请用“核对连接并安全重连”。','blocked');}
+  if(!cfPlain(v)||v.enabled!==true||v.invalid||cfConfigId(v)!==cfConfigId(_cfCfg)){const status=r14ConfigStatus(raw);r14OpenReconnect();throw r9Fail('['+status.code+'] '+status.message+'；普通合并未执行。请用下方“核对连接并安全重连”，不要重复启用，也不要发送密钥。','blocked');}
   const next=Object.assign({},v),memRev=Number(_cfCfg.lastRev)||0,storedRev=Number(v.lastRev)||0;
   if(memRev===storedRev&&memRev>0&&_cfCfg.lastSha&&v.lastSha&&_cfCfg.lastSha!==v.lastSha)throw r9Fail('同一云端版本的校验信息不一致；已停止，请保留备份。','blocked');
   if(memRev>storedRev){next.lastRev=memRev;next.lastSha=_cfCfg.lastSha;next.lastSyncTs=_cfCfg.lastSyncTs;}
@@ -8265,7 +8403,7 @@ function cfPaint(){
     detail.textContent=(_cfError?_cfError+'\n':'')+last;
   }
   const recovery=document.getElementById('cf-recovery');if(recovery)recovery.hidden=!(active&&(_cfStoreBlocked||_cfMultiTabConflict));
-  if(typeof r9PaintImport==='function')r9PaintImport();r13PaintActivation();
+  if(typeof r9PaintImport==='function')r9PaintImport();r13PaintActivation();r14PaintReconnect();
   const b=document.getElementById('cf-auto-button');if(b){b.textContent=active&&_cfCfg.auto?'暂停自动同步':'开启自动同步';b.disabled=!active||!!(_cfCfg&&_cfCfg.invalid);}
   document.querySelectorAll('#cf-sync-card [data-cf-active]').forEach(el=>{el.disabled=!active;});
   const old=document.getElementById('legacy-jsonbin-card');if(old)old.querySelectorAll('button,input').forEach(function(el){el.disabled=active;});
@@ -8580,7 +8718,8 @@ async function cfActivate(){
   if(_cfBusy||_syncing||_pullBusy||_doitPreparing||_doitPollRunning||_cfLegacyInFlight){showToast('有同步请求尚未结束，请等一会儿再启用','orange');return false;}
   let cfg;try{cfg=cfInput();}catch(e){cfSetTest(e.message);return false;}
   if(!_cfTested||cfConfigId(_cfTested)!==cfConfigId(cfg)){cfSetTest('请先用当前地址和密钥完成只读测试，再启用。');return false;}
-  if(_cfMultiTabConflict){cfSetTest('另一页面修改了本机内容；请先分别备份、关闭多余页面，再刷新。');return false;}
+  let changedCfg=false;try{changedCfg=localStorage.getItem(CF_SYNC_CFG_KEY)!==_cfObservedCfg;}catch(e){changedCfg=true;}
+  if(_cfMultiTabConflict||(cfIsActive()&&(_cfCfg.invalid||changedCfg||cfConfigId(_cfCfg)!==cfConfigId(cfg)))){r14OpenReconnect();cfSetTest('本机连接或存档需要重新核验；请用下方“核对连接并安全重连”。不会靠反复启用或刷新解除保护。');return false;}
   if(!document.getElementById('cf-ack-backups').checked||!document.getElementById('cf-ack-order').checked){cfSetTest('请先完成两台设备的两类备份，并确认“最新设备先同步”；完成后再勾选。');return false;}
   if(cfIsActive()&&cfConfigId(_cfCfg)===cfConfigId(cfg)){showToast('本机已启用，请点立即同步');return true;}
   const phase=_cfTested.revision===0?'云端为空，将由这台有最新进度的设备建立新云端。':'云端已有数据，将先读取并与这台设备合并。';
@@ -10997,6 +11136,5 @@ window.addEventListener('storage',function(e){
 });
 </script>
 
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a5cc289c8ba02513',t:'MTc5NTA1OTI2MA=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a5cc289c8ba02513',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script><script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a5cc9d9e9a3e0fb5',t:'MTc5NTA2NDA1Mw=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a5cc9d9e9a3e0fb5',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
