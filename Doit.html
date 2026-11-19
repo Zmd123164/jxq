@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Doit · 数资20题与安全导入 | 2026-11-17 r9</title>
+<title>Doit · 简洁课表 | 2026-11-17 r12</title>
 <style>
 :root{
   --bg:#f0f6ff;--surface:#fff;--s2:#f7faff;--border:#d0e2ff;
@@ -228,8 +228,11 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
 
 
 .train9-standard{display:flex;gap:6px;flex-direction:column;margin:10px 0;padding:10px 12px;border:1px solid #bfdbfe;background:#eff6ff;border-radius:9px;font-size:12px;color:#1e3a8a}.train9-standard small{color:#475569}#cf-recovery[hidden]{display:none}
+
+.train11-baseline,.train11-rhythm,.train11-evidence{margin:12px 0;padding:12px;border:1px solid #bfd5f5;border-radius:10px;background:#f7faff;color:#193d6a;font-size:12px;line-height:1.7;overflow-wrap:anywhere}.train11-baseline b,.train11-baseline span,.train11-baseline small,.train11-rhythm b,.train11-rhythm>span{display:block}.train11-baseline small,.train11-line{font-size:11px;color:#64748b}.train11-rhythm>span+span{margin-top:5px}.train11-evidence{background:#fff;scroll-margin-top:170px}.train11-evidence h3{font-size:14px;margin:0 0 7px}.train11-score-state{display:grid;grid-template-columns:35px minmax(0,1fr);gap:6px;margin:9px 0;padding:9px 0;border-top:1px solid #e2e8f0}.train11-score-state span{min-width:0}.train11-score-state small{display:block;color:#64748b;font-size:10px}.train11-score-state strong{grid-column:2;font-size:11px;color:#1d4ed8}.train11-status{padding:8px;background:#eff6ff;border-radius:7px;font-size:11px}.train11-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:12px}.train11-form-grid label{display:flex;flex-direction:column;min-width:0;font-size:11px;color:#475569}.train11-form-grid input,.train11-form-grid select{box-sizing:border-box;width:100%;min-width:0;max-width:100%;padding:8px 6px;border:1px solid #bfd1eb;border-radius:6px;background:white;color:#1e3a5f;font:inherit;font-size:13px}.train11-wide{grid-column:1/-1}.train11-form-actions{display:flex;gap:7px;flex-wrap:wrap;margin:11px 0}.train11-form-actions button,.train11-score-shortcut{padding:8px 10px;border:1px solid #93b4ef;border-radius:7px;color:#1d4ed8;background:#eff6ff;font-size:12px}.train11-form-actions button[type=submit]{background:#2563eb;color:#fff}.train11-score-shortcut{margin:7px 0 2px;font-size:11px}#train11-score-message{font-size:11px;white-space:pre-wrap}@media(max-width:420px){.train11-baseline,.train11-rhythm,.train11-evidence{padding:10px}.train11-form-grid{gap:7px}.train11-score-state{grid-template-columns:29px minmax(0,1fr)}}
+
 </style>
-<meta name="doit-release" content="2026-11-17-execution-r9-paired20-safe-import">
+<meta name="doit-release" content="2026-11-17-execution-r12-compact-task-cards">
 </head>
 <body>
 
@@ -266,7 +269,7 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
     <button class="tb" onclick="showMemoryCard()" style="display:inline-flex;align-items:center">🧠 记忆卡</button>
   </div>
   <div style="font-size:10px;margin-top:4px;opacity:.8;cursor:pointer;display:inline-block" id="sync-status" onclick="manualSync()" title="点击立即同步合并">⚪ 未配置</div>
-  <div id="app-version" style="font-size:10px;margin-top:3px;opacity:.8">✅ Doit r9 · 每日数资20题 · 安全导入</div>
+  <div id="app-version" style="font-size:10px;margin-top:3px;opacity:.8">✅ Doit r12 · 泸州双科 · 简洁课表</div>
 </div>
 
 <div class="main">
@@ -2005,7 +2008,7 @@ function exec17DateAdd(d,n){var x=new Date(d+'T12:00:00');x.setDate(x.getDate()+
 const EXEC17_EVENING_DATE='2026-11-17';
 function exec17EveningDay(d){return d===EXEC17_EVENING_DATE;}
 function exec17PublicId(d){return d==='2026-11-18'?'exec17_gj_transfer':'exec17_gj';}
-function exec17RetiredDiagnostic(d,id){return ((d==='2026-11-17'||d==='2026-11-18')&&id==='exec17_gj')||exec17RetiredReview(d,id)||(typeof TRAIN9_RETIRED!=='undefined'&&train9Retired(d,id));}
+function exec17RetiredDiagnostic(d,id){return ((d==='2026-11-17'||d==='2026-11-18')&&id==='exec17_gj')||exec17RetiredReview(d,id)||(typeof TRAIN9_RETIRED!=='undefined'&&train9Retired(d,id))||(typeof train10Retired==='function'&&train10Retired(d,id));}
 function exec17EveningZcNeeded(d){var m=((typeof D!=='undefined'&&D&&D.landing)||{})[d]||{};return !m.exec17_zc;}
 function exec17EveningTaskMinutes(d,id){return ((typeof D!=='undefined'&&D&&D.logs)||[]).filter(function(l){return l.date===d&&l.taskKey==='landing_'+d+'_'+id;}).reduce(function(n,l){return n+(Number(l.duration)||0);},0);}
 function exec17EveningLogged(d){return (exec17EveningZcNeeded(d)?exec17EveningTaskMinutes(d,'exec17_evening_zc'):0)+Math.min(60,exec17MemoryMinutes(d))+exec17EveningTaskMinutes(d,'exec17_evening_close');}
@@ -2029,7 +2032,7 @@ function exec17NonMemoryMinutes(d){return Math.max(0,exec17RequiredMinutes(d)-ex
 
 // r7: 70 is the user's weighted written-score goal, NOT an assumed 50/50 formula.
 const TRAIN70_START='2026-11-18';
-const TRAIN70_GOAL={exam:'四川事业单位',date:'2026-12-20',target:70,metric:'笔试折算成绩',weights:null,officialRulesVerified:false};
+const TRAIN70_GOAL={exam:'四川泸州市事业单位',subjects:['公共基础知识','综合能力测试'],subjectsConfirmedByUser:true,date:'2026-12-20',target:70,metric:'笔试折算成绩',weights:null,officialRulesVerified:false};
 const TRAIN70_QUANT_TOPICS={
  percent_base:{name:'百分数基数',how:'看1个完整示范，再独立做3道新变式并核对。',goal:'找准“谁的百分之几”，再列式。',test:'逐题圈基数、写算式；记对__/3。'},
  percent_reverse:{name:'涨降与倒推',how:'画出价格变化，看1例，再独立做3道新题。',goal:'分清原价、中间价与现价。',test:'写出每步基数与倒推式；记对__/3。'},
@@ -2045,7 +2048,7 @@ function train70QuantKey(d){
  Object.keys(p).forEach(function(k){var m=/^(\d{4}-\d{2}-\d{2})\|train70_quant_focus$/.exec(k);if(!m||m[1]<TRAIN70_START||m[1]>d||m[1]<best)return;var v=String((p[k]||{}).note||'');if(TRAIN70_QUANT_TOPICS[v]){best=m[1];out=v;}});
  return out;
 }
-// r9: one mixed 20-question number/data set daily. No independent verbal block.
+// r10: user-confirmed 泸州公基 + 综测; keep the r9 daily20 and safe-import contracts.
 const TRAIN9_PAIR_ID='train9_pair';
 const TRAIN9_RETIRED=['train70_quant','train70_data','train70_rescue_quant','train70_rescue_data'];
 function train9Retired(d,id){return train70Active(d)&&TRAIN9_RETIRED.indexOf(id)>=0;}
@@ -2057,66 +2060,387 @@ function train70CoreIds(d){
  if(d==='2026-12-19')return [TRAIN9_PAIR_ID,'exec17_prepare','exec17_memory'];
  if(d==='2026-12-18')return [TRAIN9_PAIR_ID,'exec17_final','exec17_memory'];
  if(exec17DayOfWeek(d)===0)return [TRAIN9_PAIR_ID,'exec17_memory'];
- if(exec17Dose(d)==='rescue')return ['train70_rescue_knowledge',TRAIN9_PAIR_ID,'train70_rescue_reason','train70_rescue_zc','exec17_memory'];
+ if(exec17Dose(d)==='rescue')return [train10TopicId(d,'knowledge',true),TRAIN9_PAIR_ID,train10TopicId(d,'graph',true),'train70_rescue_zc','exec17_memory'];
  if(exec17DayOfWeek(d)===6)return [exec17PublicId(d),'exec17_zc','exec17_memory'];
- return [exec17PublicId(d),TRAIN9_PAIR_ID,'train70_reason','exec17_zc','exec17_memory'];
+ return [train10TopicId(d,'knowledge',false),TRAIN9_PAIR_ID,train10TopicId(d,'graph',false),'exec17_zc','exec17_memory'];
 }
 function train70Counts(d){var ids=exec17CoreIds(d),m=((D&&D.landing)||{})[d]||{};return {done:ids.filter(function(k){return !!m[k];}).length,total:ids.length};}
 const CLEAR8_CURRICULUM=[
- ['2026-11-18','法律','民事法律行为与代理','区分行为效力，认清代理权限。','判断','图形：数量与位置','先找稳定规律，再验证选项。'],
- ['2026-11-19','政治','党的创新理论：核心概念','分清核心概念及其对应表述。','判断','定义：条件对照','逐项核对定义中的必要条件。'],
- ['2026-11-20','公文','文种选择与行文规则','按行文关系选对文种。','判断','类比：语义与逻辑关系','用同一关系标准检验全部选项。'],
- ['2026-11-23','法律','正当防卫与紧急避险','根据起因、对象和限度作判断。','判断','图形：样式与属性','区分样式变化与图形属性。'],
- ['2026-11-24','政治','唯物论：物质与意识','区分物质决定作用与意识能动作用。','判断','条件：必要条件','找准必要条件，判断推理方向。'],
- ['2026-11-25','法律','行政处罚与行政强制','区分处罚、强制措施与强制执行。','判断','类比：关系辨析','说清词项关系，再对照选项。'],
- ['2026-11-26','政治','辩证法：矛盾与联系','按题意辨别矛盾与联系的原理。','判断','论证：结论与理由','找准论点、论据及其连接。'],
- ['2026-11-27','经济','财政政策与货币政策','分清政策工具与作用方向。','判断','定义：多条件筛选','不遗漏限制条件，不添加题外条件。'],
- ['2026-11-30','法律','劳动合同解除与经济补偿','根据解除情形判断补偿条件。','判断','图形：对称与曲直','依据可验证的属性排除选项。'],
- ['2026-12-01','政治','认识论：实践与认识','区分认识来源、动力和检验标准。','判断','定义：多条件筛选','不遗漏限制条件，不添加题外条件。'],
- ['2026-12-02','法律','宪法：基本权利与国家机构','区分基本权利及国家机关职权。','判断','类比：对应与包含','区分对应关系与种属、组成关系。'],
- ['2026-12-03','政治','时政：近一年重要会议','对应会议、部署及关键词。','判断','条件：充分条件','正确翻译条件并验证推理。'],
- ['2026-12-04','管理','管理职能与决策','区分计划、组织、领导和控制。','判断','论证：加强与削弱','判断选项对论点的实际作用。'],
- ['2026-12-07','法律','合同效力与违约责任','按合同情形判断效力与责任。','判断','论证：加强','选出最能补足论证的选项。'],
- ['2026-12-08','政治','政治经济学：商品与价值','分清价值、使用价值与价格。','判断','论证：削弱','找出最直接动摇论证的选项。'],
- ['2026-12-09','法律','侵权责任构成','从行为、损害和因果关系判断责任。','判断','图形：限时新题','独立找规律，记录卡题用时。'],
- ['2026-12-10','政治','党的创新理论：易混表述','根据关键词排除概念错配。','判断','条件：限时新题','先翻译条件再推理。'],
- ['2026-12-11','常识','科技与文化常识','分清高频概念、人物与成果对应。','判断','定义：限时新题','按必要条件逐项排除。'],
- ['2026-12-14','法律','行政复议与行政诉讼','区分受案范围、程序及救济路径。','判断','定义：限时新题','按必要条件逐项排除。'],
- ['2026-12-15','政治','时政：国家重大战略','对应战略目标、任务和关键词。','判断','类比：限时新题','用同一关系标准检验全部选项。'],
- ['2026-12-16','法律','事业单位人事管理','分清聘用、考核、处分及解除条件。','判断','论证：限时新题','找准结论，判断选项作用。'],
- ['2026-12-17','政治','理论综合新题','独立辨别理论概念和表述错误。','判断','图形：综合新题','用可验证规律排除干扰。']
+ [
+  "2026-11-18",
+  "法律",
+  "民事法律行为与代理",
+  "区分行为效力，认清代理权限。"
+ ],
+ [
+  "2026-11-19",
+  "政治",
+  "党的创新理论：核心概念",
+  "分清核心概念及其对应表述。"
+ ],
+ [
+  "2026-11-20",
+  "公文",
+  "文种选择与行文规则",
+  "按行文关系选对文种。"
+ ],
+ [
+  "2026-11-23",
+  "法律",
+  "正当防卫与紧急避险",
+  "根据起因、对象和限度作判断。"
+ ],
+ [
+  "2026-11-24",
+  "政治",
+  "唯物论：物质与意识",
+  "区分物质决定作用与意识能动作用。"
+ ],
+ [
+  "2026-11-25",
+  "法律",
+  "行政处罚与行政强制",
+  "区分处罚、强制措施与强制执行。"
+ ],
+ [
+  "2026-11-26",
+  "政治",
+  "辩证法：矛盾与联系",
+  "按题意辨别矛盾与联系的原理。"
+ ],
+ [
+  "2026-11-27",
+  "经济",
+  "财政政策与货币政策",
+  "分清政策工具与作用方向。"
+ ],
+ [
+  "2026-11-30",
+  "法律",
+  "劳动合同解除与经济补偿",
+  "根据解除情形判断补偿条件。"
+ ],
+ [
+  "2026-12-01",
+  "政治",
+  "认识论：实践与认识",
+  "区分认识来源、动力和检验标准。"
+ ],
+ [
+  "2026-12-02",
+  "法律",
+  "宪法：基本权利与国家机构",
+  "区分基本权利及国家机关职权。"
+ ],
+ [
+  "2026-12-03",
+  "政治",
+  "时政：近一年重要会议",
+  "对应会议、部署及关键词。"
+ ],
+ [
+  "2026-12-04",
+  "管理",
+  "管理职能与决策",
+  "区分计划、组织、领导和控制。"
+ ],
+ [
+  "2026-12-07",
+  "法律",
+  "合同效力与违约责任",
+  "按合同情形判断效力与责任。"
+ ],
+ [
+  "2026-12-08",
+  "政治",
+  "政治经济学：商品与价值",
+  "分清价值、使用价值与价格。"
+ ],
+ [
+  "2026-12-09",
+  "法律",
+  "侵权责任构成",
+  "从行为、损害和因果关系判断责任。"
+ ],
+ [
+  "2026-12-10",
+  "政治",
+  "党的创新理论：易混表述",
+  "根据关键词排除概念错配。"
+ ],
+ [
+  "2026-12-11",
+  "常识",
+  "科技与文化常识",
+  "分清高频概念、人物与成果对应。"
+ ],
+ [
+  "2026-12-14",
+  "法律",
+  "行政复议与行政诉讼",
+  "区分受案范围、程序及救济路径。"
+ ],
+ [
+  "2026-12-15",
+  "政治",
+  "时政：国家重大战略",
+  "对应战略目标、任务和关键词。"
+ ],
+ [
+  "2026-12-16",
+  "法律",
+  "事业单位人事管理",
+  "分清聘用、考核、处分及解除条件。"
+ ],
+ [
+  "2026-12-17",
+  "政治",
+  "理论综合新题",
+  "独立辨别理论概念和表述错误。"
+ ]
 ];
-function clear8Theme(d){
- var r=CLEAR8_CURRICULUM.find(function(x){return x[0]===d;})||CLEAR8_CURRICULUM.slice().reverse().find(function(x){return x[0]<d;})||CLEAR8_CURRICULUM[0];
- return {subject:r[1],topic:r[2],goal:r[3],abilitySubject:r[4],ability:r[5],abilityGoal:r[6],data:'数资混合20题',dataGoal:'先独立作答，再按错型补练。'};
+// r10: task identity, not the passage of a date, determines the next topic.
+// Uses only the existing landing/landingProg/logs. No mastery store or extra checkbox.
+const TRAIN10_SCOPE={city:'泸州市',subjects:['公共基础知识','综合能力测试'],subjectBasis:'用户确认',judgment:'图形推理',judgmentBasis:'用户提供的范围',verbalTraining:false};
+const TRAIN10_GRAPH=[
+ ['数量与位置','先找稳定规律，再验证选项。'],
+ ['平移与旋转','比较方向、步数与旋转角度。'],
+ ['翻转与位置组合','区分翻转和旋转，用同一变化验证全部图。'],
+ ['样式与属性','区分样式变化与图形属性。'],
+ ['叠加与去同存异','按相同运算规则逐一验证。'],
+ ['遍历与元素增减','确定元素集合与增减次序。'],
+ ['点与线的计数','先统一交点、端点和线条的计数标准。'],
+ ['面与封闭区域','按同一规则数封闭区域并验证。'],
+ ['对称与曲直','依据可验证的属性排除选项。'],
+ ['笔画与连通性','先判断连通与奇点，再检验笔画规律。'],
+ ['图形分组','找到能把所有图形一致分类的标准。'],
+ ['黑白与阴影','比较黑白数量、位置与变化。'],
+ ['平面拼合','对照边长、方向与轮廓验证拼合。'],
+ ['立体展开','按相对面、相邻面与公共边排除。'],
+ ['立体视图','核对观察方向、遮挡与可见轮廓。'],
+ ['限时新题','独立找规律，记录卡题用时。'],
+ ['位置变化新题','先验证整体移动，再看局部变化。'],
+ ['数量规律新题','明确数的对象，逐项核对规律。'],
+ ['样式变化新题','用同一运算检验全部图形。'],
+ ['属性分组新题','按同一属性完成分组并说明依据。'],
+ ['空间图形新题','用面、边和方向关系验证选项。'],
+ ['综合新题','用可验证规律排除干扰。']
+];
+// r11: practice evidence, not task checkmarks, is used to inspect the 70-point training line.
+// Records use the existing timestamp-merged landingProg map. No mastery database.
+const TRAIN11_BASELINE={publicScore:50.6,publicCorrect:51,publicQuestions:100,comprehensiveScore:null,comprehensiveReported:'50多分',law:[9,24],politics:[15,27],common:[7,14],quantity:[0,5],data:[4,5],documents:[7,9]};
+const TRAIN11_KNOWLEDGE_ORDER=[0,1,3,4,5,6,17,7,8,9,10,11,2,13,14,12,15,16,18,19,20,21];
+const TRAIN11_PUBLIC_WEAK=['法律','政治','常识','经济','管理','公文','数量','资料','图形'];
+const TRAIN11_ZC_WEAK=['采点','结构','格式','用时','审题'];
+const TRAIN11_SCORE_PREFIX='train11_score_';
+var _train11ScoreBusy=false;
+function train11ValidDate(d){
+ if(typeof d!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(d))return false;
+ var a=d.split('-').map(Number),x=new Date(Date.UTC(a[0],a[1]-1,a[2]));return x.getUTCFullYear()===a[0]&&x.getUTCMonth()===a[1]-1&&x.getUTCDate()===a[2];
 }
+function train11ValidateScore(value,until){
+ var x=value||{};if(typeof x!=='object'||Array.isArray(x))throw Error('成绩格式无效。');var date=x.date,subject=x.subject;
+ if(!train11ValidDate(date)||date<'2026-11-01'||date>'2026-12-19'||date>(until||ds(new Date())))throw Error('日期须为已经发生的有效训练日期，不能填未来成绩。');
+ if(['public','zc'].indexOf(subject)<0)throw Error('请选择公基或综测。');
+ var paper=typeof x.paper==='string'?x.paper.trim():'';if(!paper||paper.length>100)throw Error('请填写具体卷名或题源（100字以内），同卷重做不能冒充另一份新卷。');
+ function num(k,max,zero){var raw=x[k];if(raw===null||raw===undefined||String(raw).trim()==='')throw Error('请填写得分、满分、规定时限和实际用时。');if(typeof raw!=='number'&&(typeof raw!=='string'||!/^(?:0|[1-9]\d*)(?:\.\d+)?$/.test(raw.trim())))throw Error('分数和用时须为普通数字。');var v=Number(raw);if(!Number.isFinite(v)||v<0||(!zero&&v===0)||v>max)throw Error('分数或用时超出有效范围。');return v;}
+ var earned=num('earned',1000,true),max=num('max',1000,false),limit=num('limit',480,false),used=num('used',480,false);
+ if(earned>max)throw Error('得分不能高于满分。');
+ if(['full','partial','repeat'].indexOf(x.method)<0||['answer','reviewed','estimate'].indexOf(x.grading)<0)throw Error('请如实填写作答方式和评分依据。');
+ var weak=String(x.weak||''),allowed=subject==='public'?TRAIN11_PUBLIC_WEAK:TRAIN11_ZC_WEAK;if(weak&&allowed.indexOf(weak)<0)throw Error('失分点与所选科目不一致。');
+ return {v:1,date:date,subject:subject,paper:paper,earned:earned,max:max,limit:limit,used:used,method:x.method,grading:x.grading,weak:weak};
+}
+function train11Scores(until){
+ var today=ds(new Date()),stop=until&&until<today?until:today,out=[],p=train10Store().landingProg||{};
+ Object.keys(p).forEach(function(k){var m=/^(\d{4}-\d{2}-\d{2})\|train11_score_(public|zc)$/.exec(k);if(!m||m[1]>stop)return;
+  try{var v=JSON.parse(p[k].note||'');if(!v||v.removed||v.v!==1||v.date!==m[1]||v.subject!==m[2])return;var r=train11ValidateScore(v,stop);r.key=k;r.ts=Number(p[k].ts)||0;r.percent=Math.round(r.earned/r.max*10000)/100;out.push(r);}catch(e){}
+ });return out.sort(function(a,b){return a.date.localeCompare(b.date)||a.subject.localeCompare(b.subject);});
+}
+function train11LatestScore(d,subject){var a=train11Scores(d).filter(function(r){return r.date<d&&r.subject===subject&&r.method==='full';});return a.length?a[a.length-1]:null;}
+function train11BelowLine(r){return r.earned*100<r.max*70;}
+function train11ScoreEvidence(until){
+ var today=ds(new Date()),stop=until&&until<today?until:today,all=train11Scores(stop).filter(function(r){return r.date>=TRAIN70_START;}),result={date:stop,trainingLine:70,practiceAim:75,formalWeightedScore:null,officialWeights:TRAIN70_GOAL.weights,subjects:{},ready:false};
+ ['public','zc'].forEach(function(subject){
+  var seen=new Set(),unique=[],duplicates=[];
+  all.filter(function(r){return r.subject===subject;}).forEach(function(r){var id=r.paper.toLowerCase().replace(/[\s\u3000·•,，。:：;；\-_()（）]/g,'');if(seen.has(id)){duplicates.push(r);return;}seen.add(id);unique.push(r);});
+  var last=unique.slice(-2).map(function(r){var reasons=[];if(train11BelowLine(r))reasons.push('低于70');if(r.method!=='full')reasons.push('非首次完整独立限时');if(r.used>r.limit)reasons.push('超时');if(subject==='zc'&&r.grading!=='reviewed')reasons.push('综测尚非批改得分');if(subject==='public'&&r.grading==='estimate')reasons.push('公基尚未核准');if(r.date<exec17DateAdd(stop,-14))reasons.push('超过近14天');return Object.assign({},r,{meets:reasons.length===0,reasons:reasons});});
+  result.subjects[subject]={recent:last,distinctPapers:unique.length,duplicateRecords:duplicates.length,meets:last.length===2&&last.every(function(r){return r.meets;})};
+ });result.ready=result.subjects.public.meets&&result.subjects.zc.meets;return result;
+}
+function train11PriorityOrder(d){
+ var order=TRAIN11_KNOWLEDGE_ORDER.slice(),r=train11LatestScore(d,'public');
+ if(r&&train11BelowLine(r)&&['法律','政治','常识','经济','管理','公文'].indexOf(r.weak)>=0)order.sort(function(a,b){var aa=CLEAR8_CURRICULUM[a][1]===r.weak,bb=CLEAR8_CURRICULUM[b][1]===r.weak;return aa===bb?TRAIN11_KNOWLEDGE_ORDER.indexOf(a)-TRAIN11_KNOWLEDGE_ORDER.indexOf(b):aa?-1:1;});
+ return order;
+}
+function train11FirstPending(done,kind,d){
+ // The explicitly uncompleted11/18 law topic is not bypassed by an unstarted priority change.
+ if(!done[0])return 0;
+ var order=kind==='knowledge'?train11PriorityOrder(d):Array.from({length:CLEAR8_CURRICULUM.length},function(_,i){return i;});
+ for(var i=0;i<order.length;i++)if(!done[order[i]])return order[i];return CLEAR8_CURRICULUM.length;
+}
+function train11StartedOpen(d,kind,done){
+ var s=train10Store(),days={},prefix=kind==='graph'?'g':'k',re=new RegExp('^train10_(?:r)?'+prefix+'_(\\d{2})$');
+ Object.keys(s.landing||{}).forEach(function(day){if(day>=TRAIN70_START&&day<d)days[day]=true;});
+ Object.keys(s.landingProg||{}).forEach(function(k){var day=k.slice(0,10);if(day>=TRAIN70_START&&day<d&&k[10]==='|')days[day]=true;});
+ (s.logs||[]).forEach(function(l){if(l.date>=TRAIN70_START&&l.date<d)days[l.date]=true;});
+ var found=null;Object.keys(days).sort().some(function(day){var ids=Object.keys((s.landing||{})[day]||{});Object.keys(s.landingProg||{}).forEach(function(k){if(k.indexOf(day+'|')===0)ids.push(k.slice(11));});(s.logs||[]).forEach(function(l){var p='landing_'+day+'_';if(l.date===day&&String(l.taskKey||'').indexOf(p)===0)ids.push(String(l.taskKey).slice(p.length));});return ids.some(function(id){var m=re.exec(id);if(m&&Number(m[1])<CLEAR8_CURRICULUM.length&&!done[Number(m[1])]){found=Number(m[1]);return true;}return false;});});return found;
+}
+function train11ZcFocus(d){
+ var r=train11LatestScore(d,'zc'),needs=!!(r&&(train11BelowLine(r)||r.used>r.limit)),weak=needs?r.weak:'';
+ return {practice:d>='2026-12-09'||needs,weak:weak,instruction:({'采点':'先圈材料依据，再分条写要点，核对漏掉的采分点。','结构':'先列答案层次，再补材料依据，避免只有标题没有内容。','格式':'按题目指定文种列格式，再补正文要点。','用时':'按题目分值分配用时，到点停笔，记录没写完的部分。','审题':'先圈身份、对象、任务和字数，再作答。'})[weak]||'对照材料依据、题目要求和采分点检查答案。'};
+}
+function train11Esc(v){return String(v==null?'':v).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function train11ScoreOptions(values,selected){return values.map(function(r){return '<option value="'+train11Esc(r[0])+'" '+(r[0]===selected?'selected':'')+'>'+train11Esc(r[1])+'</option>';}).join('');}
+function train11EvidenceHTML(){
+ var e=train11ScoreEvidence(),rows=['public','zc'].map(function(k){var a=e.subjects[k],name=k==='public'?'公基':'综测';return '<div class="train11-score-state"><b>'+name+'</b><span>'+(a.recent.length?a.recent.map(function(r){return train11Esc(r.paper)+'：'+r.earned+'/'+r.max+'（'+r.percent+'%）<small>'+r.date.slice(5)+(r.meets?' · 训练线内':' · '+train11Esc(r.reasons.join('、')))+'</small>';}).join('<br>'):'尚无完整新卷成绩记录')+'</span><strong>'+(a.meets?'最近两份符合训练线':'仍需训练与核验')+'</strong></div>';}).join('');
+ var date=ds(new Date());if(date>'2026-12-19')date='2026-12-19';
+ return '<section class="train11-evidence" id="train11-evidence"><h3>70分训练验收</h3><p class="train11-line">每科训练线70，练习争取75。近14天最近两份不同新卷均须完整、独立、限时；综测用批改得分验收，自评只作参考。</p>'+rows+'<p class="train11-status" role="status">'+(e.ready?'按已录入记录，两科满足本训练验收线；不是正式考试成绩预测。':'尚不能据现有记录确认稳定达到训练线。打卡、听完课和学时不替代成绩。')+'</p><p class="train11-line">正式折算权重未核实，不擅按50/50合成总分。</p>'
+ +'<form id="train11-score-form" onsubmit="event.preventDefault();train11SaveScore()"><div class="train11-form-grid">'
+ +'<label>训练日期<input id="train11-score-date" type="date" min="2026-11-01" max="'+ds(new Date())+'" value="'+date+'" onchange="train11LoadScoreForm()" required></label><label>科目<select id="train11-score-subject" onchange="train11LoadScoreForm()"><option value="public">公基</option><option value="zc">综测</option></select></label>'
+ +'<label class="train11-wide">具体卷名或题源<input id="train11-score-paper" maxlength="100" placeholder="不同新卷须填不同卷名；同卷重做不重复验收" required></label>'
+ +'<label>原始得分<input id="train11-score-earned" type="number" min="0" max="1000" step="0.01" required></label><label>原卷满分<input id="train11-score-max" type="number" min="0.01" max="1000" step="0.01" value="100" required></label>'
+ +'<label>卷面时限（分钟）<input id="train11-score-limit" type="number" min="0.01" max="480" step="0.01" required></label><label>实际用时（分钟）<input id="train11-score-used" type="number" min="0.01" max="480" step="0.01" required></label>'
+ +'<label>作答方式<select id="train11-score-method">'+train11ScoreOptions([['full','首次完整独立限时'],['partial','节选或未完整'],['repeat','重做或看过解析']],'full')+'</select></label>'
+ +'<label>评分依据<select id="train11-score-grading">'+train11ScoreOptions([['estimate','自评或尚未核准'],['answer','标准答案核对'],['reviewed','批改得分或正式出分']],'estimate')+'</select></label>'
+ +'<label class="train11-wide">本次最大失分模块<select id="train11-score-weak">'+train11ScoreOptions([['','尚未定位']].concat(TRAIN11_PUBLIC_WEAK.map(function(x){return [x,x];})), '')+'</select></label></div>'
+ +'<div class="train11-form-actions"><button type="submit" id="train11-score-save">保存训练成绩</button><button type="button" onclick="train11RemoveScore()">移除此条误录</button></div><div id="train11-score-message" role="status" aria-live="polite"></div></form></section>';
+}
+window.train11LoadScoreForm=function(){
+ var form=document.getElementById('train11-score-form');if(!form)return;var date=document.getElementById('train11-score-date').value,subject=document.getElementById('train11-score-subject').value,weak=subject==='public'?TRAIN11_PUBLIC_WEAK:TRAIN11_ZC_WEAK;
+ document.getElementById('train11-score-weak').innerHTML=train11ScoreOptions([['','尚未定位']].concat(weak.map(function(x){return [x,x];})), '');
+ var r=train11Scores().find(function(x){return x.date===date&&x.subject===subject;});
+ ['paper','earned','max','limit','used','method','grading','weak'].forEach(function(k){var el=document.getElementById('train11-score-'+k);if(el)el.value=r?r[k]:(k==='max'?'100':k==='method'?'full':k==='grading'?'estimate':'');});
+};
+function train11ScoreMessage(text,bad){var el=document.getElementById('train11-score-message');if(el){el.textContent=text;el.style.color=bad?'#b91c1c':'#166534';}}
+function train11AssertScoreReady(){
+ r9AssertReady(false);
+ if(localStorage.getItem(KEY)!==_cfObservedDashboard||localStorage.getItem(CF_SYNC_CFG_KEY)!==_cfObservedCfg)throw Error('本页与本机存档或配置不同；请先分别备份并处理冲突，未写入成绩。');
+}
+async function train11CommitScore(value,remove){
+ if(_train11ScoreBusy)throw Error('上一条成绩仍在保存，请稍候。');
+ _train11ScoreBusy=true;
+ try{
+  var r=remove?{v:1,date:value.date,subject:value.subject,removed:true}:train11ValidateScore(value);
+  if(!train11ValidDate(r.date)||['public','zc'].indexOf(r.subject)<0||r.date>ds(new Date()))throw Error('不能移除或写入无效日期、科目的成绩。');
+  if(_r9ImportBusy)throw Error('正在导入数据，请稍后保存成绩。');
+  train11AssertScoreReady();if(await r9OtherPageOpen())throw Error('请先关闭其他Doit页面，防止覆盖不同步的成绩。');
+  if(_r9ImportBusy)throw Error('正在导入数据，请稍后保存成绩。');train11AssertScoreReady();
+  var g=r9ReadGuard(),candidate=r9StampUnsaved(r9Dashboard(JSON.parse(g.model))),key=r.date+'|'+TRAIN11_SCORE_PREFIX+r.subject;
+  candidate.landingProg=candidate.landingProg||{};var prev=candidate.landingProg[key];
+  candidate.landingProg[key]={note:JSON.stringify(r),ts:Math.max(Date.now(),(Number((prev||{}).ts)||0)+1)};
+  var text=JSON.stringify(candidate);r9WriteChecked([[KEY,text],[cfIsActive()?CF_SYNC_DIRTY_KEY:'doit_sync_pending_v1','1']],g);
+  Object.keys(D).forEach(function(k){if(!Object.prototype.hasOwnProperty.call(candidate,k))delete D[k];});
+  Object.keys(candidate).forEach(function(k){Object.defineProperty(D,k,{value:candidate[k],writable:true,enumerable:true,configurable:true});});
+  syncSnapshot();_cfObservedDashboard=text;
+  if(cfIsActive()){_cfDirty=true;_cfChangeSeq++;_cfView='pending';cfPaint();cfQueue();}
+  else{_pendingSave=true;setSyncStatus(CLOUD.apiKey&&CLOUD.binId?'pending':'none');if(CLOUD.apiKey&&CLOUD.binId)queueCloudSave();}
+  safeRun(renderSchedule);safeRun(window.renderLanding);safeRun(renderPlanGap);
+  return {localSaved:true,key:key,record:r};
+ }finally{_train11ScoreBusy=false;}
+}
+window.train11SaveScore=async function(){
+ try{var x={};['date','subject','paper','earned','max','limit','used','method','grading','weak'].forEach(function(k){x[k]=document.getElementById('train11-score-'+k).value;});if(document.activeElement&&document.activeElement.blur)document.activeElement.blur();var out=await train11CommitScore(x,false);document.getElementById('train11-score-date').value=x.date;document.getElementById('train11-score-subject').value=x.subject;train11LoadScoreForm();train11ScoreMessage('成绩已保存并回读核验；云端是否确认仍以原同步状态为准。',false);return out;}catch(e){train11ScoreMessage('未保存：'+e.message,true);return false;}
+};
+window.train11RemoveScore=async function(){
+ try{var x={date:document.getElementById('train11-score-date').value,subject:document.getElementById('train11-score-subject').value};if(!confirm('移除这个日期、科目的误录成绩？其他学习记录和原任务结果不改。'))return false;if(document.activeElement&&document.activeElement.blur)document.activeElement.blur();var out=await train11CommitScore(x,true);document.getElementById('train11-score-date').value=x.date;document.getElementById('train11-score-subject').value=x.subject;train11LoadScoreForm();train11ScoreMessage('误录已移除并核验保存；其他学习记录不变。',false);return out;}catch(e){train11ScoreMessage('未移除：'+e.message,true);return false;}
+};
+
+function train10Store(){return (typeof D!=='undefined'&&D)||{};}
+function train10LegacyIndex(d,kind){
+ var i=CLEAR8_CURRICULUM.findIndex(function(r){return r[0]===d;});
+ if(i<0)return -1;
+ // These are the only r9 judgment slots that really were graph tasks.
+ return kind==='graph'&&[0,3,8,15,21].indexOf(i)<0?-1:i;
+}
+function train10LegacyId(d,kind){return kind==='graph'?'train70_reason':(d===TRAIN70_START?'exec17_gj_transfer':'exec17_gj');}
+function train10HasRecord(d,id){
+ var s=train10Store(),m=(s.landing||{})[d]||{};
+ return Object.prototype.hasOwnProperty.call(m,id)||Object.prototype.hasOwnProperty.call(s.landingProg||{},d+'|'+id)||(s.logs||[]).some(function(l){return l.date===d&&l.taskKey==='landing_'+d+'_'+id;});
+}
+function train10OwnIndex(d,kind){
+ var s=train10Store(),ids={},prefix=kind==='graph'?'g':'k',re=new RegExp('^train10_(?:r)?'+prefix+'_(\\d{2}|mixed)$');
+ Object.keys((s.landing||{})[d]||{}).forEach(function(id){ids[id]=1;});
+ Object.keys(s.landingProg||{}).forEach(function(k){if(k.indexOf(d+'|')===0)ids[k.slice(d.length+1)]=1;});
+ (s.logs||[]).forEach(function(l){var p='landing_'+d+'_';if(l.date===d&&String(l.taskKey||'').indexOf(p)===0)ids[String(l.taskKey).slice(p.length)]=1;});
+ var out=null;Object.keys(ids).forEach(function(id){var m=re.exec(id);if(!m)return;var n=m[1]==='mixed'?CLEAR8_CURRICULUM.length:Number(m[1]);if(n>CLEAR8_CURRICULUM.length)return;if(out===null||n<out)out=n;});
+ return out;
+}
+function train10CompletedBefore(d,kind){
+ var s=train10Store(),done={},p=kind==='graph'?'g':'k',re=new RegExp('^train10_'+p+'_(\\d{2})$');
+ Object.keys(s.landing||{}).forEach(function(day){
+  if(day<TRAIN70_START||day>=d||day>='2026-12-18')return;
+  var m=s.landing[day]||{};
+  Object.keys(m).forEach(function(id){var r=re.exec(id);if(r&&m[id]&&Number(r[1])<CLEAR8_CURRICULUM.length)done[Number(r[1])]=true;});
+  var i=train10LegacyIndex(day,kind),legacy=train10LegacyId(day,kind);
+  if(i>=0&&m[legacy])done[i]=true;
+ });
+ return done;
+}
+function train10NextIndex(d,kind){
+ var own=train10OwnIndex(d,kind);if(own!==null)return own;
+ var s=train10Store(),legacyIndex=train10LegacyIndex(d,kind);
+ // A real old completion keeps that original day's topic; false/absent checks do not skip anything.
+ if(legacyIndex>=0&&((s.landing||{})[d]||{})[train10LegacyId(d,kind)])return legacyIndex;
+ var done=train10CompletedBefore(d,kind),started=train11StartedOpen(d,kind,done);
+ if(started!==null)return started;return train11FirstPending(done,kind,d);
+}
+function train10TopicId(d,kind,rescue){
+ var i=train10NextIndex(d,kind),legacy=train10LegacyId(d,kind);
+ if(!rescue&&train10OwnIndex(d,kind)===null&&train10LegacyIndex(d,kind)===i&&train10HasRecord(d,legacy))return legacy;
+ return 'train10_'+(rescue?'r':'')+(kind==='graph'?'g':'k')+'_'+(i<CLEAR8_CURRICULUM.length?String(i).padStart(2,'0'):'mixed');
+}
+function train10ThemeAt(ki,gi){
+ var r=CLEAR8_CURRICULUM[ki],g=TRAIN10_GRAPH[gi];
+ return {subject:r?r[1]:'公基',topic:r?r[2]:'已学知识混合新题',goal:r?r[3]:'用新题检验已学规则，只补本次暴露的缺口。',abilitySubject:'图形推理',ability:'图形：'+(g?g[0]:'混合新题'),abilityGoal:g?g[1]:'独立验证图形规律，记录卡题原因。',data:'数资混合20题',dataGoal:'先独立作答，再按错型补练。',knowledgeIndex:ki,graphIndex:gi};
+}
+function clear8Theme(d){return train10ThemeAt(train10NextIndex(d,'knowledge'),train10NextIndex(d,'graph'));}
+function train10ForecastTheme(d){
+ var today=ds(new Date()),start=today<TRAIN70_START?TRAIN70_START:today;
+ if(d<=start)return clear8Theme(d);
+ var ks=train10CompletedBefore(start,'knowledge'),gs=train10CompletedBefore(start,'graph');
+ for(var day=start;day<=d;day=exec17DateAdd(day,1)){
+  var ki=train11FirstPending(ks,'knowledge',day),gi=train11FirstPending(gs,'graph',day);
+  if(day===start){ki=train10NextIndex(day,'knowledge');gi=train10NextIndex(day,'graph');}
+  if(day===d)return train10ThemeAt(ki,gi);
+  var dow=exec17DayOfWeek(day);
+  if(day<'2026-12-18'&&dow!==0&&dow!==6&&exec17Dose(day)!=='rescue'){ks[ki]=true;gs[gi]=true;}
+ }
+ return clear8Theme(d);
+}
+function train10Retired(d,id){
+ if(!train70Active(d))return false;
+ if(id==='train70_rescue_knowledge'||id==='train70_rescue_reason')return true;
+ if(id==='train70_reason')return train10TopicId(d,'graph',false)!==id;
+ if((id==='exec17_gj'||id==='exec17_gj_transfer')&&exec17DayOfWeek(d)!==0&&exec17DayOfWeek(d)!==6&&d<'2026-12-18')return train10TopicId(d,'knowledge',false)!==id;
+ return false;
+}
+
 function train70Knowledge(d){var x=clear8Theme(d);return x.subject+'｜'+x.topic;}
 function train70AbilityTheme(d,kind){return kind==='data'?'数资混合20题':clear8Theme(d).ability;}
 function clear8ZcLabel(d){
- var dow=exec17DayOfWeek(d);if(dow===0)return '主线休息';if(dow===5&&d>='2026-11-27')return '新卷限时作答';if(dow===6&&d>='2026-11-28')return '核对本周新卷';
+ var dow=exec17DayOfWeek(d);if(dow===0)return '主线休息';if(dow===5&&d>='2026-11-27')return '新卷限时作答';if(dow===6&&d>='2026-11-28')return '仅处理本周新卷未订正处';
  var complete=false;try{complete=rollingLessonNext()===0;}catch(e){}
- if(complete||d>='2026-12-14'||(d>='2026-12-09'&&(dow===2||dow===4)))return (['','归纳概括','提出对策','应用文写作','综合分析','归纳概括','应用文写作'][dow]||'归纳概括')+'新题';
- return '实际停点续课';
+ return complete?'新材料独写100＋核对20':train11ZcFocus(d).practice?'新题60＋续课40＋核对20':'先试25＋续课80＋核对15';
 }
-const TRAIN70_WEEK=Array.from({length:7},function(_,i){var d=exec17DateAdd(TRAIN70_START,i),dow=exec17DayOfWeek(d),x=clear8Theme(d);return [d,dow===6?'公基新卷周测（含数资20题）':dow===0?'主线休息':train70Knowledge(d),'数资20题',dow===0||dow===6?'不另排判断':x.ability,dow===0?'数资60＋记忆卡60分钟':clear8ZcLabel(d)];});
+const TRAIN70_WEEK=Array.from({length:7},function(_,i){var d=exec17DateAdd(TRAIN70_START,i),dow=exec17DayOfWeek(d),x=train10ForecastTheme(d);return [d,dow===6?'公基新卷周测（含数资20题）':dow===0?'主线休息':train70Knowledge(d),'数资20题',dow===0||dow===6?'不另排图形':x.ability,dow===0?'数资60＋记忆卡60分钟':clear8ZcLabel(d)];});
 function train70PhaseLabel(d){return d<='2026-11-24'?'数资12/20标尺':d<='2026-12-08'?'数资14/20标尺':'数资16/20标尺';}
 const CLEAR8_WEEKS=[['11/18—11/24','2026-11-18','2026-11-24'],['11/25—12/01','2026-11-25','2026-12-01'],['12/02—12/08','2026-12-02','2026-12-08'],['12/09—12/15','2026-12-09','2026-12-15'],['12/16—12/20','2026-12-16','2026-12-20']];
 function clear8WeekHTML(i){
  var w=CLEAR8_WEEKS[Number(i)]||CLEAR8_WEEKS[0],rows='';
  for(var d=w[1];d<=w[2];d=exec17DateAdd(d,1)){
-  var dow=exec17DayOfWeek(d),date=d.slice(5).replace('-','/'),day=['日','一','二','三','四','五','六'][dow],x=clear8Theme(d),body='';
+  var dow=exec17DayOfWeek(d),date=d.slice(5).replace('-','/'),day=['日','一','二','三','四','五','六'][dow],x=train10ForecastTheme(d),body='';
   if(d==='2026-12-20')body='<b>考试</b><span>按准考证到场</span>';
   else if(d==='2026-12-19')body='<b>数资20题 · 用品检查</b><span>熟悉题型，不加难题 · 记忆卡60分钟</span>';
   else if(d==='2026-12-18')body='<b>数资20题 · 规则与格式轻回看60分钟</b><span>记忆卡60分钟</span>';
   else if(dow===0)body='<b>数资20题60分钟</b><span>其余主线休息 · 记忆卡60分钟</span>';
   else if(dow===6)body='<b>公基新卷周测135分钟（含数资20题）</b><span>综测：'+clear8ZcLabel(d)+'120分钟 · 记忆卡60分钟</span>';
-  else body='<b>'+x.subject+'｜'+x.topic+'</b><span>数资20题 · 判断：'+x.ability+'</span><span>综测：'+clear8ZcLabel(d)+'</span>';
-  rows+='<div class="clear8-day"><time>'+date+'<small>周'+day+'</small></time><div>'+body+'</div></div>';
+  else body='<b>'+x.subject+'｜'+x.topic+'</b><span>数资20题 · 图形推理：'+x.ability.replace(/^图形：/,'')+'</span><span>综测：'+clear8ZcLabel(d)+'</span>';
+  rows+='<div class="clear8-day"><time>'+date+'<small>周'+day+(d>ds(new Date())?' · 预排':'')+'</small></time><div>'+body+'</div></div>';
  }
  return rows;
 }
 window.clear8ShowWeek=function(i){var el=document.getElementById('clear8-week-grid');if(el)el.innerHTML=clear8WeekHTML(i);};
-function train70FeedbackContext(){return '【目标】四川事业单位，2026/12/20，笔试折算70；本场计分公告未匹配，weights=null，不假定50/50或保证分数。以不同限时新卷、原始得分、分项正确数和用时检验。【r9】撤掉独立言语任务，不恢复前置对话测验。每天一套数资20题，默认数量10＋资料10，先独立完成并记首轮结果，再核对错/空/猜题；只针对本套暴露的1—2个错型补对应课段与每型2道新题。不是先看示范再做3题，不是重复做已复盘旧卷。训练标尺11/18—24向12/20、11/25—12/08向14/20、12/09—17向16/20推进；训练计时40/35分钟不冒充正式考试时限。目标没达到如实记，不伪造掌握，不另设掌握打卡。【课表】普通日指定知识专题60＋数资60＋判断15＋综测120＋独立记忆卡60＝315分钟。周六公基新卷135替换前三项，其中含数资20题，不另加一套；卷内不够10数量＋10资料时用未做同类题补齐，核对仍在本块。周日数资60＋记忆卡60，其他主线休息。应急知识15＋数资60＋判断5＋综测20＋记忆卡60＝160，只影响当天，不计完整日达标。主动加量在普通日上两科各45，共405，不自动升级。12/18数资60＋规则与格式轻回看60＋记忆卡60；12/19数资60＋记忆卡60＋用品检查，不开新难题；12/20考试不加练。【课程】知识按CLEAR8_CURRICULUM指定单一科目专题，11/18法律民事法律行为与代理。刘流实际基线1/13，每节原长2—3h，从真实课次停点接续，120可分段；有新例题先尝试再听，没有题干不凭空强写。11/27起周五新卷替换课程，周六只核对本周新卷尚未处理部分；已处理完接新课，不重复旧复盘。12/9起周二周四增加指定材料新题，12/14起以新题作答为主。任务勾选不自动完成整节课。【保留】任务/目标/检验、现有一个勾选和结果输入；不添加解释折叠或掌握数据库。已复盘法律政治公文旧卷不排、不借时、不变欠账。旧数量/资料任务历史完整保留，不据旧3题/5题完成推断新20题完成。记忆卡每天另60分钟，课程/今日新增卡可直接选，保留全部ID、SRS、会话与个人编辑。自选不改必做目标、不滚欠账。用户时间不限，主要困难是手机与拖延。';}
+function train70FeedbackContext(){return '【目标与范围】按用户确认的泸州市事业单位公基＋综测双科、12/20、笔试折算70训练。判断按用户信息只排图形推理，不安排言语、定义、类比、条件或论证训练。不是官方评分规则已核实，weights=null，不擅按50/50合分，不保证70或录用。【已知起点】公基50.6分、51/100；本卷法律9/24、政治15/27、常识7/14、数量0/5提示优先补弱；资料4/5、公文7/9维持。本卷题数不等于分值权重，不能据总分断定具体法别弱。综测只知50多分，不虚构精确分或分题成绩。【课程】知识60分钟：10分钟独立试4道新题、25分钟定向补规则或未学片段、15分钟闭卷做6道新题、10分钟核对；已会规则不重听。后测争取5/6，仅训练检查，不是正式分。专题ID不改，先接已开未完专题；默认顺序提高法律政治和常识优先级。公基新卷低于70且已定位知识模块时，调整下一未开专题的优先级，不叠时、不把旧卷重排。11/18未做仍接法律，不因日历或预排当成已学。保留一个完成勾选和原结果输入，不新建掌握数据库。【数资】每天一套共20题，默认数量10＋资料10，先独立计时，再核对错空猜，只按本套集中1—2错型按需补课段和每型2道新题。不恢复前置问答。周六20题并入适用公基新卷，卷内不足在原块补齐；补齐题不回填整卷分。周日、应急、考前减量保留20，考试日除外。【综测】刘流按真实课次停点继续，基线只确认1/13，不按打卡完成整节。前期120分钟为先试新课例25＋续学80＋核对15；没有题干先续未学片段，出现新例题先尝试再听，不凭空写答案。12/9起或最近完整训练自报低于70或超时时，在原120分钟内用新材料独写60＋实际停点续课40＋核对20，按采点/结构/格式/用时/审题的已报告缺口处理；不为听完13节牺牲作答。课程全完才转100分钟新题＋20核对。11/27、12/4、12/11周五新卷替换课程，次日仅核对该新卷未处理处，已经订正完就接新课，不重复旧复盘。【验收】每科训练线70、练习争取75。近14天每科最近两份不同、首次完整独立限时新卷均达70，才说满足本训练验收线；公基用核准答案分，综测用批改得分，自评只作参考。原始分、满分、卷名、时限、实际用时和评分依据如实录入；同卷重做、节选、超时、未来成绩不能冒充达标。成绩存原landingProg并核验落盘，不通过打卡自动生成分数；不是正式考试成绩预测或云端确认。没有足够真实成绩就明确证据不足，不编造提升。【预算与保留】普通日知识60＋数资60＋图形15＋综测120＋独立记忆卡60＝315。周六公基135（内含20题）＋综测120＋记忆60；周日数资60＋记忆60；应急15＋60＋5＋20＋60＝160；主动加量405，不自动升级。12/18为180，12/19数资60＋记忆60＋用品，12/20不加练。全部旧数据、卡片、SRS、会话、历史笔记和r9安全导入/真实冲突保护保留，不清空数据、不索要密钥。软件测试只检验程序，不能证明学习提分。';}
 
 function exec17CoreIds(d){
   if(!exec17MemoryActive(d))return [];
@@ -3168,6 +3492,7 @@ function renderPlanGap(){
   const el=document.getElementById('plan-gap');
   if(!el) return;
   el.innerHTML=newPlanOverviewHTML();
+  if(typeof train11LoadScoreForm==='function')train11LoadScoreForm();
   return;
 }
 function renderScoreGuess(){
@@ -3225,17 +3550,29 @@ function renderNewPlanDay(d,dkey){
  if(c){c.style.display='block';c.innerHTML=`<div style="background:#eff6ff;border:1px solid #93c5fd;border-radius:12px;padding:12px 14px;font-size:12px;line-height:1.8;color:#1e3a8a"><strong>${p.icon} ${p.name}</strong><br>${p.desc}<br><span style="font-weight:700">${exec17Applies(dkey)?'具体做什么、做到哪算完成，见上方执行卡。时间均为有效学习，不含休息；晚开始也从第一块接着做，不重排全天。':'这里是历史日期；旧打卡、课次、卡片与计时不因本次更新被重置。'}</span></div>`;}
  try{updateDayProgress(dkey);}catch(e){}
 }
+function train11ScoreShortcut(t){
+ var subject=t.train9Pair&&t.train9Pair.inWeeklyPaper?'public':t.id==='exec17_zc'&&t.title==='综测｜新卷限时作答'?'zc':'';
+ return subject?'<button type="button" class="train11-score-shortcut" onclick="train11OpenScore(\''+subject+'\',\''+t.origDay+'\')">记录原卷成绩</button>':'';
+}
+window.train11OpenScore=function(subject,date){
+ var btn=Array.from(document.querySelectorAll('.tb')).find(function(b){return (b.textContent||'').indexOf('总规划')>=0;});if(btn)btn.click();else renderPlanGap();
+ var d=document.getElementById('train11-score-date'),s=document.getElementById('train11-score-subject');if(!d||!s)return;
+ d.value=date;s.value=subject;train11LoadScoreForm();var el=document.getElementById('train11-evidence');if(el)el.scrollIntoView({block:'start'});
+};
+
 function newPlanOverviewHTML(){
  var today=ds(new Date()),i=CLEAR8_WEEKS.findIndex(function(w){return today>=w[1]&&today<=w[2];});if(i<0)i=0;
  var options=CLEAR8_WEEKS.map(function(w,j){return '<option value="'+j+'" '+(i===j?'selected':'')+'>'+w[0]+'</option>';}).join('');
  return '<div class="exec17-overview clear8-overview" id="train70-overview">'
-  +'<div class="clear8-plan-goal"><b>12/20 · 笔试折算70</b><small>本场计分规则待公告匹配</small></div>'
-  +'<div class="clear8-budget"><span>指定专题<b>60分钟</b></span><span>数资20题<b>60分钟</b></span><span>判断<b>15分钟</b></span><span>综测<b>120分钟</b></span><span>记忆卡<b>另60分钟</b></span></div>'
-  +'<div class="train9-standard"><b>数资阶段标尺</b><span>11/24：12/20 → 12/08：14/20 → 12/17：16/20</span><small>均记首轮结果；先做整组，再补错型。</small></div>'
-  +'<div class="clear8-week-head"><b>逐日安排</b><select id="clear8-week-pick" aria-label="选择课表周" onchange="clear8ShowWeek(this.value)">'+options+'</select></div>'
+  +'<div class="clear8-plan-goal"><b>泸州 · 公基＋综测 · 70分训练</b><small>沿用12/20 · 正式折算权重待核对</small></div>'
+  +'<div class="train11-baseline"><b>从已有成绩补弱，不把计划当成绩</b><span>公基50.6分（51/100）；本卷法律9/24、政治15/27、常识7/14、数量0/5提示优先补弱。资料4/5、公文7/9仍用新题保温。</span><small>分项题数不是分值权重；综测仅知“50多分”，不虚构精确基线。</small></div>'
+  +'<div class="clear8-budget"><span>指定知识<b>60分钟</b></span><span>数资20题<b>60分钟</b></span><span>图形推理<b>15分钟</b></span><span>综测<b>120分钟</b></span><span>记忆卡<b>另60分钟</b></span></div>'
+  +'<div class="train11-rhythm"><b>训练节奏</b><span>11/18—24：当前未学专题建规则；综测先试新例题，再接实际停点。</span><span>11/25—12/08：周五综测新卷、周六公基新卷；根据新卷失分调整下一未开知识专题。</span><span>12/09—17：综测新题作答比重提高；以近14天每科最近两份不同新卷检验70训练线，不为赶完13节牺牲作答。</span><span>12/18—19：减量；保留数资20题和记忆卡60分钟，不补课债。12/20不加练。</span></div>'
+  +'<div class="train9-standard"><b>数资首轮训练标尺</b><span>11/24：12/20 → 12/08：14/20 → 12/17：16/20</span><small>先独立做20题，再按本套错型补练；这些标尺不是正式考试成绩。</small></div>'
+  +'<div class="clear8-week-head"><b>逐日安排 · 未完成不跳过</b><select id="clear8-week-pick" aria-label="选择课表周" onchange="clear8ShowWeek(this.value)">'+options+'</select></div>'
   +'<div id="clear8-week-grid">'+clear8WeekHTML(i)+'</div>'
-  +'<div class="clear8-plan-check"><b>每日</b><span>数资20题＝数量10＋资料10；周日、应急、考前两天保留。</span><b>周测</b><span>周六20题并入公基新卷，不另加套题；11/27起周五综测新卷、次日核对，替换课程。</span><b>70分检验</b><span>按正式规则，用两份不同限时新卷的真实成绩核验；未达就调整失分点。</span></div>'
-  +'</div>';
+  +'<div class="clear8-plan-check"><b>接续</b><span>先接已开但未完成的专题；新专题按补弱顺序安排，不叠两天量。未来日期为预排。</span><b>范围</b><span>公基＋综测；判断只排图形推理，不安排言语题训练。</span><b>每日</b><span>数资20题默认数量10＋资料10；周日、应急、考前减量保留。记忆卡独立另60分钟。</span><b>周测</b><span>周六数资并入公基新卷，不另加套；补齐题只计训练，不回填原卷分数。综测只订正本周新卷未处理处。</span><b>调整</b><span>公基新卷低于70且已定位知识失分模块，优先补该模块下一未学专题；综测低于70或超时，则在原120分钟内提高新题作答比重，不加总时长。</span></div>'
+  +train11EvidenceHTML()+'</div>';
 }
 
 function renderSchedule(){
@@ -4208,7 +4545,7 @@ function setMode(m,btn){curMode=m;document.querySelectorAll('.mb').forEach(b=>{b
 
 // ==================== 学习科目管理（可增删，跨设备同步） ====================
 const SUBJ_DEFAULT=[
-  {v:'数资-套题',label:'🔢 数资20题'},{v:'速算',label:'⚡ 资料速算'},
+  {v:'图形-刷题',label:'🧩 图形推理'},{v:'数资-套题',label:'🔢 数资20题'},{v:'速算',label:'⚡ 资料速算'},
   {v:'资料-基础',label:'📊 资料分析·基础课'},{v:'资料-刷题',label:'📊 资料分析·刷题'},
     {v:'逻辑',label:'🔍 逻辑推理'},
   {v:'图推-刘义恒',label:'🔷 刘义恒图推'},
@@ -4253,7 +4590,7 @@ function delSubj(){
   sv();renderSubjs();
   showToast('🗑 已删除科目');
 }
-function sL(v){const m={'数资-套题':'数资20题','资料-基础':'资料基础','资料-刷题':'资料刷题','逻辑':'逻辑推理','图推-刘义恒':'刘义恒图推',
+function sL(v){const m={'图形-刷题':'图形推理','数资-套题':'数资20题','资料-基础':'资料基础','资料-刷题':'资料刷题','逻辑':'逻辑推理','图推-刘义恒':'刘义恒图推',
 '数量-基础':'数量基础','数量-刷题':'数量刷题','言语-基础':'言语基础','言语-刷题':'言语刷题','综测-基础':'综测基础','综测-刷题':'综测刷题','综测-真题':'综测真题','小黑-理论':'小黑理论','小黑-刷题':'超格政治','公基-系统':'公基系统(马克)','公基-刷题':'公基刷题','申论-小题':'白鹭申论小题','申论-作文':'白鹭申论作文','申论':'申论','复盘':'错题复盘'};return m[v]||v;}
 // 学习记录唯一键 + 删除（带墓碑机制：删除会同步，不会被合并复活）
 const logK=l=>`${l.date}|${l.start}|${l.end}|${l.subject}|${l.duration}`;
@@ -8913,7 +9250,7 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
     t.rawTitle=t.title;t.rawDetail=t.detail;t.rawOut=t.out;return t;
   }
   // 自选加练定义复用 landingProg 的逐条时间戳合并；完成、备注、计时仍使用原有数据结构。
-  var EXEC17_CUSTOM_SUBJECTS=['法律','民法','刑法','行政法','宪法','政治理论','时政','常识','经济','管理','公文','数量关系','资料分析','判断推理','国情省情','综测'];
+  var EXEC17_CUSTOM_SUBJECTS=['法律','民法','刑法','行政法','宪法','政治理论','时政','常识','经济','管理','公文','数量关系','资料分析','图形推理','国情省情','综测'];
   function exec17CustomRecords(d,includeRemoved){
     var prefix=d+'|exec17_customdef_',p=(D.landingProg||{}),out=[];
     Object.keys(p).forEach(function(k){if(k.indexOf(prefix)!==0)return;var uid=k.slice(prefix.length);if(!/^[a-z0-9_-]{4,100}$/i.test(uid))return;
@@ -8923,7 +9260,7 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
   }
   function exec17CustomTask(d,r){
     var mins=Math.max(5,Math.min(180,Number(r.minutes)||25)),label=String(r.subject).slice(0,24),mode=['听课','刷题','背诵','手写','复盘'].indexOf(r.mode)>=0?r.mode:'刷题';
-    var sub=/综测/.test(label)?'综测-真题':/资料/.test(label)?'资料-刷题':/数量/.test(label)?'数量-刷题':/判断/.test(label)?'逻辑':/法律|民法|刑法|行政法|宪法|政治|时政|常识|经济|管理|公文|国情|省情/.test(label)?'公基-刷题':label;
+    var sub=/综测/.test(label)?'综测-真题':/资料/.test(label)?'资料-刷题':/数量/.test(label)?'数量-刷题':/图形|判断/.test(label)?'图形-刷题':/法律|民法|刑法|行政法|宪法|政治|时政|常识|经济|管理|公文|国情|省情/.test(label)?'公基-刷题':label;
     var t=exec17Task(d,r.id,mins,'自选｜'+label+' · '+String(r.title).slice(0,80),'学习方式：'+mode+'；本次参考'+mins+'分钟。\n'+(r.goal?'完成标准：'+String(r.goal).slice(0,500):'完成标准：完成自己选定的一个小任务，写下实际产出与停点。')+'\n自愿加练，不改变当天原计划、目标时长或连续达标条件。计时、备注和勾选分别保存；未完成不自动转为明天欠项。整节课次仍需单独标记，休息与睡眠优先。','记录：实际产出__ / 对题或停点__',sub,mode);
     t.exec17Optional=true;t.customUid=r.uid;t.customSubject=label;
     if(train70Active(d)){t.clear8=true;t.action=String(r.title);t.goal=String(r.goal||'完成本次指定训练。');t.test='记录本次结果或停点。';t.detail='任务：'+t.action+'\n目标：'+t.goal+'\n检验：'+t.test;}
@@ -9112,18 +9449,16 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
     return t;
   }
   function clear8Course(d,mins,id){
-    var dow=exec17DayOfWeek(d),p=rollData(),next=rollNextLesson(p),stop=next?rollNote(p,'lessonNotes',next):'';
-    if(id==='exec17_zc_plus')return clear8Task(d,id,mins,'综测加练｜当前新例题','接当前停点；有新例题就独写后核对，没有题干则续学。','把当前方法用于新例题。','记录本次漏点或准确停点。','例题__ · 漏点或停点__',next?'综测-刘流13':'综测-真题',next?'听课':'手写');
-    if(mins===20)return clear8Task(d,id,mins,next?'综测｜刘流第'+next+'节·续学':'综测｜归纳概括小题',next?'从实际未学停点续课20分钟。':'独立完成1道新小题并核对。','说清本段1个方法。','闭卷复述；有新例题先尝试再核对。','第__节 · 停点__ · 本段方法__',next?'综测-刘流13':'综测-真题',next?'听课':'手写');
+    var dow=exec17DayOfWeek(d),p=rollData(),next=rollNextLesson(p),stop=next?rollNote(p,'lessonNotes',next):'',at=stop?String(stop).slice(0,45):'实际未学停点',focus=train11ZcFocus(d);
+    if(id==='exec17_zc_plus')return clear8Task(d,id,mins,'综测加练｜本次新题薄弱处','用30分钟独立处理本次新材料题最缺的一部分，15分钟对照材料核对；已经改好的旧稿不重写。','把当前方法用于新材料。',focus.instruction,'新题__ · 漏点__ · 材料依据__','综测-真题','手写');
+    if(mins===20)return clear8Task(d,id,mins,next?'综测｜刘流第'+next+'节·续学':'综测｜归纳概括小题',next?'从'+at+'续课20分钟；出现新例题先尝试再听对应解析。':'独立完成1道新小题并核对。','说清本段1个方法。','闭卷复述；没有题干不凭空写答案。','第__节 · 停点__ · 本段方法__',next?'综测-刘流13':'综测-真题',next?'听课':'手写');
     var full=dow===5&&d>='2026-11-27',correction=dow===6&&d>='2026-11-28';
-    if(full)return clear8Task(d,id,mins,'综测｜新卷限时作答','未做新卷1套，按卷面时限独立作答。','在所选卷时限内完成各题。','逐题记用时、未完成处；次日核对。','卷名__ · 每题用时__ · 未完成__','综测-真题','手写');
-    if(correction)return clear8Task(d,id,mins,'综测｜核对本周新卷','核对本周新卷尚未订正处；已经订正完就接新课。','补齐本次作答的漏点、结构与格式。','改写1个仍有问题的部分；已处理完不重写。','未解决题号__ · 本次改好__ · 或课程停点__','综测-真题','手写');
-    if(!next||d>='2026-12-14'||(d>='2026-12-09'&&(dow===2||dow===4))){
-      var topic=['','归纳概括','提出对策','应用文写作','综合分析','归纳概括','应用文写作'][dow]||'归纳概括';
-      return clear8Task(d,id,mins,'综测｜'+topic+'新题','未做材料题1道：独立手写，再对照解析订正。','按题目要求组织要点与结构。','圈出材料依据；核查漏点、字数与格式。','题源__ · 用时__ · 漏点__','综测-真题','手写');
-    }
-    var at=stop?String(stop).slice(0,45):'实际未学停点';
-    return clear8Task(d,id,mins,'综测｜刘流第'+next+'节·续学','从'+at+'续学；新例题先写后听。','能说明本段方法，并用于本课例题。','对照例题标漏点；没有题干时，闭卷复述1个方法。','第__节 · 停点__ · 例题漏点__','综测-刘流13','听课');
+    if(full)return clear8Task(d,id,mins,'综测｜新卷限时作答','未做新卷1套，按卷面时限完整、独立手写；不查解析，逐题记录用时。','训练争取75分；70分训练线须用实际批改成绩核验。','记原卷得分、满分、评分依据与实际用时；未出批改分不填成已达70。','卷名__ · 得分__/满分__ · 用时__ · 扣分点__','综测-真题','手写');
+    if(correction)return clear8Task(d,id,mins,'综测｜核对本周新卷','核对本周新卷尚未订正处；已经订正完就接新课。只改一个仍有问题的部分，不重写已处理旧稿。','补齐本次新作答的漏点、结构与格式。',focus.instruction+' 综测自评只作参考，有批改分再录入训练验收。','未解决题号__ · 本次改好__ · 或课程停点__','综测-真题','手写');
+    var topic=['','归纳概括','提出对策','应用文写作','综合分析','归纳概括','应用文写作'][dow]||'归纳概括';
+    if(!next)return clear8Task(d,id,mins,'综测｜'+topic+'新题','100分钟独立完成未做材料题，20分钟核对并只改本次漏点。','按题目要求完成要点、结构与格式。',focus.instruction+' 记用时与本次漏点，不重播已完成课程。','题源__ · 用时__ · 漏点__','综测-真题','手写');
+    if(focus.practice)return clear8Task(d,id,mins,'综测｜新题应用＋刘流第'+next+'节','60分钟独立手写未做材料题；40分钟从'+at+'续学；20分钟核对本次漏点。没有题干先续未学片段，出现新例题先尝试再听。','用新材料检验方法，不以听完13节代替作答。',focus.instruction+' 记准确课次停点、漏点和用时；没有题干不凭空写答案。','新题__ · 用时__ · 漏点__ · 第__节停点__','综测-刘流13','听课');
+    return clear8Task(d,id,mins,'综测｜刘流第'+next+'节·续学','先25分钟独立尝试本段未看解析的新例题；80分钟从'+at+'续学及核对对应讲解；15分钟补材料漏点。','能说明本段方法，并用于本课新例题。','对照材料标出漏点，记准确课次停点；没有题干先续未学片段，出现新题先尝试再听解析，不凭空写答案。','第__节 · 停点__ · 新例题漏点__','综测-刘流13','听课');
   }
   function train9PairTask(d){
     var taper=d>='2026-12-18',limit=train9PairLimit(d);
@@ -9131,6 +9466,15 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
     action+=taper?'只用熟悉题型，不开新难题。':'针对最集中的1—2个错型，必要时补对应课段，各做2道同型新题。';
     var t=clear8Task(d,TRAIN9_PAIR_ID,60,'数资｜每日20题',action,taper?'保持选数、列式和作答节奏。':'首轮向'+train9PairGoal(d)+'/20推进；练习限时'+limit+'分钟。','记首轮数量__/10、资料__/10与用时；补练后独立说清错因。','套题__ · 数量__/10 · 资料__/10 · 用时__ · 错型/补练__','数资-套题','刷题');
     t.train9Pair=train9PairSpec(d);t.train9Pair.inWeeklyPaper=false;return t;
+  }
+  function train10KnowledgeTask(d,mins,rescue){
+    var x=clear8Theme(d),action=rescue?'同专题新题3道；不会的查对应规则，本块内核对。':'10分钟独立试4道新题；25分钟只补本专题规则或未学片段；15分钟闭卷做6道新题；10分钟核对。已会规则不重听，改做同专题新情境。';
+    var t=clear8Task(d,train10TopicId(d,'knowledge',rescue),mins,x.subject+'｜'+x.topic,action,x.goal+(rescue?'':' 后测争取5/6。'),rescue?'逐题说出依据；记对__/3。':'记录首轮__/4、后测__/6与猜题；闭卷说清1条适用规则。未达如实记，不冒充掌握。',rescue?'题源__ · 对__/3 · 卡点__':'首轮__/4 · 后测__/6 · 规则__ · 未解决__','公基-刷题','刷题');
+    t.train10Topic={kind:'knowledge',index:x.knowledgeIndex,full:!rescue};return t;
+  }
+  function train10GraphTask(d,mins,rescue){
+    var x=clear8Theme(d),t=clear8Task(d,train10TopicId(d,'graph',rescue),mins,'图形推理｜'+x.ability.replace(/^图形：/,''),rescue?'独立做1道同类型图形新题并核对。':'同类型图形新题4道，独立作答并核对。',x.abilityGoal,rescue?'说出图形变化依据；记对__/1。':'逐题说出图形变化依据；记对__/4、作答用时。',rescue?'对__/1 · 规律__':'题源__ · 对__/4 · 用时__ · 规律__','图形-刷题','刷题');
+    t.train10Topic={kind:'graph',index:x.graphIndex,full:!rescue};return t;
   }
   function exec17WithoutDailyMemoryPlan(vds,forcedDose){
     if(!train70Active(vds))return exec17PriorDayPlanR6(vds,forcedDose);
@@ -9143,18 +9487,18 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
     if(vds==='2026-12-18')return {dayInfo:['轻量3h',''],tasks:[train9PairTask(vds),clear8Task(vds,'exec17_final',60,'考前轻回看','回忆已整理规则20分钟，回看综测格式与框架40分钟。','稳定易混条件、审题和书写顺序。','闭卷说出3条易混规则；列出答题检查顺序。','易混规则__ · 答题顺序__','复盘','复盘')],protectedReview:true};
     if(dow===0)return {dayInfo:['数资20题＋记忆卡2h',''],tasks:[train9PairTask(vds)],protectedReview:true};
     if(dose==='rescue')return {dayInfo:['应急2h40',''],tasks:[
-      clear8Task(vds,'train70_rescue_knowledge',15,x.subject+'｜'+x.topic,'同专题新题3道并核对。',x.goal,'逐题说出依据；记对__/3。','题源__ · 对__/3 · 卡点__','公基-刷题','刷题'),
+      train10KnowledgeTask(vds,15,true),
       train9PairTask(vds),
-      clear8Task(vds,'train70_rescue_reason',5,'判断｜'+x.ability,'独立做1道新题并核对。',x.abilityGoal,'说出关键依据；记对__/1。','对__/1 · 依据__','逻辑','刷题'),
+      train10GraphTask(vds,5,true),
       clear8Course(vds,20,'train70_rescue_zc')
     ],protectedReview:true};
     if(dow===6){
-      var paper=clear8Task(vds,exec17PublicId(vds),135,'公基周测｜新卷含数资20题','新卷按卷面时限独立作答；数资计数量10＋资料10，不足用未做同类题补齐；本块内核对，不另加一套。','取得可比较的整卷分数；数资向'+train9PairGoal(vds)+'/20推进。','记原始分、首轮数量__/10、资料__/10、猜题与用时。','卷名__ · 原始分__ · 数量__/10 · 资料__/10 · 用时__','公基-刷题','刷题');
+      var paper=clear8Task(vds,exec17PublicId(vds),135,'公基周测｜新卷含数资20题','选与本场范围相符的公基新卷（判断只含图形推理），按卷面时限独立作答；数资计数量10＋资料10，不足用未做同类题补齐；本块内核对，不另加一套。','原卷训练争取75分；70训练线看真实限时成绩。','记原卷得分及满分、首轮数量__/10、资料__/10与用时；补齐题只计训练，不回填原卷分。','卷名__ · 原卷得分__/满分__ · 数量__/10 · 资料__/10 · 用时__','公基-刷题','刷题');
       paper.train9Pair=train9PairSpec(vds);list.push(paper);
     }else{
-      list.push(clear8Task(vds,exec17PublicId(vds),60,x.subject+'｜'+x.topic,'同专题新题8道并核对，再做2道新变式。',x.goal,'末2题闭卷作答并写依据；记总对__/10、变式对__/2。','题源__ · 对__/10 · 变式对__/2 · 卡点__','公基-刷题','刷题'));
+      list.push(train10KnowledgeTask(vds,60,false));
       list.push(train9PairTask(vds));
-      list.push(clear8Task(vds,'train70_reason',15,'判断｜'+x.ability,'同类型新题4道，独立作答并核对。',x.abilityGoal,'逐题说出依据；记对__/4、作答用时。','题源__ · 对__/4 · 用时__ · 依据__','逻辑','刷题'));
+      list.push(train10GraphTask(vds,15,false));
     }
     list.push(clear8Course(vds,120,'exec17_zc'));
     if(dose==='grow'){
@@ -9178,7 +9522,7 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
         var pp;try{pp=(d==='2026-11-16'||d>=legacyStart)?dec20LegacyDailyPlan(d):buildFor(d);}catch(e){pp={tasks:[]};}
         (pp.tasks||[]).concat(pp.carrySourceTasks||[]).forEach(function(t){if(t&&t.origDay===d&&!t.rollLegacy&&!(t.rollHint&&/本行只记录学习时段/.test(t.rollHint)))add(t);});
       }else{
-        var lm=(s.landing||{})[d]||{},started=Object.keys(lm).some(function(k){return /^(exec17_|train70_)/.test(k);})||Object.keys(s.landingProg||{}).some(function(k){return (k.indexOf(d+'|exec17_')===0||k.indexOf(d+'|train70_')===0)&&!(/\|exec17_(mode|regular_mode|carry_choice)$/.test(k)||/\|train70_quant_focus$/.test(k));})||(s.logs||[]).some(function(l){return l.date===d&&(String(l.taskKey||'').indexOf('landing_'+d+'_exec17_')===0||String(l.taskKey||'').indexOf('landing_'+d+'_train70_')===0);});
+        var lm=(s.landing||{})[d]||{},started=Object.keys(lm).some(function(k){return /^(exec17_|train70_|train9_|train10_)/.test(k);})||Object.keys(s.landingProg||{}).some(function(k){return (k.indexOf(d+'|exec17_')===0||k.indexOf(d+'|train70_')===0||k.indexOf(d+'|train9_')===0||k.indexOf(d+'|train10_')===0)&&!(/\|exec17_(mode|regular_mode|carry_choice)$/.test(k)||/\|train70_quant_focus$/.test(k));})||(s.logs||[]).some(function(l){return l.date===d&&(String(l.taskKey||'').indexOf('landing_'+d+'_exec17_')===0||String(l.taskKey||'').indexOf('landing_'+d+'_train70_')===0||String(l.taskKey||'').indexOf('landing_'+d+'_train9_')===0||String(l.taskKey||'').indexOf('landing_'+d+'_train10_')===0);});
         if(started)(exec17DayPlan(d).tasks||[]).forEach(add);
       }
     }
@@ -9200,7 +9544,7 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
     if(mode==='rescue'&&!confirm('今天切换应急2h40？数资仍做20题，次日恢复原设置。'))return;
     if(mode!=='rescue')setNote(today,'exec17_regular_mode',mode);
     setNote(today,'exec17_mode',mode);CACHE_VER++;render();try{renderSchedule();updateDayProgress(today);}catch(e){}
-    showToast(mode==='grow'?'已主动选6h45；数资20题不变，两科各追加45分钟。':mode==='rescue'?'今天应急2h40；数资20题保留，不累计补债。':'已选择5h15：指定专题、数资20题、判断、综测、独立记忆卡。');
+    showToast(mode==='grow'?'已主动选6h45；数资20题不变，两科各追加45分钟。':mode==='rescue'?'今天应急2h40；数资20题保留，不累计补债。':'已选择5h15：指定专题、数资20题、图形推理、综测、独立记忆卡。');
   };
   window.exec17Phone=function(checked){var today=fmt(new Date());if(viewDs!==today)return;var s=store();s.landing[today]=s.landing[today]||{};s.landingTs[today]=s.landingTs[today]||{};s.landing[today].exec17_phone=!!checked;s.landingTs[today].exec17_phone=Date.now();saveLocal();saveCloud();};
   window.exec17OpenDate=function(d){if(!/^\d{4}-\d{2}-\d{2}$/.test(d))return;curDate=parse(d);renderSchedule();applyView(d);render();window.scrollTo(0,0);};
@@ -9228,7 +9572,7 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
     try{localStorage.getItem('doit2026_dashboard_v1');}catch(e){warning='<div class="exec17-callout">受限预览：记录无法保存，请在原站点使用。</div>';}
     var buttons=study?'<div class="exec17-dose-grid">'+[['base','常规5h15'],['grow','加量6h45'],['rescue','应急2h40']].map(function(x){return '<button type="button" class="exec17-dose '+(dose===x[0]?'is-on':'')+'" onclick="exec17SetDose(\''+x[0]+'\')" '+(!current?'disabled':'')+'>'+x[1]+'</button>';}).join('')+'</div>':'';
     var phone=current&&study?'<label class="clear8-phone"><input type="checkbox" '+(lm.exec17_phone?'checked':'')+' onchange="exec17Phone(this.checked)">手机离手，开始学习</label>':'';
-    return warning+'<div class="exec17-panel clear8-control" id="train70-daily-panel"><div class="clear8-control-head"><b>12/20 · 目标：笔试折算70</b><span>已计 '+exec17RequiredMinutes(viewDs)+' / '+Math.round(exec17Target(viewDs)*60)+' 分钟</span></div>'+buttons+phone+'</div>';
+    return warning+'<div class="exec17-panel clear8-control" id="train70-daily-panel"><div class="clear8-control-head"><b>公基＋综测 · 12/20 · 70分训练</b><span>已计 '+exec17RequiredMinutes(viewDs)+' / '+Math.round(exec17Target(viewDs)*60)+' 分钟</span></div>'+buttons+phone+'</div>';
   }
 
   function exec17CoursePanel(){
@@ -9258,7 +9602,7 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
     }).join('');
     return '<details id="exec17-archive" class="exec17-archive" '+(exec17ArchiveOpen?'open':'')+' ontoggle="exec17ToggleArchive(this.open)"><summary>历史条目 · '+carryQueue.length+'条（只读，不是补做清单）</summary><div style="max-height:350px;overflow:auto">'+rows+'</div></details>';
   }
-  window.__exec17Inspect=function(d){var p=exec17DayPlan(d||viewDs),a=exec17Archive(d||viewDs,p);return {date:d||viewDs,dose:exec17Dose(d||viewDs),target:exec17Target(d||viewDs),qualified:exec17QualifiedStreak(d||viewDs),protectedReview:p.protectedReview,evening:exec17EveningDay(d||viewDs),remaining:exec17EveningDay(d||viewDs)?exec17EveningRemaining(d||viewDs):null,tasks:p.tasks.map(function(t){return {id:t.id,title:t.title,minutes:t.exec17Minutes,subject:t.exec17Subject,paired:t.train9Pair||null,optional:!!t.exec17Optional,dailyMemory:!!t.exec17DailyMemory,detail:t.detail,clear8:!!t.clear8,action:t.action||'',goal:t.goal||'',test:t.test||''};}),archive:a.carryQueue.map(function(t){return {date:t.origDay,id:t.origId,title:t.title};}),lessonState:rollingLessonState()};};
+  window.__exec17Inspect=function(d){var p=exec17DayPlan(d||viewDs),a=exec17Archive(d||viewDs,p);return {date:d||viewDs,dose:exec17Dose(d||viewDs),target:exec17Target(d||viewDs),qualified:exec17QualifiedStreak(d||viewDs),protectedReview:p.protectedReview,evening:exec17EveningDay(d||viewDs),remaining:exec17EveningDay(d||viewDs)?exec17EveningRemaining(d||viewDs):null,tasks:p.tasks.map(function(t){return {id:t.id,title:t.title,minutes:t.exec17Minutes,subject:t.exec17Subject,paired:t.train9Pair||null,topic:t.train10Topic||null,optional:!!t.exec17Optional,dailyMemory:!!t.exec17DailyMemory,detail:t.detail,clear8:!!t.clear8,action:t.action||'',goal:t.goal||'',test:t.test||''};}),archive:a.carryQueue.map(function(t){return {date:t.origDay,id:t.origId,title:t.title};}),lessonState:rollingLessonState()};};
 
   function dec20DailyPlan(vds){return exec17Applies(vds)?exec17DayPlan(vds):dec20LegacyDailyPlan(vds);}
   function dec20LegacyDailyPlan(vds){
@@ -9856,6 +10200,7 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
         window.exec17Phone(true);
       }
     }
+    if(t.exec17Subject==='图形-刷题'&&typeof getSubjs==='function'){var graphSubjects=getSubjs();if(!graphSubjects.some(function(x){return x.v==='图形-刷题';})){graphSubjects.push({v:'图形-刷题',label:'🧩 图形推理'});D.subjs=graphSubjects;saveLocal();try{renderSubjs();}catch(e){}}}
     if(t.exec17Subject==='数资-套题'&&typeof getSubjs==='function'){var pairSubjects=getSubjs();if(!pairSubjects.some(function(x){return x.v==='数资-套题';})){pairSubjects.push({v:'数资-套题',label:'🔢 数资20题'});D.subjs=pairSubjects;saveLocal();try{renderSubjs();}catch(e){}}}
     if(t.exec17DailyMemory&&typeof getSubjs==='function'){var subjects=getSubjs();if(!subjects.some(function(x){return x.v==='记忆卡';})){subjects.push({v:'记忆卡',label:'🧠 记忆卡背诵'});D.subjs=subjects;saveLocal();try{renderSubjs();}catch(e){}}}
     if(t.exec17DailyMemory){try{var mb=Array.from(document.querySelectorAll('#mode-wrap .mb')).find(function(b){return (b.textContent||'').indexOf('背诵')>=0;});if(mb)setMode('背诵',mb);}catch(e){}}
@@ -9917,8 +10262,8 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
     return '<article class="landing-task clear8-task" data-task-id="'+esc(t.id)+'">'
       +'<div class="clear8-task-head"><input type="checkbox" data-landing="'+esc(t.id)+'" aria-label="完成'+esc(t.title)+'" onchange="toggleLandingCheck(\''+t.id+'\',this.checked)">'
       +'<div class="clear8-task-title"><b>'+esc(t.title)+'</b><small>'+esc(t.time)+'</small></div><div class="clear8-task-actions">'+badge+timer+'</div></div>'
-      +'<div class="clear8-task-body"><dl class="clear8-lines"><div><dt>任务</dt><dd>'+esc(t.action)+'</dd></div><div><dt>目标</dt><dd>'+esc(t.goal)+'</dd></div><div><dt>检验</dt><dd>'+esc(t.test)+'</dd></div></dl>'
-      +exec17MemoryInline(t)
+      +'<div class="clear8-task-body">'
+      +exec17MemoryInline(t)+train11ScoreShortcut(t)
       +'<label class="clear8-result"><span>结果</span><input data-lp="'+esc(viewDs+'|'+t.origId)+'" value="'+esc(note)+'" placeholder="'+esc(ph)+'" onchange="landingSaveNote(this)" onblur="landingSaveNote(this)"></label></div></article>';
   }
 
@@ -10110,17 +10455,18 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
     var notes=[];
     try{
       Object.keys(D.landingProg||{}).forEach(function(k){
-        var p=k.split('|'); if(p[0]!==d||/^exec17_(mode|regular_mode|carry_choice)$/.test(p[1])||p[1]==='train70_quant_focus'||/^exec17_customdef_/.test(p[1])) return;
+        var p=k.split('|'); if(p[0]!==d||/^exec17_(mode|regular_mode|carry_choice)$/.test(p[1])||p[1]==='train70_quant_focus'||/^exec17_customdef_/.test(p[1])||/^train11_score_/.test(p[1])) return;
         var n=(D.landingProg[k]||{}).note; if(!n) return;
         var name=p[1], bs=exec17Applies(d)?exec17DayPlan(d).tasks:(baseOf(d).tasks||[]);
         for(var i=0;i<bs.length;i++){ if(bs[i].id===p[1]){ name=bs[i].title; break; } }
         if(exec17RetiredDiagnostic(d,p[1]))name='已移除诊断的原笔记（保留，不安排重做）';
         if(exec17RetiredReview(d,p[1]))name='已取消旧复盘的原笔记（保留，不安排重做）';
         if(train9Retired(d,p[1]))name='原数量/资料短练记录（保留，不计作新20题）';
+        if(train10Retired(d,p[1]))name=p[1]==='train70_reason'||p[1]==='train70_rescue_reason'?'原判断任务记录（保留，不计作当前图形任务）':'原公基专题记录（保留，不自动计作当前专题）';
         notes.push({id:p[1],name:String(name).replace(/^【明天再做】/,''),note:n});
       });
     }catch(e){}
-    return {date:d,done:done,openProg:openProg,openDrill:openDrill,deferred:deferred,total:tasks.length-deferred.length,mins:mins,notes:notes,optionalDone:optionalDone,optionalOpen:optionalOpen,optionalMins:exec17Applies(d)?exec17OptionalMinutes(d):0,memoryMins:exec17MemoryMinutes(d),memoryTarget:exec17MemoryActive(d)?60:0,trainingGoal:train70Active(d)?TRAIN70_GOAL:null,quantFocus:train70Active(d)?train70QuantKey(d):null,pairedSet:train70Active(d)&&d<'2026-12-20'?train9PairSpec(d):null,requiredMins:exec17Applies(d)?exec17RequiredMinutes(d):mins,retiredMins:exec17Applies(d)?exec17RetiredMinutes(d):0,future:(d>fmt(new Date()))};
+    return {date:d,done:done,openProg:openProg,openDrill:openDrill,deferred:deferred,total:tasks.length-deferred.length,mins:mins,notes:notes,optionalDone:optionalDone,optionalOpen:optionalOpen,optionalMins:exec17Applies(d)?exec17OptionalMinutes(d):0,memoryMins:exec17MemoryMinutes(d),memoryTarget:exec17MemoryActive(d)?60:0,trainingGoal:train70Active(d)?TRAIN70_GOAL:null,quantFocus:train70Active(d)?train70QuantKey(d):null,pairedSet:train70Active(d)&&d<'2026-12-20'?train9PairSpec(d):null,scope:train70Active(d)?TRAIN10_SCOPE:null,scores:train11Scores(d).filter(function(r){return r.date===d;}),trainingEvidence:train70Active(d)?train11ScoreEvidence(d):null,topic:train70Active(d)?clear8Theme(d):null,requiredMins:exec17Applies(d)?exec17RequiredMinutes(d):mins,retiredMins:exec17Applies(d)?exec17RetiredMinutes(d):0,future:(d>fmt(new Date()))};
   }
   function curWeekNo(){ try{ return Math.max(1,Math.ceil(dayIdx(new Date())/7)||1); }catch(e){ return 1; } }
   // 第 N 周 = 课表第 (N-1)*7+1 ~ N*7 天（跟「统计/总规划」里的第几周一致）
@@ -10168,6 +10514,7 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
       if(x.openProg.length) L.push((exec17Applies(x.date)?'  ⏳ 未完成（保留记录，不自动挤占主线）：':'  ⏳ 未完成（历史口径）：')+brief(x.openProg));
       if(x.openDrill.length) L.push((exec17Applies(x.date)?'  🔁 未完成练习（按错点再安排）：':'  🔁 练习类顺延（历史口径）：')+brief(x.openDrill));
       if(x.deferred.length) L.push('  ↪ 已顺延：'+brief(x.deferred,4));
+      if(x.scores&&x.scores.length)x.scores.forEach(function(r){L.push('  📊 '+(r.subject==='public'?'公基':'综测')+' '+r.paper+'：'+r.earned+'/'+r.max+'（'+r.percent+'） · '+r.used+'/'+r.limit+'分钟 · '+(r.grading==='reviewed'?'批改分':r.grading==='answer'?'答案核对':'自评参考'));});
       if(x.notes.length) L.push('  📝 '+x.notes.slice(0,6).map(function(n){ return n.name+'→'+n.note; }).join('；'));
     });
     return L.join('\n');
@@ -10389,6 +10736,5 @@ window.addEventListener('storage',function(e){
 });
 </script>
 
-<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"1954b47c125f43f8b4338b3c4f804e4f","spa":2}' crossorigin="anonymous"></script>
-</body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a5cbe8d8deca5585',t:'MTc5NTA1NjY0OQ=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a5cbe8d8deca5585',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
