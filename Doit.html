@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Doit · 平板连接保存修复 | 2026-11-17 r15</title>
+<title>Doit · 连接保存配额回退修复 | 2026-11-17 r17</title>
 <style>
 :root{
   --bg:#f0f6ff;--surface:#fff;--s2:#f7faff;--border:#d0e2ff;
@@ -232,7 +232,7 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
 .train11-baseline,.train11-rhythm,.train11-evidence{margin:12px 0;padding:12px;border:1px solid #bfd5f5;border-radius:10px;background:#f7faff;color:#193d6a;font-size:12px;line-height:1.7;overflow-wrap:anywhere}.train11-baseline b,.train11-baseline span,.train11-baseline small,.train11-rhythm b,.train11-rhythm>span{display:block}.train11-baseline small,.train11-line{font-size:11px;color:#64748b}.train11-rhythm>span+span{margin-top:5px}.train11-evidence{background:#fff;scroll-margin-top:170px}.train11-evidence h3{font-size:14px;margin:0 0 7px}.train11-score-state{display:grid;grid-template-columns:35px minmax(0,1fr);gap:6px;margin:9px 0;padding:9px 0;border-top:1px solid #e2e8f0}.train11-score-state span{min-width:0}.train11-score-state small{display:block;color:#64748b;font-size:10px}.train11-score-state strong{grid-column:2;font-size:11px;color:#1d4ed8}.train11-status{padding:8px;background:#eff6ff;border-radius:7px;font-size:11px}.train11-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:12px}.train11-form-grid label{display:flex;flex-direction:column;min-width:0;font-size:11px;color:#475569}.train11-form-grid input,.train11-form-grid select{box-sizing:border-box;width:100%;min-width:0;max-width:100%;padding:8px 6px;border:1px solid #bfd1eb;border-radius:6px;background:white;color:#1e3a5f;font:inherit;font-size:13px}.train11-wide{grid-column:1/-1}.train11-form-actions{display:flex;gap:7px;flex-wrap:wrap;margin:11px 0}.train11-form-actions button,.train11-score-shortcut{padding:8px 10px;border:1px solid #93b4ef;border-radius:7px;color:#1d4ed8;background:#eff6ff;font-size:12px}.train11-form-actions button[type=submit]{background:#2563eb;color:#fff}.train11-score-shortcut{margin:7px 0 2px;font-size:11px}#train11-score-message{font-size:11px;white-space:pre-wrap}@media(max-width:420px){.train11-baseline,.train11-rhythm,.train11-evidence{padding:10px}.train11-form-grid{gap:7px}.train11-score-state{grid-template-columns:29px minmax(0,1fr)}}
 
 </style>
-<meta name="doit-release" content="2026-11-17-execution-r15-tablet-connection-persistence">
+<meta name="doit-release" content="2026-11-17-execution-r17-config-quota-retry">
 </head>
 <body>
 
@@ -269,7 +269,7 @@ body{font-family:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;background
     <button class="tb" onclick="showMemoryCard()" style="display:inline-flex;align-items:center">🧠 记忆卡</button>
   </div>
   <div style="font-size:10px;margin-top:4px;opacity:.8;cursor:pointer;display:inline-block" id="sync-status" onclick="manualSync()" title="点击立即同步合并">⚪ 未配置</div>
-  <div id="app-version" style="font-size:10px;margin-top:3px;opacity:.8">✅ Doit r15 · 简洁课表 · 平板连接保存修复</div>
+  <div id="app-version" style="font-size:10px;margin-top:3px;opacity:.8">✅ Doit r17 · 简洁课表 · 连接保存修复</div>
 </div>
 
 <div class="main">
@@ -7767,11 +7767,45 @@ function r13LiveSignature(x){
   if(!x)return '';return cfComparable({format:CF_SYNC_FORMAT,dashboard:{logs:[],checks:{}},srs:x.srs,session:x.session||null});
 }
 function r13SameLive(g){return r13LiveSignature(r13LiveMemory())===(g.liveSignature||'');}
+/* r17: extend the existing quota-only retry to unchanged, valid SRS slots.
+   No new storage keys, database, cloud protocol or user interaction. */
+function r17QuotaRetryWrites(writes,g){
+  const compact=r13CompactWrites(writes);
+  // Extra same-key replacements are scoped strictly to connection persistence.
+  // Other writes retain the pre-r17 retry behavior.
+  if(!compact.some(([k])=>k===CF_SYNC_CFG_KEY||k===R15_CFG_KEY))return compact;
+  const present=new Set(compact.map(x=>x[0])),extra=[],cache=new Map();
+  for(const key of [SRS_LS_KEY,SRS_LS_KEY+'_backup']){
+    if(present.has(key))continue;
+    const raw=g&&g.slots&&g.slots[key];if(typeof raw!=='string'||!raw)continue;
+    try{
+      let packed=cache.get(raw);
+      if(packed===undefined){
+        const plain=r13DecodeLocal(raw);r9Srs(JSON.parse(plain));
+        packed=r13EncodeLocal(raw);
+        if(r13DecodeLocal(packed)!==plain)throw Error('roundtrip');
+        cache.set(raw,packed);
+      }
+      // Only lossless shrinkage of the observed slot is eligible. A malformed
+      // backup is never replaced from its primary, nor is any copy deleted.
+      if(packed.length<raw.length)extra.push([key,packed]);
+    }catch(e){/* Preserve unreadable/unsupported originals; normal failure remains. */}
+  }
+  // Free space through checked replacement first, then retry the exact intended writes.
+  // The original transaction owns and rolls back these replacements too.
+  return extra.concat(compact);
+}
+function r17SameSrsRaw(a,b){
+  if(a===b)return true;
+  if(typeof a!=='string'||typeof b!=='string')return false;
+  try{return r13DecodeLocal(a)===r13DecodeLocal(b);}catch(e){return false;}
+}
+
 function r9WriteChecked(writes,g){
   const prior={blocked:_cfStoreBlocked,conflict:_cfMultiTabConflict,error:_cfError};
   try{return r13RawWriteChecked(writes,g);}catch(first){
     if(!/quota/i.test(first&&first.r13StorageName||'')||first.r9Uncertain||!r9SameGuard(g))throw first;
-    const compact=r13CompactWrites(writes);
+    const compact=r17QuotaRetryWrites(writes,g);
     if(JSON.stringify(compact)===JSON.stringify(writes))throw first;
     const result=r13RawWriteChecked(compact,g);
     _cfStoreBlocked=prior.blocked;_cfMultiTabConflict=prior.conflict;_cfError=prior.error;return result;
@@ -7783,7 +7817,7 @@ function r13CommitMemory(slim,expectedMain){
     if(DOIT_ID_BLOCKED||_doitScopeError)throw r9Fail('编号或独立存储尚未核对；记忆卡仍留在当前页面，请先下载备份。','blocked');
     if(cfIsActive())cfAssertStable();
     const s=r9Srs(slim),g=r9ReadGuard();
-    if(g.slots[SRS_LS_KEY]!==expectedMain)throw r9Fail('另一页面或后台改变了记忆卡主档；本次没有覆盖，请先备份并合并本机冲突。','conflict');
+    if(!r17SameSrsRaw(g.slots[SRS_LS_KEY],expectedMain))throw r9Fail('另一页面或后台改变了记忆卡主档；本次没有覆盖，请先备份并合并本机冲突。','conflict');
     const raw=JSON.stringify(s),writes=[[SRS_LS_KEY,raw],[SRS_LS_KEY+'_backup',raw]];
     if(s.session){const q=JSON.stringify(r9Session(s.session));writes.push(['scsyd_session_v1',q],['scsyd_session_v1_backup',q]);}
     writes.push([cfIsActive()?CF_SYNC_DIRTY_KEY:'doit_sync_pending_v1','1']);
@@ -8665,7 +8699,7 @@ function cfCapture(){
   const envelope=cfValidateEnvelope({format:CF_SYNC_FORMAT,dashboard:d,srs:s,session:q||null});
   return {envelope,guard:{dashboard:JSON.stringify(D),storedDashboard:localStorage.getItem(KEY),srs:sraw,session:qraw},seq:_cfChangeSeq};
 }
-function cfSameGuard(g){return !_cfMultiTabConflict&&localStorage.getItem(CF_SYNC_CFG_KEY)===_cfObservedCfg&&localStorage.getItem(R15_CFG_KEY)===_r15ObservedCheckpoint&&g.dashboard===JSON.stringify(D)&&g.storedDashboard===localStorage.getItem(KEY)&&g.srs===localStorage.getItem(SRS_LS_KEY)&&g.session===localStorage.getItem('scsyd_session_v1');}
+function cfSameGuard(g){return !_cfMultiTabConflict&&localStorage.getItem(CF_SYNC_CFG_KEY)===_cfObservedCfg&&localStorage.getItem(R15_CFG_KEY)===_r15ObservedCheckpoint&&g.dashboard===JSON.stringify(D)&&g.storedDashboard===localStorage.getItem(KEY)&&r17SameSrsRaw(g.srs,localStorage.getItem(SRS_LS_KEY))&&g.session===localStorage.getItem('scsyd_session_v1');}
 function cfHasProgress(e){
   const d=e.dashboard,s=e.srs;
   if(e.session||(s&&((Array.isArray(s.cards)&&s.cards.length)||Object.keys(s.log||{}).length||s.session)))return true;
@@ -10732,10 +10766,6 @@ try{ if(window.renderLanding) window.renderLanding(); }catch(e){}
     if(exec17Applies(viewDs)){
       if(viewDs!==fmt(new Date())){showToast('历史／未来日期仅查看，不在这里新增计时。','orange');return;}
       if(typeof tOn!=='undefined'&&tOn){showToast('已有任务在计时，请先结束。','orange');return;}
-      if(exec17StudyDay(viewDs)&&!isDoneId(viewDs,'exec17_phone')){
-        if(!confirm('开始前请把手机放远；需要用本机看课时，请先手动开勿扰并限制娱乐应用。网页不会锁手机。已经准备好了吗？'))return;
-        window.exec17Phone(true);
-      }
     }
     if(t.exec17Subject==='图形-刷题'&&typeof getSubjs==='function'){var graphSubjects=getSubjs();if(!graphSubjects.some(function(x){return x.v==='图形-刷题';})){graphSubjects.push({v:'图形-刷题',label:'🧩 图形推理'});D.subjs=graphSubjects;saveLocal();try{renderSubjs();}catch(e){}}}
     if(t.exec17Subject==='数资-套题'&&typeof getSubjs==='function'){var pairSubjects=getSubjs();if(!pairSubjects.some(function(x){return x.v==='数资-套题';})){pairSubjects.push({v:'数资-套题',label:'🔢 数资20题'});D.subjs=pairSubjects;saveLocal();try{renderSubjs();}catch(e){}}}
@@ -11264,5 +11294,5 @@ window.addEventListener('storage',function(e){
 });
 </script>
 
-<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a5cd0236adad71e7',t:'MTc5NTA2ODE3Mw=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a5cd0236adad71e7',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a5cdb2a1af2d2271',t:'MTc5NTA3NTM5OQ=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a5cdb2a1af2d2271',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
